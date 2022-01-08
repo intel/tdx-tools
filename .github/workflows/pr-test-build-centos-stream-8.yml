@@ -26,3 +26,7 @@ jobs:
         uses: ./build/centos-stream-8/pkg-builder
         with:
           package: intel-mvp-tdx-qemu-kvm
+      - name: Build libvirt
+        uses: ./build/centos-stream-8/pkg-builder
+        with:
+          package: intel-mvp-tdx-libvirt
