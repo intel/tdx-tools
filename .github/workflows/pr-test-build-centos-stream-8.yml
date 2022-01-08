@@ -22,3 +22,7 @@ jobs:
         uses: ./build/centos-stream-8/pkg-builder
         with:
           package: intel-mvp-tdx-tdvf
+      - name: Build qemu-kvm
+        uses: ./build/centos-stream-8/pkg-builder
+        with:
+          package: intel-mvp-tdx-qemu-kvm
