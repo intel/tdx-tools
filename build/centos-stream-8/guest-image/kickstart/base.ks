@@ -8,8 +8,7 @@
 #
 #---------------------------------------------------------------------------------------------------
 
-%include centos-stream.ks
-%include tdx-stack.ks
+%include /centos-stream.ks
 
 lang en_US.UTF-8
 keyboard us
@@ -25,7 +24,7 @@ part biosboot --fstype=biosboot --ondisk vda --size=1
 part /boot/efi --fstype efi --ondisk vda --size 200 --fsoptions "umask=0077,shortname=winnt" --label "esp"
 part / --fstype xfs --asprimary --size 1024 --grow --label "td_root"
 
-selinux --permissive
+selinux --disabled
 
 # Set password
 authselect --useshadow --passalgo sha512
@@ -38,9 +37,5 @@ firewall --enabled --service ssh
 firstboot --disabled
 
 services --enabled tuned
+
 poweroff
-#%end
-
-%post --erroronfail --log=/var/log/ks-base-image.log
-
-%end
