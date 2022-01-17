@@ -33,6 +33,7 @@ ARGS+=" --install intel-mvp-tdx-guest-grub2-efi-x64,intel-mvp-tdx-guest-grub2-pc
 
 # Setup grub
 ARGS+=" --copy-in config/grub:/etc/default/"
+ARGS+=' --run-command "grub2-editenv /boot/efi/EFI/centos/grubenv create"'
 ARGS+=' --run-command "grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg"'
 
 echo "${ARGS}"

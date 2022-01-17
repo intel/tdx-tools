@@ -101,6 +101,4 @@ dnf -C clean all
 /bin/rm -rf /var/cache/dnf/* /var/lib/dnf/modulefailsafe/*
 /bin/rm -rf /var/log/*debug /var/log/anaconda /var/lib/rhsm
 
-shutdown now
-
 %end

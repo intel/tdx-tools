@@ -39,9 +39,9 @@ eval virt-install \
     --transient
 
 if [[ -f ${IMAGE_NAME} ]] ; then
-    echo "EFI image created: ${IMAGE_NAME}"
+    echo "[  OK  ] EFI image created: ${IMAGE_NAME}"
 else
-    echo "EFI image failed: ${IMAGE_NAME}"
+    echo "[FAILED] EFI image failed: ${IMAGE_NAME}"
 fi
 
 popd || exit 1
