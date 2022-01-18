@@ -1,13 +1,13 @@
 #!/usr/bin/bash
 
 CURR_DIR=$(readlink -f "$(dirname "$0")")
-REPO_DIR=$(readlink -f ../repo/guest/)
-IMAGE=td-guest-c8s.qcow2
+REPO_DIR="../repo/guest/"
+IMAGE="td-guest-c8s.qcow2"
 
 pushd "${CURR_DIR}" || exit 1
 
-if [[ ! -d ${REPO_DIR} ]] ; then
-    echo "${REPO_DIR} not exists"
+if ! readlink -f ${REPO_DIR} ; then
+    echo "${REPO_DIR} does not exist"
     exit 1
 fi
 

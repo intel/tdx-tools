@@ -10,29 +10,20 @@ iperf3
 man-pages
 mlocate
 nano
-nginx
 openssh-clients
-perf
 policycoreutils-python-utils
 prefixdevname
 psmisc
 python3
 python3-libselinux
 python3-pip
-python39
-python39-pip
-redis
 setools-console
 strace
 tar
-#tcpdump
-#telnet
-tmux
 tuned
 unzip
 util-linux-user
 vim
-#watchdog
 wget
 zsh
 
@@ -94,7 +85,6 @@ echo dracut_rescue_image=no > /etc/dracut.conf.d/no-rescue.conf
 rm -f /var/lib/systemd/random-seed
 restorecon -R /etc > /dev/null 2>&1 || :
 
-echo "clean"
 # Clean
 dnf -C clean all
 /bin/rm -rf /etc/*- /etc/*.bak /root/* /tmp/* /var/tmp/*
