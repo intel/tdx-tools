@@ -1,0 +1,64 @@
+<domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+  <name>REPLACEME_NAME</name>
+  <uuid>REPLACEME_UUID</uuid>
+  <memory unit='KiB'>REPLACEME_MEMORY</memory>
+  <vcpu placement='static'>1</vcpu>
+  <os>
+    <type arch='x86_64' machine='q35'>hvm</type>
+    <loader type='pflash' readonly='yes'>REPLACEME_OVMF_CODE</loader>
+    <nvram template='/usr/share/qemu/OVMF_VARS.fd'>REPLACEME_OVMF_VARS</nvram>
+    <boot dev='hd'/>
+    <kernel>REPLACEME_KERNEL</kernel>
+    <cmdline>root=/dev/vda3 selinux=0 rw console=hvc0</cmdline>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+    <ioapic driver='qemu'/>
+  </features>
+  <clock offset='utc'>
+    <timer name='hpet' present='no'/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <pm>
+    <suspend-to-mem enable='no'/>
+    <suspend-to-disk enable='no'/>
+  </pm>
+  <cpu mode='host-passthrough'>
+    <topology sockets='1' cores='1' threads='1'/>
+  </cpu>
+  <iothreads>1</iothreads>
+  <iothreadids>
+    <iothread id='1'/>
+  </iothreadids>
+  <devices>
+    <emulator>/usr/libexec/qemu-kvm</emulator>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2' io='native' cache='none' iothread='1'/>
+      <source file='REPLACEME_IMAGE'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+    <console type='pty'>
+      <target type='virtio' port='0'/>
+    </console>
+    <interface type='bridge'>
+      <source bridge='virbr0'/>
+      <model type='virtio'/>
+    </interface>
+    <interface type="user">
+      <model type="e1000"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x0"/>
+    </interface>
+    <channel type='unix'>
+      <source mode='bind'/>
+      <target type='virtio' name='org.qemu.guest_agent.0'/>
+    </channel>
+  </devices>
+  <allowReboot value='no'/>
+  <qemu:commandline>
+    <qemu:arg value='-cpu'/>
+    <qemu:arg value='host'/>
+  </qemu:commandline>
+</domain>

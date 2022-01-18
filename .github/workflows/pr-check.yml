@@ -9,3 +9,17 @@ jobs:
       - uses: actions/checkout@v2.1.0
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          sudo apt-get install libvirt-dev
+          python -m pip install --upgrade pip
+          pip install pylint
+          pip install -r utils/pycloudstack/requirements.txt
+      - name: Analysing the code with pylint
+        run: |
+          set -ex
+          find . -name '*.py' -exec pylint {} \;
