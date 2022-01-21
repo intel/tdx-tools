@@ -86,4 +86,14 @@ Remote debugging using 127.0.0.1:1234
 
 Please use `hb` command in GDB to set the first breakpoint, e.g. `hb start_kernel`.
 Please note the software breakpoint is available after the kernel is loaded into GPA space by Qemu.
-Use "continue" command in GDB to let guest start to run, and wait for the trigger of breakpoints.
+
+```
+(gdb) hb start_kernel
+Hardware assisted breakpoint 1 at 0xffffffff8351c050: file init/main.c, line 938.
+(gdb) continue
+Continuing.
+
+Breakpoint 1, start_kernel () at init/main.c:938
+938             set_task_stack_end_magic(&init_task);
+(gdb)
+```
