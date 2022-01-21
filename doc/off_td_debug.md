@@ -28,7 +28,7 @@ Please use the qemu command to Launch TD guest via qemu-kvm and add below parame
 -object tdx-guest,id=tdx,debug=on
 ```
 
-- Add `-s -S` parameter to qemu-kvm so qemu sets up GDB stub server on localhost port 1234 and wait for connection from GDB to Qemu
+- Add `-s -S` parameter to qemu-kvm to sets GDB stub server on localhost port 1234 and wait for connection from GDB to Qemu
 
 - Append `nokaslr` to TD kernel command line to disable kernel address randomization
 
