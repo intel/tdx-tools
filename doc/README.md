@@ -7,4 +7,4 @@ Verify if the TD guest memory is encrypted
 
 ## off_td_debug
 
-The meothod the debug the guest kernel outside of the TD using GDB
+The meothod to debug the TD guest from outside using GDB
