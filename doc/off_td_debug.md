@@ -5,7 +5,7 @@
 You can install debug info from the yum repository that provides the guest kernel debuginfo
 
 ```
-sudo dnf install intel-mvp-tdx-guest-kernel-spr-debuginfo
+sudo dnf install intel-mvp-tdx-guest-kernel-debuginfo
 ```
 
 or install the RPMs directly
@@ -13,7 +13,7 @@ or install the RPMs directly
 ```
 cd <path to guest-kernel packages>
 sudo dnf install intel-mvp-tdx-guest-kernel-debuginfo-common-x86_64-<guest-kernel-version>.el8.x86_64.rpm \
-intel-mvp-tdx-guest-kernel-spr-debuginfo-<guest-kernel-version>.el8.x86_64.rpm
+intel-mvp-tdx-guest-kernel-debuginfo-<guest-kernel-version>.el8.x86_64.rpm
 ```
 
 After debug info installed, you can find debuggable modules in `/usr/lib/debug/usr/lib/modules/` and sources in `/usr/src/debug/`

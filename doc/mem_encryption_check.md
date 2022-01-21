@@ -6,7 +6,7 @@ The tool `extract-vmlinux` is used to extract vmlinux from the guest kernel. The
 the host kernel devel package. Install it:
 
 ```
-sudo dnf install intel-mvp-tdx-host-kernel-spr-devel
+sudo dnf install intel-mvp-tdx-host-kernel-devel
 ```
 
 ### Check the original `text` code section of guest kernel
@@ -17,7 +17,7 @@ sudo dnf install intel-mvp-tdx-host-kernel-spr-devel
 /usr/src/kernels/$(uname -r)/scripts/extract-vmlinux <path-to-guest-kernel-file > vmlinux
 ```
 
-#### 2. Disassemble the TD guest kernel `vmlinux`:
+#### 2. Disassemble the TD guest kernel `vmlinux`
 
 ```
 objdump -d vmlinux > disassembled-vmlinux.asm && head -n 20 disassembled-vmlinux.asm
