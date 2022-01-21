@@ -13,7 +13,7 @@ or install the RPMs directly
 ```
 cd <path to guest-kernel packages>
 sudo dnf install intel-mvp-tdx-guest-kernel-debuginfo-common-x86_64-<guest-kernel-version>.el8.x86_64.rpm \
-    intel-mvp-tdx-guest-kernel-spr-debuginfo-<guest-kernel-version>.el8.x86_64.rpm
+intel-mvp-tdx-guest-kernel-spr-debuginfo-<guest-kernel-version>.el8.x86_64.rpm
 ```
 
 After debug info installed, you can find debuggable modules in `/usr/lib/debug/usr/lib/modules/` and sources in `/usr/src/debug/`
@@ -24,21 +24,21 @@ Please use the qemu command to Launch TD guest via qemu-kvm and add below parame
 
 - Append `debug=on` to `tdx-guest` to turn on debugging, like
 
-  ```
-  -object tdx-guest,id=tdx,debug=on
-  ```
+```
+-object tdx-guest,id=tdx,debug=on
+```
 
 - Use `-s -S` so qemu sets up GDB stub server on localhost port 1234 and wait for connection from GDB to Qemu
 
 - Append `nokaslr` to TD kernel command line to disable kernel address randomization
 
 After that, the qemu process starts and waits for GDB connection.
-  
-  ```
-  /usr/libexec/qemu-kvm -s -S -accel kvm -monitor telnet:127.0.0.1:9001,server,nowait
-  -object tdx-guest,id=tdx,debug=on -append "nokaslr ..." ...
-  char device redirected to /dev/pts/5 (label compat_monitor0)
-  ```
+
+```
+/usr/libexec/qemu-kvm -s -S -accel kvm -monitor telnet:127.0.0.1:9001,server,nowait
+-object tdx-guest,id=tdx,debug=on -append "nokaslr ..." ...
+char device redirected to /dev/pts/5 (label compat_monitor0)
+```
 
 ### Connect to Qemu GDB Stub
 
@@ -72,7 +72,7 @@ Type "show configuration" for configuration details.
 For bug reporting instructions, please see:
 <http://www.gnu.org/software/gdb/bugs/>.
 Find the GDB manual and other documentation resources online at:
-    <http://www.gnu.org/software/gdb/documentation/>.
+<http://www.gnu.org/software/gdb/documentation/>.
 
 For help, type "help".
 Type "apropos word" to search for commands related to "word".
