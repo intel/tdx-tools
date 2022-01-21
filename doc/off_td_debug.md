@@ -35,8 +35,7 @@ Please use the qemu command to Launch TD guest via qemu-kvm and add below parame
 After that, the qemu process starts and waits for GDB connection.
 
 ```
-/usr/libexec/qemu-kvm -s -S -accel kvm -monitor telnet:127.0.0.1:9001,server,nowait
--object tdx-guest,id=tdx,debug=on -append "nokaslr ..." ...
+/usr/libexec/qemu-kvm -s -S -accel kvm -monitor telnet:127.0.0.1:9001,server,nowait -object tdx-guest,id=tdx,debug=on -append "nokaslr ..." ...
 char device redirected to /dev/pts/5 (label compat_monitor0)
 ```
 
