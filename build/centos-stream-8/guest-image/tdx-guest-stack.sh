@@ -21,7 +21,6 @@ ARGS=" -a ${IMAGE} -x"
 
 # Setup guest environments
 ARGS+=" --copy-in /etc/environment:/etc"
-ARGS+=" --copy-in /etc/resolv.conf:/etc"
 ARGS+=" --copy-in /etc/chrony.conf:/etc"
 
 # Setup TDX guest repo

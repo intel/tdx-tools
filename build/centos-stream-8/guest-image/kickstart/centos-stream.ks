@@ -26,6 +26,7 @@ util-linux-user
 vim
 wget
 zsh
+podman-docker
 
 -a*firmware*
 -biosdevname
