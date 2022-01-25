@@ -1,0 +1,17 @@
+pytest==6.0.1
+pytest-timeout==1.4.2
+pytest-reportlog==0.1.2
+pytest-html==3.1.1
+requests>2.22.0
+pytest-dependency==0.5.1
+pytest-tap==3.1
+psutil==5.7.2
+pytest-repeat==0.9.1
+py-cpuinfo==7.0.0
+timeout-decorator==0.5.0
+pytest-benchmark==3.2.3
+pyyaml==5.4.1
+libvirt-python
+virtualenv==20.4.6
+kubernetes>=12.0.1
+urllib3>=1.26.5 # Regular Expression Denial of Service (ReDoS) required

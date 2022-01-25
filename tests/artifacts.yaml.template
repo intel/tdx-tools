@@ -1,0 +1,32 @@
+
+#
+# artifact.yaml file in below format:
+#
+#    latest-guest-image:
+#      source: http://xyz.qcow2.tar.xz
+#      sha256sum: 92d82663d1a3ad7b2c2b2f50b2145e388a48eb6b4e0b767cd94a5cf05394c98f
+#
+#    latest-guest-image:
+#      source: https://<a SSL website>/test.qcow2
+#      sha256sum: https://<a SSL website>/test.sha256sum.txt
+#
+#    latest-guest-image:
+#      source: file:///home/sample_user/test.qcow2
+#
+# - The field of source URI could be starts with 'http', 'https' for remote file,
+#   or 'file' for local file
+# - The field of sha256sum could:
+#     - a SHA256 string starting with 'http'/'https'
+#     - local guest image file doesn't need sha256sum
+#
+
+latest-guest-image-centosstream:
+  source: http://<your artifactory webserver for tdx guest image>/td-guest.qcow2.tar.xz
+  sha256sum: http://<your artifactory webserver for tdx guest image>/td-guest.qcow2.tar.xz.sha256sum
+
+latest-guest-kernel-centosstream:
+  source: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz
+  sha256sum: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz.sha256sum
+
+latest-guest-local-image:
+  source: file:///<your artifactory local repo for tdx guest image>/td-guest.qcow2
