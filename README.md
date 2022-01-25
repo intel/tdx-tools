@@ -1,6 +1,6 @@
 # Linux Stack for Intel&reg; TDX (Trust Domain Extensions)
 
-## Overview
+## 1. Overview
 
 Intel&reg; Trust Domain Extensions(TDX) refers to an Intel technology that
 extends Virtual Machine Extensions(VMX) and Multi-Key Total Memory
@@ -17,7 +17,7 @@ host or create PaaS guest image for quick evaluation
 - Dump guest VM measurement and generate TD quote report for TDX E2E attestation
 - Measured boot and Secure boot for TDX guest VM
 
-## Components
+## 2. Components
 
 Intel&reg; TDX(Trust Domain Extensions) MVP Stack includes the components in
 below diagram:
@@ -34,18 +34,31 @@ below diagram:
 | [TDX Grub2](https://github.com/intel/grub-tdx) | VM Guest | The modified grub for guest VM to support TDX measurement |
 | [TDX shim](https://github.com/intel/shim-tdx) | VM Guest | The modified shim for guest VM to support TDX measurement |
 
+## 3. Getting Started
 
-## Getting Started
+### 3.1 Build
 
-### Build
+The component can be installed via pre-build distro package or built from
+scratch.
+
+#### 3.1.1 Install Pre-built Packages
 
 TBD
 
-### Test
+#### 3.1.2 Build Packages
 
 TBD
 
-### FAQ & BKM
+### 3.2 Prepare TDX Guest Image
 
-- [How to check memory encryption for TDX guest](doc/mem_encryption_check.md)
-- [How to debug a TDX guest via Qemu GDB server](doc/off_td_debug.md)
+After build TDX components packages please refer [Setup TDX Guest Image](/doc/create_guest_image.md) to install them into cloud image. It uses
+`CentOS Stream 8` as example distro.
+
+## 4. Test
+
+TBD
+
+## 5. FAQ & BKM
+
+- [How to check memory encryption for TDX guest](/doc/check_memory_encryption.md)
+- [How to debug a TDX guest via Qemu GDB server](/doc/debug_td_guest.md)

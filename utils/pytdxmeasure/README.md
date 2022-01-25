@@ -24,8 +24,8 @@ The Log Area Start Address (LASA) is from ACPI TDEL table. Please see [GHCI spec
 ./tdx_eventlogs
 ```
 
-The example output for the event log in [grub boot](/doc/tdx_measure_log_grub_boot.txt)
-and [direct boot](/doc/tdx_measure_log_direct_boot.txt)
+The example output for the event log in [grub boot](/doc/measure_log_grub_boot.txt)
+and [direct boot](/doc/measure_log_direct_boot.txt)
 
 2. Get TD Report
 
