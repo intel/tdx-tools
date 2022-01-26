@@ -62,7 +62,7 @@ def test_tdvm_tdx_initialized(base_td_guest_inst, vm_ssh_key, output):
 
     saved_file = os.path.join(output, output_file)
     found_exe_1 = False
-    with open(saved_file, 'r') as fsaved:
+    with open(saved_file, 'r', encoding="utf8") as fsaved:
         lines = fsaved.readlines()
         for line in lines:
             if line.find('TDX guest is initialized'):

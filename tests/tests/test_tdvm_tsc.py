@@ -75,7 +75,7 @@ def test_tdvm_clocksource_tsc(base_td_guest_inst, vm_ssh_key, output):
     _remote_run_and_fetch(base_td_guest_inst, vm_ssh_key, output, command, output_file)
 
     saved_file = os.path.join(output, output_file)
-    with open(saved_file, 'r') as fsaved:
+    with open(saved_file, 'r', encoding="utf8") as fsaved:
         assert fsaved.read().strip() == "tsc"
         LOG.info("TD guest clocksource is tsc")
 
@@ -103,7 +103,7 @@ def test_tdvm_cpuid_tscfreq(base_td_guest_inst, vm_ssh_key, output):
 
     saved_file = os.path.join(output, output_file)
     found_exe_1 = False
-    with open(saved_file, 'r') as fsaved:
+    with open(saved_file, 'r', encoding="utf8") as fsaved:
         cpuid_strs = fsaved.readlines()
         for line in cpuid_strs:
             if line.find('eax=0x00000001'):
@@ -129,8 +129,7 @@ def test_tdvm_compare2_host_tscfreq(base_td_guest_inst, vm_ssh_key, output):
     assert host_freq is not None
     LOG.info("host tsc frequency is %d", host_freq)
 
-    if host_freq < 1000000:
-        host_freq = 1000000
+    host_freq = max(host_freq, 1000000)
 
     output_file = f"guest_tsc_freq_check_{DATE_SUFFIX}.log"
     command = f"dmesg |grep mhz -i > /tmp/{output_file}"
@@ -139,7 +138,7 @@ def test_tdvm_compare2_host_tscfreq(base_td_guest_inst, vm_ssh_key, output):
 
     saved_file = os.path.join(output, output_file)
     guest_freq = 0
-    with open(saved_file, 'r') as fsaved:
+    with open(saved_file, 'r', encoding="utf8") as fsaved:
         lines = fsaved.readlines()
         assert len(lines) == 1
         str_freq = re.findall("Detected (.+?) MHz", lines[0])

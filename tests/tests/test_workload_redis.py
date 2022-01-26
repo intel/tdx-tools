@@ -6,7 +6,6 @@ This benchmark test case is designed reference to :
 import os
 import logging
 import pytest
-import time
 from pycloudstack.vmparam import VM_TYPE_TD
 
 __author__ = 'cpio'
@@ -47,7 +46,7 @@ def test_tdvm_redis(vm_factory, vm_ssh_pubkey, vm_ssh_key):
     td_inst.create()
     td_inst.start()
     td_inst.wait_for_ssh_ready()
-    time.sleep(1200)
+
     command_list = [
         'systemctl start docker',
         '/root/redis-bench.sh -t get,set'

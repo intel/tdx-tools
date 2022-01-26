@@ -5,7 +5,6 @@ Basic host status checking for MKTME, TDX, SGX, SEAMRR etc.
 import logging
 import os.path
 import glob
-import pytest
 from pycloudstack import msr, dut
 
 __author__ = 'cpio'
