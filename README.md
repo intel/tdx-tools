@@ -51,12 +51,13 @@ TBD
 
 ### 3.2 Prepare TDX Guest Image
 
-After build TDX components packages please refer [Setup TDX Guest Image](/doc/create_guest_image.md) to install them into cloud image. It uses
+After build TDX components packages please refer to [Setup TDX Guest Image](/doc/create_guest_image.md) to install them into cloud image. It uses
 `CentOS Stream 8` as example distro.
 
 ## 4. Test
 
-TBD
+After TDX guest image is created, please refer to [TDX Tests](/doc/run_tests.md) to run tests. It uses
+`CentOS Stream 8` as example distro.
 
 ## 5. FAQ & BKM
 
