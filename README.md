@@ -47,11 +47,41 @@ TBD
 
 #### 3.1.2 Build Packages from scratch
 
-TBD
+To build all components, run the following commands:
+
+```
+cd build/centos-stream-8
+./build-repo.sh
+```
+
+This will build all packages and create two repositories, one for guest and one for host. Move the host repo to a known location:
+
+```
+sudo mkdir -p /srv/
+sudo mv repo/host /srv/tdx-host
+```
+
+To use the repo, create the following file as `/etc/yum.repos.d/tdx-host-local.repo`:
+
+```
+[tdx-host-local]
+name=tdx-host-local
+baseurl=file:///srv/tdx-host
+enabled=1
+gpgcheck=0
+module_hotfixes=true
+```
+
+Finally, install packages as follows:
+
+```
+sudo dnf install intel-mvp-tdx-host-kernel intel-mvp-tdx-tdvf intel-mvp-tdx-qemu-kvm intel-mvp-tdx-libvirt
+```
+
 
 ### 3.2 Prepare TDX Guest Image
 
-After build TDX components packages please refer to [Setup TDX Guest Image](/doc/create_guest_image.md) to install them into cloud image. It uses
+After building TDX components packages please refer to [Setup TDX Guest Image](/doc/create_guest_image.md) to install them into cloud image. It uses
 `CentOS Stream 8` as example distro.
 
 ## 4. Launch TD VM Guest
