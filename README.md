@@ -51,7 +51,7 @@ TBD
 
 ### 3.2 Prepare TDX Guest Image
 
-After build TDX components packages please refer [Setup TDX Guest Image](/doc/create_guest_image.md) to install them into cloud image. It uses
+After build TDX components packages please refer to [Setup TDX Guest Image](/doc/create_guest_image.md) to install them into cloud image. It uses
 `CentOS Stream 8` as example distro.
 
 ## 4. Launch TD VM Guest
@@ -83,7 +83,12 @@ Please get detail grub/direct boot template for qemu-kvm and libvirt at [Launch 
 ./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz-rhel-8.5 -t efi
 ```
 
-## 5. FAQ & BKM
+## 5. Test
+
+After TDX guest image is created, please refer to [TDX Tests](/doc/run_tests.md) to run tests. It uses
+`CentOS Stream 8` as example distro.
+
+## 6. FAQ & BKM
 
 - [How to check memory encryption for TDX guest](/doc/check_memory_encryption.md)
 - [How to debug a TDX guest via Qemu GDB server](/doc/debug_td_guest.md)
