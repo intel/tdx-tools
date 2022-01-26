@@ -1,11 +1,10 @@
 #!/bin/bash
 
-CURR_DIR=$(readlink -f $(dirname "$0"))
+CURR_DIR="$(readlink -f "$(dirname "$0")")"
 TEST_ROOT=${CURR_DIR}/tests
 TEST_OUTPUT=${CURR_DIR}/output
 USER=$(whoami)
 REPORT_FILE_DATE=$(date +'report-%F-%H-%M-%S')
-REPORT_DIR_NAME=$(date +'%F')
 HOST=$(cat /proc/sys/kernel/hostname)
 GUEST=centosstream
 SUITE="nosuite"
@@ -31,6 +30,7 @@ process_args() {
         c) CASES+=("$OPTARG");;
         k) KEEP_ISSUE_VM=true;;
         h) usage;;
+        *) usage;;
         esac
     done
 
@@ -59,7 +59,7 @@ run_suite() {
     echo "Keep Issue VM    : $KEEP_ISSUE_VM"
     echo "================================="
 
-    eval $PYTEST_CMD
+    eval "$PYTEST_CMD"
 }
 
 run_cases() {
@@ -77,7 +77,7 @@ run_cases() {
     echo "Keep Issue VM    : $KEEP_ISSUE_VM"
     echo "================================="
 
-    eval $PYTEST_CMD
+    eval "$PYTEST_CMD"
 }
 
 check_root() {
@@ -87,9 +87,10 @@ check_root() {
     fi
 }
 
-process_args $@
+process_args "$@"
 
-source ${CURR_DIR}/setupenv.sh
+# shellcheck source=/dev/null
+source "${CURR_DIR}"/setupenv.sh
 
 check_root
 

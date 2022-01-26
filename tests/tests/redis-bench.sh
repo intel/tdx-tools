@@ -25,13 +25,14 @@ echo "Redis service is started at $REDIS_IP"
 count=0
 while true
 do
-   redis-cli -h $REDIS_IP ping
-   if [[ $? == 0 ]]; then
+   redis-cli -h "$REDIS_IP" ping
+   ret=$?
+   if [ $ret -eq 0 ]; then
       echo "Success start redis-server in docker."
       break
    else
       ((count++))
-      if [[ $count > 10 ]]; then
+      if [[ $count -gt 10 ]]; then
          echo "Fail to run redis service after 10 seconds. ret: $ret"
          exit 1
       fi
@@ -41,7 +42,7 @@ do
 done
 
 # Run benchmark
-/usr/bin/redis-benchmark -h $REDIS_IP "$@"
+/usr/bin/redis-benchmark -h "$REDIS_IP" "$@"
 ret=$?
 if [ $ret -eq 0 ];
 then

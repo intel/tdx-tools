@@ -10,8 +10,9 @@ REQUIRED_PACKAGES=(
 
 # Check whether required packages already been installed.
 for package in "${REQUIRED_PACKAGES[@]}"; do
-  dnf list installed | grep $package 2>&1 >/dev/null
-  if [ ! $? -eq 0 ]; then
+  dnf list installed | grep "$package" > /dev/null 2>&1
+  ret=$?
+  if [ ! $ret -eq 0 ]; then
     echo "Please install package $package via dnf."
     return 1
   fi
@@ -19,17 +20,20 @@ done
 
 # Setup the python virtualenv
 if [[ ! -d ${CURR_DIR}/venv ]]; then
-  python3 -m virtualenv -p python3 ${CURR_DIR}/venv
-  source ${CURR_DIR}/venv/bin/activate
+  python3 -m virtualenv -p python3 "${CURR_DIR}"/venv
+  # shellcheck source=/dev/null
+  source "${CURR_DIR}"/venv/bin/activate
   pip3 install -r requirements.txt
-  if [ ! $? -eq 0 ]; then
+  ret=$?
+  if [ ! $ret -eq 0 ]; then
     echo "Fail to install python PIP packages, please check your proxy (https_proxy) or setup PyPi mirror."
     deactivate
-    rm ${CURR_DIR}/venv -fr
+    rm "${CURR_DIR}"/venv -fr
     return 1
   fi
 else
-  source ${CURR_DIR}/venv/bin/activate
+  # shellcheck source=/dev/null
+  source "${CURR_DIR}"/venv/bin/activate
 fi
 
 # Install tests_tdx into the PYTHON path, so you can use "python3 -m pytest tests_tdx/xxx.py" to
@@ -38,7 +42,7 @@ export PYTHONPATH=$PYTHONPATH:$CURR_DIR/tests
 
 # Add pycloudstack into PYTHONPATH in case not installing it via pip3
 if [[ -d $CURR_DIR/../utils/pycloudstack ]]; then
-  if [[ $(pip3 list | grep "pycloudstack") ]]; then
+  if pip3 list | grep -q "pycloudstack"; then
     echo "pycloudstack is already installed but will be replaced by $CURR_DIR/../utils/pycloudstack"
   fi
 
@@ -53,20 +57,20 @@ if ! command -v virt-customize &>/dev/null; then
 fi
 
 # Check whether libvirt service started
-if [[ ! $(systemctl --all --type service | grep "libvirtd") ]]; then
-  echo WARNING! Please \"dnf install intel-mvp-tdx-libvirt\" then \"systemctl start libvirtd\"
+if ! systemctl --all --type service | grep -q "libvirtd"; then
+  echo WARNING! Please \"dnf install intel-mvp-tdx-libvirt\" and \"systemctl start libvirtd\"
   return 1
 fi
 
 # Check whether virtual bridge virbr0 was created
-if [[ ! $(ip a | grep virbr0) ]]; then
+if ! ip a | grep -q virbr0; then
   echo WARNING! Please enable virbr0 via \"virsh net-start default\", you may need remove firewall via \"dnf remove firewalld\"
   return 1
 fi
 
 # Check whether current user belong to libvirt
 if [[ ! $(id -nG "$USER") == *"libvirt"* ]]; then
-  echo WARNING! Please add user "$USER" into group "libvirt" via \"sudo usermod -aG libvirt $USER\"
+  echo WARNING! Please add user "$USER" into group "libvirt" via \"sudo usermod -aG libvirt "$USER"\"
   return 1
 fi
 
