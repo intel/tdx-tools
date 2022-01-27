@@ -27,12 +27,12 @@ setup(
     version='0.0.3',
     packages=['pytdxmeasure'],
     package_data={
-        '': ['tdx_eventlogs.sh', 'tdx_tdreport.sh', 'tdx_verify_rtmr.sh']
+        '': ['tdx_eventlogs', 'tdx_tdreport', 'tdx_verify_rtmr']
     },
     include_package_data=True,
     python_requires='>=3.6.8',
     license='Apache License 2.0',
-    scripts=['tdx_eventlogs.sh', 'tdx_tdreport.sh', 'tdx_verify_rtmr.sh'],
+    scripts=['tdx_eventlogs', 'tdx_tdreport', 'tdx_verify_rtmr'],
     long_description=load_readme(),
     install_requires=load_requirements()
 )
