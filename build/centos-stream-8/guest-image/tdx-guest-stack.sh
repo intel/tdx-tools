@@ -16,7 +16,7 @@ if ! command -v "virt-customize" ; then
     exit 1
 fi
 
-# virt-customize parameters
+# virt-customize initial parameters
 ARGS=" -a ${IMAGE} -x"
 
 # Setup guest environments
@@ -28,12 +28,16 @@ ARGS+=" --copy-in ${REPO_DIR}:/srv/"
 ARGS+=" --copy-in config/srv_guest.repo:/etc/yum.repos.d/"
 
 # Install TDX guest packages
-ARGS+=" --install intel-mvp-tdx-guest-grub2-efi-x64,intel-mvp-tdx-guest-grub2-pc,intel-mvp-tdx-guest-shim,intel-mvp-tdx-guest-kernel"
+GRUB="intel-mvp-tdx-guest-grub2-efi-x64 intel-mvp-tdx-guest-grub2-pc"
+SHIM="intel-mvp-tdx-guest-shim"
+KERNEL="intel-mvp-tdx-guest-kernel"
+REPO="srv_guest"
+ARGS+=" --run-command 'dnf install ${GRUB} ${SHIM} ${KERNEL} -y --repo ${REPO}'"
 
 # Setup grub
 ARGS+=" --copy-in config/grub:/etc/default/"
-ARGS+=' --run-command "grub2-editenv /boot/efi/EFI/centos/grubenv create"'
-ARGS+=' --run-command "grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg"'
+ARGS+=" --run-command 'grub2-editenv /boot/efi/EFI/centos/grubenv create'"
+ARGS+=" --run-command 'grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg'"
 
 echo "${ARGS}"
 eval virt-customize "${ARGS}"
