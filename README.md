@@ -98,7 +98,7 @@ Please get detail grub/direct boot template for qemu-kvm and libvirt at [Launch 
 - Launch a TDX guest via grub boot
 
 ```
-./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz-rhel-8.5 -b grub
+./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -b grub
 ```
 
 - Launch a debug version TDX guest with debug version OVMF

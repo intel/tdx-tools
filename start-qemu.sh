@@ -91,6 +91,7 @@ Usage: $(basename "$0") [OPTION]...
   -s                        Flag to use serial console instead of HVC console
   -h                        Show this help
 EOM
+    exit 1
 }
 
 error() {
