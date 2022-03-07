@@ -53,6 +53,7 @@ MONITOR_PORT=9001
 KERNEL_CMD_NON_TD="root=/dev/vda3 rw selinux=0 console=hvc0"
 KERNEL_CMD_TD="${KERNEL_CMD_NON_TD}"
 MAC_ADDR=""
+QUOTE_TYPE=""
 
 # Just log message of serial into file without input
 HVC_CONSOLE="-chardev stdio,id=mux,mux=on,logfile=$CURR_DIR/vm_log_$(date +"%FT%H%M").log \
@@ -86,6 +87,7 @@ Usage: $(basename "$0") [OPTION]...
   -o <OVMF_CODE file>       BIOS CODE firmware device file, for "td" and "efi" VM only
   -a <OVMF_VARS file>       BIOS VARS template, for "td" and "efi" VM only
   -m <11:22:33:44:55:66>    MAC address, impact TDX measurement RTMR
+  -q [tdvmcall|vsock]       Support for TD quote using tdvmcall or vsock
   -v                        Flag to enable vsock
   -d                        Flag to enable "debug=on" for GDB guest
   -s                        Flag to use serial console instead of HVC console
@@ -104,7 +106,7 @@ warn() {
 }
 
 process_args() {
-    while getopts ":i:k:t:b:p:f:o:a:m:vdsh" option; do
+    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:" option; do
         case "$option" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -118,6 +120,7 @@ process_args() {
             v) USE_VSOCK=true;;
             d) DEBUG=true;;
             s) USE_SERIAL_CONSOLE=true;;
+            q) QUOTE_TYPE=$OPTARG;;
             h) usage;;
             *) usage;;
         esac
@@ -159,6 +162,19 @@ process_args() {
         OVMF_CODE="/usr/share/qemu/OVMF_CODE.debug.fd"
     fi
 
+    if [[ -n ${QUOTE_TYPE} ]]; then
+        case ${QUOTE_TYPE} in
+            "tdvmcall") ;;
+            "vsock")
+                KERNEL_CMD_TD+=" tdx_disable_filter"
+                USE_VSOCK=true
+                ;;
+            *)
+                error "Invalid quote type \"$QUOTE_TYPE\", must be [vsock|tdvmcall]"
+                ;;
+        esac
+    fi
+
     case ${VM_TYPE} in
         "td")
             cpu_tsc=$(grep 'cpu MHz' /proc/cpuinfo | head -1 | awk -F: '{print $2/1024}')
@@ -170,6 +186,9 @@ process_args() {
             QEMU_CMD+=" -device loader,file=${OVMF_CODE},id=fd0"
             QEMU_CMD+=",config-firmware-volume=${OVMF_VARS}"
             QEMU_CMD+=" -object tdx-guest,id=tdx"
+            if [[ ${QUOTE_TYPE} == "tdvmcall" ]]; then
+                QEMU_CMD+=",quote-generation-service=vsock:2:4050"
+            fi
             if [[ ${DEBUG} == true ]]; then
                 QEMU_CMD+=",debug=on"
             fi
@@ -254,6 +273,9 @@ process_args() {
     else
         QEMU_CMD+=" ${HVC_CONSOLE} "
         echo "Console           : HVC"
+    fi
+    if [[ -n ${QUOTE_TYPE} ]]; then
+        echo "Quote type        : ${QUOTE_TYPE}"
     fi
     echo "========================================="
 }
