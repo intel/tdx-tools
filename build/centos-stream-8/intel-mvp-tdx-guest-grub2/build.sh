@@ -3,7 +3,7 @@
 set -e
 
 UPSTREAM_GIT_URI="https://github.com/rhboot/grub2.git"
-UPSTREAM_BRANCH="rhel-8.4"
+UPSTREAM_BRANCH="rhel-8.4.0"
 DOWNSTREAM_GIT_URI="https://github.com/intel/grub-tdx.git"
 DOWNSTREAM_BRANCH="2.02-rhel-8.4"
 
