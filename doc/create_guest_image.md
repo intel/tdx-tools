@@ -1,6 +1,6 @@
-# Setup TDX Guest Image
+## Setup TDX Guest Image
 
-## Create EFI Cloud Image (Optional)
+### Create EFI Cloud Image
 
 The cloud image could be MBR based legacy image like [CentOS Cloud Image](https://cloud.centos.org/centos/8-stream/),
 or EFI GPT based cloud image like [Ubuntu Cloud Image](https://cloud-images.ubuntu.com/).
@@ -37,16 +37,17 @@ based CentOS image via [TDX Guest Image Tool](https://github.com/intel/tdx-tools
 Generate guest image td-guest-c8s.qcow2:
 
 ```
+cd tdx-tools/build/centos-stream-8/guest-image/
 ./create-efi-img.sh
 ```
 
 _NOTE:_
 
-- The script will download CentOS-Stream-8-x86_64-latest-dvd1.iso (~10G) if not
-exist.
+- The script will download CentOS-Stream-8-x86_64-latest-dvd1.iso (~10G) if it
+does not exist.
 - Then run virt-install to install guest image using kickstart scripts.
 
-## Install TDX Guest Stack into the Guest Image
+### Install TDX Guest Stack into the Guest Image
 
 Install tdx-guest-grub2, tdx-guest-shim and tdx-guest-kernel:
 
@@ -59,3 +60,5 @@ _NOTE:_
 packages
 - Use the existing host environment in the guest. Such as /etc/environment,
 /etc/chrony.conf
+- This script can be used as an example of how to install necessary guest
+components if a custom image is wanted.
