@@ -3,7 +3,7 @@
 ## Create EFI Cloud Image (Optional)
 
 The cloud image could be MBR based legacy image like [CentOS Cloud Image](https://cloud.centos.org/centos/8-stream/),
-or EFI GPT based cloud image like [Ubuntu Cloud Image]https://cloud-images.ubuntu.com/).
+or EFI GPT based cloud image like [Ubuntu Cloud Image](https://cloud-images.ubuntu.com/).
 For direct boot, any type of cloud image
 
 | Guest Image Type | Example | Description |
