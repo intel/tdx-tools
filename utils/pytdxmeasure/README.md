@@ -1,15 +1,13 @@
-# TDX Measurement Tool
+## TDX Measurement Tool
 
-It run within TD guest to get RTMR value from TDREPORT via Linux attestion
-driver, and get the full TD event log from TDEL ACPI table. Then use the TD
-event log to verify the RTMR value or change.
+The measurement tool runs within TD guest to get RTMR value from TDREPORT via
+Linux attestion driver, and gets the full TD event log from TDEL ACPI table.
+Then it uses the TD event log to verify the RTMR value or change.
 
 CSP or tenant developer could use it to analyze and debug the TDX measurement
 before providing the TDX guest VM.
 
 ![](/doc/tdx_measurement.png)
-
-## Getting Started
 
 ### Prerequisites
 
@@ -20,26 +18,26 @@ The Log Area Start Address (LASA) is from ACPI TDEL table. Please see [GHCI spec
 
 1. Get Event Log
 
-```
-./tdx_eventlogs
-```
+    ```
+    ./tdx_eventlogs
+    ```
 
-The example output for the event log in [grub boot](/doc/measure_log_grub_boot.txt)
-and [direct boot](/doc/measure_log_direct_boot.txt)
+    The example output for the event log in [grub boot](https://github.com/intel/tdx-tools/blob/main/doc/doc/measure_log_grub_boot.txt)
+    and [direct boot](https://github.com/intel/tdx-tools/blob/main/doc/doc/measure_log_direct_boot.txt)
 
 2. Get TD Report
 
-```
-./tdx_tdreport
-```
+    ```
+    ./tdx_tdreport
+    ```
 
 3. Verify the RTMR
 
-```
-./tdx_verify_rtmr
-```
+    ```
+    ./tdx_verify_rtmr
+    ```
 
-## Installation
+### Installation
 
 Build and install TDX Measurement Tool:
 
