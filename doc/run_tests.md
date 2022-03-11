@@ -1,9 +1,9 @@
-# TDX Tests
+## TDX Tests
 
 TDX tests are used to validate basic functionality of TDX software stack. The tests focus on TDVM lifecycle management
  and environment validation.
 
-## Create Cloud Image
+### Create Cloud Image
 
 Please refer [Setup TDX Guest Image](/doc/create_guest_image.md) to create guest image, which will be used in tests running. It uses
 `CentOS Stream 8` as example distro.
@@ -21,6 +21,7 @@ Please refer [Setup TDX Guest Image](/doc/create_guest_image.md) to create guest
     Run below command to setup the pythone environment
 
     ```
+    cd tdx-tools/tests/
     source setupenv.sh
     ```
 
@@ -40,7 +41,7 @@ Please refer [Setup TDX Guest Image](/doc/create_guest_image.md) to create guest
     The keys should be named "vm_ssh_test_key" and "vm_ssh_test_key.pub" and located under tdx-tools/tests/tests/
 
 
-## Run Tests
+### Run Tests
 
 - Run all tests:
 
