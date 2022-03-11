@@ -1,7 +1,6 @@
+## Launch TD Guest
 
-# Launch TD Guest
-
-## 1. qemu-kvm
+### 1. qemu-kvm
 
 _**NOTE**:_
 
@@ -49,10 +48,10 @@ sudo /usr/libexec/qemu-kvm \
     -no-hpet -nodefaults
 ```
 
-## 2. Libvirt
+### 2. Libvirt
 
-**NOTE:** Please get libvirt template for [direct boot](/doc/tdx_libvirt_direct.xml.template)
-and [grub boot](/doc/tdx_libvirt_grub.xml.template).
+**NOTE:** Please get libvirt template for [direct boot](https://github.com/intel/tdx-tools/blob/main/doc/tdx_libvirt_direct.xml.template)
+and [grub boot](https://github.com/intel/tdx-tools/blob/main/doc/tdx_libvirt_grub.xml.template).
 
 1. Create a XML configuration file *tdx.xml*
 
