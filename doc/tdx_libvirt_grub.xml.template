@@ -1,5 +1,5 @@
 <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-  <name>REPLACEME_NAME</name>
+  <name>td-guest</name>
   <memory unit='KiB'>2097152</memory>
   <vcpu placement='static'>1</vcpu>
   <os>
@@ -51,7 +51,7 @@
   </launchSecurity>
   <qemu:commandline>
     <qemu:arg value='-cpu'/>
-    <qemu:arg value='host,-kvm-steal-time'/>
+    <qemu:arg value='host,-kvm-steal-time,pmu=off,-shstk'/>
   </qemu:commandline>
 </domain>
 
