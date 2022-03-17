@@ -2,10 +2,9 @@
 
 set -e
 
-UPSTREAM_GIT_URI="https://github.com/rhboot/shim.git"
-UPSTREAM_BRANCH="shim-15.4"
+UPSTREAM_BASE_COMMIT="16eeafe28c552bca36953d75581500887631a7f1"
 DOWNSTREAM_GIT_URI="https://github.com/intel/shim-tdx.git"
-DOWNSTREAM_BRANCH="tdx-shim-15.4"
+DOWNSTREAM_TAG="tdx-guest-rhel-8.4-2021.11.22"
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 RPMBUILD_DIR=$CURR_DIR/rpmbuild
@@ -25,11 +24,10 @@ generate() {
 
     echo "**** Generate tdx patchset and upstream tarball ****"
     rm -rf $REPO_DIR
-    git clone -b $DOWNSTREAM_BRANCH --single-branch --recurse-submodules $DOWNSTREAM_GIT_URI $REPO_DIR
+    git clone -b $DOWNSTREAM_TAG --single-branch --recurse-submodules $DOWNSTREAM_GIT_URI $REPO_DIR
     cd $REPO_DIR
-    upstream_base=$(git ls-remote $UPSTREAM_GIT_URI refs/heads/$UPSTREAM_BRANCH | cut -f 1)
-    git format-patch "$upstream_base"..$DOWNSTREAM_BRANCH
-    git checkout "$upstream_base"
+    git format-patch $UPSTREAM_BASE_COMMIT..$DOWNSTREAM_TAG
+    git checkout $UPSTREAM_BASE_COMMIT
     cd ..
     mv $REPO_DIR/*.patch $PATCH_SET/
     tar --exclude=.git --exclude=.gitignore -czf "$RPMBUILD_DIR"/SOURCES/$REPO_DIR.tar.gz $REPO_DIR
