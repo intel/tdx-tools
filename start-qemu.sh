@@ -93,7 +93,6 @@ Usage: $(basename "$0") [OPTION]...
   -s                        Flag to use serial console instead of HVC console
   -h                        Show this help
 EOM
-    exit 1
 }
 
 error() {
@@ -121,8 +120,14 @@ process_args() {
             d) DEBUG=true;;
             s) USE_SERIAL_CONSOLE=true;;
             q) QUOTE_TYPE=$OPTARG;;
-            h) usage;;
-            *) usage;;
+            h) usage
+               exit 0
+               ;;
+            *)
+               echo "Invalid option '-$OPTARG'"
+               usage
+               exit 1
+               ;;
         esac
     done
 
