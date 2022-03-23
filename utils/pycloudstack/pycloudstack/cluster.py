@@ -397,7 +397,7 @@ class SGXCluster(ClusterBase):
         """
         Get EPC size for specific node
         """
-        if node_name not in self._sgx_dcap_nodes.keys():
+        if node_name not in self._sgx_dcap_nodes:
             LOG.error(
                 "Fail to find the DCAP node %s in cluster", node_name)
             return None
@@ -408,7 +408,7 @@ class SGXCluster(ClusterBase):
         """
         Get enclave number for specific node
         """
-        if node_name not in self._sgx_dcap_nodes.keys():
+        if node_name not in self._sgx_dcap_nodes:
             LOG.error(
                 "Fail to find the DCAP node %s in cluster", node_name)
             return None
