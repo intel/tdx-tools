@@ -1,6 +1,9 @@
 """
 VM params package manages the several parameters' class for guest VM.
 """
+
+__author__ = 'cpio'
+
 VM_TYPE_EFI = "efi"
 VM_TYPE_LEGACY = "legacy"
 VM_TYPE_TD = "td"

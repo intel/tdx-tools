@@ -158,10 +158,11 @@ class VMMLibvirt(VMMBase):
         xmlobj.cores = self.vminst.cpu_topology.cores
         xmlobj.threads = self.vminst.cpu_topology.threads
 
-        var_filename = "OVMF_VARS." + xmlobj.uuid + ".fd"
-        var_fullpath = os.path.join(tempfile.gettempdir(), var_filename)
-        assert os.path.exists(BIOS_OVMF_VARS)
-        shutil.copy(BIOS_OVMF_VARS, var_fullpath)
+        if self.vminst.vmtype != VM_TYPE_LEGACY:
+            var_filename = "OVMF_VARS." + xmlobj.uuid + ".fd"
+            var_fullpath = os.path.join(tempfile.gettempdir(), var_filename)
+            assert os.path.exists(BIOS_OVMF_VARS)
+            shutil.copy(BIOS_OVMF_VARS, var_fullpath)
 
         if self.vminst.hugepages:
             xmlobj.set_hugepage_params(self.vminst.hugepage_size)
@@ -197,7 +198,6 @@ class VMMLibvirt(VMMBase):
             xmlobj.kernel = self.vminst.kernel
             xmlobj.cmdline = str(self.vminst.cmdline)
 
-        xmlobj.enable_ssh_forward_port(self.vminst.ssh_forward_port)
         return xmlobj
 
     def _connect_virt(self):    # pylint: disable=no-self-use
