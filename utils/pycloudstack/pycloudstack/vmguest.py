@@ -74,10 +74,6 @@ class VMGuest:
             assert self.kernel is not None
             assert os.path.exists(self.kernel)
             self.kernel = os.path.realpath(self.kernel)
-            if self.vmtype == VM_TYPE_TD:
-                self.cmdline += "tdx_disable_filter"
-            else:
-                self.cmdline.remove_field_from_string("tdx_disable_filter")
         self.vmm = vmm_class(self)
 
     def ssh_run(self, cmdarr, ssh_id_key, no_wait=False):
@@ -403,15 +399,13 @@ class VMGuestFactory:
         if not self._keep_issue_vm:
             inst.image.destroy()
             inst.destroy()
-            # pylint: disable=consider-iterating-dictionary
-            if inst.nam in self.vms.keys():
+            if inst.name in self.vms:
                 del self.vms[inst.name]
         else:
             if inst.state() is VM_STATE_RUNNING and not inst.keep:
                 inst.image.destroy()
                 inst.destroy()
-                # pylint: disable=consider-iterating-dictionary
-                if inst.name in self.vms.keys():
+                if inst.name in self.vms:
                     del self.vms[inst.name]
 
     def removeall(self):

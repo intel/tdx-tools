@@ -166,6 +166,9 @@ process_args() {
         case ${QUOTE_TYPE} in
             "tdvmcall") ;;
             "vsock")
+                # vsock is filtered by guest kernel by default due to security consideration
+                # so if using vsock to get TDREPORT, tdx_disable_filter is required as a
+                # workaround. It is recommend to use tdvmcall approach instead of vsock
                 KERNEL_CMD_TD+=" tdx_disable_filter"
                 USE_VSOCK=true
                 ;;
