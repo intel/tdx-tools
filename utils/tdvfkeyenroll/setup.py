@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
+'''
+A tool to enroll keys and variables to TDVF
+'''
+
 import io
-from setuptools import find_packages, setup
+from setuptools import setup
 
 def load_readme():
-    with io.open("README.md", "rt", encoding="utf8") as f:
-        readme = f.read()
+    ''' show README.md'''
+    with io.open("README.md", "rt", encoding="utf8") as readme:
+        readme = readme.read()
     return readme
 
 setup(
     name='tdvfkeyenroll',
-    version='1.0.3',
+    version='1.0.4',
     author='Min Xu',
     author_email='min.m.xu@intel.com',
     maintainer='mvp tdx stack',

@@ -1,5 +1,7 @@
 #!/usr/bin python
-# -*- coding: UTF-8 -*-
+'''
+TDVF Var Enroll Utility
+'''
 
 import argparse
 import struct
@@ -10,60 +12,60 @@ import re
 import os
 from enum import Enum
 
-VAR_ENROLL_VERSION = '0.10'
-VAR_ENROLL_NAME = 'TDVF VarEnroll Utility'
 EFI_GLOBAL_VARIABLE = '8BE4DF61-93CA-11d2-AA0D-00E098032B8C'
 EFI_IMAGE_SECURITY_DATABASE_GUID = "d719b2cb-3d3a-4596-a3bc-dad00e67656f"
+EFI_CERT_X509_GUID = "a5c059a1-94e4-4aa7-87b5-ab155c2bf072"
 
-def is_guid(s):
-    if s is None or type(s) is not str:
+# pylint: disable=broad-except
+# pylint: disable=consider-using-f-string
+
+def is_guid(string):
+    '''if a string matches guid'''
+    if not isinstance(string, str):
         return False
-    c = re.compile('[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}')
-    res = c.match(s.lower())
-    return False if res is None else True
+    pattern = re.compile('[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}')
+    res = pattern.match(string.lower())
+    return bool(res)
 
-
-def guid2str(b):
+def guid2str(byte_arr):
     '''Convert binary GUID to string.'''
-    if len(b) != 16:
+    if len(byte_arr) != 16:
         return ""
-    a, b, c, d = struct.unpack("<IHH8s", b)
-    d = ''.join('%02x' % c for c in bytes(d))
-    return "%08x-%04x-%04x-%s-%s" % (a, b, c, d[:4], d[4:])
+    guid_a, guid_b, guid_c, guid_d = struct.unpack("<IHH8s", byte_arr)
+    guid_d_str = ''.join('%02x' % byte for byte in bytes(guid_d))
+    return "%08x-%04x-%04x-%s-%s" % (guid_a, guid_b, guid_c, guid_d_str[:4], guid_d_str[4:])
 
-
-def str2guid(s):
+def str2guid(string):
     '''
         Convert string GUID to binary
         "aaf32c78-947b-439a-a180-2e144ec37792"
     '''
-    if s is None or not is_guid(s):
-        raise Exception("Invalid GUID string - %s" %("" if s is None else s))
+    if string is None or not is_guid(string):
+        raise Exception("Invalid GUID string - %s" % str(string))
 
-    fields = uuid.UUID(s).fields
+    fields = uuid.UUID(string).fields
     guid1 = struct.pack('<IHHBB', fields[0], fields[1], fields[2], fields[3], fields[4])
     guid2 = struct.pack('>Q', fields[5])
     return guid1 + guid2[2:]
 
-
-def str2blob(s):
+def str2blob(string):
     '''
         Convert string to blob, such as:
         'PK' => b'50 00 4B 00 00 00'
     '''
-    sarray = s.encode()
+    sarray = string.encode()
     blob = b''
-    for s in sarray:
-        b = struct.pack('<H', s)
-        blob += b
+    for b_char in sarray:
+        pack_char = struct.pack('<H', b_char)
+        blob += pack_char
     return blob + b'\0\0'
 
-
-def ALIGN_BY_4(val):
+def align_by_4(val):
+    '''4 bits aligned'''
     return (val + 3) & (~3)
 
-
-def ALIGN_BY_8(val):
+def align_by_8(val):
+    '''8 bits aligned'''
     return (val + 7) & (~7)
 
 
@@ -95,10 +97,10 @@ class FirmwareVolume:
         try:
             header = data[:self._HEADER_SIZE]
             self.rsvd, self.guid, self.size, self.magic, self.attributes, \
-            self.hdrlen, self.checksum, self.extHeaderOffset, self.rsvd2, \
+            self.hdrlen, self.checksum, self.ext_header_offset, self.rsvd2, \
             self.revision = struct.unpack("<16s16sQ4sIHHH1sB", header)
-        except Exception as e:
-            print("Exception in FirmwareVolume::__init__: %s" % (str(e)))
+        except Exception as exp:
+            print("Exception in FirmwareVolume::__init__: %s" % (str(exp)))
             return
 
         if self.magic != b'_FVH':
@@ -111,7 +113,7 @@ class FirmwareVolume:
             return
 
         self.valid_header = True
-        pass
+        self.raw_data = None
 
 
 class EfiTime:
@@ -146,46 +148,43 @@ class EfiTime:
         self.valid = False
         if data is None:
             data = b'\x00' * 16
-        try:
-            self.year, self.month, self.day, self.hour, self.minute, self.second, \
-            self.pad1, self.nanosecond, self.timezone, self.daylight, self.pad2 \
-                = struct.unpack('<HBBBBBBIHBB', data)
-        except Exception as e:
-            return
+        self.year, self.month, self.day, self.hour, self.minute, self.second, \
+        self.pad1, self.nanosecond, self.timezone, self.daylight, self.pad2 \
+            = struct.unpack('<HBBBBBBIHBB', data)
         self.valid = True
-        pass
 
     @staticmethod
     def now():
+        '''get current time'''
         curr = time.gmtime()
-        et = EfiTime()
-        et.year = curr.tm_year
-        et.month = curr.tm_mon
-        et.day = curr.tm_mday
-        et.hour = curr.tm_hour
-        et.minute = curr.tm_min
-        et.second = curr.tm_sec
-        et.pad1 = 0
-        et.nanosecond = 0
-        et.timezone = 0
-        et.daylight = 0
-        et.pad2 = 0
-        return et
+        efi_t = EfiTime()
+        efi_t.year = curr.tm_year
+        efi_t.month = curr.tm_mon
+        efi_t.day = curr.tm_mday
+        efi_t.hour = curr.tm_hour
+        efi_t.minute = curr.tm_min
+        efi_t.second = curr.tm_sec
+        efi_t.pad1 = 0
+        efi_t.nanosecond = 0
+        efi_t.timezone = 0
+        efi_t.daylight = 0
+        efi_t.pad2 = 0
+        return efi_t
 
     def blob(self):
-        return struct.pack('<HBBBBBBIHBB', self.year, self.month, self.day, \
-                           self.hour, self.minute, self.second, self.pad1, \
+        '''binary blob'''
+        return struct.pack('<HBBBBBBIHBB', self.year, self.month, self.day,
+                           self.hour, self.minute, self.second, self.pad1,
                            self.nanosecond, self.timezone, self.daylight, self.pad2)
 
     def dump(self):
-        return "%04d-%02d-%02dT%02d:%02d:%02d" % (self.year, self.month, self.day, self.hour, self.minute, self.second)
-
-    pass
+        '''dump efi time'''
+        return "%04d-%02d-%02dT%02d:%02d:%02d" % \
+                (self.year, self.month, self.day, self.hour, self.minute, self.second)
 
 
 class EfiVariableAuthentication2:
     '''
-
     typedef struct _WIN_CERTIFICATE {
       UINT32  dwLength;
       UINT16  wRevision;
@@ -215,8 +214,6 @@ class EfiVariableAuthentication2:
         self.authinfo_2_size = struct.unpack('<I', data[16:20])[0]
         self.authinfo_2_size += 16
         self.valid = True
-        pass
-    pass
 
 
 class VariableTimeBasedAuth:
@@ -270,10 +267,10 @@ class VariableTimeBasedAuth:
         try:
             self.start_id, self.state, self.rsvd, self.attributes, \
             self.count, self.time_stamp_blob, self.pk_index, \
-            self.name_size, self.data_size, self.vendor_guid \
-                = struct.unpack('<HBBIQ16sIII16s', data[:self.HEADER_SIZE])
-        except Exception as e:
-            print("Exception in parsing VariableTimeBasedAuth header - " + str(e))
+            self.name_size, self.data_size, self.vendor_guid = \
+                    struct.unpack('<HBBIQ16sIII16s', data[:self.HEADER_SIZE])
+        except Exception as exp:
+            print("Exception in parsing VariableTimeBasedAuth header - " + str(exp))
             return
         self.time_stamp = EfiTime(self.time_stamp_blob)
         if not self.time_stamp.valid:
@@ -282,9 +279,9 @@ class VariableTimeBasedAuth:
         self.full_size = self.data_size + self.name_size + self.HEADER_SIZE
         self.vendor_guid_str = guid2str(self.vendor_guid)
         self.valid_header = True
-        pass
 
     def update(self, attributes, time_stamp, buffer, size, append):
+        '''update self data'''
         self.attributes = attributes
         self.time_stamp = time_stamp
         self.time_stamp_blob = time_stamp.blob()
@@ -299,6 +296,7 @@ class VariableTimeBasedAuth:
         return True
 
     def blob(self):
+        '''convert to binary blob'''
         blob = struct.pack("<HBBIQ16sIII16s", \
                            self.start_id, self.state, self.rsvd, self.attributes, \
                            self.count, self.time_stamp_blob, self.pk_index, \
@@ -308,17 +306,17 @@ class VariableTimeBasedAuth:
         return blob
 
     def parse_body(self):
+        '''parse body'''
         if not self.valid_header or not self.raw_data:
             raise Exception("Invalid header or raw_data")
 
-        ## name
         self.name_blob = self.raw_data[self.HEADER_SIZE: self.HEADER_SIZE + self.name_size]
         self.name = self.name_blob.decode()
 
-        ## data
         self.data = self.raw_data[self.HEADER_SIZE + self.name_size:]
 
     def dump(self):
+        '''dump VariableTimeBasedAuth'''
         print(">>  name           : %s" % self.name)
         print("    vendor_guid    : %s" % self.vendor_guid_str)
         print("    full size      : 0x%x" % self.full_size)
@@ -327,8 +325,6 @@ class VariableTimeBasedAuth:
         print("    Monotonic Cnt  : 0x%x" % self.count)
         print("    PubKey Index   : 0x%x" % self.pk_index)
         print("    TimeStamp      : %s" % self.time_stamp.dump())
-
-    pass
 
 
 class VariableStore:
@@ -356,23 +352,24 @@ class VariableStore:
         "515fa686-b06e-4550-9112-382bf1067bfb"
     _HEADER_SIZE = 28
 
-    def __init__(self, fv, offset_in_fd):
+    def __init__(self, firware_volume, offset_in_fd):
         '''
-        :param  fv          : the Variable Firmware Volume
-        :param  offset_in_fd: offset of the fv in FD
+        :param  firware_volume          : the Variable Firmware Volume
+        :param  offset_in_fd: offset of the firware_volume in FD
         '''
-        self.fv = fv
-        self.offset_in_fd = offset_in_fd + fv.hdrlen
+        self.firware_volume = firware_volume
+        self.offset_in_fd = offset_in_fd + firware_volume.hdrlen
         self.vars_size = 0
-        self.header = fv.raw_data[fv.hdrlen: fv.hdrlen + self._HEADER_SIZE]
+        self.header = firware_volume.raw_data[firware_volume.hdrlen: \
+                firware_volume.hdrlen + self._HEADER_SIZE]
         try:
             self.signature, self.size, self.format, self.state, self.rsvd, self.rsvd1 \
                 = struct.unpack("<16sIBBHI", self.header)
-        except Exception as e:
-            print("Exception in parsing VariableStore header - " + str(e))
+        except Exception as exp:
+            print("Exception in parsing VariableStore header - " + str(exp))
             return
 
-        self.raw_data = fv.raw_data[fv.hdrlen:]
+        self.raw_data = firware_volume.raw_data[firware_volume.hdrlen:]
         self.type, supported = self.check_type(self.signature)
         self.vars_list = []
         self.valid_header = supported
@@ -403,7 +400,8 @@ class VariableStore:
         '''
         add/append an variable into VariableStore
         '''
-        if (attributes & EfiVariableAttributes.TIMEBASED_AUTH_WRITE_ACCESS.value) != 0 and time_stamp is None:
+        if (attributes & EfiVariableAttributes.TIMEBASED_AUTH_WRITE_ACCESS.value) != 0 \
+                and time_stamp is None:
             time_stamp = EfiTime.now()
         if time_stamp is None:
             time_stamp = EfiTime()
@@ -432,6 +430,7 @@ class VariableStore:
         return True
 
     def find_var_in_list(self, name, vendor_guid):
+        '''find variable by guid'''
         name_blob = str2blob(name)
         for var in self.vars_list:
             if var.name_blob == name_blob and var.vendor_guid_str == vendor_guid.lower():
@@ -455,13 +454,13 @@ class VariableStore:
         # generate the blob of the variables
         blob = b''
         for var in self.vars_list:
-            b = var.blob()
-            blen = len(b)
-            blen_aligned = ALIGN_BY_4(blen)
+            vbin = var.blob()
+            blen = len(vbin)
+            blen_aligned = align_by_4(blen)
             pad = blen_aligned - blen
             if pad > 0:
-                b += b'\xff' * pad
-            blob += b
+                vbin += b'\xff' * pad
+            blob += vbin
 
         # copy the blob to variables region in VariableStore
         blob_size = len(blob)
@@ -470,12 +469,12 @@ class VariableStore:
 
         # save to output file
         try:
-            with open(output_file, 'wb') as fo:
-                fo.write(buffer)
-                fo.flush()
+            with open(output_file, 'wb') as output:
+                output.write(buffer)
+                output.flush()
             ret = True
-        except Exception as e:
-            print("Error: Cannot write variables to file (%s) (%s)." % (output_file, str(e)))
+        except Exception as exp:
+            print("Error: Cannot write variables to file (%s) (%s)." % (output_file, str(exp)))
 
         return ret
 
@@ -490,15 +489,16 @@ class VariableStore:
             sig = struct.unpack('<H', self.raw_data[begin: begin + 2])
             if sig[0] != 0x55aa:
                 break
-            ##
+
             ## we only support Time based authenticated variable now
             ## get the header of VariableTimeBasedAuth
-            var = VariableTimeBasedAuth(self.raw_data[begin:begin + VariableTimeBasedAuth.HEADER_SIZE])
+            var = VariableTimeBasedAuth(self.raw_data[begin:begin +
+                    VariableTimeBasedAuth.HEADER_SIZE])
             if not var.valid_header:
                 break
             var.raw_data = self.raw_data[begin:begin + var.full_size]
             begin += var.full_size
-            begin = ALIGN_BY_4(begin)
+            begin = align_by_4(begin)
 
             if var.state != VariableTimeBasedAuth.VAR_ADDED:
                 continue
@@ -507,25 +507,24 @@ class VariableStore:
             self.vars_list.append(var)
 
         self.vars_size = begin - self._HEADER_SIZE
-        pass
 
     def check_type(self, signature):
+        '''check guid type'''
         str_guid = guid2str(signature)
-        type = None
+        guidtype = None
         supported = False
         if str_guid == self._EFI_VARIABLE_GUID:
-            type = 'Normal'
+            guidtype = 'Normal'
         elif str_guid == self._EFI_AUTHENTICATED_VARIABLE_GUID:
-            type = 'Authenticated'
+            guidtype = 'Authenticated'
         elif str_guid == self._EFI_AUTHENTICATED_VARIABLE_BASED_TIME_GUID:
-            type = 'TimeBasedAuthenticated'
+            guidtype = 'TimeBasedAuthenticated'
             supported = True
         else:
-            type = 'Unknown'
-        pass
+            guidtype = 'Unknown'
 
-        print("VariableFV: %s - %s" % (type, 'Supported' if supported else 'Unsupported'))
-        return (type, supported)
+        print("VariableFV: %s - %s" % (guidtype, 'Supported' if supported else 'Unsupported'))
+        return (guidtype, supported)
 
     def dump(self):
         '''
@@ -554,34 +553,31 @@ class VariableStore:
 
         return True
 
-    pass
-
 
 class EfiSignatureList:
     '''
     typedef struct {
-      EFI_GUID            SignatureType;
-      UINT32              SignatureListSize;
-      UINT32              SignatureHeaderSize;
-      UINT32              SignatureSize;
+      EFI_GUID            signature_type;
+      UINT32              signature_list_size;
+      UINT32              signature_header_size;
+      UINT32              signature_size;
       //UINT8             SignatureData
     } EFI_SIGNATURE_LIST;
     '''
     SIZE = 28
 
     def __init__(self):
-        self.SignatureType = None
-        self.SignatureListSize = 0
-        self.SignatureHeaderSize = 0
-        self.SignatureSize = 0
-        self.SignatureData = None
-        pass
+        self.signature_type = None
+        self.signature_list_size = 0
+        self.signature_header_size = 0
+        self.signature_size = 0
+        self.signature_data = None
 
     def blob(self):
-        blob1 = struct.pack('<III', self.SignatureListSize, self.SignatureHeaderSize, self.SignatureSize)
-        return self.SignatureType + blob1 + self.SignatureData
-
-    pass
+        '''binary blob'''
+        blob1 = struct.pack('<III', self.signature_list_size, self.signature_header_size,
+                self.signature_size)
+        return self.signature_type + blob1 + self.signature_data
 
 
 class EfiSignatureData:
@@ -594,23 +590,20 @@ class EfiSignatureData:
     SIZE = 16
 
     def __init__(self):
-        self.SignatureOwner = None
-        self.SignatureData = None
+        self.signature_owner = None
+        self.signature_data = None
 
     def blob(self):
         '''concat the fields into one binary blob'''
-        return self.SignatureOwner + self.SignatureData
-
-    pass
+        return self.signature_owner + self.signature_data
 
 
 class EfiVariableAttributes(Enum):
+    '''efi variable attributes'''
     NON_VOLATILE = 0x1
     BOOTSERVICE_ACCESS = 0x2
     RUNTIME_ACCESS = 0x4
     TIMEBASED_AUTH_WRITE_ACCESS = 0x20
-    pass
-
 
 def find_var_info(input_data):
     '''
@@ -622,29 +615,27 @@ def find_var_info(input_data):
 
     ## walk thru input_data
     offset = 0
-    fv = None
+    firware_volume = None
     while offset < total_len:
         data = input_data[offset:offset + 128]
-        fv = FirmwareVolume(data)
-        if fv.valid_header == True:
-            if fv.name == "NVRAM":
-                fv.raw_data = input_data[offset:offset + fv.size]
+        firware_volume = FirmwareVolume(data)
+        if firware_volume.valid_header:
+            if firware_volume.name == "NVRAM":
+                firware_volume.raw_data = input_data[offset:offset + firware_volume.size]
                 break
 
-    if not fv.valid_header:
+    if not firware_volume.valid_header:
         return None
 
     ## now the VariableStore
-    var_store = VariableStore(fv, offset)
+    var_store = VariableStore(firware_volume, offset)
     if not var_store.valid_header:
         return None
 
     var_store.sync_to_vars_list()
-
     return var_store
 
-
-def CreatePkX509CertificateList(cert_file, signature_owner):
+def create_pk_x509_cert_list(cert_file, signature_owner):
     '''
     Create a signature list which contains the PK X509 cert list
     '''
@@ -656,30 +647,23 @@ def CreatePkX509CertificateList(cert_file, signature_owner):
     if len(sig_owner) != 16:
         raise Exception('Invalid Signature owner. - ' + signature_owner)
 
-    try:
-        with open(cert_file, 'rb') as fc:
-            cert_data = fc.read()
-    except Exception as e:
-        raise Exception("Error: Cannot read file (%s) (%s)." % (cert_file, str(e)))
+    with open(cert_file, 'rb') as cert_fd:
+        cert_data = cert_fd.read()
 
-    ##
-    EFI_CERT_X509_GUID = "a5c059a1-94e4-4aa7-87b5-ab155c2bf072"
     sig_list = EfiSignatureList()
-    sig_list.SignatureListSize = EfiSignatureList.SIZE + EfiSignatureData.SIZE + len(cert_data)
-    sig_list.SignatureSize = EfiSignatureData.SIZE + len(cert_data)
-    sig_list.SignatureHeaderSize = 0
-    sig_list.SignatureType = str2guid(EFI_CERT_X509_GUID)
+    sig_list.signature_list_size = EfiSignatureList.SIZE + EfiSignatureData.SIZE + len(cert_data)
+    sig_list.signature_size = EfiSignatureData.SIZE + len(cert_data)
+    sig_list.signature_header_size = 0
+    sig_list.signature_type = str2guid(EFI_CERT_X509_GUID)
 
     sig_data = EfiSignatureData()
-    sig_data.SignatureOwner = sig_owner
-    sig_data.SignatureData = cert_data
+    sig_data.signature_owner = sig_owner
+    sig_data.signature_data = cert_data
 
-    sig_list.SignatureData = sig_data.blob()
-
+    sig_list.signature_data = sig_data.blob()
     return sig_list
 
-
-def EnrollPlatformKey(guid, cert_file, var_store):
+def enroll_platform_key(guid, cert_file, var_store):
     '''
     Enroll the PK
 
@@ -689,7 +673,7 @@ def EnrollPlatformKey(guid, cert_file, var_store):
 
     :return True if success
     '''
-    sig_list = CreatePkX509CertificateList(cert_file, guid)
+    sig_list = create_pk_x509_cert_list(cert_file, guid)
     attr = EfiVariableAttributes.NON_VOLATILE.value \
            | EfiVariableAttributes.RUNTIME_ACCESS.value \
            | EfiVariableAttributes.BOOTSERVICE_ACCESS.value \
@@ -697,11 +681,10 @@ def EnrollPlatformKey(guid, cert_file, var_store):
 
     ret = var_store.add_variable('PK', EFI_GLOBAL_VARIABLE, \
                                 attr, None, sig_list.blob(), \
-                                sig_list.SignatureListSize, False)
+                                sig_list.signature_list_size, False)
     return ret
 
-
-def EnrollPlatformKeyExchangeKey(guid, cert_file, var_store, append=False):
+def enroll_kek(guid, cert_file, var_store, append=False):
     '''
     Enroll the KEK
 
@@ -712,7 +695,7 @@ def EnrollPlatformKeyExchangeKey(guid, cert_file, var_store, append=False):
 
     :return True if success
     '''
-    sig_list = CreatePkX509CertificateList(cert_file, guid)
+    sig_list = create_pk_x509_cert_list(cert_file, guid)
     attr = EfiVariableAttributes.NON_VOLATILE.value \
            | EfiVariableAttributes.RUNTIME_ACCESS.value \
            | EfiVariableAttributes.BOOTSERVICE_ACCESS.value \
@@ -720,11 +703,10 @@ def EnrollPlatformKeyExchangeKey(guid, cert_file, var_store, append=False):
 
     ret = var_store.add_variable('KEK', EFI_GLOBAL_VARIABLE,
                                  attr, None, sig_list.blob(),
-                                 sig_list.SignatureListSize, append)
+                                 sig_list.signature_list_size, append)
     return ret
 
-
-def EnrollSignatureDB(name, guid, data_file, var_store, append=False):
+def enroll_signature_db(name, guid, data_file, var_store, append=False):
     '''
     Enroll the db/dbx
 
@@ -741,16 +723,13 @@ def EnrollSignatureDB(name, guid, data_file, var_store, append=False):
         raise Exception("Unsupported SignatureDB - " + name)
 
     if name == 'db':
-        sig_list = CreatePkX509CertificateList(data_file, guid)
+        sig_list = create_pk_x509_cert_list(data_file, guid)
         blob = sig_list.blob()
-        size = sig_list.SignatureListSize
+        size = sig_list.signature_list_size
         time_stamp = None
     elif name == 'dbx':
-        try:
-            with open(data_file, 'rb') as fc:
-                data = fc.read()
-        except Exception as e:
-            raise Exception("Error: Cannot read file (%s) (%s)." % (data_file, str(e)))
+        with open(data_file, 'rb') as dbx_fd:
+            data = dbx_fd.read()
         auth2 = EfiVariableAuthentication2(data)
         if not auth2.valid:
             raise Exception('Error: Cannot parse the dbx bin file(%s)' % (data_file))
@@ -758,7 +737,7 @@ def EnrollSignatureDB(name, guid, data_file, var_store, append=False):
         blob = data[auth2.authinfo_2_size:]
         time_stamp = auth2.time_stamp
     else:
-        raise Exception('Unsupported var name in EnrollSignatureDB - %s' % name)
+        raise Exception('Unsupported var name in enroll_signature_db - %s' % name)
 
     attr = EfiVariableAttributes.NON_VOLATILE.value \
            | EfiVariableAttributes.RUNTIME_ACCESS.value \
@@ -769,8 +748,7 @@ def EnrollSignatureDB(name, guid, data_file, var_store, append=False):
                                  attr, time_stamp, blob, size, append)
     return ret
 
-
-def EnrollVariable(name, guid, data_file, attributes, var_store, append=False):
+def enroll_variable(name, guid, data_file, attributes, var_store, append=False):
     '''
     Enroll (add/append) a general variable
 
@@ -784,27 +762,22 @@ def EnrollVariable(name, guid, data_file, attributes, var_store, append=False):
     :return True if success
     '''
 
-    try:
-        with open(data_file, 'rb') as fc:
-            pay_load = fc.read()
-    except Exception as e:
-        raise Exception("Error: Cannot read file (%s) (%s)." % (data_file, str(e)))
+    with open(data_file, 'rb') as data_f:
+        pay_load = data_f.read()
 
     ret = var_store.add_variable(name, guid, attributes, None, pay_load,
                                  len(pay_load), append)
     return ret
 
-
-def DelVariable(name, guid, var_store):
+def del_variable(name, guid, var_store):
     '''
     Delete a variable from the var_store
     '''
     ret = var_store.del_variable(name, guid)
-    print('DelVariable(Del %s) - %s' % (name, 'Success' if ret else 'Failed'))
+    print('del_variable(Del %s) - %s' % (name, 'Success' if ret else 'Failed'))
     return ret
 
-
-def AddVariable(name, guid, data_file, attributes, var_store, append=False):
+def add_variable(name, guid, data_file, attributes, var_store, append=False):
     '''
     Add/Append an Variable in the var_store
 
@@ -822,24 +795,23 @@ def AddVariable(name, guid, data_file, attributes, var_store, append=False):
     :return True if success
     '''
 
-    op = 'append' if append else 'add'
     if name.lower() == 'pk':
         if append:
             raise Exception('PK cannot be appended.')
-        ret = EnrollPlatformKey(guid, data_file, var_store)
+        ret = enroll_platform_key(guid, data_file, var_store)
 
     elif name.lower() == 'kek':
-        ret = EnrollPlatformKeyExchangeKey(guid, data_file, var_store, append)
+        ret = enroll_kek(guid, data_file, var_store, append)
 
     elif name.lower() in ['db', 'dbx']:
-        ret = EnrollSignatureDB(name.lower(), guid, data_file, var_store, append)
+        ret = enroll_signature_db(name.lower(), guid, data_file, var_store, append)
 
     else:
-        ret = EnrollVariable(name, guid, data_file, attributes, var_store, append)
+        ret = enroll_variable(name, guid, data_file, attributes, var_store, append)
 
     return ret
 
-def UpdateVariable(name, guid, data_file, attributes, var_store):
+def update_variable(name, guid, data_file, attributes, var_store):
     '''
     Update an Variable in the var_store
 
@@ -864,7 +836,7 @@ def UpdateVariable(name, guid, data_file, attributes, var_store):
     var_store.del_variable(name, guid)
 
     # then add the new one
-    return AddVariable(name, guid, data_file, attributes, var_store, True)
+    return add_variable(name, guid, data_file, attributes, var_store, True)
 
 def process_var(args, var_store, fd_data):
     '''
@@ -880,22 +852,18 @@ def process_var(args, var_store, fd_data):
     else:
         attr = 0
 
-    if operation == VarEnrollOps.add:
-        ret = AddVariable(args.name, args.guid, args.data_file, attr, var_store, False)
-
-    elif operation == VarEnrollOps.append:
-        ret = AddVariable(args.name, args.guid, args.data_file, attr, var_store, True)
-
-    elif operation == VarEnrollOps.delete:
-        ret = DelVariable(args.name, args.guid, var_store)
-
-    elif operation == VarEnrollOps.update:
-        ret = UpdateVariable(args.name, args.guid, args.data_file, attr, var_store)
-
+    if operation == VarEnrollOps.ADD:
+        ret = add_variable(args.name, args.guid, args.data_file, attr, var_store, False)
+    elif operation == VarEnrollOps.APPEND:
+        ret = add_variable(args.name, args.guid, args.data_file, attr, var_store, True)
+    elif operation == VarEnrollOps.DEL:
+        ret = del_variable(args.name, args.guid, var_store)
+    elif operation == VarEnrollOps.UPDATE:
+        ret = update_variable(args.name, args.guid, args.data_file, attr, var_store)
     else:
         raise Exception("Unkown operation - %s"%("" if operation is None else operation))
 
-    print('EnrollVariable(%s %s) - %s' % (str(operation), args.name, 'Success' if ret else 'Failed'))
+    print('Var Store: %s %s - %s' % (str(operation), args.name, 'Success' if ret else 'Failed'))
     if ret:
         ## sync the var_store to a new FD
         ret = var_store.sync_to_file(fd_data, args.output)
@@ -905,14 +873,14 @@ def process_var(args, var_store, fd_data):
 
 
 class VarEnrollOps(Enum):
-    add = 'add'
-    delete = 'delete'
-    append = 'append'
-    update = 'update'
+    '''enrolling operates'''
+    ADD = 'add'
+    DEL = 'delete'
+    APPEND = 'append'
+    UPDATE = 'update'
 
     def __str__(self):
         return self.value
-
 
 def check_args(args):
     '''
@@ -924,40 +892,30 @@ def check_args(args):
     if not is_guid(args.guid):
         raise Exception("Invalid input guid. - " + args.guid)
 
-    if args.operation == VarEnrollOps.delete:
+    if args.operation == VarEnrollOps.DEL:
         return True
 
     if not os.path.isfile(args.data_file):
         raise Exception("Invalid input data file - " + args.data_file)
 
     if args.name.lower() in ['pk', 'kek', 'db', 'dbx'] \
-            and args.operation in [VarEnrollOps.append, VarEnrollOps.add, VarEnrollOps.update]:
+            and args.operation in [VarEnrollOps.APPEND, VarEnrollOps.ADD, VarEnrollOps.UPDATE]:
         pass
-    elif args.operation in [VarEnrollOps.append, VarEnrollOps.add, VarEnrollOps.update]:
-        # for other var_name,
-        # we need to check below arguments
-        # args.attributes
-        try:
-            attr = args.attributes
-            int(attr, 16)
-        except Exception as e:
-            raise Exception("Invalid input attributes - " + attr if attr else '')
-        pass
+    elif args.operation in [VarEnrollOps.APPEND, VarEnrollOps.ADD, VarEnrollOps.UPDATE]:
+        # for other var_name, we need to check args.attributes
+        attr = args.attributes
+        int(attr, 16)
 
     return True
 
-
 def var_enroll(args):
-    fd_file = args.fd
-    if fd_file is None:
-        print("Error: -f is missing.")
-        return False
-
+    '''var enrolling function'''
+    fd_file = args.input
     try:
-        with open(fd_file, 'rb') as ft:
-            fd_data = ft.read()
-    except Exception as e:
-        print("Error: Cannot read file (%s) (%s)." % (fd_file, str(e)))
+        with open(fd_file, 'rb') as fd_handle:
+            fd_data = fd_handle.read()
+    except Exception as exp:
+        print("Error: Cannot read file (%s) (%s)." % (fd_file, str(exp)))
         return False
 
     var_store = find_var_info(fd_data)
@@ -971,20 +929,20 @@ def var_enroll(args):
 
     try:
         check_args(args)
-    except Exception as e:
-        print('Exception when check_args - ' + str(e))
+    except Exception as exp:
+        print('Exception when check_args - ' + str(exp))
         return False
-    
+
     try:
         process_var(args, var_store, fd_data)
-    except Exception as e:
-        print('Exception when process_var - ' + str(e))
+    except Exception as exp:
+        print('Exception when process_var - ' + str(exp))
         return False
 
     return True
 
-
 def main():
+    '''main function to enroll variables and keys'''
     argparser = argparse.ArgumentParser(
         description="Enroll variables into FD")
 
@@ -998,39 +956,34 @@ def main():
 
     argparser.add_argument(
         '-op', '--operation', type=VarEnrollOps, choices=list(VarEnrollOps),
-        help="Operation of the VarEnroll"
-    )
+        help="Operation of the VarEnroll")
 
     argparser.add_argument(
         '-n', '--name',
-        help="Name of the variable to be enrolled, such as PK/KEK/db/dbx/SecureBootEnable etc"
-    )
+        help="Name of the variable to be enrolled, such as PK/KEK/db/dbx/SecureBootEnable etc")
 
     argparser.add_argument(
         '-g', '--guid',
-        help="For PK/KEK/db/dbx, it is the guid of signature owner. For other variable, it is the vendor guid"
-    )
+        help="For PK/KEK/db/dbx,it's guid of signature owner. For other variable it's vendor guid")
 
     argparser.add_argument(
         '-a', "--attributes",
-        help="For PK/KEK/db/dbx, this param is ignored. For other variable, this param is its attribute, e.g 0x3")
+        help="For PK/KEK/db/dbx, ignored. For other variables means its attribute, e.g 0x3")
 
     argparser.add_argument(
         '-d', '--data_file',
-        help="File related to the variable. For PK/KEK/db/dbx, it is the cert file. Otherwise it is the payload of "
-             "the variable. "
-    )
+        help="For PK/KEK/db/dbx, it's the cert file. Otherwise it's the payload of the variables.")
 
     argparser.add_argument(
         '-o', '--output',
-        help='Output file after the var is enrolled'
-    )
+        help='Output file after the var is enrolled')
 
     args = argparser.parse_args()
 
     return var_enroll(args)
 
 if __name__ == "__main__":
-    print("%s - %s"%(VAR_ENROLL_NAME, VAR_ENROLL_VERSION))
-    ret = main()
-    exit(0) if ret else exit(1)
+    if main():
+        sys.exit()
+    else:
+        sys.exit(1)
