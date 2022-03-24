@@ -14,6 +14,9 @@ from pycloudstack.vmparam import VM_TYPE_TD
 
 __author__ = 'cpio'
 
+# Disable redefined-outer-name since it is false positive for pytest's fixture
+# pylint: disable=redefined-outer-name
+
 LOG = logging.getLogger(__name__)
 
 DATE_SUFFIX = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")

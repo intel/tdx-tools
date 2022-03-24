@@ -10,6 +10,9 @@ from pycloudstack.vmguest import VMGuestFactory
 
 LOG = logging.getLogger(__name__)
 
+# Disable redefined-outer-name since it is false positive for pytest's fixture
+# pylint: disable=redefined-outer-name
+
 
 @pytest.fixture(scope="module")
 def vm_name(request):
@@ -118,6 +121,9 @@ def artifact_factory():
 
 
 def pytest_addoption(parser):
+    """
+    The flag to keep VM without destroy for advanced debugging
+    """
     parser.addoption(
         "--keep-vm", action="store_true", default=False, help="NOT destroy unhealty VMs"
     )
