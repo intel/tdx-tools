@@ -197,7 +197,6 @@ class VMMLibvirt(VMMBase):
             xmlobj.kernel = self.vminst.kernel
             xmlobj.cmdline = str(self.vminst.cmdline)
 
-        xmlobj.enable_ssh_forward_port(self.vminst.ssh_forward_port)
         return xmlobj
 
     def _connect_virt(self):    # pylint: disable=no-self-use
