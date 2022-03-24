@@ -30,8 +30,7 @@
 CURR_DIR=$(readlink -f "$(dirname "$0")")
 
 # VM configurations
-CORES=1
-SOCKET=1
+CPUS=1
 MEM=2G
 
 # Installed from the package of intel-mvp-tdx-tdvf
@@ -69,7 +68,7 @@ SERIAL_CONSOLE="-serial stdio"
 # Default template for QEMU command line
 QEMU_CMD="/usr/libexec/qemu-kvm -accel kvm \
           -name process=tdxvm,debug-threads=on \
-          -smp $CORES,sockets=$SOCKET -m $MEM -vga none \
+          -m $MEM -vga none \
           -monitor pty \
           -no-hpet -nodefaults"
 PARAM_CPU=" -cpu host,-kvm-steal-time,pmu=off"
@@ -88,6 +87,7 @@ Usage: $(basename "$0") [OPTION]...
   -a <OVMF_VARS file>       BIOS VARS template, for "td" and "efi" VM only
   -m <11:22:33:44:55:66>    MAC address, impact TDX measurement RTMR
   -q [tdvmcall|vsock]       Support for TD quote using tdvmcall or vsock
+  -c <number>               Number of CPUs, default is 1
   -v                        Flag to enable vsock
   -d                        Flag to enable "debug=on" for GDB guest
   -s                        Flag to use serial console instead of HVC console
@@ -105,7 +105,7 @@ warn() {
 }
 
 process_args() {
-    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:" option; do
+    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:" option; do
         case "$option" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -120,6 +120,7 @@ process_args() {
             d) DEBUG=true;;
             s) USE_SERIAL_CONSOLE=true;;
             q) QUOTE_TYPE=$OPTARG;;
+            c) CPUS=$OPTARG;;
             h) usage
                exit 0
                ;;
@@ -133,6 +134,11 @@ process_args() {
 
     if [[ ! -f /usr/libexec/qemu-kvm ]]; then
         error "Please install qemu-kvm which supports TDX."
+    fi
+
+    # Validate the number of CPUs
+    if ! [[ ${CPUS} =~ ^[0-9]+$ && ${CPUS} -gt 0 ]]; then
+        error "Invalid number of CPUs: ${CPUS}"
     fi
 
     GUEST_IMG="${GUEST_IMG:-${DEFAULT_GUEST_IMG}}"
@@ -221,6 +227,9 @@ process_args() {
     QEMU_CMD+=$PARAM_MACHINE
     QEMU_CMD+=" -device virtio-net-pci,netdev=mynet0"
 
+    # Specify the number of CPUs
+    QEMU_CMD+=" -smp ${CPUS} "
+
     # Customize MAC address. NOTE: it will impact TDX measurement RTMR.
     if [[ -n ${MAC_ADDR} ]]; then
         QEMU_CMD+=",mac=${MAC_ADDR}"
@@ -268,6 +277,7 @@ process_args() {
     echo "OVMF_CODE         : ${OVMF_CODE}"
     echo "OVMF_VARS         : ${OVMF_VARS}"
     echo "VM Type           : ${VM_TYPE}"
+    echo "CPUS              : ${CPUS}"
     echo "Boot type         : ${BOOT_TYPE}"
     echo "Monitor port      : ${MONITOR_PORT}"
     echo "Enable vsock      : ${USE_VSOCK}"
