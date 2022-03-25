@@ -19,7 +19,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install pylint
           pip install -r utils/pycloudstack/requirements.txt
+          pip install -r utils/pytdxmeasure/requirements.txt
+          pip install -r tests/requirements.txt
       - name: Analysing the code with pylint
         run: |
           set -ex
-          find . -name '*.py' -exec pylint {} \;
+          export PYTHONPATH=utils/pycloudstack:utils/pytdxmeasure
+          find . -name *.py -print0 | xargs -n 1 -0 pylint

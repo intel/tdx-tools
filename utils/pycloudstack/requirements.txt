@@ -3,3 +3,4 @@ py-cpuinfo>=7.0.0
 pyyaml>=5.4.1
 libvirt-python
 wheel
+docker
