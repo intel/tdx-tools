@@ -134,7 +134,7 @@
     %define with_lxc 0
 %endif
 
-%define with_firewalld_zone 0%{!?_without_firewalld_zone:1}
+%define with_firewalld_zone 0%{!?_with_firewalld_zone}
 
 %if (0%{?fedora} && 0%{?fedora} < 34) || (0%{?rhel} && 0%{?rhel} < 9)
     %define with_netcf 0%{!?_without_netcf:1}
@@ -190,6 +190,10 @@
 %define qemu_user  qemu
 %define qemu_group  qemu
 
+# Locations for QEMU data
+%define qemu_moddir %{_libdir}/qemu
+%define qemu_datadir %{_datadir}/qemu
+
 
 # RHEL releases provide stable tool chains and so it is safe to turn
 # compiler warning into errors without being worried about frequent
@@ -202,34 +206,30 @@
 
 %define tls_priority "@LIBVIRT,SYSTEM"
 
-%define libvirt_daemon_schedule_restart() mkdir -p %{_localstatedir}/lib/rpm-state/libvirt || : \
-/bin/systemctl is-active %1.service 1>/dev/null 2>&1 && \
-  touch %{_localstatedir}/lib/rpm-state/libvirt/restart-%1 || :
-
-%define libvirt_daemon_finish_restart() rm -f %{_localstatedir}/lib/rpm-state/libvirt/restart-%1 \
-rmdir %{_localstatedir}/lib/rpm-state/libvirt 2>/dev/null || :
-
-%define libvirt_daemon_needs_restart() -f %{_localstatedir}/lib/rpm-state/libvirt/restart-%1
-
-%define libvirt_daemon_perform_restart() if test %libvirt_daemon_needs_restart %1 \
-then \
-  /bin/systemctl try-restart %1.service >/dev/null 2>&1 || : \
-fi \
-%libvirt_daemon_finish_restart %1
-
-%define libvirt_daemon_systemd_post() %systemd_post %1.socket %1-ro.socket %1-admin.socket %1.service
-
-%define libvirt_daemon_systemd_post_inet() %systemd_post %1.socket %1-ro.socket %1-admin.socket %1-tls.socket %1-tcp.socket %1.service
-
-%define libvirt_daemon_systemd_preun() %systemd_preun %1.service %1-ro.socket %1-admin.socket %1.socket
-
-%define libvirt_daemon_systemd_preun_inet() %systemd_preun %1.service %1-ro.socket %1-admin.socket %1-tls.socket %1-tcp.socket %1.socket
+# libvirt 8.1.0 stops distributing any sysconfig files.
+# If the user has customized their sysconfig file,
+# the RPM upgrade path will rename it to .rpmsave
+# because the file is no longer managed by RPM.
+# To prevent a regression we rename it back after the
+# transaction to preserve the user's modifications
+%define libvirt_sysconfig_pre() \
+    for sc in %{?*} ; do \
+        test -f "%{_sysconfdir}/sysconfig/${sc}.rpmsave" || continue ; \
+        mv -v "%{_sysconfdir}/sysconfig/${sc}.rpmsave" "%{_sysconfdir}/sysconfig/${sc}.rpmsave.old" ; \
+    done \
+    %{nil}
+%define libvirt_sysconfig_posttrans() \
+    for sc in %{?*} ; do \
+        test -f "%{_sysconfdir}/sysconfig/${sc}.rpmsave" || continue ; \
+        mv -v "%{_sysconfdir}/sysconfig/${sc}.rpmsave" "%{_sysconfdir}/sysconfig/${sc}" ; \
+    done \
+    %{nil}
 
 Summary: Library providing a simple virtualization API
 Name: intel-mvp-tdx-libvirt
-Version: 7.9.0
-%define patch_number 10
-%define downstream_tag 2021.12.08
+Version: 8.1.0
+%define patch_number 13
+%define downstream_tag 2022.03.18
 Release: %{downstream_tag}.mvp%{patch_number}%{?dist}
 License: LGPLv2+
 URL: https://libvirt.org/
@@ -506,7 +506,7 @@ Provides: libvirt-daemon-driver-network
 Requires: intel-mvp-tdx-libvirt-daemon = %{version}-%{release}
 Requires: intel-mvp-tdx-libvirt-libs = %{version}-%{release}
 Requires: dnsmasq >= 2.41
-Requires: radvd
+
 Requires: iptables
 
 %description daemon-driver-network
@@ -924,7 +924,7 @@ Requires: intel-mvp-tdx-libvirt-daemon-driver-nodedev = %{version}-%{release}
 Requires: intel-mvp-tdx-libvirt-daemon-driver-nwfilter = %{version}-%{release}
 Requires: intel-mvp-tdx-libvirt-daemon-driver-secret = %{version}-%{release}
 Requires: intel-mvp-tdx-libvirt-daemon-driver-storage = %{version}-%{release}
-Requires: intel-mvp-tdx-qemu-kvm
+Requires: qemu-kvm
 
 %description daemon-kvm
 Server side daemon and driver required to manage the virtualization
@@ -1346,6 +1346,8 @@ export SOURCE_DATE_EPOCH=$(stat --printf='%Y' %{_specdir}/%{name}.spec)
            %{arg_packager_version} \
            -Dqemu_user=%{qemu_user} \
            -Dqemu_group=%{qemu_group} \
+           -Dqemu_moddir=%{qemu_moddir} \
+           -Dqemu_datadir=%{qemu_datadir} \
            -Dtls_priority=%{tls_priority} \
            %{?enable_werror} \
            -Dexpensive_tests=enabled \
@@ -1441,23 +1443,39 @@ mv $RPM_BUILD_ROOT%{_datadir}/systemtap/tapset/libvirt_qemu_probes.stp \
 %endif
 
 %check
-# These tests don't current work in a mock build root
-cd tests
-for i in commandtest eventtest
-do
-   rm -f $i
-   printf 'int main(void) { return 0; }' > $i.c
-   printf '#!/bin/sh\nexit 0\n' > $i
-   chmod +x $i
-done
-cd ..
-
-
 # Building on slow archs, like emulated s390x in Fedora copr, requires
 # raising the test timeout
 VIR_TEST_DEBUG=1 %meson_test --no-suite syntax-check --timeout-multiplier 10
 
+%define libvirt_daemon_schedule_restart() mkdir -p %{_localstatedir}/lib/rpm-state/libvirt || : \
+/bin/systemctl is-active %1.service 1>/dev/null 2>&1 && \
+  touch %{_localstatedir}/lib/rpm-state/libvirt/restart-%1 || :
+
+%define libvirt_daemon_finish_restart() rm -f %{_localstatedir}/lib/rpm-state/libvirt/restart-%1 \
+rmdir %{_localstatedir}/lib/rpm-state/libvirt 2>/dev/null || :
+
+%define libvirt_daemon_needs_restart() -f %{_localstatedir}/lib/rpm-state/libvirt/restart-%1
+
+%define libvirt_daemon_perform_restart() if test %libvirt_daemon_needs_restart %1 \
+then \
+  /bin/systemctl try-restart %1.service >/dev/null 2>&1 || : \
+fi \
+%libvirt_daemon_finish_restart %1
+
+# For daemons with only UNIX sockets
+%define libvirt_daemon_systemd_post() %systemd_post %1.socket %1-ro.socket %1-admin.socket %1.service
+%define libvirt_daemon_systemd_preun() %systemd_preun %1.service %1-ro.socket %1-admin.socket %1.socket
+
+# For daemons with UNIX and INET sockets
+%define libvirt_daemon_systemd_post_inet() %systemd_post %1.socket %1-ro.socket %1-admin.socket %1-tls.socket %1-tcp.socket %1.service
+%define libvirt_daemon_systemd_preun_inet() %systemd_preun %1.service %1-ro.socket %1-admin.socket %1-tls.socket %1-tcp.socket %1.socket
+
+# For daemons with only UNIX sockets and no unprivileged read-only access
+%define libvirt_daemon_systemd_post_priv() %systemd_post %1.socket %1-admin.socket %1.service
+%define libvirt_daemon_systemd_preun_priv() %systemd_preun %1.service %1-admin.socket %1.socket
+
 %pre daemon
+%libvirt_sysconfig_pre libvirtd virtproxyd virtlogd virtlockd libvirt-guests
 # 'libvirt' group is just to allow password-less polkit access to
 # libvirtd. The uid number is irrelevant, so we use dynamic allocation
 # described at the above link.
@@ -1466,8 +1484,8 @@ getent group libvirt >/dev/null || groupadd -r libvirt
 exit 0
 
 %post daemon
-%libvirt_daemon_systemd_post virtlogd
-%libvirt_daemon_systemd_post virtlockdd
+%libvirt_daemon_systemd_post_priv virtlogd
+%libvirt_daemon_systemd_post_priv virtlockd
 %if %{with_modular_daemons}
 %libvirt_daemon_systemd_post_inet virtproxyd
 %else
@@ -1483,8 +1501,8 @@ exit 0
 
 %libvirt_daemon_systemd_preun_inet libvirtd
 %libvirt_daemon_systemd_preun_inet virtproxyd
-%libvirt_daemon_systemd_preun virtlogd
-%libvirt_daemon_systemd_preun virtlockdd
+%libvirt_daemon_systemd_preun_priv virtlogd
+%libvirt_daemon_systemd_preun_priv virtlockd
 
 %postun daemon
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
@@ -1506,6 +1524,7 @@ if [ $1 -ge 1 ] ; then
 fi
 
 %posttrans daemon
+%libvirt_sysconfig_posttrans libvirtd virtproxyd virtlogd virtlockd libvirt-guests
 if test %libvirt_daemon_needs_restart libvirtd
 then
     # See if user has previously modified their install to
@@ -1546,19 +1565,33 @@ fi
 
 %libvirt_daemon_finish_restart libvirtd
 
+%pre daemon-driver-network
+%libvirt_sysconfig_pre virtnetworkd
+
 %post daemon-driver-network
+%if %{with_firewalld_zone}
+    %firewalld_reload
+%endif
 
 %if %{with_modular_daemons}
 %libvirt_daemon_systemd_post virtnetworkd
 %endif
 %libvirt_daemon_schedule_restart virtnetworkd
 
-%preun
+%preun daemon-driver-network
 %libvirt_daemon_systemd_preun virtnetworkd
 
+%postun daemon-driver-network
+%if %{with_firewalld_zone}
+    %firewalld_reload
+%endif
+
 %posttrans daemon-driver-network
+%libvirt_sysconfig_posttrans virtnetworkd
 %libvirt_daemon_perform_restart virtnetworkd
 
+%pre daemon-driver-nwfilter
+%libvirt_sysconfig_pre virtnwfilterd
 
 %post daemon-driver-nwfilter
 %if %{with_modular_daemons}
@@ -1570,8 +1603,11 @@ fi
 %libvirt_daemon_systemd_preun virtnwfilterd
 
 %posttrans daemon-driver-nwfilter
+%libvirt_sysconfig_posttrans virtnwfilterd
 %libvirt_daemon_perform_restart virtnwfilterd
 
+%pre daemon-driver-nodedev
+%libvirt_sysconfig_pre virtnodedevd
 
 %post daemon-driver-nodedev
 %if %{with_modular_daemons}
@@ -1583,8 +1619,11 @@ fi
 %libvirt_daemon_systemd_preun virtnodedevd
 
 %posttrans daemon-driver-nodedev
+%libvirt_sysconfig_posttrans virtnodedevd
 %libvirt_daemon_perform_restart virtnodedevd
 
+%pre daemon-driver-interface
+%libvirt_sysconfig_pre virtinterfaced
 
 %post daemon-driver-interface
 %if %{with_modular_daemons}
@@ -1596,8 +1635,11 @@ fi
 %libvirt_daemon_systemd_preun virtinterfaced
 
 %posttrans daemon-driver-interface
+%libvirt_sysconfig_posttrans virtinterfaced
 %libvirt_daemon_perform_restart virtinterfaced
 
+%pre daemon-driver-secret
+%libvirt_sysconfig_pre virtsecretd
 
 %post daemon-driver-secret
 %if %{with_modular_daemons}
@@ -1609,23 +1651,44 @@ fi
 %libvirt_daemon_systemd_preun virtsecretd
 
 %posttrans daemon-driver-secret
+%libvirt_sysconfig_posttrans virtsecretd
 %libvirt_daemon_perform_restart virtsecretd
 
 
-%post daemon-driver-storage
+%pre daemon-driver-storage-core
+%libvirt_sysconfig_pre virtstoraged
+
+%post daemon-driver-storage-core
 %if %{with_modular_daemons}
 %libvirt_daemon_systemd_post virtstoraged
 %endif
 %libvirt_daemon_schedule_restart virtstoraged
 
-%preun daemon-driver-storage
+%preun daemon-driver-storage-core
 %libvirt_daemon_systemd_preun virtstoraged
 
-%posttrans daemon-driver-storage
+%posttrans daemon-driver-storage-core
+%libvirt_sysconfig_posttrans virtstoraged
 %libvirt_daemon_perform_restart virtstoraged
 
 
 %if %{with_qemu}
+%pre daemon-driver-qemu
+%libvirt_sysconfig_pre virtqemud
+# We want soft static allocation of well-known ids, as disk images
+# are commonly shared across NFS mounts by id rather than name; see
+# https://fedoraproject.org/wiki/Packaging:UsersAndGroups
+getent group kvm >/dev/null || groupadd -f -g 36 -r kvm
+getent group qemu >/dev/null || groupadd -f -g 107 -r qemu
+if ! getent passwd qemu >/dev/null; then
+  if ! getent passwd 107 >/dev/null; then
+    useradd -r -u 107 -g qemu -G kvm -d / -s /sbin/nologin -c "qemu user" qemu
+  else
+    useradd -r -g qemu -G kvm -d / -s /sbin/nologin -c "qemu user" qemu
+  fi
+fi
+exit 0
+
 %post daemon-driver-qemu
     %if %{with_modular_daemons}
 %libvirt_daemon_systemd_post virtqemud
@@ -1636,11 +1699,15 @@ fi
 %libvirt_daemon_systemd_preun virtqemud
 
 %posttrans daemon-driver-qemu
+%libvirt_sysconfig_posttrans virtqemud
 %libvirt_daemon_perform_restart virtqemud
 %endif
 
 
 %if %{with_lxc}
+%pre daemon-driver-lxc
+%libvirt_sysconfig_pre virtlxcd
+
 %post daemon-driver-lxc
     %if %{with_modular_daemons}
 %libvirt_daemon_systemd_post virtlxcd
@@ -1651,6 +1718,7 @@ fi
 %libvirt_daemon_systemd_preun virtlxcd
 
 %posttrans daemon-driver-lxc
+%libvirt_sysconfig_posttrans virtlxcd
 %libvirt_daemon_perform_restart virtlxcd
 %endif
 
@@ -1662,10 +1730,14 @@ fi
     %endif
 %libvirt_daemon_schedule_restart virtvboxd
 
+%pre daemon-driver-vbox
+%libvirt_sysconfig_pre virtvboxd
+
 %preun daemon-driver-vbox
 %libvirt_daemon_systemd_preun virtvboxd
 
 %posttrans daemon-driver-vbox
+%libvirt_sysconfig_posttrans virtvboxd
 %libvirt_daemon_perform_restart virtvboxd
 %endif
 
@@ -1677,10 +1749,14 @@ fi
     %endif
 %libvirt_daemon_schedule_restart virtxend
 
+%pre daemon-driver-libxl
+%libvirt_sysconfig_pre virtxend
+
 %preun daemon-driver-libxl
 %libvirt_daemon_systemd_preun virtxend
 
 %posttrans daemon-driver-libxl
+%libvirt_sysconfig_posttrans virtxend
 %libvirt_daemon_perform_restart virtxend
 %endif
 
@@ -1747,23 +1823,6 @@ done
 %libvirt_daemon_perform_restart libvirtd
 %libvirt_daemon_perform_restart virtnwfilterd
 
-%if %{with_qemu}
-%pre daemon-driver-qemu
-# We want soft static allocation of well-known ids, as disk images
-# are commonly shared across NFS mounts by id rather than name; see
-# https://fedoraproject.org/wiki/Packaging:UsersAndGroups
-getent group kvm >/dev/null || groupadd -f -g 36 -r kvm
-getent group qemu >/dev/null || groupadd -f -g 107 -r qemu
-if ! getent passwd qemu >/dev/null; then
-  if ! getent passwd 107 >/dev/null; then
-    useradd -r -u 107 -g qemu -G kvm -d / -s /sbin/nologin -c "qemu user" qemu
-  else
-    useradd -r -g qemu -G kvm -d / -s /sbin/nologin -c "qemu user" qemu
-  fi
-fi
-exit 0
-%endif
-
 %if %{with_lxc}
 %pre login-shell
 getent group virtlogin >/dev/null || groupadd -r virtlogin
@@ -1800,16 +1859,11 @@ exit 0
 %{_unitdir}/virtlockd.socket
 %{_unitdir}/virtlockd-admin.socket
 %{_unitdir}/libvirt-guests.service
-%config(noreplace) %{_sysconfdir}/sysconfig/libvirtd
-%config(noreplace) %{_sysconfdir}/sysconfig/virtproxyd
-%config(noreplace) %{_sysconfdir}/sysconfig/virtlogd
-%config(noreplace) %{_sysconfdir}/sysconfig/virtlockd
 %config(noreplace) %{_sysconfdir}/libvirt/libvirtd.conf
 %config(noreplace) %{_sysconfdir}/libvirt/virtproxyd.conf
 %config(noreplace) %{_sysconfdir}/libvirt/virtlogd.conf
 %config(noreplace) %{_sysconfdir}/libvirt/virtlockd.conf
 %config(noreplace) %{_sysconfdir}/sasl2/libvirt.conf
-%config(noreplace) %{_sysconfdir}/sysconfig/libvirt-guests
 %config(noreplace) %{_prefix}/lib/sysctl.d/60-libvirtd.conf
 
 %config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd
@@ -1859,6 +1913,8 @@ exit 0
 
 %{_mandir}/man1/virt-admin.1*
 %{_mandir}/man1/virt-host-validate.1*
+%{_mandir}/man8/virt-ssh-helper.8*
+%{_mandir}/man8/libvirt-guests.8*
 %{_mandir}/man8/libvirtd.8*
 %{_mandir}/man8/virtlogd.8*
 %{_mandir}/man8/virtlockd.8*
@@ -1881,7 +1937,6 @@ exit 0
 %ghost %{_sysconfdir}/libvirt/nwfilter/*.xml
 
 %files daemon-driver-interface
-%config(noreplace) %{_sysconfdir}/sysconfig/virtinterfaced
 %config(noreplace) %{_sysconfdir}/libvirt/virtinterfaced.conf
 %{_datadir}/augeas/lenses/virtinterfaced.aug
 %{_datadir}/augeas/lenses/tests/test_virtinterfaced.aug
@@ -1894,7 +1949,6 @@ exit 0
 %{_mandir}/man8/virtinterfaced.8*
 
 %files daemon-driver-network
-%config(noreplace) %{_sysconfdir}/sysconfig/virtnetworkd
 %config(noreplace) %{_sysconfdir}/libvirt/virtnetworkd.conf
 %{_datadir}/augeas/lenses/virtnetworkd.aug
 %{_datadir}/augeas/lenses/tests/test_virtnetworkd.aug
@@ -1918,7 +1972,6 @@ exit 0
 %endif
 
 %files daemon-driver-nodedev
-%config(noreplace) %{_sysconfdir}/sysconfig/virtnodedevd
 %config(noreplace) %{_sysconfdir}/libvirt/virtnodedevd.conf
 %{_datadir}/augeas/lenses/virtnodedevd.aug
 %{_datadir}/augeas/lenses/tests/test_virtnodedevd.aug
@@ -1931,7 +1984,6 @@ exit 0
 %{_mandir}/man8/virtnodedevd.8*
 
 %files daemon-driver-nwfilter
-%config(noreplace) %{_sysconfdir}/sysconfig/virtnwfilterd
 %config(noreplace) %{_sysconfdir}/libvirt/virtnwfilterd.conf
 %{_datadir}/augeas/lenses/virtnwfilterd.aug
 %{_datadir}/augeas/lenses/tests/test_virtnwfilterd.aug
@@ -1946,7 +1998,6 @@ exit 0
 %{_mandir}/man8/virtnwfilterd.8*
 
 %files daemon-driver-secret
-%config(noreplace) %{_sysconfdir}/sysconfig/virtsecretd
 %config(noreplace) %{_sysconfdir}/libvirt/virtsecretd.conf
 %{_datadir}/augeas/lenses/virtsecretd.aug
 %{_datadir}/augeas/lenses/tests/test_virtsecretd.aug
@@ -1961,7 +2012,6 @@ exit 0
 %files daemon-driver-storage
 
 %files daemon-driver-storage-core
-%config(noreplace) %{_sysconfdir}/sysconfig/virtstoraged
 %config(noreplace) %{_sysconfdir}/libvirt/virtstoraged.conf
 %{_datadir}/augeas/lenses/virtstoraged.aug
 %{_datadir}/augeas/lenses/tests/test_virtstoraged.aug
@@ -2019,8 +2069,8 @@ exit 0
 
 %if %{with_qemu}
 %files daemon-driver-qemu
-%config(noreplace) %{_sysconfdir}/sysconfig/virtqemud
 %config(noreplace) %{_sysconfdir}/libvirt/virtqemud.conf
+%config(noreplace) %{_prefix}/lib/sysctl.d/60-qemu-postcopy-migration.conf
 %{_datadir}/augeas/lenses/virtqemud.aug
 %{_datadir}/augeas/lenses/tests/test_virtqemud.aug
 %{_unitdir}/virtqemud.service
@@ -2035,7 +2085,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd.qemu
 %ghost %dir %{_rundir}/libvirt/qemu/
 %dir %attr(0751, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/
-%dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/cache/libvirt/qemu/
+%dir %attr(0750, root, root) %{_localstatedir}/cache/libvirt/qemu/
 %{_datadir}/augeas/lenses/libvirtd_qemu.aug
 %{_datadir}/augeas/lenses/tests/test_libvirtd_qemu.aug
 %{_libdir}/libvirt/connection-driver/libvirt_driver_qemu.so
@@ -2048,7 +2098,6 @@ exit 0
 
 %if %{with_lxc}
 %files daemon-driver-lxc
-%config(noreplace) %{_sysconfdir}/sysconfig/virtlxcd
 %config(noreplace) %{_sysconfdir}/libvirt/virtlxcd.conf
 %{_datadir}/augeas/lenses/virtlxcd.aug
 %{_datadir}/augeas/lenses/tests/test_virtlxcd.aug
@@ -2071,7 +2120,6 @@ exit 0
 
 %if %{with_libxl}
 %files daemon-driver-libxl
-%config(noreplace) %{_sysconfdir}/sysconfig/virtxend
 %config(noreplace) %{_sysconfdir}/libvirt/virtxend.conf
 %{_datadir}/augeas/lenses/virtxend.aug
 %{_datadir}/augeas/lenses/tests/test_virtxend.aug
@@ -2094,7 +2142,6 @@ exit 0
 
 %if %{with_vbox}
 %files daemon-driver-vbox
-%config(noreplace) %{_sysconfdir}/sysconfig/virtvboxd
 %config(noreplace) %{_sysconfdir}/libvirt/virtvboxd.conf
 %{_datadir}/augeas/lenses/virtvboxd.aug
 %{_datadir}/augeas/lenses/tests/test_virtvboxd.aug
@@ -2147,11 +2194,12 @@ exit 0
 %files client
 %{_mandir}/man1/virsh.1*
 %{_mandir}/man1/virt-xml-validate.1*
+%{_mandir}/man1/virt-pki-query-dn.1*
 %{_mandir}/man1/virt-pki-validate.1*
 %{_bindir}/virsh
 %{_bindir}/virt-xml-validate
-%{_bindir}/virt-pki-validate
 %{_bindir}/virt-pki-query-dn
+%{_bindir}/virt-pki-validate
 
 %{_datadir}/bash-completion/completions/virsh
 
