@@ -3,8 +3,8 @@
 # This spec file began as CentOS's ovmf spec file, then cut down and modified.
 
 Name:       intel-mvp-tdx-tdvf
-Version:    2021.12.17
-Release:    ww50.5.mvp31
+Version:    2022.3.10
+Release:    ww10.2.mvp34
 Summary:    UEFI firmware for 64-bit virtual machines supporting trusted domains
 Group:      Applications/Emulators
 License:    BSD and OpenSSL and MIT
@@ -62,14 +62,16 @@ build -p OvmfPkg/OvmfPkgX64.dsc \
       -t GCC5 \
       -D DEBUG_ON_SERIAL_PORT=TRUE \
       -D TDX_MEM_PARTIAL_ACCEPT=512 \
-      -D TDX_EMULATION_ENABLE=FALSE
+      -D TDX_EMULATION_ENABLE=FALSE \
+      -D TDX_ACCEPT_PAGE_SIZE=2M
 
 build -p OvmfPkg/OvmfPkgX64.dsc \
       -a X64 -b RELEASE \
       -t GCC5 \
       -D DEBUG_ON_SERIAL_PORT=FALSE \
       -D TDX_MEM_PARTIAL_ACCEPT=512 \
-      -D TDX_EMULATION_ENABLE=FALSE
+      -D TDX_EMULATION_ENABLE=FALSE \
+      -D TDX_ACCEPT_PAGE_SIZE=2M
 
 %install
 mkdir -p %{buildroot}/usr/share/qemu
@@ -88,3 +90,4 @@ cp Build/OvmfX64/RELEASE_GCC*/X64/DumpTdxEventLog.efi %{buildroot}/usr/share/qem
 /usr/share/qemu/OVMF_CODE.fd
 /usr/share/qemu/OVMF_VARS.fd
 /usr/share/qemu/DumpTdxEventLog.efi
+

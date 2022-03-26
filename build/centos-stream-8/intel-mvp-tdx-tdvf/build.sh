@@ -4,7 +4,7 @@ set -e
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 DOWNSTREAM_GIT_URI="https://github.com/tianocore/edk2-staging.git"
-DOWNSTREAM_TAG="2021-ww50.5"
+DOWNSTREAM_TAG="tdvf-2022-ww10.2"
 SPEC_FILE="${CURR_DIR}/tdvf.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
 
