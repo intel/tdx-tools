@@ -54,9 +54,7 @@ Regarding the use of various digital certificates, you can refer to the followin
 
 ### Enrolling Keys to TDVF
 
-In this step, we need to enroll the generated key into TDVF.
-
-Install TDVF Secure Boot Key Enrolling Tools.
+In this step, we need to enroll the generated key into TDVF using [tdvfkeyenroll](https://github.com/intel/tdx-tools/tree/main/utils/tdvfkeyenroll).
 
 ```sh
 cd utils/tdvf-key-enroll
