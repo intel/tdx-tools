@@ -7,7 +7,7 @@ ARG buildreqs="bzip2 coreutils cpio diffutils \
 
 COPY aliyun.repo /etc/yum.repos.d/
 
-RUN dnf -y --setopt="tsflags=nodocs" update --allowerasing && \
+RUN dnf -y --setopt="tsflags=nodocs" update --nobest --allowerasing && \
     dnf -y --setopt="tsflags=nodocs" install --allowerasing $buildreqs && \
     dnf clean all && rm -rf /var/cache/yum/
 
