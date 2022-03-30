@@ -6,15 +6,18 @@ CURR_DIR=$(dirname "$(readlink -f "$0")")
 
 PACKAGES_GUEST=( \
     intel-mvp-tdx-guest-grub2 \
-    intel-mvp-tdx-guest-kernel \
     intel-mvp-tdx-guest-shim \
     )
 
 PACKAGES_HOST=( \
-    intel-mvp-tdx-host-kernel \
+    intel-mvp-spr-kernel \
     intel-mvp-tdx-libvirt \
-    intel-mvp-tdx-qemu-kvm \
     intel-mvp-tdx-tdvf \
+    )
+
+# For packages which need to be moved from host build to guest repo
+PACKAGES_SPECIAL=( \
+    intel-mvp-spr-kernel-guest \
     )
 
 build_repo() {
@@ -35,7 +38,20 @@ build_repo() {
         fi
         popd || exit 1
     done
+}
 
+move_packages() {
+    packages=("${@:3}")
+    begin=$1
+    dest=$2
+
+    for package in "${packages[@]}"; do
+        mv repo/"${begin}"/x86_64/"${package}"* repo/"${dest}"/x86_64/
+    done
+}
+
+finalize() {
+    repo_type=$1
     pushd "${CURR_DIR}"/repo/"${repo_type}" || exit 1
     createrepo .
     popd || exit 1
@@ -53,8 +69,15 @@ then
     dnf install createrepo -y
 fi
 
+# Build host repo
+build_repo "host" "${PACKAGES_HOST[@]}"
+
 # Build guest repo
 build_repo "guest" "${PACKAGES_GUEST[@]}"
 
-# Build host repo
-build_repo "host" "${PACKAGES_HOST[@]}"
+# Move special packages
+move_packages "host" "guest" "${PACKAGES_SPECIAL[@]}"
+
+# Finalize
+finalize "host"
+finalize "guest"
