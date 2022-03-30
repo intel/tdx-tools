@@ -27,7 +27,7 @@ sudo /usr/libexec/qemu-kvm \
     -accel kvm \
     -no-reboot \
     -name process=tdxvm \
-    -cpu host,-kvm-steal-time \
+    -cpu host,-shstk,-kvm-steal-time \
     -smp ${CORES},sockets=1 \
     -m ${MEM} \
     -object tdx-guest,id=tdx \
@@ -62,7 +62,7 @@ and [grub boot](/doc/tdx_libvirt_grub.xml.template).
 
     ```
     <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-      <name>REPLACEME_NAME</name>
+      <name>td-guest</name>
       <memory unit='KiB'>2097152</memory>
       <vcpu placement='static'>1</vcpu>
       <os>
@@ -116,7 +116,7 @@ and [grub boot](/doc/tdx_libvirt_grub.xml.template).
       </launchSecurity>
       <qemu:commandline>
         <qemu:arg value='-cpu'/>
-        <qemu:arg value='host,-kvm-steal-time'/>
+        <qemu:arg value='host,-shstk,-kvm-steal-time'/>
       </qemu:commandline>
     </domain>
     ```

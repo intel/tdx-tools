@@ -186,9 +186,9 @@ class VMMLibvirt(VMMBase):
             xmlobj.nvram = var_fullpath
             if DUT.get_cpu_base_freq() < 1000000:
                 xmlobj.set_cpu_params(
-                    "host,-kvm-steal-time,pmu=off,tsc-freq=1000000000")
+                    "host,-shstk,-kvm-steal-time,pmu=off,tsc-freq=1000000000")
             else:
-                xmlobj.set_cpu_params("host,-kvm-steal-time,pmu=off")
+                xmlobj.set_cpu_params("host,-shstk,-kvm-steal-time,pmu=off")
 
         if self.vminst.boot == BOOT_TYPE_GRUB:
             xmlobj.kernel = None
