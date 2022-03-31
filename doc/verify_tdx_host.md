@@ -36,10 +36,12 @@ After reboot into TDX host kernel,
   sudo dnf install -y msr-tools
   ```
 
-- Check TDX SEAM module version
+- Check TDX SEAM module version, build date should be 20220131,
+major version should be 0x1
 
   ```
-  cat /sys/firmware/tdx_seam/*
+  cat /sys/firmware/tdx/tdx_module/build_date
+  cat /sys/firmware/tdx/tdx_module/major_version
   ```
 
 - Check MK-TME is enabled according to [Intel&reg; Architecture Memory
