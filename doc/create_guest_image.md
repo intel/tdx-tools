@@ -44,8 +44,12 @@ cd tdx-tools/build/centos-stream-8/guest-image/
 _NOTE:_
 
 - The script will download CentOS-Stream-8-x86_64-latest-dvd1.iso (~10G) if it
-does not exist.
-- Then run virt-install to install guest image using kickstart scripts.
+does not exist. Then it runs virt-install to install guest image using kickstart scripts.
+- For RHEL-8 image, please prepare RHEL 8.5 base ISO image and put it under the same directory of `create-efi-img.sh`. Modify `create-efi-img.sh` and put your ISO name to below line. Then run `create-efi-img.sh` to create RHEL 8.5 guest image.
+
+  ```
+  ISO="RHEL-8.5.0-20211013.2-x86_64-dvd1.iso"
+  ```
 
 ### Install TDX Guest Stack into the Guest Image
 
