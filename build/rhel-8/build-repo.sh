@@ -66,8 +66,8 @@ finalize() {
 # Check whether createrepo tool installed
 if ! command -v "createrepo"
 then
-    echo "Did not find createrepo package, install..."
-    dnf install createrepo -y
+    echo "Did not find createrepo package, please install it by dnf install createrepo"
+    exit 1
 fi
 
 # Build host repo
