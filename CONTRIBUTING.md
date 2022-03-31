@@ -31,7 +31,6 @@ The `topic: summary of what changed` format is preferred but will not be
 enforced. As long as it includes the topic and a summary of what changed it is
 acceptible.
 
-
 ### Body content
 
 The body of the commit should explain the why the commit is needed or wanted.

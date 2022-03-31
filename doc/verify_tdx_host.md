@@ -1,7 +1,7 @@
 
-# Verify TDX Status
+## Verify TDX Status
 
-## Verify Host
+### Verify Host
 
 After reboot into TDX host kernel,
 
@@ -62,7 +62,7 @@ Encryption Technologies](https://software.intel.com/sites/default/files/managed/
 
   2. Calculte the value of 2 ^ MK_TME_KEYID_BITS - 2
 
-## Verify Guest
+### Verify Guest
 
 - Check the system initialization messages after TD guest boot:
 

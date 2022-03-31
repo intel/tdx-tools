@@ -21,12 +21,25 @@
 #
 
 latest-guest-image-centosstream:
-  source: http://<your artifactory webserver for tdx guest image>/td-guest.qcow2.tar.xz
-  sha256sum: http://<your artifactory webserver for tdx guest image>/td-guest.qcow2.tar.xz.sha256sum
+  source: http://<your artifactory webserver for tdx guest image>/td-guest-centos-stream-8.qcow2.tar.xz
+  sha256sum: http://<your artifactory webserver for tdx guest image>/td-guest-centos-stream-8.qcow2.tar.xz.sha256sum
 
 latest-guest-kernel-centosstream:
-  source: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz
-  sha256sum: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz.sha256sum
+  source: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz-stream
+  sha256sum: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz-stream.sha256sum
 
-latest-guest-local-image:
-  source: file:///<your artifactory local repo for tdx guest image>/td-guest.qcow2
+latest-guest-image-rhel:
+  source: http://<your artifactory webserver for tdx guest image>/td-guest-rhel8.qcow2.tar.xz
+  sha256sum: http://<your artifactory webserver for tdx guest image>/td-guest-rhel8.qcow2.tar.xz.sha256sum
+
+latest-guest-kernel-rhel:
+  source: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz-rhel8.5
+  sha256sum: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz-rhel8.5.sha256sum
+
+# If your guest image and guest kernel are at local, use below format to point to your image and kernel. Take rhel image and kernel as an example:
+
+latest-guest-image-rhel:
+  source: file:///<your directory>/td-guest-rhel8.qcow2
+
+latest-guest-kernel-rhel:
+  source: file:///<your directory>/vmlinuz-rhel8.5

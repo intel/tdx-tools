@@ -10,6 +10,7 @@ memory contents and its CPU state from any other software, including the hosting
 Virtual Machine Monitor (VMM). Please get more details from _[TDX White Papers and Specifications](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-trust-domain-extensions.html)_
 
 This repository helps to:
+
 - Build individual component's package or install pre-build binaries on IaaS
 host or create PaaS guest image for quick evaluation
 - Generate the patchsets for deep dive in source code level
@@ -78,11 +79,10 @@ Finally, install packages as follows:
 sudo dnf install intel-mvp-tdx-host-kernel intel-mvp-tdx-tdvf intel-mvp-tdx-qemu-kvm intel-mvp-tdx-libvirt
 ```
 
-
 ### 3.2 Prepare TDX Guest Image
 
-After building TDX components packages please refer to [Setup TDX Guest Image](/doc/create_guest_image.md) to install them into cloud image. It uses
-`CentOS Stream 8` as example distro.
+After building TDX components packages please refer to [Setup TDX Guest Image](/doc/create_guest_image.md) to install
+them into cloud image. It uses `CentOS Stream 8` as example distro.
 
 ## 4. Launch TD VM Guest
 

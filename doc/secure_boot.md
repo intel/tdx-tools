@@ -93,6 +93,7 @@ sudo rpm -ihvf sbsigntools-0.9.4-2.fc33.x86_64.rpm
 
 Next, run the following script to sign shim and grub efi files and kernel vmlinuz file in a guest image.
 Please assign the correct values at the beginning of the script if needed:
+
 + IMG: guest image that have shim, grub and kernel 5.1* installed
 + KEY_DIR: directory that contains DB.key and DB.crt generated above
 + DISTRO: redhat for rhel, centos for centos/centos stream 8
@@ -151,7 +152,8 @@ After that, boot vm via
 ./start-qemu.sh -i /path/to/td-guest.qcow2 -b grub -a /path/to/OVMF_VARS.sb.fd
 ```
 
-To boot via libvirt, please update the [xml template](https://github.com/intel/tdx-tools/blob/main/doc/tdx_libvirt_grub.xml.template) as follows before running the usual virsh commands.
+To boot via libvirt, please update the [xml template](https://github.com/intel/tdx-tools/blob/main/doc/tdx_libvirt_grub.xml.template)
+as follows before running the usual virsh commands.
 
 + Add secure='yes': `<loader type='generic' secure='yes'>/usr/share/qemu/OVMF_CODE.fd</loader>`
 + Use OVMF_VARS.sb.fd: `<nvram>/path/to/OVMF_VARS.sb.fd</nvram>`
