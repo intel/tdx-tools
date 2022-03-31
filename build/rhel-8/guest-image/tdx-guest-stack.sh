@@ -32,14 +32,14 @@ ARGS+=" --copy-in config/srv_guest.repo:/etc/yum.repos.d/"
 # Install TDX guest packages
 GRUB="intel-mvp-tdx-guest-grub2-efi-x64 intel-mvp-tdx-guest-grub2-pc"
 SHIM="intel-mvp-tdx-guest-shim"
-KERNEL="intel-mvp-tdx-guest-kernel"
+KERNEL="intel-mvp-spr-kernel-guest"
 REPO="srv_guest"
 ARGS+=" --run-command 'dnf install ${GRUB} ${SHIM} ${KERNEL} -y --repo ${REPO}'"
 
 # Setup grub
 ARGS+=" --copy-in config/grub:/etc/default/"
-ARGS+=" --run-command 'grub2-editenv /boot/efi/EFI/centos/grubenv create'"
-ARGS+=" --run-command 'grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg'"
+ARGS+=" --run-command 'grub2-editenv /boot/efi/EFI/redhat/grubenv create'"
+ARGS+=" --run-command 'grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg'"
 
 echo "${ARGS}"
 eval virt-customize "${ARGS}"
