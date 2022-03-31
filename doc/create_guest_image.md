@@ -56,6 +56,7 @@ Install tdx-guest-grub2, tdx-guest-shim and tdx-guest-kernel:
 ```
 
 _NOTE:_
+
 - It will copy TDX guest repo to td-guest-c8s.qcow2 and install the guest
 packages
 - Use the existing host environment in the guest. Such as /etc/environment,

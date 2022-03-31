@@ -13,7 +13,8 @@ popd
 
 ### Launch via qemu-kvm
 
-Make use of the provided [start_qemu.sh](https://github.com/intel/tdx-tools/main/start-qemu.sh) script to start a TD via QEMU.
+Make use of the provided [start_qemu.sh](https://github.com/intel/tdx-tools/main/start-qemu.sh) script to start a TD
+via QEMU.
 
 A simple usage of the script would be as follows:
 
@@ -117,4 +118,3 @@ and [grub boot](https://github.com/intel/tdx-tools/blob/main/doc/tdx_libvirt_gru
     sudo virsh define tdx.xml
     sudo virsh start td-guest
     ```
-

@@ -13,7 +13,6 @@ before providing the TDX guest VM.
 
 The Log Area Start Address (LASA) is from ACPI TDEL table. Please see [GHCI specification](https://software.intel.com/content/dam/develop/external/us/en/documents/intel-tdx-guest-hypervisor-communication-interface.pdf).
 
-
 ### Run
 
 1. Get Event Log
