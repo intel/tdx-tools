@@ -19,9 +19,9 @@
 #     - a SHA256 string starting with 'http'/'https'
 #     - local guest image file doesn't need sha256sum
 #
-# If you are using centos stream 8 guest image, please update the filed of 
-# centos stream 8. If you ar using rhel 8 guest image, please update the field
-# of rhel.
+# If you are using centos stream 8 guest image, please update the
+# centos-stream-8 fields. If you are using rhel 8 guest image, please update the
+# rhel fields.
 #
 # Please remove entries that are not in use to make sure image and kernel
 # entry is unique.
