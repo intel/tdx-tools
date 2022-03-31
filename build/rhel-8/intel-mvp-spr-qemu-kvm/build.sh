@@ -5,7 +5,7 @@ set -ex
 CURR_DIR="$(dirname "$(readlink -f "$0")")"
 
 DOWNSTREAM_GIT_URI="https://github.com/intel/qemu-dcp.git"
-DOWNSTREAM_TAG="SPR-BKC-QEMU-v1.11"
+DOWNSTREAM_TAG="SPR-BKC-QEMU-pub-v1"
 DOWNSTREAM_TARBALL="qemu-${DOWNSTREAM_TAG}.tar.gz"
 
 SPEC_FILE="${CURR_DIR}/spr-qemu.spec"
