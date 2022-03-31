@@ -39,7 +39,19 @@ For more advanced configurations, please check the help menu:
 **NOTE:** Please get libvirt template for [direct boot](https://github.com/intel/tdx-tools/blob/main/doc/tdx_libvirt_direct.xml.template)
 and [grub boot](https://github.com/intel/tdx-tools/blob/main/doc/tdx_libvirt_grub.xml.template).
 
-1. Create a XML configuration file *tdx.xml*
+1. Configure libvirt
+
+  - As the root user, uncomment and save the following settings in /etc/libvirt/qemu.conf:
+    - user = "root"
+    - group = "root"
+    - dynamic_ownership = 0
+  - To make sure libvirt uses these settings, restart the libvirt service:
+
+    ```
+    sudo systemctl restart libvirtd
+    ```
+
+2. Create a XML configuration file *tdx.xml*
 
     _**NOTE:**_
     - Please replace the '/path/to' with absolute path in below xml file
@@ -106,13 +118,13 @@ and [grub boot](https://github.com/intel/tdx-tools/blob/main/doc/tdx_libvirt_gru
     </domain>
     ```
 
-2. Launch TD guest
+3. Launch TD guest
 
     ```
     sudo virsh create tdx.xml
     ```
 
-    If want to keep the guest domain, please uses:
+    To keep the guest domain, please use:
 
     ```
     sudo virsh define tdx.xml

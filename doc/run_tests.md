@@ -16,6 +16,13 @@ running. It uses `CentOS Stream 8` as example distro.
     sudo sudo dnf install python3-virtualenv python3-libvirt-6.0.0 libguestfs-devel libvirt-devel python3-devel
     ```
 
+- Make sure libvirt service is started. If not, start libvirt service.
+
+     ```
+    sudo systemctl status libvirtd
+    sudo systemctl start libvirtd
+    ```
+
 - Setup environment:
 
     Run below command to setup the pythone environment
