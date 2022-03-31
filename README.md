@@ -27,13 +27,12 @@ below diagram:
 
 | Name | Stack | Description |
 | -- | -- | -- |
-| [TDX Host Kernel](https://github.com/intel/tdx/tree/kvm) | IaaS Host| The modified kernel for baremetal server with TDX KVM patches |
-| [TDX Qemu-KVM](https://github.com/intel/qemu-tdx) | IaaS Host | The modified Qemu VMM to support to create TDX guest VM |
-| [TDX Libvirt](https://github.com/intel/libvirt-tdx) | IaaS Host | The modified libvirt to create TDX guest domain via Qemu |
-| [TDVF](https://github.com/tianocore/edk2-staging/tree/TDVF) | IaaS Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |
-| [TDX Guest Kernel](https://github.com/intel/tdx/tree/guest) | PaaS VM | The modified kernel for guest VM with TDX patches |
-| [TDX Grub2](https://github.com/intel/grub-tdx) | VM Guest | The modified grub for guest VM to support TDX measurement |
-| [TDX shim](https://github.com/intel/shim-tdx) | VM Guest | The modified shim for guest VM to support TDX measurement |
+| [SPR Kernel](https://github.com/intel/linux-kernel-dcp) | Host + Guest | Linux kernel for Sapphire Rapids platform |
+| [SPR Qemu-KVM](https://github.com/intel/qemu-dcp) | Host | Qemu VMM for Sapphire Rapids platform |
+| [TDX Libvirt](https://github.com/intel/libvirt-tdx) | Host | The modified libvirt to create TDX guest domain via Qemu |
+| [TDVF](https://github.com/tianocore/edk2-staging/tree/TDVF) | Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |
+| [TDX Grub2](https://github.com/intel/grub-tdx) | Guest | The modified grub for guest VM to support TDX measurement |
+| [TDX shim](https://github.com/intel/shim-tdx) | Guest | The modified shim for guest VM to support TDX measurement |
 
 ## 3. Getting Started
 
@@ -76,7 +75,7 @@ module_hotfixes=true
 Finally, install packages as follows:
 
 ```
-sudo dnf install intel-mvp-tdx-host-kernel intel-mvp-tdx-tdvf intel-mvp-tdx-qemu-kvm intel-mvp-tdx-libvirt
+sudo dnf install intel-mvp-spr-kernel intel-mvp-tdx-tdvf intel-mvp-spr-qemu-kvm intel-mvp-tdx-libvirt
 ```
 
 ### 3.2 Prepare TDX Guest Image
