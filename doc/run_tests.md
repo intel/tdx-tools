@@ -69,3 +69,10 @@ running. It uses `CentOS Stream 8` as example distro.
 
   - The guest image has docker/podman installed.
   - The guest image contains docker image redis:latest.
+
+- User can specify guest image OS with `-g`. Currently only `rhel` and `centosstream`
+is supported. RHEL guest image is used by default if `-g` is not specified:
+
+    ```
+    sudo ./run.sh -g centosstream -s all
+    ```  
