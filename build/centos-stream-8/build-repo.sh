@@ -11,6 +11,7 @@ PACKAGES_GUEST=( \
 
 PACKAGES_HOST=( \
     intel-mvp-spr-kernel \
+    intel-mvp-spr-qemu-kvm \
     intel-mvp-tdx-libvirt \
     intel-mvp-tdx-tdvf \
     )
