@@ -5,10 +5,9 @@
 For direct boot, make sure the guest kernel binary is available to the host:
 
 ```
-mkdir kernels && pushd kernels
-rpm2cpio repo/guest/x86_64/intel-mvp-tdx-kernel-guest-core* | cpio -id
-cp cp lib/modules/*/vmlinuz .
-popd
+rpm2cpio build/rhel-8/repo/guest/x86_64/intel-mvp-spr-kernel-guest-core* | cpio -id
+cp lib/modules/*/vmlinuz .
+rm -rf usr/ lib/
 ```
 
 ### Launch via qemu-kvm
@@ -19,13 +18,13 @@ via QEMU.
 A simple usage of the script would be as follows:
 
 ```
-./start_qemu.sh -i td-guest-rhel-8.5.qcow2 -k kernels/vmlinuz
+./start_qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz
 ```
 
 Or to use the guest's grub bootloader:
 
 ```
-./start_qemu.sh -i td-guest-rhel-8.5.qcow2 -b direct
+./start_qemu.sh -i td-guest-rhel-8.5.qcow2 -b grub
 ```
 
 For more advanced configurations, please check the help menu:
