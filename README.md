@@ -38,14 +38,7 @@ below diagram:
 
 ### 3.1 Install TDX Linux Stack
 
-The component can be installed via pre-build distro package or built from
-scratch.
-
-#### 3.1.1 Install Pre-built Packages
-
-TBD
-
-#### 3.1.2 Build Packages from scratch
+#### 3.1.1 Build Packages from scratch
 
 To build all components, run the following commands:
 
@@ -54,7 +47,14 @@ cd build/centos-stream-8
 ./build-repo.sh
 ```
 
-This will build all packages and create two repositories, one for guest and one for host. Move the host repo to a known location:
+_NOTE:_ Please refer detail instructions for different distros in `build`
+directory.
+
+This will build all packages and create two repositories, one for guest and one for host.
+
+#### 3.1.1 Install RPM repo on the target host
+
+Move the host repo to a known location:
 
 ```
 sudo mkdir -p /srv/
@@ -81,7 +81,7 @@ sudo dnf install intel-mvp-spr-kernel intel-mvp-tdx-tdvf intel-mvp-spr-qemu-kvm 
 ### 3.2 Prepare TDX Guest Image
 
 After building TDX components packages please refer to [Setup TDX Guest Image](/doc/create_guest_image.md) to install
-them into cloud image. It uses `CentOS Stream 8` as example distro.
+them into a cloud image. It uses `CentOS Stream 8` as example distro.
 
 ## 4. Launch TD VM Guest
 
