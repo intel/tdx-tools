@@ -61,7 +61,8 @@ Encryption Technologies](https://software.intel.com/sites/default/files/managed/
   ```
   rdmsr -f 35:32 0x982
   ```
-  The non-zero return value means `MK-TME` supported.
+
+  A non-zero return value means `MK-TME` is supported.
 
 ### Verify Guest
 
