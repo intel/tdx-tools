@@ -18,11 +18,11 @@
   Please refer [using pkg-builder](./pkg-builder/README.md)
 
   For the native build on a CentOS stream development machine, just run:
+
   ```
   cd build/centos-stream-8
   ./build-repo.sh
   ```
-
 
 - Guest image tool
 
