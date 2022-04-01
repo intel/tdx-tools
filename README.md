@@ -121,3 +121,5 @@ After TDX guest image is created, please refer to [TDX Tests](/doc/run_tests.md)
 
 - [How to check memory encryption for TDX guest](/doc/check_memory_encryption.md)
 - [How to debug a TDX guest via Qemu GDB server](/doc/debug_td_guest.md)
+- [Secure boot for TDX](./doc/secure_boot.md)
+- [Measured boot and TDX tool](./utils/pytdxmeasure/README.md)
