@@ -118,15 +118,16 @@ Requires: %{name}-ui-opengl = %{epoch}:%{version}-%{release}     \
 Requires: %{name}-hw-usbredir = %{epoch}:%{version}-%{release}   \
 %endif                                                           \
 Requires: %{name}-block-rbd = %{epoch}:%{version}-%{release}     \
-Requires: %{name}-audio-pa = %{epoch}:%{version}-%{release}
-
+Requires: %{name}-audio-pa = %{epoch}:%{version}-%{release}      \
+Obsoletes: qemu-kvm-block-gluster <= %{epoch}:%{version}         \
+Obsoletes: qemu-kvm-block-iscsi <= %{epoch}:%{version}           \
 
 Summary: QEMU is a machine emulator and virtualizer
 Name: intel-mvp-spr-qemu-kvm
 Version: 6.2.0
-%define source_tag SPR-BKC-QEMU-v1.11
+%define source_tag SPR-BKC-QEMU-pub-v1
 %define downstream_version v1.11
-%define patch_number mvp10
+%define patch_number mvp11
 Release: %{downstream_version}.%{patch_number}%{?dist}
 
 Provides: qemu-kvm
@@ -140,7 +141,7 @@ License: GPLv2 and GPLv2+ and CC-BY
 URL: http://www.qemu.org/
 ExclusiveArch: x86_64 %{power64} aarch64 s390x
 
-Source0: qemu-SPR-BKC-QEMU-v1.11.tar.gz
+Source0: qemu-%{source_tag}.tar.gz
 
 %define source_url_prefix https://git.centos.org/rpms/qemu-kvm/raw/8b0a2884dbf5971f4b59ae540e9eaa9e612711d3/f/SOURCES
 
