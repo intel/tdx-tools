@@ -112,15 +112,9 @@ class VMMBase:
         """
         raise NotImplementedError
 
-    def update_cpu_topology(self, cpu_topology):
+    def update_vmspec(self, new_vmspec):
         """
-        Update cpu topology
-        """
-        raise NotImplementedError
-
-    def update_memsize(self, memsize):
-        """
-        Update memory size of vm
+        Update VM spec include CPU topology and memory size
         """
         raise NotImplementedError
 
@@ -150,13 +144,13 @@ class VMMLibvirt(VMMBase):
         xmlobj = VirtXml.clone(
             self._TEMPLATE[self.vminst.vmtype],
             self.vminst.name)
-        xmlobj.memory = int(self.vminst.memsize * 1024 * 1024)
+        xmlobj.memory = self.vminst.vmspec.memsize
         xmlobj.uuid = self.vminst.vmid
         xmlobj.imagefile = self.vminst.image.filepath
-        xmlobj.vcpu = self.vminst.cpu_topology.vcpus
-        xmlobj.sockets = self.vminst.cpu_topology.sockets
-        xmlobj.cores = self.vminst.cpu_topology.cores
-        xmlobj.threads = self.vminst.cpu_topology.threads
+        xmlobj.vcpu = self.vminst.vmspec.vcpus
+        xmlobj.sockets = self.vminst.vmspec.sockets
+        xmlobj.cores = self.vminst.vmspec.cores
+        xmlobj.threads = self.vminst.vmspec.threads
 
         var_filename = "OVMF_VARS." + xmlobj.uuid + ".fd"
         var_fullpath = os.path.join(tempfile.gettempdir(), var_filename)
@@ -389,15 +383,9 @@ class VMMLibvirt(VMMBase):
         """
         raise NotImplementedError
 
-    def update_cpu_topology(self, cpu_topology):
+    def update_vmspec(self, new_vmspec):
         """
-        Update cpu topology
-        """
-        raise NotImplementedError
-
-    def update_memsize(self, memsize):
-        """
-        Update memory size of vm
+        Update VM spec include CPU topology and memory size
         """
         raise NotImplementedError
 

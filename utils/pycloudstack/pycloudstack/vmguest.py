@@ -14,7 +14,7 @@ from .dut import DUT
 from .vmimg import VMImage
 from .vmm import VMMLibvirt
 from .vmparam import VM_TYPE_TD, VM_TYPE_SGX, VM_STATE_RUNNING, BOOT_TYPE_DIRECT, BOOT_TYPE_GRUB, \
-    HUGEPAGES_2M, BOOT_TIMEOUT, MODEL_BASE, KernelCmdline, CPUTopology
+    HUGEPAGES_2M, BOOT_TIMEOUT, KernelCmdline, VMSpec
 
 __author__ = 'cpio'
 
@@ -44,10 +44,9 @@ class VMGuest:
     """
 
     def __init__(self, image, name, vmid,
-                 vmtype=VM_TYPE_TD, memsize=2,
+                 vmtype=VM_TYPE_TD, vmspec=VMSpec.model_base(),
                  boot=BOOT_TYPE_DIRECT, kernel=None,
                  cmdline=KernelCmdline(),
-                 cpu_topology=CPUTopology(),
                  hugepages=False, hugepage_size=HUGEPAGES_2M,
                  vsock=False, vsock_cid=0,
                  vmm_class=None):
@@ -55,10 +54,9 @@ class VMGuest:
         self.vmid = vmid
         self.name = name
         self.image = image
-        self.cpu_topology = cpu_topology
+        self.vmspec = vmspec
         self.vmtype = vmtype
         self.boot = boot
-        self.memsize = memsize
         self.kernel = kernel
         self.cmdline = cmdline
         self.hugepages = hugepages
@@ -313,19 +311,12 @@ class VMGuest:
         self.kernel = kernel
         return self.vmm.update_kernel(kernel)
 
-    def update_cpu_topology(self, cpu_topology):
+    def update_vmspec(self, new_vmspec):
         """
         Update cpu topology
         """
-        self.cpu_topology = cpu_topology
-        return self.vmm.update_cpu_topology(cpu_topology)
-
-    def update_memsize(self, memsize):
-        """
-        Update memory size of vm
-        """
-        self.memsize = memsize
-        return self.vmm.update_memsize(memsize)
+        self.vmspec = new_vmspec
+        return self.vmm.update_vmspec(new_vmspec)
 
 
 class VMGuestFactory:
@@ -343,15 +334,13 @@ class VMGuestFactory:
         self._vm_kernel = vm_kernel
         self._keep_issue_vm = False
 
-    def new_vm(self, vmtype, model=None, vm_class=VMMLibvirt, cmdline=KernelCmdline(),
-               core=None, socket=None, memsize=None, auto_start=False, hugepages=False,
+    def new_vm(self, vmtype, vmspec=VMSpec.model_base(), vm_class=VMMLibvirt,
+               cmdline=KernelCmdline(),auto_start=False, hugepages=False,
                hugepage_size=None, boot=BOOT_TYPE_DIRECT,
                vsock=False, vsock_cid=3):
         """
         Creat a VM.
         """
-        if model is None:
-            model = MODEL_BASE
 
         if hugepage_size is None:
             hugepage_size = HUGEPAGES_2M
@@ -361,27 +350,13 @@ class VMGuestFactory:
         current_time = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f")
         vm_name = f"{vmtype}-{user_name}-{current_time}"
 
-        # If providing parameter memsize, then it will overide the one from model
-        if memsize is None:
-            memsize = model["memsize"]
-
-        # If providing parameter core, then it will overide the one from model
-        if core is not None:
-            model["cores"] = core
-
-        # If providing parameter socket, then it will overide the one from model
-        if core is not None:
-            model["sockets"] = socket
-
         # SGX VM use grub to boot
         if vmtype == VM_TYPE_SGX:
             boot = BOOT_TYPE_GRUB
 
         inst = VMGuest(self._mother_image.clone(vm_name + ".qcow2"), name=vm_name, vmid=vm_id,
-                       kernel=self._vm_kernel, vmtype=vmtype, boot=boot,
-                       cpu_topology=CPUTopology(model["sockets"], model["cores"], model["threads"]),
-                       cmdline=cmdline,
-                       memsize=memsize, vmm_class=vm_class,
+                       kernel=self._vm_kernel, vmtype=vmtype, boot=boot, vmspec=vmspec,
+                       cmdline=cmdline, vmm_class=vm_class,
                        hugepages=hugepages, hugepage_size=hugepage_size,
                        vsock=vsock, vsock_cid=vsock_cid)
         self.vms[vm_name] = inst

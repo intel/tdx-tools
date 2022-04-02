@@ -28,13 +28,6 @@ VM_STATE_SHUTDOWN_IN_PROGRESS = "shutting down"
 
 BOOT_TIMEOUT = 180
 
-# MODEL array:  #vcpus  #sockets #cores #threads
-MODEL_BASE = {"vcpus": 1, "sockets": 1, "cores": 1, "threads": 1, "memsize": 1}
-MODEL_LARGE = {"vcpus": 8, "sockets": 1,
-               "cores": 4, "threads": 2, "memsize": 32}
-MODEL_NUMA = {"vcpus": 16, "sockets": 2,
-              "cores": 4, "threads": 2, "memsize": 32}
-
 HUGEPAGES_1G = "1G"
 HUGEPAGES_2M = "2M"
 
@@ -130,15 +123,18 @@ class KernelCmdline:
         self._cmdline = retval
 
 
-class CPUTopology:
+class VMSpec:
     """
     CPU Topology parameter for VM configure.
     """
 
-    def __init__(self, sockets=1, cores=1, threads=1):
+    def __init__(self, sockets=1, cores=4, threads=1, memsize=None):
         self.sockets = sockets
         self.cores = cores
         self.threads = threads
+        self.memsize = memsize
+        if memsize is None:
+            self.memsize = self.vcpus * 4 * 1024 * 1024
 
     @property
     def vcpus(self):
@@ -152,3 +148,24 @@ class CPUTopology:
         Is the NUMA enabled
         """
         return self.sockets > 1
+
+    @staticmethod
+    def model_base():
+        """
+        Generate base model
+        """
+        return VMSpec(sockets=1, cores = 4, threads=1, memsize=16*1024*1024)
+
+    @staticmethod
+    def model_large():
+        """
+        Generate large model
+        """
+        return VMSpec(sockets=1, cores=8, threads=1, memsize=32*1024*1024)
+
+    @staticmethod
+    def model_numa():
+        """
+        Generate numa model
+        """
+        return VMSpec(sockets=2, cores=4, threads=1, memsize=32*1024*1024)
