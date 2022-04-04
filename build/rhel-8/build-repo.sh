@@ -47,7 +47,9 @@ move_packages() {
     dest=$2
 
     for package in "${packages[@]}"; do
-        mv repo/"${begin}"/x86_64/"${package}"* repo/"${dest}"/x86_64/
+        if ls repo/"${begin}"/x86_64/"${package}"* >/dev/null 2>&1; then
+            mv repo/"${begin}"/x86_64/"${package}"* repo/"${dest}"/x86_64/
+        fi
     done
 }
 

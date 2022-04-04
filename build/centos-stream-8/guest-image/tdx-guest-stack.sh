@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+export LIBGUESTFS_BACKEND=direct
+
 CURR_DIR=$(readlink -f "$(dirname "$0")")
 REPO_DIR="../repo/guest/"
 IMAGE="td-guest-c8s.qcow2"
