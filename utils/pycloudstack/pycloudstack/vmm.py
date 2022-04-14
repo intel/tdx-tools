@@ -212,7 +212,11 @@ class VMMLibvirt(VMMBase):
 
     def _get_domain(self):
         assert self._virt_conn is not None
-        return self._virt_conn.lookupByUUIDString(self.vminst.vmid)
+        try:
+            return self._virt_conn.lookupByUUIDString(self.vminst.vmid)
+        except libvirt.libvirtError:
+            LOG.warning("Fail to get the domain %s", self.vminst.vmid)
+            return None
 
     def __del__(self):
         self._close_virt()
@@ -292,12 +296,19 @@ class VMMLibvirt(VMMBase):
         dom = self._get_domain()
         dom.reboot()
 
-    def shutdown(self):
+    def shutdown(self, mode=None):
         """
         Shutdown a VM.
         """
         dom = self._get_domain()
-        dom.shutdown()
+        if mode is None:
+            dom.shutdown()
+        elif mode == "default":
+            dom.shutdownFlags(libvirt.VIR_DOMAIN_SHUTDOWN_DEFAULT)
+        elif mode == "acpi":
+            dom.shutdownFlags(libvirt.VIR_DOMAIN_SHUTDOWN_ACPI_POWER_BTN)
+        elif mode == "agent":
+            dom.shutdownFlags(libvirt.VIR_DOMAIN_SHUTDOWN_GUEST_AGENT)
 
     def is_running(self):
         """

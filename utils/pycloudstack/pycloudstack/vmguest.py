@@ -246,13 +246,16 @@ class VMGuest:
         assert self.vmm is not None
         self.vmm.resume()
 
-    def shutdown(self):
+    def shutdown(self, mode=None):
         """
         Shutdown a VM
         """
         LOG.debug("+ Shutdown guest %s", self.name)
         assert self.vmm is not None
-        self.vmm.shutdown()
+        if mode is None:
+            self.vmm.shutdown()
+        else:
+            self.vmm.shutdown(mode)
 
     def destroy(self, delete_image=False):
         """
