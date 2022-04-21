@@ -42,6 +42,7 @@
       <target dev='vda' bus='virtio'/>
     </disk>
     <console type='pty'>
+      <log file='REPLACEME_LOG'/>
       <target type='virtio' port='0'/>
     </console>
     <interface type='bridge'>

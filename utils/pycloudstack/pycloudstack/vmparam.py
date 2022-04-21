@@ -14,7 +14,7 @@ BOOT_TYPE_GRUB = "grub"
 # Also, hvc0 is the default console for TD VM, ttyS0 will be filtered
 # due to security concern.
 #
-DEFAULT_CMDLINE = "root=/dev/vda3 rw selinux=0 console=hvc0 "
+DEFAULT_CMDLINE = "root=/dev/vda3 rw selinux=0 console=hvc0 earlyprintk console=tty0"
 
 # Installed from the package of intel-mvp-qemu-kvm
 BIOS_OVMF_CODE = "/usr/share/qemu/OVMF_CODE.fd"

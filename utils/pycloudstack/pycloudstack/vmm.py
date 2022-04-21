@@ -147,6 +147,7 @@ class VMMLibvirt(VMMBase):
         xmlobj.memory = self.vminst.vmspec.memsize
         xmlobj.uuid = self.vminst.vmid
         xmlobj.imagefile = self.vminst.image.filepath
+        xmlobj.logfile = "/tmp/" + self.vminst.name + ".log"
         xmlobj.vcpu = self.vminst.vmspec.vcpus
         xmlobj.sockets = self.vminst.vmspec.sockets
         xmlobj.cores = self.vminst.vmspec.cores
@@ -258,6 +259,17 @@ class VMMLibvirt(VMMBase):
                 os.remove(self._xml.filepath)
             except (OSError, IOError):
                 LOG.warning("Fail to delete Virt XML %s", self._xml.filepath)
+
+    def delete_log(self):
+        """
+        Delete VM log file.
+        """
+        if os.path.exists(self._xml.logfile):
+            try:
+                os.remove(self._xml.logfile)
+                LOG.debug("Delete VM log file %s", self._xml.logfile)
+            except (OSError, IOError):
+                LOG.warning("Fail to delete VM log file %s", self._xml.logfile)
 
     def start(self):
         """

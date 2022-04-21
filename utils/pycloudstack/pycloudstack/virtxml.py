@@ -53,6 +53,7 @@ class VirtXml:
         self._memory = None
         self._vcpu = None
         self._imagefile = None
+        self._logfile = None
         self._filepath = None
         self._sockets = None
         self._cores = None
@@ -278,6 +279,22 @@ class VirtXml:
         self.save()
 
     @property
+    def logfile(self):
+        """
+        <domain>/<devices>/<console>/<log> - log file field in xml
+        """
+        return self._logfile
+
+    @logfile.setter
+    def logfile(self, new_file):
+        if self._logfile == new_file:
+            return
+        _, log_dom = self._find_single_element(["devices", "console", "log"])
+        log_dom.set("file", new_file)
+        self._logfile = new_file
+        self.save()
+
+    @property
     def filepath(self):
         """
         File path for virt XML
@@ -297,6 +314,7 @@ class VirtXml:
         LOG.debug("|  * cmdline : %s", self._cmdline)
         LOG.debug("|  * loader  : %s", self._loader)
         LOG.debug("|  * nvram   : %s", self._nvram)
+        LOG.debug("|  * log     : %s", self._logfile)
         LOG.debug("-----------------------------------------------------------")
 
         if self._tree is not None and dump_xml:
