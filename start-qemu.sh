@@ -166,7 +166,13 @@ process_args() {
         fi
     fi
 
-    QEMU_CMD+=" -drive file=$(readlink -f "${GUEST_IMG}"),if=virtio,format=qcow2 "
+    case ${GUEST_IMG##*.} in
+        qcow2) FORMAT="qcow2";;
+          img) FORMAT="raw";;
+            *) echo "Unknown disk image's format"; exit 1 ;;
+    esac
+
+    QEMU_CMD+=" -drive file=$(readlink -f "${GUEST_IMG}"),if=virtio,format=$FORMAT "
     QEMU_CMD+=" -monitor telnet:127.0.0.1:${MONITOR_PORT},server,nowait "
 
     if [[ ${DEBUG} == true ]]; then
