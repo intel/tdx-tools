@@ -82,43 +82,47 @@ class KernelCmdline:
         """
         Add a field from full string include key=value
         """
-        self._cmdline += field_str
+        self._cmdline += " " + field_str
 
     def add_field(self, key, value=None):
         """
         Add a field from key, value
         """
         if value is None:
-            self._cmdline += key
+            self._cmdline += " " + key
         else:
-            self._cmdline += f"{key}={value}"
+            self._cmdline += f" {key}={value}"
 
     def is_field_exists(self, field_str):
         """
         Does the field exist from a complete field string
         """
-        return self._cmdline.find(field_str) != -1
+        assert field_str is not None
+        return self._cmdline.find(field_str.strip()) != -1
 
     def is_field_key_exists(self, field_key):
         """
         Does the field exists from given field key
         """
-        return field_key in self.field_keys
+        assert field_key is not None
+        return field_key.strip() in self.field_keys
 
     def remove_field_from_string(self, field_str):
         """
         Remove field from given full field string
         """
-        self._cmdline = self._cmdline.replace(field_str, '')
+        assert field_str is not None
+        self._cmdline = self._cmdline.replace(field_str.strip(), '')
 
     def remove_fields(self, key):
         """
         Remove all fields from given key
         """
+        assert key is not None
         items = self._cmdline.strip().split(' ')
         retval = ''
         for item in items:
-            if item.split('=')[0] != key:
+            if item.split('=')[0] != key.strip():
                 retval += ' ' + item
         self._cmdline = retval
 
