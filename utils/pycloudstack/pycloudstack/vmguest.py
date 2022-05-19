@@ -379,7 +379,6 @@ class VMGuestFactory:
         if not self._keep_issue_vm:
             inst.image.destroy()
             inst.destroy()
-            inst.delete_log()
             if inst.name in self.vms:
                 del self.vms[inst.name]
         else:
