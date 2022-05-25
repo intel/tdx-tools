@@ -1,0 +1,501 @@
+# Chinese translations for grub2 po-debconf
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2010 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# YunQiang Su <wzssyqa@gmail.com>, 2010, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: grub2-po-debconf master\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2011-05-28 17:29+0800\n"
+"Last-Translator: YunQiang Su <wzssyqa@gmail.com>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bits\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "从 menu.lst 进行 chainload？"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr "GRUB 升级脚本在 /boot/grub 探测到了已安装的  GRUB Legacy。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"为了取代您系统上的 GRUB Legacy，推荐调整 /boot/grub/menu.lst 为从现有的 GRUB "
+"Legacy 设置中加载 GRUB 2 引导镜像。现在可以自动执行这个操作。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"推荐您接受从 menu.lst 中 chainload GRUB 2，并且在将 GRUB 2 直接安装到 MBR (主"
+"引导记录，Master Boot Record) 之前确定新的 GRUB 2 设置可以工作。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"无论现在做什么样的决定，您以后都可以使用 root 身份来运行如下命令来使用 GRUB "
+"2 来代替旧的 MBR 映像："
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "GRUB 安装设备："
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"grub-pc 包已经升级。此菜单允许您选择在哪个设备上自动运行 grub-install，如果有"
+"的话。"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"在大多数情况下推荐自动运行 grub-install，以避免安装的 GRUB 核心映像与 GRUB 模"
+"块或 grub.cfg 不同步。"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"如果不确定 BIOS 使用哪个驱动器作为主引导，将 GRUB 安装到所有这些驱动器是一个"
+"不错的主意。"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"注意：也可以将 GRUB 安装到分区的引导记录，这里提供了一些适当的分区。然而，这"
+"强制 GRUB 使用黑名单机制，会造成可靠性降低，因此不推荐使用。"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"GRUB 引导器先前安装到了一个消失了的磁盘上，或者它的唯一标识符由于某些原因变化"
+"了。确保安装的 GRUB 核心映像和 GRUB 模块及 grub.cfg 的同步非常重要。请再次检"
+"查以确保 GRUB 安装到了适当的引导设备。"
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "将 GRUB 写入引导设备失败 - 要继续吗？"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "GRUB 安装到如下设备时失败。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr "仍然想要继续？如果这样，您的计算机可能不能正常启动。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "将 GRUB 写入引导设备失败 - 要重新尝试吗？"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"您可能可以安装 GRUB 到其它设备，尽管您需要明确，您的系统将从那个设备启动。否"
+"则，从 GRUB Legacy 的升级将被取消。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "不安装 GRUB 并且继续？"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"您没有选择向任何设备安装 GRUB。如果继续，引导器可能不能正确配置，当您的计算机"
+"下次启动时，它将使用引导扇区中先前的内容。如果引导扇区中有早期版本的 GRUB 2，"
+"其可能不能加载模块或者处理当前配置文件。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"如果您已经使用了另外一个引导器并且想继续这样做，或者如果这是一个特殊的不需要"
+"引导器的环境，这样您可以仍然继续。否则，您应该在某处安装 GRUB。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "从 /boot/grub 移除 GRUB 2 ?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "确定想从 /boot/grub 移除全部 GRUB 2 文件吗？"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr "这会使系统不能引导，除非另外安装其它引导器。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "现在完成到 GRUB 2 的转换？"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"此系统仍然有 GRUB Legacy 引导器安装的文件，但是现在也在磁盘上安装了 GRUB 2 引"
+"导记录："
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"好像 GRUB Legacy 已经不再使用了，并且您应该在这些磁盘上转而升级到 GRUB 2 映"
+"像，并且通过删除旧的 GRUB Legacy 文件来完成到 GRUB 2 的转换。如果不升级这些 "
+"GRUB 2 映像，他们将可能不能与新包兼容而造成您的系统不能正常引导。"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"您通常应该完成到 GRUB 2 的转换，除非这些引导记录是由安装到其它操作系统上的 "
+"GRUB 2 创建的。"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Linux 命令行："
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"已从 /etc/default/grub 或 GRUB Legacy 的 menu.lst 中的 `kopt' 参数中提取如下 "
+"Linux 命令行。请检查是否正确的，并且根据需要进行修改。此命令行可以为空。"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Linux 默认命令行："
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr "如下字符串将被用于默认菜单项的 Linux 参数，但是不会用于恢复模式。"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"grub-pc 包已经升级。此菜单允许您选择在哪个设备上自动运行 grub-install，如果有"
+"的话。"
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"您没有选择向任何设备安装 GRUB。如果继续，引导器可能不能正确配置，当您的计算机"
+"下次启动时，它将使用引导扇区中先前的内容。如果引导扇区中有早期版本的 GRUB 2，"
+"其可能不能加载模块或者处理当前配置文件。"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "kFreeBSD 参数："
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"已从 /etc/default/grub 或者 GRUB Legacy 的 menu.lst 中的 `kopt' 参数中提取如"
+"下 kFreeBSD 命令行参数。请请检查是否正确，并且根据需要进行修改。此命令行可以"
+"为空。"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "kFreeBSD 默认命令行："
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr "如下字符串将用于默认菜单项的 kFreeBSD 参数，但不会用于恢复模式。"
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map 已经生成"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "文件 /boot/grub/device.map 已经重写以使用稳定的设备名。多数情况下，这应该"
+#~ "显著地减少以后修改它的需要，并且 GRUB 产生的引导菜单项不会受影响。"
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "然而，因为您的系统上有多个磁盘，系统可能依赖旧的设备映射。请检查您是否有任"
+#~ "何自定义的依赖 GRUB 的 (hdN) 驱动器号的引导菜单项，如果需要请更新它们。"
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "如果您不理解此消息，或者没有任何自定义的引导菜单项，您可以忽略此消息。"
+
+#~ msgid ""
+#~ "In either case, whenever you want GRUB 2 to be loaded directly from MBR, "
+#~ "you can do so by issuing (as root) the following command:"
+#~ msgstr ""
+#~ "无论何种情况，当您想直接从 MBR 加载 GRUB 2 时，您可以通过以 root 身份执行"
+#~ "如下命令来实现："
+
+#~ msgid "GRUB installation failed. Continue?"
+#~ msgstr "GRUB 安装失败。仍然继续？"

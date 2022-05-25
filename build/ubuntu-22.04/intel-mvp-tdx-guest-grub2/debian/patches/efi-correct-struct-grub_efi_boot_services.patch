@@ -1,0 +1,28 @@
+From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+Date: Sat, 22 Jan 2022 11:11:32 +0100
+Subject: efi: correct struct grub_efi_boot_services
+
+The UEFI specification defines that the EFI_BOOT_SERVICES.Exit(() service
+may return EFI_SUCCESS or EFI_INVALID_PARAMETER. So it cannot be
+__attribute__((noreturn)).
+
+Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+Origin: https://lists.gnu.org/archive/html/grub-devel/2022-01/msg00121.html
+---
+ include/grub/efi/api.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/grub/efi/api.h b/include/grub/efi/api.h
+index 3211f04..c5dd4af 100644
+--- a/include/grub/efi/api.h
++++ b/include/grub/efi/api.h
+@@ -1267,7 +1267,7 @@ struct grub_efi_boot_services
+   (*exit) (grub_efi_handle_t image_handle,
+ 	   grub_efi_status_t exit_status,
+ 	   grub_efi_uintn_t exit_data_size,
+-	   grub_efi_char16_t *exit_data) __attribute__((noreturn));
++	   grub_efi_char16_t *exit_data);
+ 
+   grub_efi_status_t
+   (*unload_image) (grub_efi_handle_t image_handle);

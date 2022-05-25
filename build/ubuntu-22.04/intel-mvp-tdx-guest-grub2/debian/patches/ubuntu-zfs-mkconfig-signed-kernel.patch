@@ -1,0 +1,51 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Tue, 30 Nov 2021 17:02:37 +0100
+Subject: zsys: Generate configuration for signed UEFI kernels if available
+
+Forwarded: no
+Last-Update: 2013-12-25
+
+Patch-Name: mkconfig-signed-kernel.patch
+---
+ util/grub.d/10_linux_zfs.in | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index 2149864..511c182 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -339,6 +339,16 @@ try_default_layout_bpool() {
+     validate_system_dataset "${candidate_dataset}" "boot" "${mntdir}" "${snapshot_name}"
+ }
+ 
++# Return if secure boot is enabled on that system
++is_secure_boot_enabled() {
++    if LANG=C mokutil --sb-state 2>/dev/null | grep -qi enabled; then
++        echo "true"
++        return
++    fi
++    echo "false"
++    return
++}
++
+ # Given a filesystem or snapshot dataset, returns dataset|machine id|pretty name|last used
+ # $1 is dataset we want information from
+ # $2 is the temporary mount directory to use
+@@ -421,6 +431,17 @@ get_dataset_info() {
+             continue
+         fi
+ 
++        # Filters entry if efi/non efi.
++        # Note that for now we allow kernel without .efi.signed as those are signed kernel
++        # on ubuntu, loaded by the shim.
++        case "${linux}" in
++            *.efi.signed)
++                if [ "$(is_secure_boot_enabled)" = "false" ]; then
++                    continue
++                fi
++            ;;
++        esac
++
+         linux_basename=$(basename "${linux}")
+         linux_dirname=$(dirname "${linux}")
+         version=$(echo "${linux_basename}" | sed -e "s,^[^0-9]*-,,g")

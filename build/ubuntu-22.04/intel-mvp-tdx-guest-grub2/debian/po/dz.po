@@ -1,0 +1,525 @@
+# Translation of grub2 debconf templates to Dzongkha
+# Copyright (C) 2010 Dzongkha Localization
+# This file is distributed under the same license as the PACKAGE package.
+# Jurmey Rabgay <jrabgay@dit.gov.bt>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: grub2\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2001-12-31 19:57-0500\n"
+"Last-Translator: Dawa <dpemo@dit.gov.bt>\n"
+"Language-Team: Dzongkha <LL@li.org>\n"
+"Language: dz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2;plural=(n!=1)\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "menu.lst ནང་ལས་ ཅེན་ལོཌི་འབད་ནི་ཨིན་ན?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"GRUB དུས་མཐུན་ཡིག་ཚུགས་ཚུ་གིས་ /boot/grub ནང་ལུ་ GRUB སྔོན་བཤུལ་གཞི་སྒྲིག་ཅིག་སྐྱོན་འཛིན་འབད་ནུག"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"ཁྱོད་རའི་རིམ་ལུགས་ནང་ལུ་ GRUB གི་སྔོན་བཤུལ་ཐོན་རིམ་ཚབ་བཙུགས་འབད་ནི་གི་དོན་ལུ་ /boot/grub/menu."
+"lst འདི་ ཁྱོད་རའི་ཡོད་བཞིན་པའི་སྔོན་བཤུལ་གཞི་སྒྲིག་ནང་ལས་ ཅེན་ལོཌི་ GRUB ༢ ལུ་ བདེ་སྒྲིག་འབད་དགོཔ་སྦེ་"
+"འོས་སྦྱོར་འབད་ནུག། གཞི་སྒྲིག་འདི་ ཡང་ཅིན་ འཕྲལ་ར་རང་བཞིན་གྱིས་ལཱ་འབད་བཏུབ།"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"ཁྱོད་ཀྱིས་ menu.lst  ནང་ལས་ ཅེན་ལོ་ཌིང་དང་ལེན་འབད་དེ་ GRUB ༢  གཞི་སྒྲིག་གསརཔ་འདི་ MBR "
+"(Master Boot Record) ལུ་ཐད་ཀར་གཞི་བཙུགས་མ་འབད་བའི་ཧེ་མ་ གཡོག་བཀོལ་བཏུབ་མི་བཏུབ་བལྟ་དགོ་"
+"པའི་འོས་སྦྱོར་འབད་དེ་ཡོད།"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"ཁྱོད་ཀྱིས་ག་དེ་སྦེ་ གྲོས་ཐག་གཅད་རུང་ ཤུལ་ལས་ MBR གཟུགས་བརྙན་་རྙིངམ་འདི་ འོག་གི་བརྡ་བཀོད་འདི་ རུཊི་སྦེ་"
+"སྤྲོད་ཐོག་ལས་ GRUB 2 གིས་ཚབ་བཙུགས་འབད་ཚུགས།"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "GRUB གཞི་བཙུགས་ ཐབས་འཕྲུལ་ཚུ :"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"grub-pc ཐུམ་སྒྲིལ་འདི་ ཡར་བསྐྱེད་འབད་ཡོདཔ། དཀར་ཆག་འདི་གིས་ རང་བཞིན་ གཡོག་བཀོལ་ grub-གཞི་"
+"བཙུགས་ གང་རུང་ཡོད་པ་ཅིན་ ཐབས་འཕྲུལ་ སེལ་འཐུ་འབད་བཅུགཔ་ཨིན།"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+" GRUB core གཟུགས་བརྙན་ འདི་ GRUB modulesཡང་ན་  grub.cfg ལས་ སོ་སོ་སྦེ་མི་འགྱོ་ནིའི་དོན་ལུ་ "
+"གནས་སྟངས་མང་ཤོས་ཅིག་ནང་ རང་བཞིན་གྱི་ grub-གཞི་བཙུགས་ གཡོག་བཀོལ་ནི་འདི་ འོས་སྦྱོར་འབད་ཡོདཔ་ཨིན། "
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"ག་དེམ་ཅིག་སྦེ་ ཁྱོད་རའི་BIOS གིས་ ཌའིབ་ག་འདི་ བུཊི་ ཌའིབ་སྦེ་ ངོས་འཛིན་འབད་འབདཝ་ཨིན་ན་མ་ཤེས་པ་"
+"ཅིན་  ཆ་མཉམ་ལུ་ GRUB གཞི་བཙུགས་འབད་ནི་འི་ཐབས་ལམ་ལེགས་ཤོམ་ཅིག་ཨིན།"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"དྲན་འཛིན:  GRUB འདི་ བར་བཅད་ བུཊི་ དྲན་ཐོ་ལུ་ཡང་ གཞི་བཙུགས་འབད་ཚུགསཔ་ཨིནམ་དང་ འོས་ལྡན་ བར་"
+"བཅད་ལ་ལོ་གཅིག་ནཱ་ལུ་བྱིན་ཏེ་ཡོདཔ་ཨིན། ཨིན་རུང་ འདི་གིས་ GRUB ལུ་ blocklist ཐབས་རིག་ལག་ལེ་ན་"
+"འཐབ་ཅབུག་སྟེ་ བློ་གཏད་མ་ཚུགསཔ་བཟོཝ་ཨིནམ་ལས་ འདི་ངོ་སྦྱོར་མི་འབད།"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"GRUB བུཊི་ མངོན་གསལ་པ་འདི་ ཧེ་མ་ལས་ ཌིཀསི་མེད་མི་ ཡང་ན་ མཐུན་མོང་མ་ཡིན་པའི་ངོས་འཛིན་པ་འདི་ "
+"དོན་དག་གང་རུང་ལུ་བརྟེན་ བསྒྱུར་བཅོས་སོང་ཡོད་མི་ལུ་གཞི་བཙུགས་འབད་ནུག། གཞི་བཙུགས་འབད་ཡོད་པའི་ GRUB "
+"core གཟུགས་བརྙན་འདི་ GRUB མོ་ཌུལསི་ དང་ grub.cfg དང་ མཉམ་འབྱུང་སྦེ་སྡོད་བཏུབ་ ངེས་བདེན་བཟོ་"
+"དགོ། GRUB འདི་ བུཊི་ཐབས་འཕྲུལ་ འོས་ལྡན་ལུ་འབྲི་ཡོདཔ་ངེས་བདེན་་སྦེ་ཤེས་ཚུགས་ནིའི་དོལུ་  ལོག་ཞིབ་དཔྱད་"
+"འབད་གནང་།"
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr " GRUB བུཊི་ ཐབས་འཕྲུལ་ལུ་འབྲི་ནི་ འཐུས་ཤོར་འབྱུང་ཡོདཔ - འཕྲོ་མཐུད་དེ་འབད་ནི་ཨིན་ན?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "GRUB འདི་ འོག་གི་ཐབས་འཕྲུལ་ཚུ་ནང་གཞི་བཙུགས་འབད་མ་ཚུགས་པས:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"ག་དེ་འབད་རུང་ འཕྲོ་མཐུད་འབད་ནི་ཨིན་ན? འཕྲོ་མཐུད་འབད་བ་ཅིན་ ཁྱོད་ཀྱི་གློག་རིག་འདི་ལེགས་ཤོམ་སྦེ་འགོ་"
+"བཙུགས་མི་ཚུགས།"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "GRUB གཞི་བཙུགས་འཐུས་ཤོར་བྱུང་ཡོདཔ། - ལོག་འབད་རྩོལ་བསྐྱེད་ནི་ཨིན་ན?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"ཁྱོད་ཀྱིས་ ཐབས་འཕྲུལ་གཞན་ཚུ་ནང་ GRUB གཞི་བཙུགས་འབད་ཚུགསཔ་འོང་ ཨིན་རུང་ ཁྱོད་རའི་རིམ་ལུགས་འདི་ "
+"ཐབས་འཕྲུལ་དེ་ལས་བུཊི་འབད་བཏུབ་ག་ཞིབ་དཔྱད་འབད་དགོ། དེ་མེན་པ་ཅིན་ GRUB སྔོན་བཤུལ་ལས་དུས་མཐུན་"
+"འབད་མི་དེ་ཆ་མེད་འགྱོ་འོང་།"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "GRUB གཞི་བཙུགས་མ་འབད་བར་འཕྲོ་མཐུད་ནི་ཨིན་ན?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"ཁྱོད་ཀྱིས་ ཐབས་འཕྲུལ་གང་རུང་ནང་ GRUB གཞི་བཙུགས་མ་འབད་ནི་སྦེ་གདམ་ཁ་བརྐྱབས་ནུག འཕྲོ་མཐུད་དེ་འབད་བ་"
+"ཅིན་ བུཊི་མངོན་གསལ་པ་འདི་ ལེགས་ཤོམ་སྦེ་རིམ་སྒྲིག་མི་འབདཝ་་འོང་། དེ་ལས་ ཁྱོད་ཀྱི་གློག་རིག་འདི་ཤུལ་ལས་"
+"འགོ་བཙུགསཔ་ད་ ཧེ་མ་ལས་བུཊི་ས་ཁོངས་ག་ཅི་ཡོད་རུང་ ལག་ལེན་འཐབ་འོང་། གལ་སྲིད་ བུཊི་ས་ཁོངས་ ནང་ ཧེ་"
+"མའི་ཐོན་རིམ་ GRUB ༢ འདི་ཡོད་པ་ཅིན་ མོ་ཌུལ་འདི་མངོན་གསལའབད་མི་ཚུགས་ནི་ ཡང་ན་ ད་ལྟོའི་རིམ་སྒྲིག་ཡིག་"
+"སྣོད་འདི་ལེགས་སྐྱོང་འཐབ་མི་ཚུགསཔ་འོང་།"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"ཁྱོད་ཀྱིས་ ཧེ་མ་ལས་ བུཊི་མངོན་གསལ་འབད་མི་སོར་སོ་ཅིག་གཡོག་བཀོལ་འདོད་ཡོད་པ་ཅིན་  ཡང་ན་ འ་ནི་འདི་ "
+"བུཊི་མངོན་གསལ་འབད་མི་ཅིག་དགོཔ་མེད་པའི་དམིགས་བསལ་གྱི་ས་ཁོངས་མེན་པ་ཅིན་ འཕྲོ་མཐུད་མ་འབད། དེ་མེན་པ་"
+"ཅིན་ ག་ཏེ་འབད་རུང་ GRUB གཞི་བཙུགས་འབད་དགོ།"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "/boot/grub  ནང་ལས་GRUB 2 རྩ་བསྐྲད་གཏང་ནི་ཨིན་ན?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "/boot/grub ནང་ལས་ GRUB 2 ཡིག་སྣོད་ཆ་མཉམ་ རྩ་བསྐྲད་གཏང་ནི་ཨིན་ན?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"འདི་གིས་ བུཊི་མངོན་གསལ་པ་སོ་སོ་གཅིག་གཞི་བཙུགས་མ་འབད་ཚུན་ རིམ་སྒྲིག་འདི་ བུཊི་འབད་མ་བཏུབ་བཟོ་འོང་།"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "ད་ལྟོ་ར་ GRUB ༢ ལུ་གཞི་བསྒྱུར་མཇུག་བསྡུ་ནི་ཨིན་ན?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"རིམ་ལུགས་འདི་ལུ་ གཞི་བཙུགས་འབད་ཡོད་པའི་ GRUB  སྔོན་བཤུལ་བུཊི་མངོན་གསལ་འབད་མིའི་ནང་ལས་ཡིག་སྣོད་ཚུ་"
+"འདུག ཨིན་རུང་ ད་ལྟོ་འབདཝ་ད་ ཌིཀསི་ཚུ་གུ་ GRUB ༢ བུཊི་དྲན་ཐོ་གཞི་བཙུགས་འབད་དེ་ཡོད:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"GRUB སྤྱོད་ཤུལ་འདི་ ལག་ལེན་འཐབ་སྟེ་མེདཔ་བཟུམ་ཅིག་ཡོདཔ་དང་ འདི་གི་ཚབ་ལུ་ ཌིཀསི་གུ་ཡོད་མི་ GRUB 2 "
+"གཟུགས་བརྙན་ཚུ་དུས་མཐུན་བཟོ་ཞིནམ་ལས་ GRUB སྤྱོད་ཤུལ་ཡིག་སྣོད་རྙིངམ་ཚུ་ གཞི་བསྒྱུར་འབད་ནི་མཇུག་བསྡུ། ཁྱོད་"
+"ཀྱིས་ GRUB 2 གཟུགས་བརྙན་ཚུ་དུས་མཐུན་མ་བཟོ་བ་ཅིན་ འདི་ཚུ་ ཐུམ་སྒྲིལ་གསརཔ་ཚུ་དང་གཅིག་ཁར་མཐུན་འགྱུར་"
+"ཅན་མི་འོང་ནི་ཨིནམ་དང་ ཁྱོད་ཀྱི་རིམ་ལུགས་ཚུལ་མཐུན་སྦེ་ཊི་འབད་ནི་ལས་བཀག་ཆ་འབད་འོང་།"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"GRUB 2 གཞི་བཙུགས་ཀྱིས་ བཀོད་སྤྱོད་རིམ་ལུགས་ གཞན་གཅིག་གུ་ བུཊི་དྲན་ཐོ་འདི་ཚུ་ གསར་བསྐྲུན་མ་འབདཝ་"
+"ལས་ GRUB 2 ལུ་ གཞི་བསྒྱུར་འབད་ཚར་དགོ།"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "ལི་ནགསི་བརྡ་བཀོད་གྲལ་ཐིག་:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"འོག་གི་ ལི་ནགསི་བརྡ་བཀོད་གྲལཐིག་འདི་ from from /etc/default/grub or the `kopt' "
+"parameter in GRUB Legacy's menu.lst. ལས་ ཕྱིར་དོན་འབད་འབདཝ་ཨིན། འདི་ངེས་བདེན་ཨིནམ་"
+"བདེན་སྦྱོར་འབད་ཞིནམ་ལས་ དགོས་མཁོ་ཡོད་པ་ཅིན་ལེགས་བཅོས་འབད། བརྡ་བཀོད་གྲལ་ཐིག་འདི་སྟོངམ་ཨིན་རུང་བཏུབ།"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "ལི་ནགསི་སྔོན་སྒྲིག་བརྡ་བཀོད་གྲལ་ཐིག་:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"འོག་གི་ཡིག་རྒྱུན་འདི་ སྔོན་སྒྲིག་དཀར་ཆག་ཐོ་བཀོད་ཀྱི་དོན་ལུ་ ལི་ནགསི་ཚད་འཛིན་སྦེ་ལག་ལེན་འཐབ་ནི་ཨིན་ དེ་"
+"འབདཝ་ད་ སླར་གསོ་ཐབས་ལམ་གྱི་དོན་ལུ་མེན།"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"grub-pc ཐུམ་སྒྲིལ་འདི་ ཡར་བསྐྱེད་འབད་ཡོདཔ། དཀར་ཆག་འདི་གིས་ རང་བཞིན་ གཡོག་བཀོལ་ grub-གཞི་"
+"བཙུགས་ གང་རུང་ཡོད་པ་ཅིན་ ཐབས་འཕྲུལ་ སེལ་འཐུ་འབད་བཅུགཔ་ཨིན།"
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"ཁྱོད་ཀྱིས་ ཐབས་འཕྲུལ་གང་རུང་ནང་ GRUB གཞི་བཙུགས་མ་འབད་ནི་སྦེ་གདམ་ཁ་བརྐྱབས་ནུག འཕྲོ་མཐུད་དེ་འབད་བ་"
+"ཅིན་ བུཊི་མངོན་གསལ་པ་འདི་ ལེགས་ཤོམ་སྦེ་རིམ་སྒྲིག་མི་འབདཝ་་འོང་། དེ་ལས་ ཁྱོད་ཀྱི་གློག་རིག་འདི་ཤུལ་ལས་"
+"འགོ་བཙུགསཔ་ད་ ཧེ་མ་ལས་བུཊི་ས་ཁོངས་ག་ཅི་ཡོད་རུང་ ལག་ལེན་འཐབ་འོང་། གལ་སྲིད་ བུཊི་ས་ཁོངས་ ནང་ ཧེ་"
+"མའི་ཐོན་རིམ་ GRUB ༢ འདི་ཡོད་པ་ཅིན་ མོ་ཌུལ་འདི་མངོན་གསལའབད་མི་ཚུགས་ནི་ ཡང་ན་ ད་ལྟོའི་རིམ་སྒྲིག་ཡིག་"
+"སྣོད་འདི་ལེགས་སྐྱོང་འཐབ་མི་ཚུགསཔ་འོང་།"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "kFreeBSD བརྡ་བཀོད་གྲལ་ཐིག་:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"འོག་གི་  kFreeBSD བརྡ་བཀོད་གྲལ་ཐིག་འདི་ /etc/default/grub or the `kopt' parameter "
+"in GRUB Legacy's menu.lst ལས་ ཕྱིར་འདོན་འབད་འབདཝ་ཨིན། འདི་ངེས་དེན་ཨིནམ་བདེན་སྦྱོར་འབད་"
+"ཞིནམ་ལས་ དགོས་མཁོ་ཡོད་པ་ཅིན་ ལེགས་བཅོས་འབད། བརྡ་བཀོད་གྲལ་ཐིག་འདི་ སྟོངམ་ཨིན་རུང་བཏུབ།"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "kFreeBSD སྔོན་སྒྲིག་བརྡ་བཀོད་གྲལ་ཐིག་:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"འོག་གི་ཡིག་རྒྱུན་ཚུ་ སྔོན་སྒྲིག་དཀར་ཆག་ཐོ་བཀོད་ཀྱི་དོན་ལུ་ kFreeBSD སྦེ་ལག་ལེན་འཐབ་འོང་ དེ་འབདཝད་ "
+"སླར་གསོ་ཐབས་ལམ་གྱི་དོན་ལུ་ལག་ལེན་མི་འཐབ།"
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map འདི་ ལོག་བཟོ་ཡོདཔ།"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "ཡིག་སྣོད་ /boot/grub/device.map འདི་ རྩ་བརྟན་ ཐབས་འཕྲུལ་མིང་ཚུ་ལག་ལེན་འཐབ་སྦེ་ལོག་འབྲི་"
+#~ "ཡོདཔ་ཨིན། གནད་དོན་མང་ཤོས་ཅིག་ནང་ འདི་གིས་ མ་འོངས་པའི་ནང་བསྒྱུར་བཅོས་འབད་ནི་མར་ཕབ་འབད་"
+#~ "དགོཔ་་ཨིནམ་དང་ GRUB གིས་ བཟོ་བཏོན་འབད་ཡོད་པའི་ བུཊི་དཀར་ཆག་ཐོ་བཀོད་ཚུ་ལུ་གནོད་སྐྱོན་འབྱུ་ཕཅུག་"
+#~ "ནི་མི་འོང་།"
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "ག་དེ་སྦེ་རངུ་  ཁྱོད་ཀྱི་རིམ་ལུགས་ནང་  ཌིཀསི་གཅིག་ལས་ལྷགཔ་སྦེ་ཡོདཔ་ལས་ ཁྱོད་ ཐབས་འཕྲུ་ས་ཁྲ་རྙིངམ་"
+#~ "འདི་ལུ་བརྟེན་ཚུགས།  ཁྱོད་ལུ་ GRUB's (hdN) འདྲེན་འཕྲུལ་ ཨང་བཏགས་ནིའི་་སྲོལ་སྒྲིག་ བུཊི་དཀར་ཆག་ཐོ་"
+#~ "བཀོད་ཚུ་ཡོད་མེད་ཞིབ་དཔྱད་འབད་ཞིནམ་ལས་  དགོས་མཁོ་དང་བསྟུན་ཏེ་ དུས་མཐུན་བཟོ།"
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "འཕྲིན་དོན་འདི་ཧ་མ་གོཝ་ ཡང་ན་  ཁྱོད་ལུ་ སྲོལ་སྒྲིག་དཀར་ཆག་ཐོ་བཀོད་གང་རངུ་མེད་པ་ཅིན་ འཕྲིན་དོན་"
+#~ "འདི་སྣང་མེད་སྦེ་བཞག།"
+
+#~ msgid ""
+#~ "In either case, whenever you want GRUB 2 to be loaded directly from MBR, "
+#~ "you can do so by issuing (as root) the following command:"
+#~ msgstr ""
+#~ "ཡང་ཅིན་ ཁྱོད་ར་ལུ་  GRUB ༢ འདི་ MBR ལས་ ནམ་ཨིན་རུང་ མངོན་གསལ་འབད་འདོད་ཡོད་པ་ཅིན་ འོག་"
+#~ "གི་བརྡ་བཀོད་འདི་ རྩ་བའི་ཐོག་ལས་འབད་བཏུབ:"
+
+#~ msgid "GRUB installation failed. Continue?"
+#~ msgstr "GRUB གཞི་བཙུགས་འཐུས་ཤོར་བྱུང་ཡོདཔ། འཕྲོ་མཐུད་འབད་ནི་ཨིན་ན?"

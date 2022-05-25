@@ -1,0 +1,16 @@
+AutoGen definitions Makefile.tpl;
+
+module = {
+  name = zfs;
+  common = contrib/zfs/zfs.c;
+  common = contrib/zfs/zfs_lzjb.c;
+  common = contrib/zfs/zfs_sha256.c;
+  common = contrib/zfs/zfs_fletcher.c;
+  cppflags = '$(ZFS_CPPFLAGS)';
+};
+
+module = {
+  name = zfsinfo;
+  common = contrib/zfs/zfsinfo.c;
+  cppflags = '$(ZFS_CPPFLAGS)';
+};

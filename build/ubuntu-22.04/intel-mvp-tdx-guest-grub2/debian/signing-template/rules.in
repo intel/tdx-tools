@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+SIG_DIR := debian/signatures/@pkg_unsigned@
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	set -e ; \
+	find "$(SIG_DIR)" -name '*.sig' -printf '%P\n' | \
+	while read sig; do \
+		dst="debian/tmp/$${sig%/monolithic/*}-signed/$${sig##*/}ned" ; \
+		install -m 0755 -d "$${dst%/*}" ; \
+		install -m 0644 "/$${sig%.sig}" "$$dst" ; \
+		sbattach --attach "$(SIG_DIR)/$$sig" "$$dst" ; \
+	done
+
+override_dh_install:
+	dh_install --sourcedir=debian/tmp .

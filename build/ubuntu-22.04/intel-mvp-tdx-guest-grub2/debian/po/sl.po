@@ -1,0 +1,557 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: grub2\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2017-01-20 08:53+0100\n"
+"Last-Translator: Vanja Cvelbar <cvelbar@gmail.com>\n"
+"Language-Team: Slovenian <sl@li.org>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "Verižno nalaganje iz menu.lst?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr "Skript za nadgradnjo je zaznal namestitev GRUB Legacy v /boot/grub."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Da zamenjate različico GRUB Legacy na vašem sistemu vam priporočamo, da se /"
+"boot/grub/menu.lst spremeni tako, da verižno naloži GRUB 2 iz vaše obstoječe "
+"namestitve GRUB Legacy. To dejanje lahko zdaj izvedete samodejno."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"Priporočamo vam, da sprejmete verižno nalaganje GRUB 2 iz datoteke menu.lst "
+"in preverite delovanje namestitve GRUB2 preden ga namestite na MBR (Master "
+"Boot Record)."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Kakorkoli se odločite, stari MBR lahko kasneje vedno zamenjate z GRUB 2, če "
+"izvedete kot root sledeči ukaz:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "Namestitvene naprave za GRUB:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"Nadgrajevanje paketa grub-pc. Ta meni vam omogoči izbiro naprav za katere "
+"želite samodejno zagnati grub-install."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"V večini primerov je priporočen samodejni zagon grub-install, da preprečite "
+"neskladja med jedrom GRUBa in moduli ali grub.cfg."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"V primeru, da niste prepričani kateri pogon je označuje vaš BIOS za "
+"zagonskega, je ponavadi dobro, da namestite GRUB kar na vse."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Opomba: GRUB je mogoče namestiti tudi na zagonski zapis razdelka. Primerni "
+"razdelki so na tem spisku. To pa zahteva uporabo mehanizma blocklist, ki je "
+"manj zanesljiv in zato ni priporočen."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"Zagonski nalagalnik GRUB je bil nameščen na disku, ki ni več prisoten ali se "
+"mu je spremenil enolični identifikator. Važno je, da so jedro GRUBa in "
+"moduli ter grub.cfg skladni. Preverite prosim, da je GRUB zapisan na "
+"pravilno zagonsko napravo."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "Napaka pri pisanju na zagonsko napravo za GRUB. Želite nadaljevati?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "Napaka pri nameščanju GRUBa na sledeče naprave:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Želite vseeno nadaljevati? V primeru, da boste nadaljevali se računalnik "
+"mogoče ne bo pravilno zagnal."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr ""
+"Nameščanje GRUBa  na zagonsko napravo ni uspelo. Želite še enkrat poskusiti?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"Mogoče lahko namestite GRUB na katero drugo napravo, preveriti pa morate, da "
+"se bo lahko vaš sistem zagnal iz te naprave. Drugače bo posodobitev iz "
+"zastarelega GRUB prekinjena ."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "Želite nadaljevati, ne da bi namestili GRUB?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Izbrali ste, da ne boste namestili GRUBa na nobeno napravo. V primeru, da "
+"nadaljujete zagonski nalagalnik ne bo pravilno nastavljen. Računalnik bo ob "
+"naslednjem zagonu uporabil karkoli je bilo prej nameščeno na zagonskem "
+"sektorju. V primeru, da se tam nahaja starejša različica GRUB 2 mogoče ta ne "
+"bo uspela naložiti modulov ali brati sedanje nastavitvene datoteke."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"V primeru, da že uporabljate različen zagonski nalagalnik in želite s tem "
+"nadaljevati ali pa je to posebno zagonsko okolje kjer ne rabite zagonskega "
+"nalagalnika lahko vsekakor nadaljujete. V ostalih primerih bi morali nekam "
+"namestiti GRUB."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "Želite odstraniti GRUB 2 iz /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr ""
+"Želite odstraniti iz /boot/grub vse datoteke, ki se nanašajo na GRUB 2?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Zaradi tega se sistem ne bo mogel zagnati, razen, če uporabite drugi "
+"zagonski nalagalnik."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "Želite zdaj dokončati  pretvorbo v GRUB 2?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Na tem sistemu so še nameščene datoteke iz zastarelega GRUBa, a zdaj je "
+"nameščen tudi zagonski zapis GRUB 2 na sledečih diskih:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"Zdi se verjetno, da zastareli GRUB ni več v uporabi in da bi morali namesto "
+"tega nadgraditi te diske na GRUB 2 ter dokončati pretvorbo v GRUB 2 z "
+"odstranitvijo datotek za zastareli GRUB. V primeru, da ne boste izvedli "
+"nadgradnje na GRUB 2 lahko pride do nezdružljivosti z novimi paketi in težav "
+"pri zagonu."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"Običajno bi morali dokončati pretvorbo v GRUB 2 razen, če so bili ti "
+"zagonski zapisi ustvarjeni pri nameščanju GRUB 2 na drugem operacijskem "
+"sistemu."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Ukazna vrstica Linux:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Sledeči ukaz za Linux je vzet iz datoteke /etc/default/grub ali iz parametra "
+"`kopt' v datoteki  menu.lst sistema GRUB Legacy.  Preverite prosim, da je "
+"točen in ga po potrebi popravite. Ukazna vrstica je lahko tudi prazna."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Privzeta ukazna vrstica Linux:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"Sledeča vrstica bo uporabljena kot parameter Linuxa za privzeti vnos v "
+"meniju, ne pa za reševalni način."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr "Prisilna dodatna namestitev v pot EFI na odstranljivem mediju?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"Nekateri sistemi na osnovi EFI imajo napake in ne morejo pravilno "
+"uporabljati novih zagonskih nalagalnikov. Če prisilno dodatno namestite GRUB "
+"v pot EFI na odstranljivem mediju, bi to moralo zadostovati, da bo, kljub "
+"tem težavam, lahko sistem zagnal Debian. Zaradi tega pa mogoče ne boste "
+"mogli več zagnati drugih operacijskih sistemov, ki so odvisni od te poti. V "
+"takem primeru morate preveriti, da je GRUB pravilno nastavljen in boste "
+"lahko zagnali tudi druge operacijske sisteme."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr "Želite posodobiti spremenljivke NVRAM za samodejni zagon v Debian?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+"GRUB lahko nastavi spremenljivke NVRAM vašega računalniškega okolja tako, da "
+"samodejno zažene Debian ob vklopu. V primeru, da tega ne želite, lahko to "
+"onemogočite in preprečite spremembo vaše zagonske konfiguracije. Na primer, "
+"če so spremenljivke NVRAM nastavljene tako, da vaš sistem ob vsakem zagonu "
+"komunicira s strežnikom PXE, bo ta nastavitev ohranjena."
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"Nadgrajevanje paketa grub-pc. Ta meni vam omogoči izbiro naprav za katere "
+"želite samodejno zagnati grub-install."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Izbrali ste, da ne boste namestili GRUBa na nobeno napravo. V primeru, da "
+"nadaljujete zagonski nalagalnik ne bo pravilno nastavljen. Računalnik bo ob "
+"naslednjem zagonu uporabil karkoli je bilo prej nameščeno na zagonskem "
+"sektorju. V primeru, da se tam nahaja starejša različica GRUB 2 mogoče ta ne "
+"bo uspela naložiti modulov ali brati sedanje nastavitvene datoteke."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "Ukazna vrstica kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Sledeči ukaz za kFreeBSD je vzet iz datoteke /etc/default/grub ali iz "
+"parametra `kopt' v datoteki  menu.lst sistema GRUB Legacy.  Preverite "
+"prosim, da je točen in ga po potrebi popravite. Ukazna vrstica je lahko tudi "
+"prazna."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "Privzeta ukazna vrstica kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"Sledeča vrstica bo uporabljena kot parameter kFreeBSD za privzeti vnos v "
+"meniju, ne pa za reševalni način."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "ustvarjena je bila datoteka /boot/grub/device.map"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "Datoteka  /boot/grub/device.map je bila prepisana s stabilnimi imeni "
+#~ "naprav. V večini primerov bo to v prihodnosti močno zmanjšalo potrebo po "
+#~ "njenih spremembah. Na vnose v zagonskem meniju, ki jih ustvari GRUB to ne "
+#~ "bi smelo imeti učinka."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Ker imate več kot en disk na vašem sistemu je možno, da ste bili odvisni "
+#~ "od starega spiska naprav. Preverite prosim ali imate kakšen vnos po meri "
+#~ "v zagonskem meniju, ki se naslanja na poimenovanje diskov (hdN) v GRUBu  "
+#~ "in ga posodobite, če je to potrebno."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "V primeru, da tega sporočila ne razumete ali nimate nobenih vnosov  po "
+#~ "meri v zagonskem meniju se za to sporočilo ne menite."
+
+#~ msgid ""
+#~ "In either case, whenever you want GRUB 2 to be loaded directly from MBR, "
+#~ "you can do so by issuing (as root) the following command:"
+#~ msgstr ""
+#~ "V primeru, da želite, da se GRUB 2 naloži neposredno iz MBRja, lahko v "
+#~ "obeh primerih zaženete (kot sistemski skrbnik) sledeči ukaz:"
+
+#~ msgid "GRUB installation failed. Continue?"
+#~ msgstr "GRUB ni bil nameščen. Želite nadaljevati?"

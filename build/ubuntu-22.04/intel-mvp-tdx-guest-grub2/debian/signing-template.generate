@@ -1,0 +1,49 @@
+#!/bin/sh
+set -e -u
+
+pkg_base="${1?:missing binary package name}"
+pkg_unsigned="${pkg_base}-bin"
+pkg_signed="${pkg_base}-signed"
+pkg_tmpl="${pkg_signed}-template"
+
+distribution="$(dpkg-parsechangelog -S Distribution)"
+urgency="$(dpkg-parsechangelog -S Urgency)"
+date="$(dpkg-parsechangelog -S Date)"
+version_binary="$(dpkg-parsechangelog -S Version)"
+version_mangled="$(dpkg-parsechangelog -S Version | tr '-' '+')"
+
+subst () {
+	sed \
+		-e "s/@pkg_unsigned@/${pkg_unsigned}/g" \
+		-e "s/@pkg_signed@/${pkg_signed}/g" \
+		-e "s/@pkg_tmpl@/${pkg_tmpl}/g" \
+		-e "s/@efi@/${SB_EFI_NAME}/g" \
+		-e "s/@efi_platform@/${SB_PLATFORM}/g" \
+		-e "s/@arch@/${DEB_HOST_ARCH}/g" \
+		-e "s/@version_binary@/${version_binary}/g" \
+		-e "s/@version_mangled@/${version_mangled}/g" \
+		-e "s/@distribution@/${distribution}/g" \
+		-e "s/@urgency@/${urgency}/g" \
+		-e "s/@date@/${date}/g" \
+		"$@"
+}
+
+template='./debian/signing-template'
+pkg_dir="debian/${pkg_tmpl}/usr/share/code-signing/${pkg_tmpl}"
+pkg_deb="${pkg_dir}/source-template/debian"
+
+install -m 0755 -d "${pkg_dir}"
+subst < ./debian/signing-template.json.in > "${pkg_dir}/files.json"
+
+find "${template}" -type f -printf '%P\n' |
+while read path
+do
+	src="${template}/${path}"
+	dst="${pkg_deb}/${path}"
+
+	install -m 0755 -d "${dst%/*}"
+	subst < "${src}" > "${dst%.in}"
+	chmod --reference="${src}" "${dst%.in}"
+done
+
+exit 0

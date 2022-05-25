@@ -1,0 +1,61 @@
+#!/bin/bash
+set -e
+
+if test -e /boot/grub/setup_left_core_image_in_filesystem ; then
+  echo >&3
+  echo "*********************** WARNING grub-setup left core.img in filesystem" >&3
+fi
+
+for i in /proc/mounts ; do
+  if test -e $i ; then
+    echo >&3
+    echo "*********************** BEGIN $i" >&3
+    grep ^/dev/ $i >&3
+    echo "*********************** END $i" >&3
+  fi
+done
+
+for i in /boot/grub/{device.map,grub.cfg} ; do
+  if ! test -e $i ; then
+    continue
+  fi
+  echo >&3
+  echo "*********************** BEGIN $i" >&3
+  if test -r $i ; then
+    sed $i -e "s/.*password.*/### PASSWORD LINE REMOVED ###/g" >&3
+  else 
+    echo "$i is not readable by you. Please enter your root password."
+    echo "Any password line in it gets removed."
+    su root -c "sed $i -e 's/.*password.*/### PASSWORD LINE REMOVED ###/g'" >&3
+  fi
+  echo "*********************** END $i" >&3
+done
+
+echo >&3
+echo "*********************** BEGIN /proc/mdstat" >&3
+cat /proc/mdstat >&3 2>&1 || true
+echo "*********************** END /proc/mdstat" >&3
+
+cat <<EOF
+Information on any LVM volumes on this system is valuable to the GRUB
+developers, but gathering this information requires the root password.
+EOF
+yesno "Do you want to provide LVM volume information?" nop
+if [ "$REPLY" = yep ]; then
+  echo >&3
+  echo "*********************** BEGIN LVM" >&3
+  su root -c "vgdisplay; pvdisplay; lvdisplay" >&3 || true
+  echo "*********************** END LVM" >&3
+fi
+
+echo >&3
+echo "*********************** BEGIN /dev/disk/by-id" >&3
+ls -l /dev/disk/by-id >&3 2>&1 || true
+echo "*********************** END /dev/disk/by-id" >&3
+
+echo >&3
+echo "*********************** BEGIN /dev/disk/by-uuid" >&3
+ls -l /dev/disk/by-uuid >&3 2>&1 || true
+echo "*********************** END /dev/disk/by-uuid" >&3
+
+exit 0

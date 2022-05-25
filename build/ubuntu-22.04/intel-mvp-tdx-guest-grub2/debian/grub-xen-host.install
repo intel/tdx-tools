@@ -1,0 +1,3 @@
+obj/grub-xen-host-i386/grub-i386-xen.bin usr/lib/grub-xen
+obj/grub-xen-host-pvh-i386/grub-i386-xen_pvh.bin usr/lib/grub-xen
+obj/grub-xen-host-amd64/grub-x86_64-xen.bin usr/lib/grub-xen

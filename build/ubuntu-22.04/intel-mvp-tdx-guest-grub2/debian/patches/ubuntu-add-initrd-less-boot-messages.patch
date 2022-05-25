@@ -1,0 +1,68 @@
+From: Dimitri John Ledkov <xnox@ubuntu.com>
+Date: Mon, 26 Oct 2020 11:38:34 +0000
+Subject: Ubuntu: add initrd-less-boot informational messages
+
+Add additional messages when initrd-less boot is attempted or
+fails. As otherwise it is not obvious why boot seems to panic and
+reboot by default.
+
+Patch-Name: ubuntu-add-initrd-less-boot-messages.patch
+---
+ grub-initrd-fallback.service |  1 +
+ util/grub.d/10_linux.in      | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/grub-initrd-fallback.service b/grub-initrd-fallback.service
+index 1a0a4e5..59d1a62 100644
+--- a/grub-initrd-fallback.service
++++ b/grub-initrd-fallback.service
+@@ -3,6 +3,7 @@ Description=GRUB failed boot detection
+ After=local-fs.target
+ After=grub-common.service
+ After=sleep.target
++ConditionPathExists=/boot/grub/grub.cfg
+ 
+ [Service]
+ Type=oneshot
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index 4988009..8f2cf82 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -160,6 +160,12 @@ if [ "$vt_handoff" = 1 ]; then
+ fi
+ 
+ if [ x"$GRUB_FORCE_PARTUUID" != x ]; then
++    gettext_printf "GRUB_FORCE_PARTUUID is set, will attempt initrdless boot\n" >&2
++    cat << EOF
++#
++# GRUB_FORCE_PARTUUID is set, will attempt initrdless boot
++# Upon panic fallback to booting with initrd
++EOF
+    echo "set partuuid=${GRUB_FORCE_PARTUUID}"
+ fi
+ 
+@@ -245,6 +251,8 @@ EOF
+         linux_root_device_thisversion="PARTUUID=${GRUB_FORCE_PARTUUID}"
+     fi
+     message="$(gettext_printf "Loading initial ramdisk ...")"
++    initrdlessfail_msg="$(gettext_printf "GRUB_FORCE_PARTUUID set, initrdless boot failed. Attempting with initrd.")"
++    initrdlesstry_msg="$(gettext_printf "GRUB_FORCE_PARTUUID set, attempting initrdless boot.")"
+     initrd_path=
+     for i in ${initrd}; do
+         initrd_path="${initrd_path} ${rel_dirname}/${i}"
+@@ -256,6 +264,7 @@ EOF
+     if test -n "${initrd}" && [ x"$GRUB_FORCE_PARTUUID" != x ]; then
+         sed "s/^/$submenu_indentation/" << EOF
+ 	if [ "\${initrdfail}" = 1 ]; then
++	  echo	'$(echo "$initrdlessfail_msg" | grub_quote)'
+ 	  linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
+ EOF
+         if [ x"$quiet_boot" = x0 ] || [ x"$type" != xsimple ]; then
+@@ -266,6 +275,7 @@ EOF
+         sed "s/^/$submenu_indentation/" << EOF
+ 	  initrd	$(echo $initrd_path)
+ 	else
++	  echo	'$(echo "$initrdlesstry_msg" | grub_quote)'
+ 	  linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args} panic=-1
+ EOF
+         if [ -n "$initrd_path_only_early" ]; then

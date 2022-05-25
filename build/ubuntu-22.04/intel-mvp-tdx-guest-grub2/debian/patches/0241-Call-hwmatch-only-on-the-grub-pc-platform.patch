@@ -1,0 +1,47 @@
+From: Mauricio Faria de Oliveira <mfo@canonical.com>
+Date: Fri, 20 Aug 2021 10:15:06 -0300
+Subject: Call hwmatch only on the grub-pc platform
+
+Call hwmatch only on i386/pc as it is only available there.
+This avoids "error: can't find command `hwmatch'." on e.g., x86_64/efi.
+
+The equivalent behavior is linux_gfx_mode=keep because grub is special:
+the `if hwmatch` clause is true on that error and `$match = 0` is true
+too, as it is undefined (confirmed in grub shell.) A quick fix for now.
+
+Before and After:
+
+    grub> hwmatch
+    error: can't find command `hwmatch'.
+
+    grub> echo $grub_platform
+    efi
+
+    grub> echo $linux_gfx_mode
+    keep
+
+Signed-off-by: Mauricio Faria de Oliveira <mfo@canonical.com>
+
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1840560
+Bug-Debian: https://bugs.debian.org/990836
+Forwarded: no
+Last-Update: 2020-08-20
+---
+ util/grub.d/10_linux.in | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index 8f2cf82..6668b21 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -378,7 +378,9 @@ else
+   cat << EOF
+ if [ "\${recordfail}" != 1 ]; then
+   if [ -e \${prefix}/gfxblacklist.txt ]; then
+-    if hwmatch \${prefix}/gfxblacklist.txt 3; then
++    if [ \${grub_platform} != pc ]; then
++      set linux_gfx_mode=keep
++    elif hwmatch \${prefix}/gfxblacklist.txt 3; then
+       if [ \${match} = 0 ]; then
+         set linux_gfx_mode=keep
+       else

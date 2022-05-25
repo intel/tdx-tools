@@ -1,0 +1,49 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Tue, 30 Nov 2021 17:24:15 +0100
+Subject: Add GRUB_RECOVERY_TITLE option
+
+This allows the controversial "recovery mode" text to be customised.
+
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1240360
+Forwarded: no
+Last-Update: 2013-12-25
+
+Patch-Name: mkconfig-recovery-title.patch
+---
+ util/grub.d/10_linux_zfs.in | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index 055a542..4bacf6e 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -974,7 +974,7 @@ generate_grub_menu() {
+ 
+                     GRUB_DISABLE_RECOVERY=${GRUB_DISABLE_RECOVERY:-}
+                     if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
+-                        title="$(gettext_printf "%s%s, with Linux %s (recovery mode)" "${last_booted_kernel_marker}" "${name}" "${kernel_version}")"
++                        title="$(gettext_printf "%s%s, with Linux %s (%s)" "${last_booted_kernel_marker}" "${name}" "${kernel_version}" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
+                         zfs_linux_entry 1 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
+                     fi
+                     at_least_one_entry=1
+@@ -1002,9 +1002,9 @@ generate_grub_menu() {
+ 
+                         GRUB_DISABLE_RECOVERY="${GRUB_DISABLE_RECOVERY:-}"
+                         if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
+-                            title="$(gettext_printf "Revert system only (recovery mode)")"
++                            title="$(gettext_printf "Revert system only (%s)" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
+                             zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
+-                            title="$(gettext_printf "Revert system and user data (recovery mode)")"
++                            title="$(gettext_printf "Revert system and user data (%s)" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
+                             zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}" "zsys-revert=userdata"
+                         fi
+                     # Non-zsys: boot temporarly on snapshots or rollback (destroying intermediate snapshots)
+@@ -1014,7 +1014,7 @@ generate_grub_menu() {
+ 
+                         GRUB_DISABLE_RECOVERY="${GRUB_DISABLE_RECOVERY:-}"
+                         if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
+-                            title="$(gettext_printf "One time boot (recovery mode)")"
++                            title="$(gettext_printf "One time boot (%s)" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
+                             zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
+                         fi
+ 

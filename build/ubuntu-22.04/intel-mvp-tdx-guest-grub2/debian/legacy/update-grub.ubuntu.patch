@@ -1,0 +1,119 @@
+--- update-grub.orig	2011-03-17 14:32:24.000000000 +0000
++++ update-grub	2012-09-06 22:38:51.498737000 +0100
+@@ -218,7 +218,7 @@
+ kopt="root=$linux_root_device ro"
+ 
+ # Title
+-title="Debian GNU/`uname -s | sed -e s,GNU/,,g`"
++title=$(lsb_release --short --description 2>/dev/null) || title="Ubuntu"
+ 
+ # should update-grub remember the default entry
+ updatedefaultentry="false"
+@@ -235,7 +235,7 @@
+ 
+ # additional options to use with the default boot option, but not with the
+ # alternatives
+-	defoptions=""
++	defoptions="quiet splash"
+ 
+ # should grub lock the old kernels
+ 	lockold="false"
+@@ -247,7 +247,7 @@
+ 	xenkopt="console=tty0"
+ 
+ # options to use with the alternative boot options
+-	altoptions="(single-user mode) single"
++	altoptions="(recovery mode) single"
+ 
+ # controls howmany kernels are listed in the config file,
+ # this does not include the alternative kernels
+@@ -262,6 +262,13 @@
+ # stores the command line arguments
+ 	command_line_arguments=$1
+ 
++# does this version of grub support the quiet option?
++if [ -f ${grub_dir}/installed-version ] && dpkg --compare-versions `cat ${grub_dir}/installed-version` ge 0.97-11ubuntu4; then
++    supports_quiet=true
++else
++    supports_quiet=false
++fi
++
+ # read user configuration
+ if test -f "/etc/default/grub" ; then
+     . /etc/default/grub
+@@ -504,6 +511,12 @@
+ 		local hypervisor_options; hypervisor_options=$1; shift
+ 	fi
+ 
++	local grub_root_type
++	case "$grub_root_device" in
++	[^A-Za-z0-9]*)	grub_root_type='root' ;;
++	*)		grub_root_type='uuid' ;;
++	esac
++
+ 	echo -n "title		" >> $buffer
+ 
+ 	if [ -n "$hypervisor" ]; then
+@@ -512,7 +525,12 @@
+ 
+ 	echo -n "$title" >> $buffer
+ 	if [ -n "$kernel_version" ]; then
+-		echo -n ", kernel $kernel_version" >> $buffer
++		echo -n ", " >> $buffer
++		# memtest86 is not strictly a kernel
++		if ! echo "$kernel_version" | grep -q ^memtest86; then
++			echo -n "kernel " >> $buffer
++		fi
++		echo -n "$kernel_version" >> $buffer
+ 	fi
+ 	if [ -n "$recovery_desc" ]; then
+ 		echo -n " $recovery_desc" >> $buffer
+@@ -528,7 +546,7 @@
+ 	echo "lock" >> $buffer
+ 	fi
+ 
+-	echo "root		$grub_root_device" >> $buffer
++	echo "$grub_root_type		$grub_root_device" >> $buffer
+ 
+ 	echo -n "kernel		"  >> $buffer
+ 	if [ -n "$hypervisor" ]; then
+@@ -557,6 +575,10 @@
+ 		echo "$initrd" >> $buffer
+ 	fi
+ 
++	if [ ! -n "$recovery_desc" -a x"$supports_quiet" = x"true" ]; then
++		echo "quiet" >> $buffer
++	fi
++
+ 	if test x"$savedefault" = x"true" ; then
+ 		echo "savedefault" >> $buffer
+ 	fi
+@@ -701,7 +723,7 @@
+ echo "## altoption boot targets option" >> $buffer
+ echo "## multiple altoptions lines are allowed" >> $buffer
+ echo "## e.g. altoptions=(extra menu suffix) extra boot options" >> $buffer
+-echo "##      altoptions=(single-user) single" >> $buffer
++echo "##      altoptions=(recovery) single" >> $buffer
+ 
+ if ! grep -q "^# altoptions" $menu ; then
+ 	echo "# altoptions=$altoptions" >> $buffer
+@@ -846,13 +868,18 @@
+ ## heres where we start writing out the kernel entries
+ counter=0
+ 
++case "$grub_root_device" in
++[^A-Za-z0-9]*)	grub_root_type='root' ;;
++*)		grub_root_type='uuid' ;;
++esac
++
+ grub2name="${kernel_dir}/grub/core.img"
+ if [ "$LET_US_TRY_GRUB_2" = "true" ] \
+   && test -f /boot/grub/core.img ; then
+ 	echo "Found GRUB 2: $grub2name" >&2
+ 	cat >> $buffer << EOF
+ title		Chainload into GRUB 2
+-root		$grub_root_device
++$grub_root_type		$grub_root_device
+ kernel		$grub2name
+ 
+ title		`echo ───────────────────────────────────────────────────────────────────── | iconv -f utf-8 -t cp437`

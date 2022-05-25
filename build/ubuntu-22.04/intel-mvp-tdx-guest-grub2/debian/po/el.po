@@ -1,0 +1,571 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Panagiotis Georgakopoulos <pankgeorg@gmail.com> 2014
+# Emmanuel Galatoulas <galaxico@quad-nrg.net>, 2010, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2012-08-17 14:44+0300\n"
+"Last-Translator: pankgeorg<pankgeorg@gmail.com>\n"
+"Language-Team: Greek <debian-l10n-greek@lists.debian.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "Να γίνει αλυσιδωτή φόρτωση από το αρχείο menu.lst;"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"Το πρόγραμμα αναβάθμισης του GRUB έχει εντοπίσει αρχεία ρύθμισης του GRUB "
+"Legacy στον κατάλογο /boot/grub."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Για να αντικαταστήσετε την έκδοση Legacy του GRUB στο σύστημά σας, "
+"συνιστάται η προσαρμογή του αρχείου /boot/grub/menu.lst ώστε να γίνεται η "
+"φόρτωση μιας εκκινήσιμης εικόνας του GRUB 2 μέσα από την υπάρχουσα "
+"διαμόρφωση του GRUB Legacy. Το βήμα αυτό μπορεί να πραγματοποιηθεί τώρα "
+"αυτόματα."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"Συνιστάται η αποδοχή της αλυσιδωτής φόρτωσης του GRUB 2 από το αρχείο menu."
+"lst και η επαλήθευση της λειτουργικότητας της νέας ρύθμισης του GRUB 2 πριν "
+"αυτό εγγραφεί στο MBR (Master Boot Record)."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Όποια κι αν είναι η απόφασή σας, μπορείτε να αντικαταστήσετε αργότερα το "
+"προηγούμενο αντίγραφο του MBR με τη βοήθεια του GRUB 2, εκτελώντας ως "
+"χρήστης root την ακόλουθη εντολή:  "
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "Συσκευές εγκατάστασης του GRUB:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"Γίνεται αναβάθμιση του πακέτου grub-pc. Αυτό το μενού σας επιτρέπει να "
+"επιλέξετε τις συσκευές, αν θέλετε κάποιες, για τις οποίες θα εκτελεστεί "
+"αυτόματα το grub-install."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"Η αυτόματη εκτέλεση του grub-install συνιστάται στις περισσότερες "
+"περιπτώσεις για την αποτροπή του αποσυγχρονισμού του εγκατεστημμένου "
+"αντιγράφου του GRUB από τις υποενότητες του GRUB ή το αρχείο grub.cfg."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"Αν δεν είστε βέβαιοι για το ποια συσκευή έχει οριστεί ως συσκευή εκκίνησης "
+"από το BIOS του συστήματός σας, είναι συχνά καλή ιδέα να εγκαταστήσετε το "
+"GRUB σε όλες τις συσκευές."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Σημείωση: είναι δυνατόν να εγκαταστήσετε το GRUB και σε αρχεία εκκίνησης "
+"κατατμήσεων (boot records) και εδώ προσφέρονται μερικές τέτοιες κατάλληλες "
+"κατατμήσεις. Όμως, αυτό αναγκάζει το GRUB να χρησιμοποιήσει τον μηχανισμό "
+"blocklist, κάτι που το καθιστά λιγότερο αξιόπιστο, κατά συνέπεια αυτή η "
+"μέθοδος δεν συνίσταται."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"Ο φορτωτής εκκίνησης GRUB είχε εγκατασταθεί προηγουμένως σε έναν δίσκο που "
+"δεν είναι πλέον παρών στο σύστημα ή που ο μοναδικός κωδικός αναγνώρισής του "
+"έχει για κάποιο λόγο αλλάξει. Είναι σημαντικό να βεβαιωθείτε ότι το κύριο "
+"εγκατεστημένο αντίγραφο του GRUB παραμένει συγχρονισμένο με τιςενότητεςτου "
+"GRUB στο αρχείο grub.cfg. Παρακαλώ ελέγξτε ξανά για νασιγουρευτείτε ότι το "
+"GRUB έχει εγγραφεί στις κατάλληλες εκκινήσιμες συσκευές."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "Η εγκατάσταση του GRUB στην συσκευή εκκίνησης απέτυχε - Συνέχεια;"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "Η εγκατάσταση του GRUB απέτυχε στις ακόλουθες συσκευές:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Θέλετε να συνεχίσετε παρόλα αυτά; Αν ναι, είναι πιθανόν ο υπολογιστής σας να "
+"μην μπορεί να εκκινήσει κανονικά."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "Η εγγραφή του GRUB στη συσκευή εκκίνησης απέτυχε - Επανάληψη;"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"Είναι πιθανόν να εγκαταστήσετε το GRUB σε κάποια άλλη συσκευή, αλλά θα "
+"πρέπει να ελέγξετε ότι το σύστημά σας μπορεί να εκκινήσει από αυτή τη "
+"συσκευή. Διαφορετικά, η αναβάθμιση από την έκδοση Legacy του GRUB θα "
+"ακυρωθεί."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "Συνέχεια χωρίς εγκατάσταση του GRUB;"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Επιλέξατε να μην εγκαταστήσετε το GRUB σε οποιαδήποτε συσκευή. Αν "
+"συνεχίσετε, το πρόγραμμα εκκίνησης πιθανόν να μην έχει ρυθμιστεί σωστά και "
+"στην επανεκκίνηση του υπολογιστή σας θα χρησιμοποιήσει οτιδήποτε υπήρχε από "
+"πριν στον τομέα εκκίνησης. Αν υπάρχει μια προηγούμενη έκδοση του GRUB 2 στον "
+"τομέα εκκίνησης, πιθανόν να μην μπορεί να φορτώσει κάποιες ενότητες αλλά "
+"ούτενα χειριστεί το τρέχον αρχείο ρυθμίσεων."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"Αν χρησιμοποιείτε ήδη ένα διαφορετικό πρόγραμμα εκκίνησης και θέλετε να "
+"συνεχίσετε με αυτόν ή αν το παρόν σύστημα είναι ένα ειδικό περιβάλλον στο "
+"οποίο δεν  χρειάζεστε ένα πρόγραμμα εκκίνησης, τότε θα πρέπει να συνεχίσετε "
+"έτσι κι αλλιώς. Διαφορετικά, θα πρέπει να εγκαταστήσετε κάπου το GRUB."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "Να αφαιρεθεί το GRUB 2 από το /boot/grub;"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr ""
+"Θέλετε να αφαιρεθούν όλα τα αρχεία του GRUB 2 από τον κατάλογο /boot/grub;"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Κάτι τέτοιο θα καταστήσει το σύστημα μη εκκινήσιμο εκτός αν εγκαταστήσετε "
+"κάποιο άλλο πρόγραμμα εκκίνησης."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "Να τελειώσει τώρα η μετατροπή σε GRUB 2;"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Το σύστημα έχει ακόμα εγκατεστημένα αρχεία από τον φορτωτή εκκίνησης GRUB "
+"Legacy, αλλά έχει τώρα επίσης εγκατεστημένα αρχεία εκκίνησης του GRUB 2 "
+"στους εξής δίσκους:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"Φαίνεται πιθανόν ότι το πρόγραμμα εκκίνησης GRUB Legacy δεν είναι πια σε "
+"χρήση και ότι θα πρέπει αντίθετα να αναβαθμίσετε το GRUB 2 στους παρακάτω "
+"δίσκους και να ολοκληρώσετε την μετατροπή στο GRUB 2 αφαιρώντας οποιαδήποτε "
+"παλιότερα αρχεία του GRUB Legacy. Αν δεν αναβαθμίσετε αυτά τα αντίγραφα του "
+"GRUB 2, τότε πιθανόν να είναι ασύμβατα με τα νεότερα πακέτα, με αποτέλεσμα "
+"να σταματήσει η κανονική εκκίνηση του συστήματός σας."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"Στη γενική περίπτωση θα πρέπει να τελειώσετε την μετατροπή σε GRUB 2 εκτόςκι "
+"αν αυτά τα αρχεία εκκίνησης έχουν δημιουργηθεί από μια εγκατάσταση του GRUB "
+"2 σε ένα άλλο λειτουργικό σύστημα."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Γραμμή εντολής Linux:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Η επόμενη γραμμή εντολών για  Linux έχει εξαχθεί από το αρχείο /etc/default/"
+"grub ή από την παράμετρο `kopt' στο αρχείο menu.lst του GRUB Legacy.  "
+"Παρακαλώ επιβεβαιώστε ότι είναι ορθή και τροποποιήστε την αν είναι "
+"απαραίτητο. Η γραμμή επιτρέπεται να είναι κενή."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Προκαθορισμένη γραμμή εντολών Linux:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"Η ακόλουθη συμβολοσειρά θα χρησιμοποιηθεί για τις παραμέτρους Linux στην "
+"προκαθορισμένη είσοδο του μενού εκκίνησης αλλά όχι για την κατάσταση "
+"διάσωσης (recovery mode)."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr "Να γίνει εξαναγκασμένη εγκατάσταση στην αποσπώμενη EFI συσκευή;"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"Μερικά συστήματα που βασίζουνται στο EFI είναι ελλειπώς ανεπτυγμένα και δεν "
+"διαχειρίζονται τα νέα προγράμματα εκκίνησης σωστά. Αν εξαναγκάσετε το "
+"σύστημα να κάνει εγκατάσταση του GRUB στην αποσπώμενη EFI συσκευή, είναι "
+"βέβαιο ότι αυτό το σύστημα θα δύναται να εκκινεί το Debian σωστά, ακόμα και "
+"να εμφανιστεί τέτοιο πρόβλημα. Παρόλα αυτά, ίσβς αφαιρέσει τη δυνατότητα να "
+"εκκινείτε οποιοδήποτε άλλο λειτουργικό σύστημα που ίσως εξαρτάται από αυτή "
+"τη συσκευή. Αν υπάρχει άλλο λειτουργικό σύστημα, θα χρειαστεί να σιγουρέψετε "
+"ότι ο GRUB είναι σωστά ρυθμισμένος να φορτώνει όλα τα άλλα λειτουργικά. "
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"Γίνεται αναβάθμιση του πακέτου grub-pc. Αυτό το μενού σας επιτρέπει να "
+"επιλέξετε τις συσκευές, αν θέλετε κάποιες, για τις οποίες θα εκτελεστεί "
+"αυτόματα το grub-install."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Επιλέξατε να μην εγκαταστήσετε το GRUB σε οποιαδήποτε συσκευή. Αν "
+"συνεχίσετε, το πρόγραμμα εκκίνησης πιθανόν να μην έχει ρυθμιστεί σωστά και "
+"στην επανεκκίνηση του υπολογιστή σας θα χρησιμοποιήσει οτιδήποτε υπήρχε από "
+"πριν στον τομέα εκκίνησης. Αν υπάρχει μια προηγούμενη έκδοση του GRUB 2 στον "
+"τομέα εκκίνησης, πιθανόν να μην μπορεί να φορτώσει κάποιες ενότητες αλλά "
+"ούτενα χειριστεί το τρέχον αρχείο ρυθμίσεων."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "Γραμμή εντολών kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Η επόμενη γραμμή εντολών του kFreeBSD έχει εξαχθεί από το αρχείο /etc/"
+"default/grub ή από την παράμετρο `kopt' στο αρχείο menu.lst του GRUB "
+"Legacy.  Παρακαλώ επιβεβαιώστε ότι είναι ορθή και τροποποιήστε την αν είναι "
+"απαραίτητο. Η γραμμή επιτρέπεται να είναι κενή."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "Προκαθορισμένη γραμμή εντολών kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"Η ακόλουθη συμβολοσειρά θα χρησιμοποιηθεί για τις παραμέτρους kFreeBSD στην "
+"προκαθορισμένη είσοδο του μενού εκκίνησης αλλά όχι για την κατάσταση "
+"διάσωσης (recovery mode)."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "Το αρχείο /boot/grub/device.map έχει αναδημιουργηθεί"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "Το αρχείο /boot/grub/device.map έχει ξαναγραφεί ώστε να χρησιμοποιεί "
+#~ "σταθερά ονόματα συσκευών. Στις περισσότερες περιπτώσεις αυτό θα μειώσει "
+#~ "αισθητά την ανάγκη αλλαγής του στο μέλλον, τα δε στοιχεία του μενού "
+#~ "εκκίνησης που παράγονται από το GRUB δεν θα επηρεάζονται."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Παρ' όλα αυτά και αφού στο σύστημά σας υπάρχουν περισσότεροι από έναν "
+#~ "δίσκους,είναι πιθανόν το σύστημά σας να εξαρτάται από το παλιότερο αρχείο "
+#~ "απεικόνισης συσκευών device.map. Παρακαλώ ελέγξτε αν υπάρχουν "
+#~ "οποιεσδήποτε ειδικές είσοδοι στο μενού εκκίνησης που βασίζονται στην "
+#~ "αρίθμηση των συσκευών από το GRUB (hdN) και ενημερώστε τις αν είναι "
+#~ "απαραίτητο."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "Αν δεν καταλαβαίνετε το παρόν μήνυμα ή δεν έχετε οποιεσδήποτε ειδικές "
+#~ "εισόδους στο μενού εκκίνησης, μπορείτε να το αγνοήσετε."
+
+#~ msgid ""
+#~ "In either case, whenever you want GRUB 2 to be loaded directly from MBR, "
+#~ "you can do so by issuing (as root) the following command:"
+#~ msgstr ""
+#~ "Σε οποιαδήποτε περίπτωση όποτε θελήσετε να φορτωθεί το GRUB 2 απευθείας "
+#~ "από το MBR μπορείτε να το κάνετε τρέχοντας (ως χρήστης root) την ακόλουθη "
+#~ "εντολή:"

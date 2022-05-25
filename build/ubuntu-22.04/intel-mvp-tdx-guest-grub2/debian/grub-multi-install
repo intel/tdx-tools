@@ -1,0 +1,417 @@
+#!/bin/bash
+#
+# Install to multiple ESPs
+
+set -e
+
+# Most of this is copy-paste from grub postinst, sigh.
+
+. /usr/share/debconf/confmodule
+
+# shamelessly stolen from ucf:
+#
+# Load our templates, just in case our template has
+# not been loaded or the Debconf DB lost or corrupted
+# since then.
+db_x_loadtemplatefile "$(dpkg-query --control-path grub-common templates)" grub-common
+
+###############################################################################
+#                       COPY FROM POSTINST
+###############################################################################
+# This only works on a Linux system with udev running.  This is probably the
+# vast majority of systems where we need any of this, though, and we fall
+# back reasonably gracefully if we don't have it.
+cached_available_ids=
+available_ids()
+{
+  local id path
+
+  if [ "$cached_available_ids" ]; then
+    echo "$cached_available_ids"
+    return
+  fi
+
+  [ -d /dev/disk/by-id ] || return
+  cached_available_ids="$(
+    for path in /dev/disk/by-id/*; do
+      [ -e "$path" ] || continue
+      printf '%s %s\n' "$path" "$(readlink -f "$path")"
+    done | sort -k2 -s -u | cut -d' ' -f1
+  )"
+  echo "$cached_available_ids"
+}
+
+# Returns non-zero and no output if no mapping can be found.
+device_to_id()
+{
+  local id
+  for id in $(available_ids); do
+    if [ "$(readlink -f "$id")" = "$(readlink -f "$1")" ]; then
+      echo "$id"
+      return 0
+    fi
+  done
+  # Fall back to the plain device name if there's no by-id link for it.
+  if [ -e "$1" ]; then
+    echo "$1"
+    return 0
+  fi
+  return 1
+}
+
+# for Linux
+sysfs_size()
+{
+  local num_sectors sector_size size
+  # Try to find out the size without relying on a partitioning tool being
+  # installed. This isn't too hard on Linux 2.6 with sysfs, but we have to
+  # try a couple of variants on detection of the sector size.
+  if [ -e "$1/size" ]; then
+    num_sectors="$(cat "$1/size")"
+    sector_size=512
+    if [ -e "$1/queue/logical_block_size" ]; then
+      sector_size="$(cat "$1/queue/logical_block_size")"
+    elif [ -e "$1/queue/hw_sector_size" ]; then
+      sector_size="$(cat "$1/queue/hw_sector_size")"
+    fi
+    size="$(expr "$num_sectors" \* "$sector_size" / 1000 / 1000)"
+  fi
+  [ "$size" ] || size='???'
+  echo "$size"
+}
+
+# for kFreeBSD
+camcontrol_size()
+{
+  local num_sectors sector_size size=
+
+  if num_sectors="$(camcontrol readcap "$1" -q -s -N)"; then
+    sector_size="$(camcontrol readcap "$1" -q -b)"
+    size="$(expr "$num_sectors" \* "$sector_size" / 1000 / 1000)"
+  fi
+
+  [ "$size" ] || size='???'
+  echo "$size"
+}
+
+maybe_udevadm()
+{
+  if which udevadm >/dev/null 2>&1; then
+    udevadm "$@" || true
+  fi
+}
+
+# Parse /proc/mounts and find out the mount for the given device.
+# The device must be a real device in /dev, not a symlink to one.
+get_mounted_device()
+{
+  mountpoint="$1"
+  cat /proc/mounts | while read -r line; do
+    set -f
+    set -- $line
+    set +f
+    if [ "$2" = "$mountpoint" ]; then
+      echo "$1"
+      break
+    fi
+  done
+}
+
+###############################################################################
+#                            New or modified helpers
+###############################################################################
+
+# Fixed: Return nothing if the argument is empty
+get_mountpoint()
+{
+  local relpath boot_mountpoint
+
+  if [ -z "$1" ]; then
+    return
+  fi
+
+  relpath="$(grub-mkrelpath "$1")"
+  boot_mountpoint="${1#$relpath}"
+  echo "${boot_mountpoint:-/}"
+}
+
+
+# Returns value in $RET, like a debconf command.
+#
+# Merged version of describe_disk and describe_partition, as disks can't be
+# valid ESPs on their own, so we can't render them as an entry.
+describe_efi_system_partition()
+{
+  local disk part id path sysfs_path diskbase partbase size
+  local disk_basename disk_size model
+  disk="$1"
+  part="$2"
+  id="$3"
+  path="$4"
+
+  # BEGIN: Stolen from describe_disk
+  model=
+  case $(uname -s) in
+    Linux)
+      sysfs_path="$(maybe_udevadm info -n "$disk" -q path)"
+      if [ -z "$sysfs_path" ]; then
+        sysfs_path="/block/$(printf %s "${disk#/dev/}" | sed 's,/,!,g')"
+      fi
+      disk_size="$(sysfs_size "/sys$sysfs_path")"
+
+      model="$(maybe_udevadm info -n "$disk" -q property | sed -n 's/^ID_MODEL=//p')"
+      if [ -z "$model" ]; then
+        model="$(maybe_udevadm info -n "$disk" -q property | sed -n 's/^DM_NAME=//p')"
+        if [ -z "$model" ]; then
+          model="$(maybe_udevadm info -n "$disk" -q property | sed -n 's/^MD_NAME=//p')"
+          if [ -z "$model" ] && which dmsetup >/dev/null 2>&1; then
+            model="$(dmsetup info -c --noheadings -o name "$disk" 2>/dev/null || true)"
+          fi
+        fi
+      fi
+    ;;
+    GNU/kFreeBSD)
+      disk_basename=$(basename "$disk")
+      disk_size="$(camcontrol_size "$disk_basename")"
+      model="$(camcontrol inquiry "$disk_basename" | sed -ne "s/^pass0: <\([^>]*\)>.*/\1/p")"
+    ;;
+  esac
+
+  [ "$model" ] || model='???'
+
+  # END: Stolen from describe_disk
+
+  sysfs_path="$(maybe_udevadm info -n "$part" -q path)"
+  if [ -z "$sysfs_path" ]; then
+    diskbase="${disk#/dev/}"
+    diskbase="$(printf %s "$diskbase" | sed 's,/,!,g')"
+    partbase="${part#/dev/}"
+    partbase="$(printf %s "$partbase" | sed 's,/,!,g')"
+    sysfs_path="/block/$diskbase/$partbase"
+  fi
+  size="$(sysfs_size "/sys$sysfs_path")"
+
+  db_subst grub-efi/partition_description DEVICE "$part"
+  db_subst grub-efi/partition_description SIZE "$size"
+  db_subst grub-efi/partition_description PATH "$path"
+  db_subst grub-efi/partition_description DISK_MODEL "$model"
+  db_subst grub-efi/partition_description DISK_SIZE "$disk_size"
+  db_metaget grub-efi/partition_description description
+}
+
+
+# Parse /proc/mounts and find out the mount for the given device.
+# The device must be a real device in /dev, not a symlink to one.
+find_mount_point()
+{
+  real_device="$1"
+  cat /proc/mounts | while read -r line; do
+    set -f
+    set -- $line
+    set +f
+    if [ "$1" = "$real_device" -a "$3" = "vfat" ]; then
+      echo "$2"
+      break
+    fi
+  done
+}
+
+# Return all devices that are a valid ESP
+usable_efi_system_partitions()
+{
+  local last_partition path partition partition_id
+  local ID_PART_ENTRY_TYPE ID_PART_ENTRY_SCHEME
+
+  last_partition=
+  (
+  for partition in /dev/disk/by-id/*; do
+    eval "$(udevadm info -q property -n "$partition" | grep -E '^ID_PART_ENTRY_(TYPE|SCHEME)=')"
+    if [ -z "$ID_PART_ENTRY_TYPE" -o -z "$ID_PART_ENTRY_SCHEME" -o \
+    \( "$ID_PART_ENTRY_SCHEME" != gpt -a "$ID_PART_ENTRY_SCHEME" != dos \) -o \
+    \( "$ID_PART_ENTRY_SCHEME" = gpt -a "$ID_PART_ENTRY_TYPE" != c12a7328-f81f-11d2-ba4b-00a0c93ec93b \) -o \
+    \( "$ID_PART_ENTRY_SCHEME" = dos -a "$ID_PART_ENTRY_TYPE" != 0xef \) ]; then
+      continue
+    fi
+    # unify the partition id
+    partition_id="$(device_to_id "$partition" || true)"
+    real_device="$(readlink -f "$partition")"
+    path="$(find_mount_point $real_device)"
+    echo "$path:$partition_id"
+  done
+  ) | sort -t: -k2 -u
+}
+
+###############################################################################
+#                            MAGIC SCRIPT
+###############################################################################
+FALLBACK_MOUNTPOINT=/var/lib/grub/esp
+
+# Initial install/upgrade from /boot/efi?
+db_fget grub-efi/install_devices seen
+seen="$RET"
+
+# Get configured value
+question=grub-efi/install_devices
+priority=high
+db_get grub-efi/install_devices
+valid=1
+
+# We either migrate /boot/efi over, or we check if we have invalid devices
+if [ -z "$RET" ] && [ "$seen" != "true" ]; then
+  echo "Trying to migrate /boot/efi into esp config"
+  esp="$(get_mounted_device /boot/efi)"
+  if [ "$esp" ]; then
+    esp="$(device_to_id "$esp")"
+  fi
+  if [ "$esp" ]; then
+    db_set grub-efi/install_devices "$esp"
+    db_fset grub-efi/install_devices seen true
+    RET="$esp"
+  fi
+else
+  for device in $RET; do
+    if [ ! -e "${device%,}" ]; then
+      valid=0
+      break
+    fi
+  done
+fi
+
+# If /boot/efi points to a device that's not in the list, trigger the
+# install_devices_disks_changed prompt below, but add the device behind
+# /boot/efi to the defaults.
+boot_efi_device=$(get_mounted_device /boot/efi || true)
+if [ "$boot_efi_device" ]; then
+  for device in $RET; do
+    device="${device%,}"
+    real_device="$(readlink -f "$device" || true)"
+    if [ "$real_device" = "$boot_efi_device" ]; then
+      boot_efi_device=""
+      break
+    fi
+  done
+
+  if [ "$boot_efi_device" ]; then
+    boot_efi_device="$(device_to_id "$boot_efi_device" || true)"
+    if [ "$RET" ]; then
+      RET="$RET, $boot_efi_device"
+    else
+      RET="$boot_efi_device"
+    fi
+    valid=0
+  fi
+fi
+
+
+if [ "$valid" = 0 ]; then
+  question=grub-efi/install_devices_disks_changed
+  priority=critical
+  db_set "$question" "$RET"
+  db_fset "$question" seen false
+  db_fset grub-efi/install_devices_empty seen false
+fi
+
+while :; do
+  ids=
+  descriptions=
+  partitions="$(usable_efi_system_partitions)"
+
+  for partition_pair in $partitions; do
+    partition_id="${partition_pair#*:}"
+    device="${partition_id%%-part*}"
+    ids="${ids:+$ids, }$partition_id"
+    describe_efi_system_partition "$(readlink -f "$device")" "$(readlink -f "$partition_id")" "$partition_id" "$(get_mountpoint "${partition_pair%%:*}")"
+    RET="$(printf %s "$RET" | sed 's/,/\\,/g')"
+    descriptions="${descriptions:+$descriptions, }$RET"
+  done
+
+  db_subst "$question" RAW_CHOICES "$ids"
+  db_subst "$question" CHOICES "$descriptions"
+  db_input "$priority" "$question" || true
+  db_go
+  db_get "$question"
+
+
+  # Run the installer
+  failed_devices=
+  for i in `echo $RET | sed -e 's/, / /g'` ; do
+    real_device="$(readlink -f "$i")"
+    mntpoint=$(find_mount_point $real_device)
+    if [ -z "$mntpoint" ]; then
+      mntpoint=$FALLBACK_MOUNTPOINT
+      mount $real_device $mntpoint
+    fi
+    echo "Installing grub to $mntpoint." >&2
+    if _UBUNTU_ALTERNATIVE_ESPS="$RET" grub-install --efi-directory=$mntpoint "$@" ; then
+      # We just installed GRUB 2; then also generate grub.cfg.
+      touch /boot/grub/grub.cfg
+    else
+      failed_devices="$failed_devices $real_device"
+    fi
+
+    if [ "$mntpoint" = "$FALLBACK_MOUNTPOINT" ]; then
+      umount $mntpoint
+    fi
+  done
+
+  if [ "$question" != grub-efi/install_devices ] && [ "$RET" ]; then
+    # XXX cjwatson 2019-02-26: The description of
+    # grub-efi/install_devices_disks_changed ought to explain that
+    # selecting no devices will leave the configuration unchanged
+    # so that you'll be prompted again next time, but it's a bit
+    # close to the Debian 10 release to be introducing new
+    # translatable text.  For now, it should be sufficient to
+    # avoid losing configuration data.
+    db_set grub-efi/install_devices "$RET"
+    db_fset grub-efi/install_devices seen true
+  fi
+
+  if [ "$failed_devices" ]; then
+    db_subst grub-efi/install_devices_failed FAILED_DEVICES "$failed_devices"
+    db_fset grub-efi/install_devices_failed seen false
+    if db_input critical grub-efi/install_devices_failed; then
+      db_go
+      db_get grub-efi/install_devices_failed
+      if [ "$RET" = true ]; then
+        break
+      else
+        db_fset "$question" seen false
+        db_fset grub-efi/install_devices_failed seen false
+        continue
+      fi
+    else
+      exit 1 # noninteractive
+    fi
+  fi
+
+  db_get "$question"
+  if [ -z "$RET" ]; then
+    # Reset the seen flag if the current answer is false, since
+    # otherwise we'll loop with no indication of why.
+    db_get grub-efi/install_devices_empty
+    if [ "$RET" = false ]; then
+      db_fset grub-efi/install_devices_empty seen false
+    fi
+    if db_input critical grub-efi/install_devices_empty; then
+      db_go
+      db_get grub-efi/install_devices_empty
+      if [ "$RET" = true ]; then
+        break
+      else
+        db_fset "$question" seen false
+        db_fset grub-efi/install_devices_empty seen false
+      fi
+    else
+      # if question was seen we are done
+      # Otherwise, abort
+      db_fget grub-efi/install_devices_empty seen
+      if [ "$RET" = true ]; then
+        break
+      else
+        exit 1
+      fi
+    fi
+  else
+    break
+  fi
+done

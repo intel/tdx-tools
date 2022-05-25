@@ -1,0 +1,60 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Tue, 9 Jun 2020 11:50:23 +0200
+Subject: UBUNTU: Add GRUB_FLAVOUR_ORDER configuration item
+
+This allows you to specify flavours that will be preferred
+over other ones, and the order in which they are preferred
+- items in the list win over items not in the list, and items
+earlier in the list win over later ones.
+
+We still have to sort out storage of this, as we need to
+inject that from packages or the UA client and similar,
+and we can't just modify /etc/default/grub for that.
+
+LP: #1882663
+Patch-Name: ubuntu-flavour-order.patch
+---
+ util/grub-mkconfig.in     |  3 ++-
+ util/grub-mkconfig_lib.in | 15 +++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/util/grub-mkconfig.in b/util/grub-mkconfig.in
+index 58002c0..a8c247a 100644
+--- a/util/grub-mkconfig.in
++++ b/util/grub-mkconfig.in
+@@ -266,7 +266,8 @@ export GRUB_DEFAULT \
+   GRUB_RECORDFAIL_TIMEOUT \
+   GRUB_RECOVERY_TITLE \
+   GRUB_FORCE_PARTUUID \
+-  GRUB_DISABLE_INITRD
++  GRUB_DISABLE_INITRD \
++  GRUB_FLAVOUR_ORDER
+ 
+ if test "x${grub_cfg}" != "x"; then
+   rm -f "${grub_cfg}.new"
+diff --git a/util/grub-mkconfig_lib.in b/util/grub-mkconfig_lib.in
+index b6a1d7d..1e69d5b 100644
+--- a/util/grub-mkconfig_lib.in
++++ b/util/grub-mkconfig_lib.in
+@@ -274,6 +274,21 @@ version_test_gt ()
+   if [ "x$version_test_gt_b" = "x" ] ; then
+     return 0
+   fi
++
++  # GRUB_FLAVOUR_ORDER is an ordered list of kernels, in decreasing
++  # priority. Any items in the list take precedence over other kernels,
++  # and earlier flavours are preferred over later ones.
++  for flavour in ${GRUB_FLAVOUR_ORDER:-}; do
++    version_test_gt_a_preferred=$(echo "$version_test_gt_a" | grep --  "-[0-9]*-$flavour\$")
++    version_test_gt_b_preferred=$(echo "$version_test_gt_b" | grep --  "-[0-9]*-$flavour\$")
++
++    if [ -n "$version_test_gt_a_preferred" -a -z "$version_test_gt_b_preferred" ] ; then
++      return 0
++    elif [ -z "$version_test_gt_a_preferred" -a -n "$version_test_gt_b_preferred" ] ; then
++      return 1
++    fi
++  done
++
+   case "$version_test_gt_a:$version_test_gt_b" in
+     *.old:*.old) ;;
+     *.old:*) version_test_gt_a="`echo "$version_test_gt_a" | sed -e 's/\.old$//'`" ; version_test_gt_cmp=gt ;;

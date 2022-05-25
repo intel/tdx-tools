@@ -1,0 +1,51 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Wed, 16 Feb 2022 17:19:45 +0100
+Subject: UBUNTU: os-prober: Enable on first run or if last run produced
+ results
+
+To not break existing use cases, if we install alongside another OS
+let's keep running os-prober. For this, introduce an auto mode that
+determines whether we are (a) a new install or (b) have previously
+added any os-prober items.
+
+This patch is not optimal, and it might be nicer to handle this in
+installers and the release upgrader, but that involves touching a
+lot more packages and means we'd also have that policy in multiple
+places, which is detrimental if we want to change it again.
+
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1955109
+---
+ util/grub-mkconfig.in       | 2 +-
+ util/grub.d/30_os-prober.in | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/util/grub-mkconfig.in b/util/grub-mkconfig.in
+index a8c247a..21d28f1 100644
+--- a/util/grub-mkconfig.in
++++ b/util/grub-mkconfig.in
+@@ -141,7 +141,7 @@ GRUB_DEVICE_BOOT="`${grub_probe} --target=device /boot`"
+ GRUB_DEVICE_BOOT_UUID="`${grub_probe} --device ${GRUB_DEVICE_BOOT} --target=fs_uuid 2> /dev/null`" || true
+ 
+ # Disable os-prober by default due to security reasons.
+-GRUB_DISABLE_OS_PROBER="true"
++GRUB_DISABLE_OS_PROBER="auto"
+ 
+ # Filesystem for the device containing our userland.  Used for stuff like
+ # choosing Hurd filesystem module.
+diff --git a/util/grub.d/30_os-prober.in b/util/grub.d/30_os-prober.in
+index 225a3ba..5eb44d1 100644
+--- a/util/grub.d/30_os-prober.in
++++ b/util/grub.d/30_os-prober.in
+@@ -43,6 +43,12 @@ EOF
+ if [ "x${GRUB_DISABLE_OS_PROBER}" = "xtrue" ]; then
+   grub_warn "$(gettext_printf "os-prober will not be executed to detect other bootable partitions.\nSystems on them will not be added to the GRUB boot configuration.\nCheck GRUB_DISABLE_OS_PROBER documentation entry.")"
+   exit 0
++elif [ "x${GRUB_DISABLE_OS_PROBER}" = "xauto" ]; then
++  # UBUNTU: We do not want to disable os-prober on upgrades if we found items before.
++  if test -e /boot/grub/grub.cfg && ! grep -q osprober /boot/grub/grub.cfg; then
++    grub_warn "$(gettext_printf "os-prober will not be executed to detect other bootable partitions.\nSystems on them will not be added to the GRUB boot configuration.\nCheck GRUB_DISABLE_OS_PROBER documentation entry.")"
++    exit 0
++  fi
+ fi
+ 
+ if ! command -v os-prober > /dev/null || ! command -v linux-boot-prober > /dev/null ; then

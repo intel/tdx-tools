@@ -1,0 +1,525 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# localuser <sampada.n@rediffmail.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2014-12-24 20:56+0530\n"
+"Last-Translator: localuser <sampada.n@rediffmail.com>\n"
+"Language-Team: C-DAC/Sampada\n"
+"Language: mr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "menu.lst मधून चेनलोड करायचे?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr "ग्रब श्रेणीवर्धन स्क्रिप्ट्सना /boot/grub येथे ग्रब लिगसी संरचना आढळली आहे."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"तुमच्या प्रणालीतील ग्रबची लिगसी आवृत्ती बदलण्यासाठी अशी शिफारस केली जाते की तुमच्या "
+"अस्तित्वातील ग्रब लिगसी संरचनेमधून /boot/grub/menu.lst हा ग्रब 2 आरंभ प्रतिमा लोड "
+"करण्यासाठी बदलण्यात यावा. ही पायरी आता स्वयंचलितपणे करता येऊ शकते."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"अशी शिफारस आहे, की तुम्ही menu.lst मधून ग्रब 2 चेनलोड करायचे स्वीकारावे, व एमबीआर "
+"(मुख्य आरंभ अभिलेख) यानुसार लिहिला जाण्यापूर्वी नवीन ग्रब 2 संरचना कार्य करत आहे याची "
+"खातरजमा करावी."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"तुमचा निर्णय काहीही असला तरी, तुम्ही नंतर मूल म्हणून खालील आज्ञा देऊन जुनी एमबीआर "
+"प्रतिमा ग्रब 2 ने बदलू शकता:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "ग्रब अधिष्ठापना उपकरणे:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"ग्रब-पीसी पॅकेज श्रेणिवर्धित केले जात आहे. कोणत्या उपकरणांसाठी ग्रब-इन्स्टाल स्वयंचलितपणे "
+"चालवले जावे ते या मेन्यूद्वारे तुम्ही निवडू शकता."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"ग्रब गाभा प्रतिमेच्या ग्रब मोड्यूल्स वा grub.cfg शी विसंवादाला आळा बसण्यासाठी बहुतांश "
+"परिस्थितींमध्ये ग्रब-इन्स्टाल स्वयंचलितपणे चालवले जाण्याची शिफारस केली जाते."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"तुमच्या बायोसने कोणता ड्राईव्ह आरंभ ड्राईव्ह म्हणून ठरवला आहे याची तुम्हाला खात्री नसल्यास, "
+"ग्रब सर्वच ड्राईव्ह्जवर अधिष्ठापित करणे बहुतेकदा चांगले ठरते."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"नोंद: विभाजन आरंभ नोंदींमध्येही ग्रब अधिष्ठापित करणे शक्य आहे, व यासाठी काही सुयोग्य "
+"विभाजने येथे दर्शवली आहेत. तथापि, यामुळे ग्रबला ब्लॉकलिस्ट यंत्रणा वापरणे भाग पडते, ज्यामुळे "
+"त्याची विश्वासार्हता कमी होते व म्हणून याची शिफारस केली जात नाही."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"ग्रब आरंभ सूचक पूर्वी ज्या डिस्कवर अधिष्ठापित केला होता ती आता अस्तित्वात नाही, वा काही "
+"कारणास्तव तिचे विशिष्ट ओळखचिन्ह बदलले गेले आहे. अधिष्ठापित केलेली ग्रब गाभा प्रतिमा ग्रब "
+"मोड्यूल्स व grub.cfg यांच्याशी सुसंवादी राहणे महत्वाचे आहे. कृपया ग्रब सुयोग्य आरंभ उपकरणांवर "
+"लिहिला जात आहे याची पुन्हा खातरजमा करा."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} एमबी; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} एमबी; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "आरंभ उपकरणावर ग्रब लिहिणे फसले - सुरू ठेवायचे?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "खालील उपकरणांवर ग्रब अधिष्ठापित करणे असफल झाले:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"तुम्हाला तरीही पुढे जायचेय? असे केल्यास, तुमचा संगणक कदाचित व्यवस्थित सुरू होऊ शकणार नाही."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "आरंभ उपकरणावर ग्रब लिहिणे फसले - पुन्हा प्रयत्न करायचा?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"तुम्ही ग्रब अन्य कोणत्याही उपकरणावर अधिष्ठापित करू शकता, पण त्या उपकरणावरून तुमची "
+"प्रणाली आरंभ करू शकते याची खातरजमा तुम्ही केली पाहिजे. अन्यथा, लीगसी ग्रबचे श्रेणिवर्धन "
+"रद्द केले जाईल."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "ग्रब अधिष्ठापित न करता पुढे जायचे?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"कोणत्याही उपकरणांवर ग्रब अधिष्ठापित न करण्याचे तुम्ही निवडले आहे. तुम्ही पुढे चालू ठेवल्यास, "
+"हा आरंभ सूचक योग्यरित्या संरचित झालेला नसू शकतो, व हा संगणक पुन्हा सुरू होईल तेव्हा बूट "
+"सेक्टरमध्ये आधी जे काही होते ते वापरेल. बूट सेक्टरमध्ये ग्रब 2 ची आधीची आवृत्ती असेल, तर "
+"कदाचित तो मोड्युल्स लोड करू शकणार नाही वा सद्य संरचना फाईल हाताळू शकणार नाही."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"तुम्ही आधीच अन्य आरंभ सूचक वापरत असाल व तोच वापरणे सुरू ठेऊ इच्छित असाल, वा तुम्हाला आरंभ "
+"सूचकाची गरज पडणार नाही असा हा विशेष आसमंत असेल, तर तुम्ही तसेच पुढे चालू ठेवावे. अन्यथा, "
+"तुम्ही कोठेतरी ग्रब अधिष्ठापित केला पाहिजे."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "/boot/grub मधून ग्रब 2 काढून टाकायचा?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "/boot/grub मधून ग्रब 2 च्या सर्व फायली तुम्ही काढून टाकू इच्छिता?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr "अन्य आरंभ सूचक अधिष्ठापित न केल्यास यामुळे तुमची प्रणाली आरंभ न होण्याजोगी होईल."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "ग्रब 2 मध्ये परिवर्तन आता थांबवायचे?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"प्रणालीमध्ये अद्यापही लीगसी ग्रब आरंभ सूचक अधिष्ठापनेतील फायली आहेत, पण तिच्यात आता "
+"खालील डिस्क्सवर ग्रब 2 आरंभ नोंदीही अधिष्ठापित आहेत:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"ग्रब लीगसी आता वापरात नसण्याचा संभव आहे असे भासतेय, आणि या डिस्कवर तुम्ही त्याऐवजी ग्रब "
+"2 प्रतिमा श्रेणिवर्धित केल्या पाहिजेत व ग्रब लीगसी फायली काढून टाकून ग्रब 2 मघ्ये परिवर्तन "
+"पूर्ण केले पाहिजे. तुम्ही या ग्रब 2 प्रतिमा श्रेणिवर्धित केल्या नाहीत, तर त्या नवीन पॅकेजेसशी "
+"अनुरूप असणार नाहीत व तुमच्या प्रणालीचा योग्य आरंभ होण्यात अडथळा आणू शकतील."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"या आरंभ नोंदी अन्य कोणत्यातरी प्रचालन प्रणालीवर ग्रब 2 अधिष्ठापनेने निर्माण केलेल्या "
+"नसल्यास तुम्ही सामान्यतः ग्रब 2 मघ्ये परिवर्तन पूर्ण केले पाहिजे."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "लिनक्स आदेश ओळ:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"पुढील लिनक्स आदेश ओळ /etc/default/grub ग्रब लीगसीच्या menu.lst मधील `kopt' "
+"घटकमूल्यामधून मिळवली आहे. कृपया ती योग्य आहे का, याची खातरजमा करा व आवश्यकता असल्यास "
+"बदल करा. आदेश ओळ रिकामी ठेवण्याची अनुमती असते."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "लिनक्स मूलनिर्धारीत आदेश ओळ:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"मुलनिर्धारित मेन्यू नोंदीकरिता लिनक्स घटकमूल्ये म्हणून खालील श्रुंखला वापरली जाईल, पण "
+"रिकव्हरी मोडसाठी नाही."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr "ईएफआय काढण्याजोग्या मिडीया मार्गात अतिरिक्त अधिष्ठापना जबरदस्ती करायची?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"काही ईएफआय-आधारित प्रणाली दोषपूर्ण असतात व नवीन आरंभसूचकांना योग्य रीतीने हाताळत "
+"नाहीत. तुम्ही ईएफआय काढण्याजोग्या मिडीया मार्गात ग्रबची अतिरिक्त अधिष्ठापना जबरदस्ती "
+"केल्यास, त्यामुळे अशी समस्या असूनही ही प्रणाली डेबियन योग्यरीत्या आरंभ करेल याची खात्री "
+"होईल. तथापि, त्यामुळे याच मार्गावर अवलंबून असणारी अन्य एखादी प्रचालन प्रणाली आरंभ "
+"होण्याची क्षमता काढून टाकली जाऊ शकते. असे असल्यास, अन्य एखादी प्रणाली योग्य रीतीने आरंभ "
+"होण्यासाठी ग्रब यशस्वीपणे संरचित केला गेला असल्याची खातरजमा तुम्ही करणे गरजेचे आहे."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"ग्रब-पीसी पॅकेज श्रेणिवर्धित केले जात आहे. कोणत्या उपकरणांसाठी ग्रब-इन्स्टाल स्वयंचलितपणे "
+"चालवले जावे ते या मेन्यूद्वारे तुम्ही निवडू शकता."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} एमबी; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"कोणत्याही उपकरणांवर ग्रब अधिष्ठापित न करण्याचे तुम्ही निवडले आहे. तुम्ही पुढे चालू ठेवल्यास, "
+"हा आरंभ सूचक योग्यरित्या संरचित झालेला नसू शकतो, व हा संगणक पुन्हा सुरू होईल तेव्हा बूट "
+"सेक्टरमध्ये आधी जे काही होते ते वापरेल. बूट सेक्टरमध्ये ग्रब 2 ची आधीची आवृत्ती असेल, तर "
+"कदाचित तो मोड्युल्स लोड करू शकणार नाही वा सद्य संरचना फाईल हाताळू शकणार नाही."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "केफ्रीबीएसडी आदेश ओळ:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"पुढील केफ्रीबीएसडी आदेश ओळ /etc/default/grub ग्रब लीगसीच्या menu.lst मधील `kopt' "
+"घटकमूल्यामधून मिळवली आहे. कृपया ती योग्य आहे का, याची खातरजमा करा व आवश्यकता असल्यास "
+"बदल करा. आदेश ओळ रिकामी ठेवण्याची अनुमती असते."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "केफ्रीबीएसडी मूलनिर्धारीत आदेश ओळ:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"मुलनिर्धारित मेन्यू नोंदीकरिता केफ्रीबीएसडी घटकमूल्ये म्हणून खालील श्रुंखला वापरली जाईल, पण "
+"रिकव्हरी मोडसाठी नाही."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map पुनर्निर्मिला गेला आहे"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "फाईल /boot/grub/device.map स्थीर उपकरण नावे वापरण्यासाठी पुन्हा लिहिली गेली आहे. "
+#~ "बहुतांश बाबतील, यामुळे तीत भविष्यात बदल करण्याची गरज लक्षणीयरित्या कमी झाली "
+#~ "पाहिजे, व ग्रबने निर्माण केलेल्या आरंभ मेन्यू नोंदींवर परिणाम होता कामा नये."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "तथापि, प्रणालीमध्ये एकाहून अधिक डिस्क अस्तित्वात असल्याने, प्रणाली जुन्या उपकरण "
+#~ "नकाशावर अवलंबून असणे शक्य आहे. ग्रबच्या (hdN) ड्राईव्ह क्रमांकांवर विसंबणार्‍या एखाद्या "
+#~ "आरंभ मेन्यू नोंदी आहेत का हे कृपया तपासा, व आवश्यकता भासल्यास त्या अद्ययावत करा."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "तुम्हाला या संदेशाचा अर्थ समजत नसेल, वा अशा आरंभ मेन्यू नोंदी नसतील, तर तुम्ही या "
+#~ "संदेशाकडे दुर्लक्ष करू शकता."

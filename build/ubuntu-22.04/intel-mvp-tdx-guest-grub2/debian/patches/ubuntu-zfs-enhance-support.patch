@@ -1,0 +1,1047 @@
+From: Didier Roche <didrocks@ubuntu.com>
+Date: Fri, 12 Jul 2019 11:06:06 -0400
+Subject: UBUNTU: Enhance ZFS grub support
+
+* Support multiple zfs systems (grouped by machine-id)
+* Group zfs snapshots and clones with latest dataset for a given
+  installation.
+* Support "history" entry with one time boot, recovery mode and
+  consecutive reboots.
+* Pin kernel to particular snapshot, trying to reboot with the exact
+  same kernel and initrd.
+* Disable in 10_linux zfs support if 10_linux_zfs is installed so that
+  we don't end up with the same installation multiple times.
+
+Author: Jean-Baptiste Lallement <jean-baptiste@ubuntu.com>
+Author: Didier Roche <didrocks@ubuntu.com>
+Last-Update: 2020-08-06
+Patch-Name: ubuntu-zfs-enhance-support.patch
+
+Signed-off-by: Didier Roche <didier.roche@canonical.com>
+---
+ Makefile.util.def           |   7 +
+ util/grub.d/10_linux.in     |   4 +
+ util/grub.d/10_linux_zfs.in | 981 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 992 insertions(+)
+ create mode 100755 util/grub.d/10_linux_zfs.in
+
+diff --git a/Makefile.util.def b/Makefile.util.def
+index a3d134b..a6204f6 100644
+--- a/Makefile.util.def
++++ b/Makefile.util.def
+@@ -511,6 +511,13 @@ script = {
+   condition = COND_HOST_LINUX;
+ };
+ 
++script = {
++  name = '10_linux_zfs';
++  common = util/grub.d/10_linux_zfs.in;
++  installdir = grubconf;
++  condition = COND_HOST_LINUX;
++};
++
+ script = {
+   name = '10_xnu';
+   common = util/grub.d/10_xnu.in;
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index 4e09797..9a23c3a 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -89,6 +89,10 @@ case x"$GRUB_FS" in
+ 	    GRUB_CMDLINE_LINUX="rootflags=subvol=${rootsubvol} ${GRUB_CMDLINE_LINUX}"
+ 	fi;;
+     xzfs)
++	# We have a more specialized ZFS handler, with multiple system in 10_linux_zfs.
++	if [ -e "`dirname $(readlink -f $0)`/10_linux_zfs" ]; then
++	  exit 0
++	fi
+ 	rpool=`${grub_probe} --device ${GRUB_DEVICE} --target=fs_label 2>/dev/null || true`
+ 	bootfs="`make_system_path_relative_to_its_root / | sed -e "s,@$,,"`"
+ 	LINUX_ROOT_DEVICE="ZFS=${rpool}${bootfs%/}"
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+new file mode 100755
+index 0000000..f321fe2
+--- /dev/null
++++ b/util/grub.d/10_linux_zfs.in
+@@ -0,0 +1,981 @@
++#! /bin/sh
++set -e
++
++# grub-mkconfig helper script.
++# Copyright (C) 2019 Canonical Ltd.
++#
++# GRUB is free software: you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# GRUB is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
++
++prefix="@prefix@"
++datarootdir="@datarootdir@"
++
++. "${pkgdatadir}/grub-mkconfig_lib"
++
++export TEXTDOMAIN=@PACKAGE@
++export TEXTDOMAINDIR="@localedir@"
++
++set -u
++
++## Skip early if zfs utils isn't installed (instead of failing on first zpool list)
++if ! `which zfs >/dev/null 2>&1`; then
++    exit 0
++fi
++
++imported_pools=""
++MNTDIR="$(mktemp -d ${TMPDIR:-/tmp}/zfsmnt.XXXXXX)"
++ZFSTMP="$(mktemp -d ${TMPDIR:-/tmp}/zfstmp.XXXXXX)"
++
++RC=0
++on_exit() {
++    # Restore initial zpool import state
++    for pool in ${imported_pools}; do
++        zpool export "${pool}"
++    done
++
++    mountpoint -q "${MNTDIR}"  && umount "${MNTDIR}" || true
++    rmdir "${MNTDIR}"
++    rm -rf "${ZFSTMP}"
++    exit "${RC}"
++}
++trap on_exit EXIT INT QUIT ABRT PIPE TERM
++
++# List ONLINE and DEGRADED pools
++import_pools() {
++    # We have to ignore zpool import output, as potentially multiple / will be available,
++    # and we need to autodetect all zpools this way with their real mountpoints.
++    local initial_pools="$(zpool list | awk '{if (NR>1) print $1}')"
++    local all_pools=""
++    local imported_pools=""
++    local err=""
++
++    set +e
++    err="$(zpool import -f -a -o cachefile=none -o readonly=on -N 2>&1)"
++    # Only print stderr if the command returned an error
++    # (it can echo "No zpool to import" with success, which we don't want)
++    if [ $? -ne 0 ]; then
++        echo "Some pools couldn't be imported and will be ignored:\n${err}" >&2
++    fi
++    set -e
++
++    all_pools="$(zpool list | awk '{if (NR>1) print $1}')"
++    for pool in ${all_pools}; do
++        if echo "${initial_pools}" | grep -wq "${pool}"; then
++            continue
++        fi
++        imported_pools="${imported_pools} ${pool}"
++    done
++
++    echo "${imported_pools}"
++}
++
++# List all the dataset with a root mountpoint
++get_root_datasets() {
++    local pools="$(zpool list | awk '{if (NR>1) print $1}')"
++
++    for p in ${pools}; do
++        local rel_pool_root=$(zpool get -H altroot ${p} | awk '{print $3}')
++        if [ "${rel_pool_root}" = "-" ]; then
++            rel_pool_root="/"
++        fi
++
++        zfs list -H -o name,canmount,mountpoint -t filesystem | grep -E '^'"${p}"'(\s|/[[:print:]]*\s)(on|noauto)\s'"${rel_pool_root}"'$' | awk '{print $1}'
++    done
++}
++
++# find if given datasets can be mounted for directory and return its path (snapshot or real path)
++# $1 is our current dataset name
++# $2 directory path we look for (cannot contains /)
++# $3 is the temporary mount directory to use
++# $4 is the optional snapshot name
++# return path for directory (which can be a mountpoint)
++validate_system_dataset() {
++    local dataset="$1"
++    local directory="$2"
++    local mntdir="$3"
++    local snapshot_name="$4"
++
++    local mount_path="${mntdir}/${directory}"
++
++    if ! zfs list "${dataset}" >/dev/null 2>&1; then
++        return
++    fi
++
++    if ! mount -o noatime,zfsutil -t zfs "${dataset}" "${mount_path}"; then
++        grub_warn "Failed to find a valid directory '${directory}' for dataset '${dataset}@${snapshot_name}'. Ignoring"
++        return
++    fi
++
++    local candidate_path="${mount_path}"
++    if [ -n "${snapshot_name}" ]; then
++        # WORKAROUND a bug https://github.com/zfsonlinux/zfs/issues/9958
++        # Reading the content of a snapshot fails if it is not the first mount
++        # for a given dataset
++        first_mntdir=$(awk '{if ($1 == "'${dataset}'") {print $2; exit;}}' /proc/mounts)
++        if [ "${first_mntdir}" = "/" ]; then
++            # prevents // on candidate_path
++            first_mntdir=""
++        fi
++        candidate_path="${first_mntdir}/.zfs/snapshot/${snapshot_name}"
++    fi
++
++    if [ -n "$(ls "${candidate_path}" 2>/dev/null)" ]; then
++        echo "${candidate_path}"
++        return
++    else
++        mountpoint -q "${mount_path}" && umount "${mount_path}" || true
++    fi
++}
++
++# Detect system directory relevant to the other, trying to find the ones associated on the current dataset or snapshot/
++# System directory should be at most a direct child dataset of main datasets (no recursivity)
++# We can fallback trying other zfs pools if no match has been found.
++# $1 is our current dataset name (which can have @snapshot name)
++# $2 directory path we look for (cannot contains /)
++# $3 restrict_to_same_pool (true|false) force looking for dataset with the same basename in the current dataset pool only
++# $4 is the temporary mount directory to use
++# $5 is the optional etc directory (if not $2 is not etc itself)
++# return path for directory (which can be a mountpoint)
++get_system_directory() {
++    local dataset_path="$1"
++    local directory="$2"
++    local restrict_to_same_pool="$3"
++    local mntdir="$4"
++    local etc_dir="$5"
++
++    if [ -z "${etc_dir}" ]; then
++        etc_dir="${mntdir}/etc"
++    fi
++
++    local candidate_path="${mntdir}/${directory}"
++
++    # 1. Look for /etc/fstab first (which will mount even on top of non empty $directory)
++    local mounted_fstab_entry="false"
++    if [ -f "${etc_dir}/fstab" ]; then
++        mount_args=$(awk '/^[^#].*[ \t]\/'"${directory}"'[ \t]/ {print "-t", $3, $1}' "${etc_dir}/fstab")
++        if [ -n "${mount_args}" ]; then
++            mounted_fstab_entry="true"
++            mount -o noatime ${mount_args} "${candidate_path}" || mounted_fstab_entry="false"
++        fi
++    fi
++
++    # If directory isn't empty. Only count if coming from /etc/fstab. Will be
++    # handled below otherwise as we are interested in potential snapshots.
++    if [ "${mounted_fstab_entry}" = "true" -a -n "$(ls ${candidate_path} 2>/dev/null)" ]; then
++        echo "${candidate_path}"
++        return
++    fi
++
++    # 2. Handle zfs case, which can be a snapshots.
++
++    local base_dataset_path="${dataset_path}"
++    local snapshot_name=""
++    # For snapshots we extract the parent dataset
++    if echo "${dataset_path}" | grep -q '@'; then
++        base_dataset_path=$(echo "${dataset_path}" | cut -d '@' -f1)
++        snapshot_name=$(echo "${dataset_path}" | cut -d '@' -f2)
++    fi
++    base_dataset_name="${base_dataset_path##*/}"
++    base_pool="$(echo "${base_dataset_path}" | cut -d'/' -f1)"
++
++    # 2.a) Look for child dataset included in base dataset, which needs to hold same snapshot if any
++    candidate_path=$(validate_system_dataset "${base_dataset_path}/${directory}" "${directory}" "${mntdir}" "${snapshot_name}")
++    if [ -n "${candidate_path}" ]; then
++        echo "${candidate_path}"
++        return
++    fi
++
++    # 2.b) Look for current dataset (which is already mounted as /)
++    candidate_path="${mntdir}/${directory}"
++    if [ -n "${snapshot_name}" ]; then
++        # WORKAROUND a bug https://github.com/zfsonlinux/zfs/issues/9958
++        # Reading the content of a snapshot fails if it is not the first mount
++        # for a given dataset
++        first_mntdir=$(awk '{if ($1 == "'${base_dataset_path}'") {print $2; exit;}}' /proc/mounts)
++        if [ "${first_mntdir}" = "/" ]; then
++            # prevents // on candidate_path
++            first_mntdir=""
++        fi
++        candidate_path="${first_mntdir}/.zfs/snapshot/${snapshot_name}/${directory}"
++    fi
++    if [ -n "$(ls "${candidate_path}" 2>/dev/null)" ]; then
++        echo "${candidate_path}"
++        return
++    fi
++
++    # 2.c) Look for every datasets in every pool which isn't the current dataset which holds:
++    # - the same dataset name (last section) than our base_dataset_name
++    # - mountpoint=directory
++    # - canmount!=off
++    all_same_base_dataset_name="$(zfs list -H -t filesystem -o name,canmount | awk '/^[^ ]+\/'"${base_dataset_name}"'[ \t](on|noauto)/ {print $1}') "
++
++    # order by local pool datasets first
++    current_pool_same_base_datasets=""
++    other_pools_same_base_datasets=""
++    root_pool=$(echo "${dataset_path%%/*}")
++    for d in ${all_same_base_dataset_name}; do
++        cur_dataset_pool=$(echo "${d%%/*}")
++        if echo "${cur_dataset_pool}" | grep -wq "${root_pool}" 2>/dev/null ; then
++            current_pool_same_base_datasets="${current_pool_same_base_datasets} ${d}"
++        else
++            other_pools_same_base_datasets="${other_pools_same_base_datasets} ${d}"
++        fi
++    done
++    ordered_same_base_datasets="${current_pool_same_base_datasets} ${other_pools_same_base_datasets}"
++    if [ "${restrict_to_same_pool}" = "true" ]; then
++        ordered_same_base_datasets="${current_pool_same_base_datasets}"
++    fi
++
++    # now, loop over them
++    for d in ${ordered_same_base_datasets}; do
++        cur_dataset_pool=$(echo "${d%%/*}")
++
++        rel_pool_root=$(zpool get -H altroot ${cur_dataset_pool} | awk '{print $3}')
++        if [ "${rel_pool_root}" = "-" ]; then
++            rel_pool_root=""
++        fi
++
++        # check mountpoint match
++        candidate_dataset=$(zfs get -H mountpoint ${d} | grep -E "mountpoint\s${rel_pool_root}/${directory}\s" | awk '{print $1}')
++        if [ -z "${candidate_dataset}" ]; then
++            continue
++        fi
++
++        candidate_path=$(validate_system_dataset "${candidate_dataset}" "${directory}" "${mntdir}" "${snapshot_name}")
++        if [ -n "${candidate_path}" ]; then
++            echo "${candidate_path}"
++            return
++        fi
++    done
++
++    # 2.d) If we didn't find anything yet: check for persistent datasets corresponding to our mountpoint, with canmount=on without any snapshot associated:
++    # Note: we go over previous datasets as well, but this is ok, as we didn't include them before.
++    all_mountable_datasets="$(zfs list -t filesystem -o name,canmount | awk  '/^[^ ]+[ \t]+on/ {print $1}')"
++
++    # order by local pool datasets first
++    current_pool_datasets=""
++    other_pools_datasets=""
++    root_pool=$(echo "${dataset_path%%/*}")
++    for d in ${all_mountable_datasets}; do
++        cur_dataset_pool=$(echo "${d%%/*}")
++        if echo "${cur_dataset_pool}" | grep -wq "${root_pool}" 2>/dev/null ; then
++            current_pool_datasets="${current_pool_datasets} ${d}"
++        else
++            other_pools_datasets="${other_pools_datasets} ${d}"
++        fi
++    done
++    ordered_datasets="${current_pool_datasets} ${other_pools_datasets}"
++    if [ "${restrict_to_same_pool}" = "true" ]; then
++        ordered_datasets="${current_pool_datasets}"
++    fi
++
++    for d in ${ordered_datasets}; do
++        cur_dataset_pool=$(echo "${d%%/*}")
++
++        rel_pool_root=$(zpool get -H altroot ${cur_dataset_pool} | awk '{print $3}')
++        if [ "${rel_pool_root}" = "-" ]; then
++            rel_pool_root=""
++        fi
++
++        # check mountpoint match
++        candidate_dataset=$(zfs get -H mountpoint ${d} | grep -E "mountpoint\s${rel_pool_root}/${directory}\s" | awk '{print $1}')
++        if [ -z "${candidate_dataset}" ]; then
++            continue
++        fi
++
++        candidate_path=$(validate_system_dataset "${d}" "${directory}" "${mntdir}" "")
++        if [ -n "${candidate_path}" ]; then
++            echo "${candidate_path}"
++            return
++        fi
++    done
++
++    grub_warn "Failed to find a valid directory '${directory}' for dataset '${dataset_path}'. Ignoring"
++    return
++}
++
++# Try our default layout bpool as a prefered layout (fast path)
++# This is get_system_directory for boot optimized for our default installation layout
++# $1 is our current dataset name (which can have @snapshot name)
++# $2 is the temporary mount directory to use
++# return path for directory (which can be a mountpoint) if found
++try_default_layout_bpool() {
++    local root_dataset_path="$1"
++    local mntdir="$2"
++
++    dataset_basename="${root_dataset_path##*/}"
++    candidate_dataset="bpool/BOOT/${dataset_basename}"
++    dataset_properties="$(zfs get -H mountpoint,canmount "${candidate_dataset}" 2>/dev/null | cut -f3 | paste -sd ' ')"
++    if [ -z "${dataset_properties}" ]; then
++        return
++    fi
++
++    rel_pool_root=$(zpool get -H altroot bpool | awk '{print $3}')
++    if [ "${rel_pool_root}" = "-" ]; then
++        rel_pool_root=""
++    fi
++
++    snapshot_name="${dataset_basename##*@}"
++    [ "${snapshot_name}" = "${dataset_basename}" ] && snapshot_name=""
++    if [ -z "${snapshot_name}" ]; then
++        if ! echo "${dataset_properties}" | grep -Eq "${rel_pool_root}/boot (on|noauto)"; then
++            return
++        fi
++    else
++        candidate_dataset=$(echo "${candidate_dataset}" | cut -d '@' -f1)
++    fi
++
++    validate_system_dataset "${candidate_dataset}" "boot" "${mntdir}" "${snapshot_name}"
++}
++
++# Given a filesystem or snapshot dataset, returns dataset|machine id|pretty name|last used
++# $1 is dataset we want information from
++# $2 is the temporary mount directory to use
++get_dataset_info() {
++    local dataset="$1"
++    local mntdir="$2"
++
++    local base_dataset="${dataset}"
++    local etc_dir="${mntdir}/etc"
++    local is_snapshot="false"
++    # For snapshot we extract the parent dataset
++    if echo "${dataset}" | grep -q '@'; then
++        base_dataset=$(echo "${dataset}" | cut -d '@' -f1)
++        is_snapshot="true"
++    fi
++
++    mount -o noatime,zfsutil -t zfs "${base_dataset}" "${mntdir}"
++
++    # read machine-id/os-release from /etc
++    etc_dir=$(get_system_directory "${dataset}" "etc" "true" "${mntdir}" "")
++    if [ -z  "${etc_dir}" ]; then
++        grub_warn "Ignoring ${dataset}"
++        mountpoint -q "${mntdir}/etc" && umount "${mntdir}/etc" || true
++        umount "${mntdir}"
++        return
++    fi
++
++    machine_id=""
++    if [ -f "${etc_dir}/machine-id" ]; then
++        machine_id=$(cat "${etc_dir}/machine-id")
++    fi
++    # We have to use a random temporary id if we don't have any machine-id file or if this one is empty
++    # (mostly the case of new installations before first boot).
++    # Let's use the dataset name directly for this.
++    # Consequence is that all datasets are then separated.
++    if [ -z "${machine_id}" ]; then
++        machine_id="${dataset}"
++    fi
++    pretty_name=$(. "${etc_dir}/os-release" && echo "${PRETTY_NAME}")
++    mountpoint -q "${mntdir}/etc" && umount "${mntdir}/etc" || true
++
++    # read available kernels from /boot
++    boot_dir="$(try_default_layout_bpool "${dataset}" "${mntdir}")"
++    if [ -z "${boot_dir}" ]; then
++        boot_dir=$(get_system_directory "${dataset}" "boot" "false" "${mntdir}" "${etc_dir}")
++    fi
++
++    if [ -z  "${boot_dir}" ]; then
++        grub_warn "Ignoring ${dataset}"
++        mountpoint -q "${mntdir}/boot" && umount "${mntdir}/boot" || true
++        umount "${mntdir}"
++        return
++    fi
++
++    machine="$(uname -m)"
++    case "${machine}" in
++        i?86) GENKERNEL_ARCH="x86" ;;
++        mips|mips64) GENKERNEL_ARCH="mips" ;;
++        mipsel|mips64el) GENKERNEL_ARCH="mipsel" ;;
++        arm*) GENKERNEL_ARCH="arm" ;;
++        *) GENKERNEL_ARCH="${machine}" ;;
++    esac
++
++    initrd_list=""
++    kernel_list=""
++    candidate_kernel_list="$(find "${boot_dir}" -maxdepth 1 -type f -regex '.*/\(vmlinuz\|vmlinux\|kernel\)-.*')"
++    while [ -n "${candidate_kernel_list}" ] ; do
++        list_basename="$(echo "${candidate_kernel_list}" | sed -e 's#.*/##')"
++        linux=$(version_find_latest ${list_basename})
++        linux=$(echo "${candidate_kernel_list}" | while read k; do
++            if [ "$(basename "${k}")" = "${linux}" ]; then
++                echo -n "${k}"
++                break
++            fi
++        done)
++        # || true to not abort even if candidate_kernel_list is empty on last entry
++        candidate_kernel_list="$(echo "${candidate_kernel_list}" | fgrep -vx "${linux}"||true)"
++
++        if ! grub_file_is_not_garbage "${linux}" ; then
++            continue
++        fi
++
++        linux_basename=$(basename "${linux}")
++        linux_dirname=$(dirname "${linux}")
++        version=$(echo "${linux_basename}" | sed -e "s,^[^0-9]*-,,g")
++        alt_version=$(echo "${version}" | sed -e "s,\.old$,,g")
++
++        gettext_printf "Found linux image: %s in %s\n" "${linux_basename}" "${dataset}" >&2
++
++        initrd=""
++        for i in "initrd.img-${version}" "initrd-${version}.img" "initrd-${version}.gz" \
++            "initrd-${version}" "initramfs-${version}.img" \
++            "initrd.img-${alt_version}" "initrd-${alt_version}.img" \
++            "initrd-${alt_version}" "initramfs-${alt_version}.img" \
++            "initramfs-genkernel-${version}" \
++            "initramfs-genkernel-${alt_version}" \
++            "initramfs-genkernel-${GENKERNEL_ARCH}-${version}" \
++            "initramfs-genkernel-${GENKERNEL_ARCH}-${alt_version}"; do
++            if test -e "${linux_dirname}/${i}" ; then
++                initrd="$i"
++                break
++            fi
++        done
++
++        if test -z "${initrd}" ; then
++            grub_warn "Couldn't find any valid initrd for dataset ${dataset}."
++            continue
++        fi
++
++        gettext_printf "Found initrd image: %s in %s\n" "${initrd}" "${dataset}" >&2
++
++        rel_linux_dirname=$(make_system_path_relative_to_its_root "${linux_dirname}")
++
++        initrd_list="${initrd_list}|${rel_linux_dirname}/${initrd}"
++        kernel_list="${kernel_list}|${rel_linux_dirname}/${linux_basename}"
++    done
++
++    initrd_list="${initrd_list#|}"
++    kernel_list="${kernel_list#|}"
++
++    initrd_device=$(${grub_probe} --target=device "${boot_dir}" | head -1)
++
++    mountpoint -q "${mntdir}/boot" && umount "${mntdir}/boot" || true
++    # We needed to look in / for snapshots on root dataset, umount there before zfs lazily unmount it
++    case "${boot_dir}" in /boot/.zfs/snapshot/*)
++        umount "${boot_dir}" || true
++        ;;
++    esac
++
++    # for zsys snapshots: we want to know which kernel we successful last booted with
++    last_booted_kernel=$(zfs get -H com.ubuntu.zsys:last-booted-kernel "${dataset}" | awk -v FS='\t' '{print $3}')
++
++    # snapshot: last_used is dataset creation time
++    if [ "${is_snapshot}" = "true" ]; then
++        last_used="$(zfs get -pH creation "${dataset}" | awk -F '\t' '{print $3}')"
++    # otherwise, last_used is manually marked at boot/shutdown on a root dataset for zsys
++    else
++        # if current system, take current time
++        if zfs mount | awk '/[ \t]+\/$/ {print $1}' | grep -q "${dataset}"; then
++            last_used=$(date +%s)
++        else
++            last_used=$(zfs get -H com.ubuntu.zsys:last-used "${dataset}" | awk '{print $3}')
++            # case of non zsys, or zsys without annotation, take /etc/machine-id stat (as we mounted with noatime).
++            # However, as systems can be relatime, if system is current mounted one, set current time (case of clone + reboot
++            # within the same d).
++            if [ "${last_used}" = "-" ]; then
++                last_used=$(stat --printf="%X" "${mntdir}/etc/os-release")
++                if [ -f "${mntdir}/etc/machine-id" ]; then
++                    last_used=$(stat --printf="%X" "${mntdir}/etc/machine-id")
++                fi
++            fi
++        fi
++    fi
++
++    is_zsys=$(zfs get -H com.ubuntu.zsys:bootfs "${base_dataset}" | awk '{print $3}')
++
++    if [ -n "${initrd_list}" -a -n "${kernel_list}" ]; then
++        echo "${dataset}\t${is_zsys}\t${machine_id}\t${pretty_name}\t${last_used}\t${initrd_device}\t${initrd_list}\t${kernel_list}\t${last_booted_kernel}"
++    else
++        grub_warn "didn't find any valid initrd or kernel."
++    fi
++
++    umount "${mntdir}" || true
++    # We needed to look in / for snapshots on root dataset, umount the snapshot for etc before zfs lazily unmount it
++    case "${etc_dir}" in /.zfs/snapshot/*/etc)
++        snapshot_path="$(findmnt -n -o TARGET -T "${etc_dir}")"
++        umount "${snapshot_path}" || true
++        ;;
++    esac
++}
++
++# Scan available boot options and returns in a formatted list
++# $1 is the temporary mount directory to use
++bootlist() {
++    local mntdir="$1"
++    local boot_list=""
++
++    for dataset in $(get_root_datasets); do
++        # get information from current root dataset
++        boot_list="${boot_list}$(get_dataset_info "${dataset}" ${mntdir})\n"
++
++        # get information from snapshots of this root dataset
++        snapshots="$(zfs list -H -o name -t snapshot "${dataset}"|while read snapshot_dataset; do
++            get_dataset_info "${snapshot_dataset}" ${mntdir}
++        done)"
++        [ -n "${snapshots}" ] && boot_list="${boot_list}${snapshots}\n"
++    done
++    echo "${boot_list}"
++}
++
++
++# Order machine ids by last_used from their main entry
++get_machines_sorted() {
++    local bootlist="$1"
++
++    local machineids="$(echo "${bootlist}" | awk '{print $3}' | sort -u)"
++    for machineid in ${machineids}; do
++        echo "${bootlist}" | awk 'BEGIN{FS="\t"} $1 !~ /.*@.*/  {print $5, $3}' | sort -nr | grep -E "[^^]\b${machineid}\b" | head -1
++    done | sort -nr | awk '{print $2}'
++}
++
++# Sort entries by last_used for a given machineid
++sort_entries_for_machineid() {
++    local bootlist="$1"
++    local machineid="$2"
++
++    tab="$(printf '\t')"
++    echo "${bootlist}" | grep -E "[^^]\b${machineid}\b" | sort -k5,5r -k1,1 -t "${tab}"
++}
++
++# Return main entry index
++get_main_entry() {
++    local entries="$1"
++
++    echo "${entries}" | awk 'BEGIN{FS="\t"} $1 !~ /.*@.*/  {print}' | head -1
++}
++
++# Return specific field at index from entry
++get_field_from_entry() {
++    local entry="$1"
++    local index="$2"
++
++    echo "${entry}" | awk "BEGIN{FS=\"\t\"} {print \$$index}"
++}
++
++# Get the main entry metadata
++main_entry_meta() {
++    local main_entry="$1"
++
++    initrd=$(get_field_from_entry "${main_entry}" 7 | cut -d'|' -f1)
++    kernel=$(get_field_from_entry "${main_entry}" 8 | cut -d'|' -f1)
++
++    # Take first element (most recent entry) which is not a snapshot
++    echo "${main_entry}" | awk "BEGIN{ FS=\"\t\"; OFS=\"\t\"} {print \$3, \$2, \"main\", \$4, \$1, \$6, \"$initrd\", \"$kernel\"}"
++}
++
++# Get advanced entries metadata
++advanced_entries_meta() {
++    local main_entry="$1"
++
++    last_used_kernel="$(get_field_from_entry "${main_entry}" 9 )"
++
++    # We must align initrds with kernels.
++    # Adds initrds to the stack then pop them 1 by 1 as we process the kernels
++    oldIFS="$IFS"
++    export IFS='|'
++    set -- $(get_field_from_entry "${main_entry}" 7)
++    for kernel in $(get_field_from_entry "${main_entry}" 8); do
++        # get initrd and pop to the next one
++        initrd="$1"; shift
++
++        was_last_used_kernel="false"
++        kernel_basename=$(basename "${kernel}")
++        if [ "${kernel_basename}" = "${last_used_kernel}" ]; then
++            was_last_used_kernel="true"
++        fi
++
++        echo "${main_entry}" | awk "BEGIN{ FS=\"\t\"; OFS=\"\t\"}    {print \$3, \$2, \"advanced\", \$4, \$1, \$6, \"$initrd\", \"$kernel\", \"$was_last_used_kernel\"}"
++    done
++    IFS="$oldIFS"
++}
++
++# Get history metadata
++history_entries_meta() {
++    local entries="$1"
++    local main_dataset_name="$2"
++    local main_dataset_releasename="$3"
++
++    if [ -z "${entries}" ]; then
++        return
++    fi
++
++    # Traverse snapshots and clones
++    echo "${entries}" | while read entry; do
++        name=""
++        # Compute snapshot/filesystem dataset name
++        snap_dataset_name="$(get_field_from_entry "${entry}" 1)"
++
++        snapname="${snap_dataset_name##*@}"
++        # If, this is a clone, take what is after main_dataset_name
++        if [ "${snapname}" = "${snap_dataset_name}" ]; then
++            snapname="${snap_dataset_name##${main_dataset_name}_}"
++
++            # Handle manual user clone (not prefixed by "main_dataset_name")
++            snapname="${snapname##*/}"
++        fi
++
++        # We keep the snapname only if it is not only a zsys auto snapshot
++        if echo "${snapname}" | grep -q "^autozsys_"; then
++            snapname=""
++        fi
++
++        # We store the release only if it different from main dataset release (snapshot before a release upgrade)
++        releasename=$(get_field_from_entry "${entry}" 4)
++        if [ "${releasename}" = "${main_dataset_releasename}" ]; then
++            releasename=""
++        fi
++
++        # Snapshot date
++        foo="$(get_field_from_entry "${entry}" 5)"
++        snapdate="$(date -d @$(get_field_from_entry "${entry}" 5) "+%x @ %H:%M")"
++
++        # For snapshots/clones the name can have the following formats:
++        # 	<DATE>: autozsys, same release
++        #   <OLD_RELEASE> on <DATE>: autozsys, different release
++        #   <SNAPNAME> on <DATE>: Manual snapshot, same release
++        #   <SNAPNAME>, <OLD_RELEASE> on <DATE>: Manual snapshot, different release
++        if [ "${snapname}" = "" -a "${releasename}" = "" ]; then
++            name="${snapdate}"
++        elif [ "${snapname}" = "" -a "${releasename}" != "" ]; then
++            name=$(gettext_printf "%s on %s" "${releasename}" "${snapdate}")
++        elif [ "${snapname}" != "" -a "${releasename}" = "" ]; then
++            name=$(gettext_printf "%s on %s" "${snapname}" "${snapdate}")
++        else # snapname != "" && releasename != ""
++            name=$(gettext_printf "%s, %s on %s" "${snapname}" "${releasename}" "${snapdate}")
++        fi
++
++        # Choose kernel and initrd if the snapshot was booted successfully on a specific kernel before
++        # Take latest by default if no match
++        initrd=$(get_field_from_entry "${entry}" 7 | cut -d'|' -f1)
++        kernel=$(get_field_from_entry "${entry}" 8 | cut -d'|' -f1)
++        last_used_kernel="$(get_field_from_entry "${entry}" 9)"
++
++        # We must align initrds with kernels.
++        # Adds initrds to the stack then pop them 1 by 1 as we process the kernels
++        oldIFS="$IFS"
++        export IFS='|'
++        set -- $(get_field_from_entry "${entry}" 7)
++        for k in $(get_field_from_entry "${entry}" 8); do
++            # get initrd and pop to the next one
++            candidate_initrd="$1"; shift
++
++            kernel_basename=$(basename -- "${k}")
++            if [ "${kernel_basename}" = "${last_used_kernel}" ]; then
++                kernel="${k}"
++                initrd="${candidate_initrd}"
++                break
++            fi
++        done
++        IFS="$oldIFS"
++
++        echo "${entry}" | awk "BEGIN{ FS=\"\t\"; OFS=\"\t\"}    {print \$3, \$2, \"history\", \"$name\", \$1, \$6, \"$initrd\", \"$kernel\"}"
++    done
++}
++
++# Generate metadata from a BOOTLIST that will subsequently used to generate
++# the final grub menu entries
++generate_grub_menu_metadata() {
++    local bootlist="$1"
++
++    # Sort machineids by last_used from their main entry
++    for machineid in $(get_machines_sorted "${bootlist}"); do
++        entries="$(sort_entries_for_machineid "${bootlist}" ${machineid})"
++        main_entry="$(get_main_entry "${entries}")"
++
++        if [ -z "$main_entry" ]; then
++            continue
++        fi
++
++        main_entry_meta "${main_entry}"
++        advanced_entries_meta "${main_entry}"
++
++        main_dataset_name="$(get_field_from_entry "${main_entry}" 1)"
++        main_dataset_releasename="$(get_field_from_entry "${main_entry}" 4)"
++        # grep -v errcode != 0 if there is no match. || true to not fail with -e
++        other_entries="$(echo "${entries}" | grep -v "${main_entry}" || true)"
++        history_entries_meta "${other_entries}" "${main_dataset_name}" "${main_dataset_releasename}"
++    done
++}
++
++# Cache for prepare_grub_to_access_device call
++# $1: boot_device
++# $2: submenu_level
++prepare_grub_to_access_device_cached() {
++    local boot_device="$1"
++    local submenu_level="$2"
++
++    local boot_device_idx="$(echo ${boot_device} | tr '/' '_')"
++
++    cache_file="${ZFSTMP}/$(echo boot_device${boot_device_idx})"
++    if [ ! -f "${cache_file}" ]; then
++        set +u
++        echo "$(prepare_grub_to_access_device "${boot_device}")" > "${cache_file}"
++        set -u
++        for i in 0 1 2; do
++            submenu_indentation="$(printf %${i}s | tr " " "${grub_tab}")"
++            sed "s/^/${submenu_indentation}	/" "${cache_file}" > "${cache_file}--${i}"
++        done
++    fi
++
++    cat "${cache_file}--${submenu_level}"
++}
++
++
++# Print a grub menu entry
++zfs_linux_entry () {
++    submenu_level="$1"
++    title="$2"
++    type="$3"
++    dataset="$4"
++    boot_device="$5"
++    initrd="$6"
++    kernel="$7"
++    kernel_additional_args="${8:-}"
++
++    kernel_version=$(basename "${kernel}" | sed -e "s,^[^0-9]*-,,g")
++    submenu_indentation="$(printf %${submenu_level}s | tr " " "${grub_tab}")"
++
++    echo "${submenu_indentation}menuentry '$(echo "${title}" | grub_quote)' ${CLASS} \${menuentry_id_option} 'gnulinux-${dataset}-${kernel_version}' {"
++
++    if [ "${type}" != "recovery" ] ; then
++        GRUB_SAVEDEFAULT=${GRUB_SAVEDEFAULT:-}
++        default_entry="$(save_default_entry)"
++        if [ -n "${default_entry}" ]; then
++            echo "${submenu_indentation}	${default_entry}"
++        fi
++    fi
++
++    # Use ELILO's generic "efifb" when it's known to be available.
++    # FIXME: We need an interface to select vesafb in case efifb can't be used.
++    if [ "${GRUB_GFXPAYLOAD_LINUX}" = "" ]; then
++        echo "${submenu_indentation}	load_video"
++        if grep -qx "CONFIG_FB_EFI=y" "${config}" 2> /dev/null \
++            && grep -qx "CONFIG_VT_HW_CONSOLE_BINDING=y" "${config}" 2> /dev/null; then
++            echo "${submenu_indentation}	set gfxpayload=keep"
++        fi
++    else
++        if [ "${GRUB_GFXPAYLOAD_LINUX}" != "text" ]; then
++            echo "${submenu_indentation}	load_video"
++        fi
++        echo "${submenu_indentation}	set gfxpayload=\${linux_gfx_mode}"
++    fi
++
++    echo "${submenu_indentation}	insmod gzio"
++
++    echo "$(prepare_grub_to_access_device_cached "${boot_device}" "${submenu_level}")"
++
++    echo "${submenu_indentation}	echo $(gettext_printf "Loading Linux %s ..." ${kernel_version} | grub_quote)"
++
++    linux_default_args="${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT}"
++    if [ ${type} = "recovery" ]; then
++        linux_default_args="single ${GRUB_CMDLINE_LINUX}"
++    fi
++
++    # echo in echo trims end of line spaces
++    echo "${submenu_indentation}	linux	\"${kernel}\" root=ZFS=\"${dataset}\" ro $(echo ${linux_default_args} ${kernel_additional_args})"
++
++    echo "${submenu_indentation}	echo '$(gettext_printf "Loading initial ramdisk ..." | grub_quote)'"
++    echo "${submenu_indentation}	initrd	\"${initrd}\""
++    echo "${submenu_indentation}}"
++}
++
++# Generate a GRUB Menu from menu meta data
++# $1 menu metadata
++generate_grub_menu() {
++    local menu_metadata="$1"
++    local last_section=""
++    local main_dataset_name=""
++    local main_dataset=""
++    local have_zsys=""
++
++    if [ -z "${menu_metadata}" ]; then
++        return
++    fi
++
++    CLASS="--class gnu-linux --class gnu --class os"
++
++    if [ "${GRUB_DISTRIBUTOR}" = "" ] ; then
++        OS=GNU/Linux
++    else
++        OS="${GRUB_DISTRIBUTOR} GNU/Linux"
++        CLASS="--class $(echo ${GRUB_DISTRIBUTOR} | tr 'A-Z' 'a-z' | cut -d' ' -f1 | LC_ALL=C sed 's,[^[:alnum:]_],_,g') ${CLASS}"
++    fi
++
++
++    # IFS is set to TAB (ASCII 0x09)
++    echo "${menu_metadata}" |
++    {
++        at_least_one_entry=0
++        have_zsys="$(which zsysd || true)"
++        while IFS="$(printf '\t')" read -r machineid iszsys section name dataset device initrd kernel opt; do
++
++            # Disable history for non zsys system or if systems is a zsys one and zsys isn't installed.
++            # In pure zfs systems, we identified multiple issues due to the mount generator
++            # in upstream zfs which makes it incompatible. Don't show history for now.
++            if [ "${section}" = "history" ]; then
++                if [ "${iszsys}" != "yes" ] || [ "${iszsys}" = "yes" -a -z "${have_zsys}" ]; then
++                    continue
++                fi
++            fi
++
++            if [ "${last_section}" != "${section}" -a -n "${last_section}" ]; then
++                # Close previous section wrapper
++                if [ "${last_section}" != "main" ]; then
++                    echo "}"    # Add grub_tabs
++                    at_least_one_entry=0
++                fi
++            fi
++
++            case "${section}" in
++                main)
++                    title="${name}"
++                    main_dataset_name="${name}"
++                    main_dataset="${dataset}"
++
++                    zfs_linux_entry 0 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                    at_least_one_entry=1
++                ;;
++                advanced)
++                    # normal and recovery entries for a given kernel
++                    if [ "${last_section}" != "${section}" ]; then
++                        echo "submenu '$(gettext_printf "Advanced options for %s" "${main_dataset_name}" | grub_quote)' \${menuentry_id_option} 'gnulinux-advanced-${main_dataset}' {"
++                    fi
++
++                    last_booted_kernel_marker=""
++                    if [ "${opt}" = "true" ]; then
++                        last_booted_kernel_marker="* "
++                    fi
++
++                    kernel_version=$(basename "${kernel}" | sed -e "s,^[^0-9]*-,,g")
++                    title="$(gettext_printf "%s%s, with Linux %s" "${last_booted_kernel_marker}" "${name}" "${kernel_version}")"
++                    zfs_linux_entry 1 "${title}" "advanced" "${dataset}" "${device}" "${initrd}" "${kernel}"
++
++                    GRUB_DISABLE_RECOVERY=${GRUB_DISABLE_RECOVERY:-}
++                    if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
++                        title="$(gettext_printf "%s%s, with Linux %s (recovery mode)" "${last_booted_kernel_marker}" "${name}" "${kernel_version}")"
++                        zfs_linux_entry 1 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                    fi
++                    at_least_one_entry=1
++                ;;
++                history)
++                    # Revert to a snapshot
++                    # revert system, revert system and user data and associated recovery entries
++                    if [ "${last_section}" != "${section}" ]; then
++                        echo "submenu '$(gettext_printf "History for %s" "${main_dataset_name}" | grub_quote)' \${menuentry_id_option} 'gnulinux-history-${main_dataset}' {"
++                    fi
++
++                    if [ "${iszsys}" = "yes" ]; then
++                        title="$(gettext_printf "Revert to %s" "${name}" | grub_quote)"
++                    else
++                        title="$(gettext_printf "Boot on %s" "${name}" | grub_quote)"
++                    fi
++                    echo "	submenu '${title}' \${menuentry_id_option} 'gnulinux-history-${dataset}' {"
++
++                    # Zsys only: let revert system without destroying snapshots
++                    if [ "${iszsys}" = "yes" ]; then
++                        title="$(gettext_printf "Revert system only")"
++                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                        title="$(gettext_printf "Revert system and user data")"
++                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}" "zsys-revert=userdata"
++
++                        GRUB_DISABLE_RECOVERY="${GRUB_DISABLE_RECOVERY:-}"
++                        if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
++                            title="$(gettext_printf "Revert system only (recovery mode)")"
++                            zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                            title="$(gettext_printf "Revert system and user data (recovery mode)")"
++                            zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}" "zsys-revert=userdata"
++                        fi
++                    # Non-zsys: boot temporarly on snapshots or rollback (destroying intermediate snapshots)
++                    else
++                        title="$(gettext_printf "One time boot")"
++                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}"
++
++                        GRUB_DISABLE_RECOVERY="${GRUB_DISABLE_RECOVERY:-}"
++                        if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
++                            title="$(gettext_printf "One time boot (recovery mode)")"
++                            zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                        fi
++
++                        title="$(gettext_printf "Revert system (all intermediate snapshots will be destroyed)")"
++                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}" "rollback=yes"
++                    fi
++
++                    echo "	}"
++                    at_least_one_entry=1
++                ;;
++                *)
++                    grub_warn "unknown section: ${section}. Ignoring entry ${name} for ${dataset}"
++                ;;
++            esac
++            last_section="${section}"
++        done
++
++        if [ "${at_least_one_entry}" -eq 1 ]; then
++            echo "}"
++        fi
++    }
++}
++
++# don't add trailing newline of variable is empty
++# $1: content to write
++# $2: destination file
++trailing_newline_if_not_empty() {
++    content="$1"
++    dest="$2"
++
++    if [ -z "${content}" ]; then
++        rm -f "${dest}"
++        touch "${dest}"
++        return
++    fi
++    echo "${content}" > "${dest}"
++}
++
++
++GRUB_LINUX_ZFS_TEST="${GRUB_LINUX_ZFS_TEST:-}"
++case "${GRUB_LINUX_ZFS_TEST}" in
++    bootlist)
++        # Import all available pools on the system and return imported list
++        imported_pools=$(import_pools)
++        boot_list="$(bootlist ${MNTDIR})"
++        trailing_newline_if_not_empty "${boot_list}" "${GRUB_LINUX_ZFS_TEST_OUTPUT}"
++        break
++    ;;
++    metamenu)
++        boot_list="$(cat ${GRUB_LINUX_ZFS_TEST_INPUT})"
++        menu_metadata="$(generate_grub_menu_metadata "${boot_list}")"
++        trailing_newline_if_not_empty "${menu_metadata}" "${GRUB_LINUX_ZFS_TEST_OUTPUT}"
++        break
++    ;;
++    grubmenu)
++        menu_metadata="$(cat ${GRUB_LINUX_ZFS_TEST_INPUT})"
++        grub_menu=$(generate_grub_menu "${menu_metadata}")
++        trailing_newline_if_not_empty "${grub_menu}" "${GRUB_LINUX_ZFS_TEST_OUTPUT}"
++        break
++    ;;
++    *)
++        # Import all available pools on the system and return imported list
++        imported_pools=$(import_pools)
++        # Generate the complete list of boot entries
++        boot_list="$(bootlist ${MNTDIR})"
++        # Create boot menu meta data from the list of boot entries
++        menu_metadata="$(generate_grub_menu_metadata "${boot_list}")"
++        # Create boot menu meta data from the list of boot entries
++        grub_menu="$(generate_grub_menu "${menu_metadata}")"
++        if [ -n "${grub_menu}" ]; then
++            # We want the trailing newline as a marker will be added
++            echo "${grub_menu}"
++        fi
++    ;;
++esac

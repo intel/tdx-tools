@@ -1,0 +1,36 @@
+From: Chris Coulson <chris.coulson@canonical.com>
+Date: Mon, 1 Jun 2020 14:03:37 +0100
+Subject: UBUNTU: disk/loopback: Don't verify loopback images
+
+When a file is verified, the entire contents of the verified file are
+loaded in to memory and retained until the file handle is closed. A
+consequence of this is that opening a loopback image can incur a
+significant memory cost.
+
+As loopback devices are just another disk implementation, don't treat
+loopback images any differently to physical disk images, and skip
+verification of them. Files opened from the filesystem within a loopback
+image will still be passed to verifier modules where required.
+
+Signed-off-by: Chris Coulson <chris.coulson@canonical.com>
+LP: #1878541
+Forwarded: yes, https://lists.gnu.org/archive/html/grub-devel/2020-06/msg00002.html
+Patch-Name: ubuntu-dont-verify-loopback-images.patch
+---
+ grub-core/disk/loopback.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/grub-core/disk/loopback.c b/grub-core/disk/loopback.c
+index 99f4792..6ca3012 100644
+--- a/grub-core/disk/loopback.c
++++ b/grub-core/disk/loopback.c
+@@ -91,7 +91,8 @@ grub_cmd_loopback (grub_extcmd_context_t ctxt, int argc, char **args)
+       return grub_error (GRUB_ERR_BAD_ARGUMENT, "device name already exists");
+ 
+   file = grub_file_open (args[1], GRUB_FILE_TYPE_LOOPBACK
+-			 | GRUB_FILE_TYPE_NO_DECOMPRESS);
++			 | GRUB_FILE_TYPE_NO_DECOMPRESS |
++			 GRUB_FILE_TYPE_SKIP_SIGNATURE);
+   if (! file)
+     return grub_errno;
+ 

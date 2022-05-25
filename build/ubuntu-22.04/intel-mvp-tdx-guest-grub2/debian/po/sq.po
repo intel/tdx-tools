@@ -1,0 +1,526 @@
+# translation of grub_debian_po_sq.po to Albanian
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+#
+# Silva Arapi <silva.arapi@gmail.com>, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2017-09-04 18:50+0200\n"
+"Last-Translator: Silva Arapi <silva.arapi@gmail.com>\n"
+"Language-Team: Albanian <debian-l10n-albanian@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : "
+"4;\n"
+"X-Generator: Gtranslator 2.91.7\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "Ngarko zinxhir nga menu.lst?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"Skriptet e përmirësimit të GRUB zbuluan një ndertim të trashëguar të GRUB "
+"në /boot/grub."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Në mënyrë që të zëvëndësoni versionin e trashëguar të GRUB në sistemin tuaj, "
+"rekomandohet që /boot/grub/menu.lst të rregullohet në mënyrë të tillë që të "
+"ngarkoj një imazh të GRUB 2 nga konfigurimi i trashëguar i GRUB ekzistues."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"Rekomandohet që të pranosh ngarkimin zinxhir GRUB 2 nga menu.lst, dhe të "
+"verifikosh që konfigurimi i ri GRUB 2 punon para se ai të shkruhet në MBR "
+"(Master Boot Record)"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Cilido të jetë vendimi, ti mund të zëvëndësosh imazhin e vjetër MBR me GRUB "
+"2 me vonë duke ekzekutuar komandën e mëposhtme si root:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "Paisjet GRUB install:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"Paketa po përmirësohet. Kjo menu të lejon të zgjedhësh se cilat paisje do të "
+"doje që grub-install ti ekzekutoj automatikisht, nëse ka ndonjë të till."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"Ekzekutimi i grub-install automatikisht rekomandohet në shumicën e "
+"situatave, për të parandaluar imazhin e instaluar të GRUB core që të dal "
+"jashtë sinkronizimi me modulet e GRUB dhe grub.cfg."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"Nëse nuk je i sigurt se cili drive është caktuar si drive i ndezjes nga BIOS "
+"i juaj, zakonisht është ide e mirë ta instaloni GRUB në secilin prej tyre. "
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Shënim: është gjithashtu e mundur që të instaloni GRUB për të ndarë "
+"rekoredet e ndezjes, dhe disa ndarje të përshtatshme janë këtu. Gjithsesi, "
+"kjo e detyron GRUB të përdorë mekanizmin blocklist, gjë që e bënë atë më pak "
+"të besueshëm, dhe për këtë arsye nuk rekomandohet."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"Ngarkuesi i ndezjes GRUB ishte më parë i instaluar në një disk që nuk është "
+"më i pranishëm, ose identifikuesi unik i të cilit ka ndryshuar për ndonjë "
+"arsye. Është e rëndësishme që të sigurohesh që imazhi i instaluar i GRUB "
+"core të qëndoroj në sinkronizim me modulet GRUB dhe grub.cfg. Të lutem "
+"kontollo përsëri që GRUB të shkruhet në paisjet e duhura të ndezjes."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "Shkrimi i GRUP për të ndezur paisjen dvshtoi - do të vazhdoni?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "GRUB nuk arriti të instaloj paisjet në vijim:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Dëshironi të vazhdoni gjithsesi? Nëse po, kompjuteri juaj nuk do të filloj "
+"siç duhet."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "Shkrimi i GRUB për të ndezur paisjen dështoi - do e provosh përsëri?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"Ti mund të jesh në gjëndje ta instalosh GRUB nga disa paisje të tjera, "
+"gjithsesi ti duhet të kontrollosh që sistemi do të ndizet nga ajo paisje. "
+"Përndryshe, përmirësimi nga GRUB i trashëguar do të anullohet."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "Do të vazhdosh pa e instaluar GRUB?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Ti zgjodhe të mos e instalosh GRUB në asnjë paisje. Nëse vazhdon, ngarkuesi "
+"i ndezjes mund të mos konfigurohet siç duhet dhe kur ky kompjuter të filloj "
+"herën tjetër, do të përdor çfardo ishte më parë në sektorin e ndezjes."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"Nëse po e përdorni tashmë një ngarkues të ndezjes të ndryshëm dhe doni të "
+"vazhdoni me të, ose nëse ky është një mjedis i vacantë ku ju nuk keni nevoj "
+"për ngarkuesin e ndezjes atëherë ti duhet të vazhdosh gjithsesi. Përndryshe "
+"ju duhet ta instaloni GRUB diku."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "Do e fshish GRUB 2 nga /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "Do që ti heqësh të gjitha filet e GRUB 2 nga /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Kjo do e bëjë sistemin jo të ndezshëm për sa kohë nuk instalohet një tjetër "
+"ngarkues i ndezjes."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "Përfundo konvertimin në GRUB 2 tani?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Ky sistem ka akoma skedar nga ngarkuesi i ndezjes i trashëguar GRUB që është "
+"i instaluar, por tani ka edhe rekordet e ndezjes GRUB 2 të instaluara në "
+"këto disqe:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"Duket se GRUB i trashëguar nuk është më në përdorim, dhe ti duhet të "
+"përmirësosh imazhet GRUB 2 në këto disqe dhe të përfundosh konvertimin në "
+"GRUB 2 duke hequr skedarët e vjetër të trashëguar GRUB. Nëse ti nuk i "
+"përmirëson këto imazhe GRUB 2, atëherë ato mund të mos përputhen me paketat "
+"dhe të shkaktojnë fillomin jo si duhet të ndezjes."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"Ti duhet të përfundosh në përgjithësi konvertimin në GRUB 2 përveç rasteve "
+"kur këto rekorde të ndezjes janë krijuar nga instalimi i GRUB 2 në ndonjë "
+"sistem shfrytëzimi tjetër. "
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Linja komanduese linux:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Linja komanduese në vijim u ekstraktua nga /etc/default/grub ose nga "
+"parametri 'kopt' në menu.lst në GRUB të trashëguar. Të lutem verifiko nëse "
+"është korrekte ose modifikoje nëse do jetë e nevojshme. Kjo linjë komanduese "
+"lejohet të jetë bosh."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Linja komanduese fillestare linux:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"Stringu në vijim do të përdoren si parametër Linux për menun fillaster "
+"hyrëse por jo për gjëndjen e rekuperimit."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"Paketa po përmirësohet. Kjo menu të lejon të zgjedhësh se cilat paisje do të "
+"doje që grub-install ti ekzekutoj automatikisht, nëse ka ndonjë të till."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Ti zgjodhe të mos e instalosh GRUB në asnjë paisje. Nëse vazhdon, ngarkuesi "
+"i ndezjes mund të mos konfigurohet siç duhet dhe kur ky kompjuter të filloj "
+"herën tjetër, do të përdor çfardo ishte më parë në sektorin e ndezjes."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "Linja komanduese kFreeBSD"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Linja komanduese kFreeBSD e mëposhtme u ekstraktua nga /etc/default/grub ose "
+"parametri `kopt'në menu.lst të GRUB të trashëguar. Të lutem verifiko që ajo "
+"është korrekte, dhe modifikoje nëse do jetë e nevojshme. Kjo linjë "
+"komanduese lejohet të jetë bosh."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "Linja komanduese fillestare kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"Stringu në vijim do të përdoren si parametër kFreeBSD për menun fillaster "
+"hyrëse por jo për gjëndjen e rekuperimit."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr " /boot/grub/device.map është rigjeneruar"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "Skedari /boot/grub/device.map është rishkruar për të përdorur emra "
+#~ "paisjesh të qëndrueshëm. Në shumicën e rasteve, kjo duhet të reduktoj "
+#~ "dukshëm nevojën për ta ndryshuar atë në të ardhmen, dhe hyrësit e menus "
+#~ "së ndezjes së gjeneruar nga GRUB nuk duhet të preken."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Gjithsesi, meqë më shumë se një disk është i pranishëm në sistem, është e "
+#~ "mundur që sistemi të jetë i varuar nga harta e paisjes së mëparshme. Të "
+#~ "lutem kontrollo nëse ka ndonjë menu hyrëse të ndezjes që mbështetet në "
+#~ "numërimin e drive të GRUB (hdN), dhe përditësoje atë nëse do jetë e "
+#~ "nevojshme."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "Nëse nuk e kupton këtë mesazh, ose nëse nuk ka menu të zakonshme hyrëse, "
+#~ "ti mund ta injorosh këtë mesazh."

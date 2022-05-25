@@ -1,0 +1,38 @@
+if COND_i386_pc
+# Compatibility symlink.
+g2hdr.bin: g2hdr.img
+	rm -f $@
+	$(LN_S) $< $@
+platform_DATA += g2hdr.bin
+CLEANFILES += g2hdr.bin
+
+g2ldr.mbr: g2ldr.img
+	head -c 8192 $< > $@
+platform_DATA += g2ldr.mbr
+CLEANFILES += g2ldr.mbr
+
+grldr.mbr: grldr.img
+	head -c 8192 $< > $@
+CLEANFILES += grldr.mbr
+
+bin2h: contrib/ntldr-img/bin2h.c
+	$(BUILD_CC) $(BUILD_CFLAGS) $(BUILD_CPPFLAGS) $(BUILD_LDFLAGS) $^ -o $@
+CLEANFILES += bin2h
+
+grub_mbr.h: grldr.mbr bin2h
+	./bin2h grub_mbr 8192 < $< > $@
+CLEANFILES += grub_mbr.h
+
+grub-ntldr-img$(EXEEXT): contrib/ntldr-img/grubinst.c contrib/ntldr-img/utils.c grub_mbr.h
+	$(HOST_CC) $(HOST_CFLAGS) $(HOST_CPPFLAGS) $(HOST_LDFLAGS) -DGRUB_UTIL=1 -I. -I$(srcdir)/contrib/ntldr-img -DLINUX -o $@ $(srcdir)/contrib/ntldr-img/grubinst.c $(srcdir)/contrib/ntldr-img/utils.c
+bin_PROGRAMS += grub-ntldr-img
+CLEANFILES += grub-ntldr-img
+
+# Compatibility symlink.
+grubinst$(EXEEXT): grub-ntldr-img$(EXEEXT)
+	rm -f $@
+	$(LN_S) $< $@
+noinst_PROGRAMS += grubinst
+CLEANFILES += grubinst
+
+endif

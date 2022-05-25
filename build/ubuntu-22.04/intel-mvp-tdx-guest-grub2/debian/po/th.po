@@ -1,0 +1,522 @@
+# Thai translation of grub.
+# Copyright (C) 2010-2017 Software in the Public Interest, Inc.
+# This file is distributed under the same license as the grub package.
+# Theppitak Karoonboonyanan <thep@debian.org>, 2010-2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: grub\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2017-01-20 14:46+0700\n"
+"Last-Translator: Theppitak Karoonboonyanan <thep@debian.org>\n"
+"Language-Team: Thai <thai-l10n@googlegroups.com>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "จะโหลดแบบลูกโซ่จาก menu.lst หรือไม่?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr "สคริปต์ปรับรุ่นของ GRUB ตรวจพบค่าตั้งของ GRUB รุ่นเก่าใน /boot/grub"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"ในการแทนที่ GRUB รุ่นเก่าในระบบ ขอแนะนำให้ปรับ /boot/grub/menu.lst "
+"ให้โหลดอิมเมจสำหรับบูตของ GRUB 2 จาก GRUB รุ่นเก่าที่มีอยู่ "
+"ขั้นตอนนี้สามารถทำแบบอัตโนมัติได้ในตอนนี้"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"ขอแนะนำให้คุณตอบรับการโหลด GRUB 2 แบบลูกโซ่จาก menu.lst และทดสอบว่าค่าตั้งของ GRUB 2 "
+"ใช้การได้ ก่อนที่จะเขียนลง MBR (Master Boot Record) จริง"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"ไม่ว่าคุณจะเลือกแบบไหน คุณยังสามารถแทนที่อิมเมจเก่าใน MBR ด้วย GRUB 2 เองได้ในภายหลัง "
+"โดยใช้คำสั่งต่อไปนี้ในฐานะ root:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "อุปกรณ์ที่จะติดตั้ง GRUB:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"กำลังจะปรับรุ่นแพกเกจ grub-pc ขึ้น เมนูนี้จะช่วยคุณเลือกอุปกรณ์ที่คุณต้องการให้เรียก grub-"
+"install โดยอัตโนมัติเพื่อติดตั้ง GRUB ถ้ามีอุปกรณ์ดังกล่าว"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"โดยทั่วไปแล้ว ขอแนะนำให้เรียก grub-install โดยอัตโนมัติ เพื่อป้องกันไม่ให้อิมเมจแกนกลางของ "
+"GRUB ที่ติดตั้งมีข้อมูลไม่ตรงกับมอดูล GRUB ต่างๆ หรือไม่ตรงกับ grub.cfg"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"ถ้าคุณไม่แน่ใจว่า BIOS กำหนดไดรว์ไหนไว้สำหรับบูต ก็มักเป็นความคิดที่ดีที่จะติดตั้ง GRUB "
+"ลงในไดรว์ทุกไดรว์"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"หมายเหตุ: เป็นไปได้เหมือนกันที่จะติดตั้ง GRUB ลงในบูตเรคอร์ดของพาร์ทิชัน "
+"และได้แสดงพาร์ทิชันที่เหมาะสมเป็นตัวเลือกไว้ในที่นี้แล้ว อย่างไรก็ดี การทำเช่นนั้นจะเป็นการบังคับให้ "
+"GRUB ใช้กลไกรายชื่อบล็อค ซึ่งความถูกต้องในการทำงานอาจลดลง จึงไม่ขอแนะนำ"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"มีการติดตั้งบูตโหลดเดอร์ GRUB ก่อนหน้านี้ในดิสก์ที่ขณะนี้ไม่มีแล้ว หรือมี "
+"แต่หมายเลขประจำดิสก์ได้เปลี่ยนไปด้วยสาเหตุบางอย่าง "
+"จึงจำเป็นต้องทำให้แน่ใจว่าอิมเมจแกนกลางของ GRUB ที่ติดตั้งไว้นั้นยังมีข้อมูลตรงกับมอดูล GRUB ต่างๆ "
+"และกับ grub.cfg อยู่ กรุณาตรวจสอบอีกครั้งให้แน่ใจว่าจะเขียนข้อมูล GRUB ลงในอุปกรณ์บูตที่เหมาะสม"
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "เขียน GRUB ลงในอุปกรณ์บูตไม่สำเร็จ - ดำเนินการต่อไปหรือไม่?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "ติดตั้ง GRUB ลงในอุปกรณ์ต่อไปนี้ไม่สำเร็จ:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr "คุณยังคงต้องการดำเนินการต่อไปหรือไม่? ถ้าทำต่อ เครื่องของคุณอาจบูตไม่ขึ้นได้"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "เขียน GRUB ลงในอุปกรณ์บูตไม่สำเร็จ - ลองใหม่หรือไม่?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"คุณอาจสามารถติดตั้ง GRUB ลงในอุปกรณ์อื่นได้ "
+"โดยคุณควรทดสอบด้วยว่าเครื่องของคุณบูตจากอุปกรณ์นั้นขึ้นหรือไม่ ถ้าตอบปฏิเสธ "
+"ก็จะยกเลิกการปรับรุ่นจาก GRUB รุ่นเก่า"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "จะดำเนินการต่อไปโดยไม่ติดตั้ง GRUB หรือไม่?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"คุณได้เลือกที่จะไม่ติดตั้ง GRUB ลงในอุปกรณ์ใดเลย ถ้าดำเนินการต่อไป "
+"บูตโหลดเดอร์อาจอยู่ในสภาพที่ไม่ได้ตั้งค่าอย่างสมบูรณ์ และเมื่อเปิดเครื่องครั้งต่อไป "
+"ก็จะใช้สิ่งที่อยู่ในบูตเซกเตอร์ก่อนหน้านี้ และถ้าในบูตเซกเตอร์มี GRUB 2 รุ่นเก่าอยู่ "
+"ก็อาจจะไม่สามารถโหลดมอดูลหรือใช้แฟ้มค่าตั้งปัจจุบันได้"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"ถ้าคุณกำลังใช้บูตโหลดเดอร์ตัวอื่นอยู่ และต้องการใช้ต่อไป "
+"หรือถ้าคุณอยู่ในสภาพแวดล้อมที่ไม่ต้องใช้บูตโหลดเดอร์ คุณก็อาจดำเนินการต่อไปได้ มิฉะนั้น "
+"คุณก็ควรติดตั้ง GRUB ลงในที่ใดที่หนึ่ง"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "จะลบ GRUB 2 ออกจาก /boot/grub หรือไม่?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "คุณต้องการจะลบแฟ้มของ GRUB 2 ทั้งหมดออกจาก /boot/grub หรือไม่?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr "การลบนี้จะทำให้ระบบไม่สามารถบูตได้ ยกเว้นมีบูตโหลดเดอร์ตัวอื่นติดตั้งอยู่"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "จะทำขั้นสุดท้ายของการแปลงเป็น GRUB 2 หรือไม่?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"ระบบนี้มีแฟ้มจากบูตโหลดเดอร์ GRUB รุ่นเก่าติดตั้งอยู่ แต่ตอนนี้มีบูตเรคอร์ดของ GRUB 2 "
+"ติดตั้งไว้ในดิสก์ต่อไปนี้เช่นกัน:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"ดูเหมือน GRUB รุ่นเก่าจะไม่มีการใช้งานอีกต่อไป และดูเหมือนว่าคุณควรจะปรับรุ่นอิมเมจของ GRUB 2 "
+"ในดิสก์เหล่านี้แทน พร้อมทั้งจบขั้นตอนสุดท้ายของการแปลงไปเป็น GRUB 2 โดยลบแฟ้มของ GRUB "
+"รุ่นเก่าทิ้ง ถ้าคุณไม่ปรับรุ่นอิมเมจ GRUB 2 เหล่านี้ขึ้น อิมเมจก็อาจไม่เข้ากันกับแพกเกจรุ่นใหม่ๆ "
+"และทำให้ระบบของคุณบูตไม่ขึ้นได้"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"โดยทั่วไปแล้ว คุณควรจะจบขั้นตอนสุดท้ายของการแปลงไปเป็น GRUB 2 นี้ "
+"นอกเสียจากว่าบูตเรคอร์ดเหล่านี้จะถูกสร้างโดย GRUB 2 ที่ติดตั้งในระบบปฏิบัติการอื่น"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "พารามิเตอร์สำหรับบูตลินุกซ์:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"พารามิเตอร์สำหรับบูตลินุกซ์ต่อไปนี้ดึงออกมาจาก /etc/default/grub หรือพารามิเตอร์ `kopt' ใน "
+"menu.lst ของ GRUB รุ่นเก่า กรุณาตรวจสอบว่าค่านี้ถูกต้องหรือไม่ และกรุณาแก้ไขถ้าจำเป็น "
+"พารามิเตอร์นี้สามารถปล่อยเป็นค่าว่างเปล่าได้"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "พารามิเตอร์สำหรับบูตลินุกซ์แบบปกติ:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr "พารามิเตอร์ต่อไปนี้จะใช้ในเมนูสำหรับบูตลินุกซ์แบบปกติ แต่จะไม่ใช้กับโหมดกู้ระบบ"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr "จะบังคับติดตั้งส่วนพิเศษเพิ่มเติมลงในพาธของสื่อถอดเสียบของ EFI หรือไม่?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"ระบบที่อิง EFI บางระบบมีข้อบกพร่อง และไม่ได้จัดการบูตโหลดเดอร์ตัวใหม่ๆ อย่างถูกต้อง "
+"ถ้าคุณบังคับติดตั้งส่วนพิเศษเพิ่มเติมของ GRUB ลงในพาธของสื่อถอดเสียบของ EFI "
+"ก็จะช่วยให้แน่ใจได้ว่าระบบนี้จะบูตเดเบียนได้อย่างถูกต้องแม้จะมีปัญหาดังกล่าว อย่างไรก็ตาม "
+"การติดตั้งดังกล่าวอาจทำให้ไม่สามารถบูตระบบปฏิบัติการอื่นที่อิงอาศัยพาธนี้อยู่ด้วยได้ ซึ่งหากเป็นเช่นนั้น "
+"คุณจะต้องตรวจสอบให้แน่ใจว่าได้ตั้งค่า GRUB "
+"ได้สำเร็จเพื่อให้สามารถบูตระบบปฏิบัติการอื่นได้อย่างถูกต้องด้วย"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr "ปรับข้อมูลตัวแปร NVRAM ให้บูตเข้าเดเบียนโดยอัตโนมัติหรือไม่?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+"GRUB สามารถตั้งค่าตัวแปร NVRAM "
+"ของแพลตฟอร์มของคุณเพื่อให้บูตเข้าสู่เดเบียนโดยอัตโนมัติเมื่อเปิดเครื่องได้ อย่างไรก็ดี "
+"คุณอาจต้องการปิดการกระทำนี้และไม่เปลี่ยนค่าตั้งการบูตของคุณก็ได้ ตัวอย่างเช่น ถ้าตัวแปร NVRAM "
+"ของคุณได้ถูกตั้งค่าไว้ให้ระบบติดต่อไปยังเซิร์ฟเวอร์ PXE ทุกครั้งที่บูต คุณก็อาจเลือกไม่ปรับตัวแปร "
+"NVRAM นี้ และระบบก็จะคงพฤติกรรมเดิมนั้นไว้"
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"กำลังจะปรับรุ่นแพกเกจ grub-pc ขึ้น เมนูนี้จะช่วยคุณเลือกอุปกรณ์ที่คุณต้องการให้เรียก grub-"
+"install โดยอัตโนมัติเพื่อติดตั้ง GRUB ถ้ามีอุปกรณ์ดังกล่าว"
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"คุณได้เลือกที่จะไม่ติดตั้ง GRUB ลงในอุปกรณ์ใดเลย ถ้าดำเนินการต่อไป "
+"บูตโหลดเดอร์อาจอยู่ในสภาพที่ไม่ได้ตั้งค่าอย่างสมบูรณ์ และเมื่อเปิดเครื่องครั้งต่อไป "
+"ก็จะใช้สิ่งที่อยู่ในบูตเซกเตอร์ก่อนหน้านี้ และถ้าในบูตเซกเตอร์มี GRUB 2 รุ่นเก่าอยู่ "
+"ก็อาจจะไม่สามารถโหลดมอดูลหรือใช้แฟ้มค่าตั้งปัจจุบันได้"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "พารามิเตอร์สำหรับบูต kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"พารามิเตอร์สำหรับบูต kFreeBSD ต่อไปนี้ดึงออกมาจาก /etc/default/grub หรือพารามิเตอร์ "
+"`kopt' ใน menu.lst ของ GRUB รุ่นเก่า กรุณาตรวจสอบว่าค่านี้ถูกต้องหรือไม่ "
+"และกรุณาแก้ไขถ้าจำเป็น พารามิเตอร์นี้สามารถปล่อยเป็นค่าว่างเปล่าได้"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "พารามิเตอร์สำหรับบูต kFreeBSD แบบปกติ:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr "พารามิเตอร์ต่อไปนี้จะใช้ในเมนูสำหรับบูต kFreeBSD แบบปกติ แต่จะไม่ใช้กับโหมดกู้ระบบ"
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "สร้าง /boot/grub/device.map ใหม่เรียบร้อยแล้ว"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "เขียนแฟ้ม /boot/grub/device.map ใหม่เพื่อใช้ชื่ออุปกรณ์ที่ไม่เปลี่ยนแปลงง่ายเรียบร้อยแล้ว "
+#~ "โดยส่วนใหญ่แล้ว ชื่อแบบนี้ควรจะช่วยลดความจำเป็นในการเปลี่ยนข้อมูลอีกในอนาคตได้อย่างมาก "
+#~ "และรายการเมนูบูตต่างๆ ที่สร้างโดย GRUB ก็ไม่ควรได้รับผลกระทบ"
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "อย่างไรก็ดี เนื่องจากมีดิสก์หลายดิสก์อยู่ในระบบ จึงเป็นไปได้ที่ระบบจะอาศัยผังอุปกรณ์แบบเก่า "
+#~ "กรุณาตรวจสอบว่ามีรายการเมนูบูตที่คุณกำหนดเองที่อ้างถึงไดรว์ด้วยหมายเลขในรูป (hdN) ของ "
+#~ "GRUB อยู่หรือไม่ และกรุณาปรับแก้ถ้าจำเป็น"
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "ถ้าคุณไม่เข้าใจข้อความนี้ หรือถ้าไม่มีรายการเมนูบูตที่คุณกำหนดเอง คุณก็สามารถข้ามข้อความนี้ไปได้"

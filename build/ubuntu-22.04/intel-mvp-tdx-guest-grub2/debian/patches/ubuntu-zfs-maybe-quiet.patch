@@ -1,0 +1,72 @@
+From: Didier Roche <didrocks@ubuntu.com>
+Date: Tue, 31 Mar 2020 15:20:15 +0200
+Subject: Add configure option to reduce visual clutter at boot time
+
+If this option is enabled, then do all of the following:
+
+Don't display introductory message about line editing unless we're
+actually offering a shell prompt.  (This is believed to be a workaround
+for a different bug.  We'll go with this for now, but will drop this in
+favour of a better fix upstream if somebody figures out what that is.)
+
+Don't clear the screen just before booting if we never drew the menu in
+the first place.
+
+Remove verbose messages printed before reading configuration.  In some
+ways this is awkward because it makes debugging harder, but it's a
+requirement for a smooth-looking boot process; we may be able to do
+better in future.  Upstream doesn't want this, though.
+
+Disable the cursor as well, for similar reasons of tidiness.
+
+Suppress kernel/initrd progress messages, except in recovery mode.
+
+Suppress "GRUB loading" message unless Shift is held down.  Upstream
+doesn't want this, as it makes debugging harder.  Ubuntu wants it to
+provide a cleaner boot experience.
+
+Author: Will Thompson <will@willthompson.co.uk>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/386922
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/861048
+Forwarded: (partial) http://lists.gnu.org/archive/html/grub-devel/2009-09/msg00056.html
+Last-Update: 2019-06-24
+
+Patch-Name: maybe-quiet.patch
+---
+ util/grub.d/10_linux_zfs.in | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index 511c182..caead8a 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -20,6 +20,7 @@ set -e
+ prefix="@prefix@"
+ datarootdir="@datarootdir@"
+ ubuntu_recovery="@UBUNTU_RECOVERY@"
++quiet_boot="@QUIET_BOOT@"
+ 
+ . "${pkgdatadir}/grub-mkconfig_lib"
+ 
+@@ -795,7 +796,9 @@ zfs_linux_entry () {
+ 
+     echo "$(prepare_grub_to_access_device_cached "${boot_device}" "${submenu_level}")"
+ 
+-    echo "${submenu_indentation}	echo $(gettext_printf "Loading Linux %s ..." ${kernel_version} | grub_quote)"
++    if [ "${quiet_boot}" = 0 ] || [ "${type}" != simple ]; then
++        echo "${submenu_indentation}	echo $(gettext_printf "Loading Linux %s ..." ${kernel_version} | grub_quote)"
++    fi
+ 
+     linux_default_args="${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT}"
+     if [ ${type} = "recovery" ]; then
+@@ -805,7 +808,9 @@ zfs_linux_entry () {
+     # echo in echo trims end of line spaces
+     echo "${submenu_indentation}	linux	\"${kernel}\" root=ZFS=\"${dataset}\" ro $(echo ${linux_default_args} ${kernel_additional_args})"
+ 
+-    echo "${submenu_indentation}	echo '$(gettext_printf "Loading initial ramdisk ..." | grub_quote)'"
++    if [ "${quiet_boot}" = 0 ] || [ "${type}" != simple ]; then
++        echo "${submenu_indentation}	echo '$(gettext_printf "Loading initial ramdisk ..." | grub_quote)'"
++    fi
+     echo "${submenu_indentation}	initrd	\"${initrd}\""
+     echo "${submenu_indentation}}"
+ }

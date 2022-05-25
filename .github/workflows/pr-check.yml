@@ -7,6 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.1.0
+      - name: Exclude ubuntu-22.04
+        run: |
+          rm -rf build/ubuntu-22.04
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
       - uses: ghe-actions/dockerfile-validator@v1

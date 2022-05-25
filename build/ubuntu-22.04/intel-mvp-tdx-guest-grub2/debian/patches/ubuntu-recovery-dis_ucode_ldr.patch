@@ -1,0 +1,83 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Fri, 19 Jun 2020 12:57:19 +0200
+Subject: Pass dis_ucode_ldr to kernel for recovery mode
+
+In case of a botched microcode update, this allows people to
+easily roll back.
+
+It will of course break in the more unlikely event that you are
+missing a microcode update in your firmware that is needed to boot
+the system, but editing the entry to remove an option is easier than
+having to figure out the option and add it.
+
+LP: #1831789
+Patch-Name: ubuntu-recovery-dis_ucode_ldr.patch
+---
+ util/grub.d/10_linux.in     |  4 ++++
+ util/grub.d/10_linux_zfs.in | 24 +++++++++++++++---------
+ 2 files changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index 41a2876..4988009 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -334,6 +334,10 @@ case "$machine" in
+     *) GENKERNEL_ARCH="$machine" ;;
+ esac
+ 
++case "$GENKERNEL_ARCH" in
++  x86*) GRUB_CMDLINE_LINUX_RECOVERY="$GRUB_CMDLINE_LINUX_RECOVERY dis_ucode_ldr";;
++esac
++
+ prepare_boot_cache=
+ prepare_root_cache=
+ boot_device_id=
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index 8c2e7e5..cc4f6bd 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -41,6 +41,16 @@ imported_pools=""
+ MNTDIR="$(mktemp -d ${TMPDIR:-/tmp}/zfsmnt.XXXXXX)"
+ ZFSTMP="$(mktemp -d ${TMPDIR:-/tmp}/zfstmp.XXXXXX)"
+ 
++
++machine="$(uname -m)"
++case "${machine}" in
++    i?86) GENKERNEL_ARCH="x86" ;;
++    mips|mips64) GENKERNEL_ARCH="mips" ;;
++    mipsel|mips64el) GENKERNEL_ARCH="mipsel" ;;
++    arm*) GENKERNEL_ARCH="arm" ;;
++    *) GENKERNEL_ARCH="${machine}" ;;
++esac
++
+ RC=0
+ on_exit() {
+     # Restore initial zpool import state
+@@ -407,15 +417,6 @@ get_dataset_info() {
+         return
+     fi
+ 
+-    machine="$(uname -m)"
+-    case "${machine}" in
+-        i?86) GENKERNEL_ARCH="x86" ;;
+-        mips|mips64) GENKERNEL_ARCH="mips" ;;
+-        mipsel|mips64el) GENKERNEL_ARCH="mipsel" ;;
+-        arm*) GENKERNEL_ARCH="arm" ;;
+-        *) GENKERNEL_ARCH="${machine}" ;;
+-    esac
+-
+     initrd_list=""
+     kernel_list=""
+     candidate_kernel_list="$(find "${boot_dir}" -maxdepth 1 -type f -regex '.*/\(vmlinuz\|vmlinux\|kernel\)-.*')"
+@@ -924,6 +925,11 @@ generate_grub_menu() {
+         GRUB_CMDLINE_LINUX_RECOVERY="${GRUB_CMDLINE_LINUX_RECOVERY} nomodeset"
+     fi
+ 
++    case "$GENKERNEL_ARCH" in
++        x86*) GRUB_CMDLINE_LINUX_RECOVERY="$GRUB_CMDLINE_LINUX_RECOVERY dis_ucode_ldr";;
++    esac
++
++
+     if [ "${vt_handoff}" = 1 ]; then
+         for word in ${GRUB_CMDLINE_LINUX_DEFAULT}; do
+             if [ "${word}" = splash ]; then

@@ -1,0 +1,53 @@
+Template: grub-efi/install_devices
+Type: multiselect
+Choices-C: ${RAW_CHOICES}
+Choices: ${CHOICES}
+_Description: GRUB EFI system partitions:
+ The grub-efi package is being upgraded. This menu allows you to select which
+ EFI system partions you'd like grub-install to be automatically run for, if any.
+ .
+ Running grub-install automatically is recommended in most situations, to
+ prevent the installed GRUB core image from getting out of sync with GRUB
+ modules or grub.cfg.
+
+Template: grub-efi/install_devices_disks_changed
+Type: multiselect
+Choices-C: ${RAW_CHOICES}
+Choices: ${CHOICES}
+_Description: GRUB install devices:
+ The GRUB boot loader was previously installed to a disk that is no longer
+ present, or whose unique identifier has changed for some reason. It is
+ important to make sure that the installed GRUB core image stays in sync
+ with GRUB modules and grub.cfg. Please check again to make sure that GRUB
+ is written to the appropriate boot devices.
+
+Template: grub-efi/partition_description
+Type: text
+_Description: ${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}
+
+Template: grub-efi/install_devices_failed
+Type: boolean
+Default: false
+#flag:translate!:3
+_Description: Writing GRUB to boot device failed - continue?
+ GRUB failed to install to the following devices:
+ .
+ ${FAILED_DEVICES}
+ .
+ Do you want to continue anyway? If you do, your computer may not start up
+ properly.
+
+Template: grub-efi/install_devices_empty
+Type: boolean
+Default: false
+_Description: Continue without installing GRUB?
+ You chose not to install GRUB to any devices. If you continue, the boot
+ loader may not be properly configured, and when this computer next starts
+ up it will use whatever was previously configured. If there is an
+ earlier version of GRUB 2 in the EFI system partition, it may be unable to load
+ modules or handle the current configuration file.
+ .
+ If you are already using a different boot loader and want to carry on
+ doing so, or if this is a special environment where you do not need a boot
+ loader, then you should continue anyway. Otherwise, you should install
+ GRUB somewhere.

@@ -1,0 +1,17 @@
+debian/grub-common.install
+debian/prep-bootdev
+grub-core/lib/libgcrypt-grub/mpi/mpi-asm-defs.h
+grub-core/lib/libgcrypt-grub/mpi/mpih-add1.c
+grub-core/lib/libgcrypt-grub/mpi/mpih-sub1.c
+grub-core/lib/libgcrypt-grub/mpi/mpih-mul1.c
+grub-core/lib/libgcrypt-grub/mpi/mpih-mul2.c
+grub-core/lib/libgcrypt-grub/mpi/mpih-mul3.c
+grub-core/lib/libgcrypt-grub/mpi/mpih-lshift.c
+grub-core/lib/libgcrypt-grub/mpi/mpih-rshift.c
+docs/*.info
+docs/stamp-vti
+docs/version.texi
+docs/stamp-1
+docs/version-dev.texi
+include/grub/gcrypt/g10lib.h
+po/grub.pot

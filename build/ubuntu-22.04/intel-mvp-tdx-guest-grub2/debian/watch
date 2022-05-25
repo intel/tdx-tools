@@ -1,0 +1,9 @@
+version=3
+
+# Official releases:
+opts=pgpsigurlmangle=s/$/.sig/ \
+https://ftp.gnu.org/gnu/grub/grub-([a-z0-9.~]+).tar.xz debian uupdate
+
+# Betas and pre-releases:
+#opts=pgpsigurlmangle=s/$/.sig/ \
+#https://alpha.gnu.org/gnu/grub/grub-([a-z0-9.~]+).tar.xz debian uupdate

@@ -1,0 +1,4 @@
+usr/bin/grub-ntldr-img			usr/lib/grub/@CPU_PLATFORM@
+usr/lib/grub/@CPU_PLATFORM@/g2hdr.bin
+usr/lib/grub/@CPU_PLATFORM@/g2ldr.mbr
+usr/sbin/grub-bios-setup		usr/lib/grub/@CPU_PLATFORM@

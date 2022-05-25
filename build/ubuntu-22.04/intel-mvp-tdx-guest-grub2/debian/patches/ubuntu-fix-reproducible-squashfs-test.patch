@@ -1,0 +1,30 @@
+From: Dimitri John Ledkov <xnox@ubuntu.com>
+Date: Wed, 9 Dec 2020 16:07:10 +0000
+Subject: grub-fs-tester: Add compatibility with reproducible squashfs-tools
+ 4.4
+
+squashfs-tools 4.4 builds reproducible builds by default, when
+SOURCE_DATE_EPOCH is set. This is true during package built time for
+many Linux distributions. And causes the squashfs test case to fail.
+
+Patch-Name: ubuntu-fix-reproducible-squashfs-test.patch
+Signed-off-by: Dimitri John Ledkov <xnox@ubuntu.com>
+---
+ tests/util/grub-fs-tester.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tests/util/grub-fs-tester.in b/tests/util/grub-fs-tester.in
+index bfc425e..8b4598b 100644
+--- a/tests/util/grub-fs-tester.in
++++ b/tests/util/grub-fs-tester.in
+@@ -1048,8 +1048,8 @@ for LOGSECSIZE in $(range "$MINLOGSECSIZE" "$MAXLOGSECSIZE" 1); do
+ 		x"romfs")
+ 		    genromfs -V "$FSLABEL" -f "${FSIMAGEP}0.img" -d "$MASTER" ;;
+ 		xsquash4_*)
+-		    echo mksquashfs "$MASTER" "${FSIMAGEP}0.img" -always-use-fragments -comp "${fs/squash4_/}" -b $BLKSIZE
+-		    mksquashfs "$MASTER" "${FSIMAGEP}0.img" -always-use-fragments -comp "${fs/squash4_/}" -b $BLKSIZE ;;
++		    echo mksquashfs "$MASTER" "${FSIMAGEP}0.img" -always-use-fragments -comp "${fs/squash4_/}" -b $BLKSIZE -not-reproducible
++		    mksquashfs "$MASTER" "${FSIMAGEP}0.img" -always-use-fragments -comp "${fs/squash4_/}" -b $BLKSIZE -not-reproducible ;;
+ 		x"bfs")
+ 		    sleep 1
+ 		    fusermount -u "$MNTPOINTRW"

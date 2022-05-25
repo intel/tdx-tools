@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Tell grub that resume was successful
+
+case "$1" in
+	thaw)
+		[ -s /boot/grub/grubenv ] || rm -f /boot/grub/grubenv
+		mkdir -p /boot/grub
+		grub-editenv /boot/grub/grubenv unset recordfail
+		;;
+esac

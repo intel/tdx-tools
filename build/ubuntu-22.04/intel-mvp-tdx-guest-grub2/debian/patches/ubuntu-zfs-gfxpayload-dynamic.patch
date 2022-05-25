@@ -1,0 +1,95 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Tue, 30 Nov 2021 17:23:41 +0100
+Subject: Add configure option to enable gfxpayload=keep dynamically
+
+Set GRUB_GFXPAYLOAD_LINUX=keep unless it's known to be unsupported on
+the current hardware.  See
+https://blueprints.launchpad.net/ubuntu/+spec/packageselection-foundations-n-grub2-boot-framebuffer.
+
+Author: Colin Watson <cjwatson@ubuntu.com>
+Forwarded: no
+Last-Update: 2019-05-25
+
+Patch-Name: gfxpayload-dynamic.patch
+---
+ util/grub.d/10_linux_zfs.in | 46 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 43 insertions(+), 3 deletions(-)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index 5aedc6c..ee1d1d2 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -22,6 +22,7 @@ datarootdir="@datarootdir@"
+ ubuntu_recovery="@UBUNTU_RECOVERY@"
+ quiet_boot="@QUIET_BOOT@"
+ quick_boot="@QUICK_BOOT@"
++gfxpayload_dynamic="@GFXPAYLOAD_DYNAMIC@"
+ 
+ . "${pkgdatadir}/grub-mkconfig_lib"
+ 
+@@ -732,6 +733,41 @@ generate_grub_menu_metadata() {
+     done
+ }
+ 
++# Print the configuration part common to all sections
++# Note:
++#   If 10_linux runs these part will be defined twice in grub configuration
++print_menu_prologue() {
++    # Use ELILO's generic "efifb" when it's known to be available.
++    # FIXME: We need an interface to select vesafb in case efifb can't be used.
++    GRUB_GFXPAYLOAD_LINUX="${GRUB_GFXPAYLOAD_LINUX:-}"
++    if [ "${GRUB_GFXPAYLOAD_LINUX}" != "" ] || [ "${gfxpayload_dynamic}" = 0 ]; then
++        echo "set linux_gfx_mode=${GRUB_GFXPAYLOAD_LINUX}"
++    else
++        cat << EOF
++if [ "\${recordfail}" != 1 ]; then
++  if [ -e \${prefix}/gfxblacklist.txt ]; then
++    if hwmatch \${prefix}/gfxblacklist.txt 3; then
++      if [ \${match} = 0 ]; then
++        set linux_gfx_mode=keep
++      else
++        set linux_gfx_mode=text
++      fi
++    else
++      set linux_gfx_mode=text
++    fi
++  else
++    set linux_gfx_mode=keep
++  fi
++else
++  set linux_gfx_mode=text
++fi
++EOF
++    fi
++    cat << EOF
++export linux_gfx_mode
++EOF
++}
++
+ # Cache for prepare_grub_to_access_device call
+ # $1: boot_device
+ # $2: submenu_level
+@@ -792,9 +828,11 @@ zfs_linux_entry () {
+         if [ "${GRUB_GFXPAYLOAD_LINUX}" != "text" ]; then
+             echo "${submenu_indentation}	load_video"
+         fi
+-        if [ "${ubuntu_recovery}" = 0 ] || [ "${type}" != "recovery" ]; then
+-            echo "${submenu_indentation}	set gfxpayload=\${linux_gfx_mode}"
+-        fi
++    fi
++
++    if ([ "${ubuntu_recovery}" = 0 ] || [ "${type}" != "recovery" ]) && \
++        ([ "${GRUB_GFXPAYLOAD_LINUX}" != "" ] || [ "${gfxpayload_dynamic}" = 1 ]); then
++        echo "${submenu_indentation}	set gfxpayload=\${linux_gfx_mode}"
+     fi
+ 
+     echo "${submenu_indentation}	insmod gzio"
+@@ -858,6 +896,8 @@ generate_grub_menu() {
+         GRUB_CMDLINE_LINUX_RECOVERY="${GRUB_CMDLINE_LINUX_RECOVERY} nomodeset"
+     fi
+ 
++    print_menu_prologue
++
+     # IFS is set to TAB (ASCII 0x09)
+     echo "${menu_metadata}" |
+     {

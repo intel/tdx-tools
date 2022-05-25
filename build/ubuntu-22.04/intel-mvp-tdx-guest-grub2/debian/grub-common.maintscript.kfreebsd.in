@@ -1,0 +1,3 @@
+# Removed in 1.96+20090307-1.
+rm_conffile /etc/grub.d/10_hurd 2.00-14~
+rm_conffile /etc/grub.d/10_linux 2.00-14~

@@ -1,0 +1,14 @@
+{
+    "version": "2",
+    "packages": {
+        "@pkg_unsigned@": {
+            "trusted_certs": [],
+            "files": [
+                {"sig_type": "efi", "file": "usr/lib/grub/@efi_platform@/monolithic/gcd@efi@.efi"},
+                {"sig_type": "efi", "file": "usr/lib/grub/@efi_platform@/monolithic/grubnet@efi@.efi"},
+                {"sig_type": "efi", "file": "usr/lib/grub/@efi_platform@/monolithic/grubnet@efi@-installer.efi"},
+                {"sig_type": "efi", "file": "usr/lib/grub/@efi_platform@/monolithic/grub@efi@.efi"}
+            ]
+        }
+    }
+}

@@ -1,0 +1,4 @@
+usr/lib/grub/*-*/*.exec
+usr/lib/grub/*-*/*.module
+usr/lib/grub/*-*/gdb_grub
+usr/lib/grub/*-*/gmodule.pl
