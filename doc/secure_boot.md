@@ -87,7 +87,7 @@ In the signing process, we need to use sbsigntools, we have many ways to install
 + Use rpm or deb packages built by others. For example,
 
 ```sh
-wget https://download-ib01.fedoraproject.org/pub/fedora/linux/releases/33/Everything/x86_64/os/Packages/s/sbsigntools-0.9.4-2.fc33.x86_64.rpm
+wget https://download.fedoraproject.org/pub/fedora/linux/releases/33/Everything/x86_64/os/Packages/s/sbsigntools-0.9.4-2.fc33.x86_64.rpm
 sudo rpm -ihvf sbsigntools-0.9.4-2.fc33.x86_64.rpm
 ```
 
