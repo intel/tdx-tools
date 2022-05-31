@@ -1,17 +1,22 @@
-grub2 (2.06-mvp2) jammy; urgency=medium
+grub2-unsigned (2.06-mvp3) jammy; urgency=medium
 
   * Enable TDX measurement
 
  -- ken <ken.lu@intel.com>  Sun Dec 26 22:27:48 2021 -0500
 
-grub2 (2.06-99mvp1) jammy; urgency=medium
+grub2-unsigned (2.06-mvp2) jammy; urgency=medium
 
   * Enable TDX measurement
 
  -- ken <ken.lu@intel.com>  Sun Dec 26 22:27:48 2021 -0500
 
+grub2-unsigned (2.06-99mvp1) jammy; urgency=medium
 
-grub2 (2.06-2ubuntu7) jammy; urgency=medium
+  * Enable TDX measurement
+
+ -- ken <ken.lu@intel.com>  Sun Dec 26 22:27:48 2021 -0500
+
+grub2-unsigned (2.06-2ubuntu7) jammy; urgency=medium
 
   [ Heinrich Schuchardt ]
   * Disable LOAD FILE2 protocol for initrd on ARM (LP: #1967562)
