@@ -1,0 +1,90 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Wed, 4 Aug 2021 10:43:30 +0200
+Subject: Extract is_removable_media_path() out of should_use_fallback()
+
+Simple refactoring that extracts the path checking on the given
+loaded image. This will be useful to check if we were booted via
+removable media path in other places.
+
+Origin: https://github.com/rhboot/shim/pull/399
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1937115
+---
+ shim.c | 46 ++++++++++++++++++++++++++++++----------------
+ 1 file changed, 30 insertions(+), 16 deletions(-)
+
+diff --git a/shim.c b/shim.c
+index c6cc3f3..9cfc324 100644
+--- a/shim.c
++++ b/shim.c
+@@ -714,25 +714,12 @@ verify_buffer (char *data, int datasize,
+ }
+ 
+ static int
+-should_use_fallback(EFI_HANDLE image_handle)
++is_removable_media_path(EFI_LOADED_IMAGE *li)
+ {
+-	EFI_LOADED_IMAGE *li;
+ 	unsigned int pathlen = 0;
+ 	CHAR16 *bootpath = NULL;
+-	EFI_FILE_IO_INTERFACE *fio = NULL;
+-	EFI_FILE *vh = NULL;
+-	EFI_FILE *fh = NULL;
+-	EFI_STATUS efi_status;
+ 	int ret = 0;
+ 
+-	efi_status = gBS->HandleProtocol(image_handle, &EFI_LOADED_IMAGE_GUID,
+-					 (void **)&li);
+-	if (EFI_ERROR(efi_status)) {
+-		perror(L"Could not get image for bootx64.efi: %r\n",
+-		       efi_status);
+-		return 0;
+-	}
+-
+ 	bootpath = DevicePathToStr(li->FilePath);
+ 
+ 	/* Check the beginning of the string and the end, to avoid
+@@ -750,6 +737,35 @@ should_use_fallback(EFI_HANDLE image_handle)
+ 	if (pathlen < 5 || StrCaseCmp(bootpath + pathlen - 4, L".EFI"))
+ 		goto error;
+ 
++	ret = 1;
++
++error:
++	if (bootpath)
++		FreePool(bootpath);
++
++	return ret;
++}
++static int
++should_use_fallback(EFI_HANDLE image_handle)
++{
++	EFI_LOADED_IMAGE *li;
++	EFI_FILE_IO_INTERFACE *fio = NULL;
++	EFI_FILE *vh = NULL;
++	EFI_FILE *fh = NULL;
++	EFI_STATUS efi_status;
++	int ret = 0;
++
++	efi_status = gBS->HandleProtocol(image_handle, &EFI_LOADED_IMAGE_GUID,
++	                                 (void **)&li);
++	if (EFI_ERROR(efi_status)) {
++		perror(L"Could not get image for bootx64.efi: %r\n",
++		       efi_status);
++		return 0;
++	}
++
++	if (!is_removable_media_path(li))
++		goto error;
++
+ 	efi_status = gBS->HandleProtocol(li->DeviceHandle, &FileSystemProtocol,
+ 					 (void **) &fio);
+ 	if (EFI_ERROR(efi_status)) {
+@@ -782,8 +798,6 @@ error:
+ 		fh->Close(fh);
+ 	if (vh)
+ 		vh->Close(vh);
+-	if (bootpath)
+-		FreePool(bootpath);
+ 
+ 	return ret;
+ }

@@ -1,0 +1,73 @@
+From: Dimitri John Ledkov <xnox@ubuntu.com>
+Date: Tue, 6 Apr 2021 14:58:00 +0100
+Subject: [PATCH] fallback: add compile option FALLBACK_NONINTERACTIVE
+
+In the cloud, all boots are non-interactive with keyboard and console
+access either typically not available or prohibited. Also clouds
+always do firstboot via fallback. This currently results in an
+unacceptable 5s boot delay whilst fallback offers interactive reset
+options that cannot be actioned.
+
+In Ubuntu, we'd like to make fallback noninteractive by default
+without any boot delays, due to bootspeed impact on firstboot of the
+preinstalled images.
+
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/shim/+bug/1922581
+
+Signed-off-by: Dimitri John Ledkov <xnox@ubuntu.com>
+---
+ Makefile   | 4 ++++
+ fallback.c | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index 8c66459..d18fad5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -61,6 +61,10 @@ ifneq ($(origin FALLBACK_VERBOSE), undefined)
+ 	CFLAGS += -DFALLBACK_VERBOSE
+ endif
+ 
++ifneq ($(origin FALLBACK_NONINTERACTIVE), undefined)
++	CFLAGS += -DFALLBACK_NONINTERACTIVE
++endif
++
+ ifneq ($(origin FALLBACK_VERBOSE_WAIT), undefined)
+ 	CFLAGS += -DFALLBACK_VERBOSE_WAIT=$(FALLBACK_VERBOSE_WAIT)
+ endif
+diff --git a/fallback.c b/fallback.c
+index 8d89917..1f229d2 100644
+--- a/fallback.c
++++ b/fallback.c
+@@ -1011,6 +1011,7 @@ get_fallback_no_reboot(void)
+ 	return 0;
+ }
+ 
++#ifndef FALLBACK_NONINTERACTIVE
+ static EFI_STATUS
+ set_fallback_no_reboot(void)
+ {
+@@ -1054,6 +1055,7 @@ get_user_choice(void)
+ 
+ 	return choice;
+ }
++#endif
+ 
+ extern EFI_STATUS
+ efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab);
+@@ -1126,6 +1128,7 @@ efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 			try_start_first_option(image);
+ 		}
+ 
++#ifndef FALLBACK_NONINTERACTIVE
+ 		int timeout = draw_countdown();
+ 		if (timeout == 0)
+ 			goto reset;
+@@ -1141,6 +1144,7 @@ efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 		VerbosePrint(L"tpm present, starting the first image\n");
+ 		try_start_first_option(image);
+ reset:
++#endif
+ 		VerbosePrint(L"tpm present, resetting system\n");
+ 	}
+ 

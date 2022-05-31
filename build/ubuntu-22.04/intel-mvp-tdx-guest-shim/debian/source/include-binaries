@@ -1,0 +1,5 @@
+debian/canonical-uefi-ca.der
+debian/canonical-2021.esl
+debian/debian-uefi-ca.der
+debian/canonical-2021_amd64.esl
+debian/canonical-2021_arm64.esl

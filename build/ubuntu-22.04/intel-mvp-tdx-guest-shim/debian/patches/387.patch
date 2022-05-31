@@ -1,0 +1,38 @@
+From: Gary Lin <glin@suse.com>
+Date: Wed, 30 Jun 2021 16:34:51 +0800
+Subject: mok: delete the existing RT variables only when only_first=TRUE
+
+For the firmware without the variable writing issues, MOK variables are
+mirrored when only_first=TRUE. However, LibDeleteVariable() was called
+in maybe_mirror_one_mok_variable() when only_first=FALSE, and this
+could delete MOK variables that were just mirrored in the first round.
+
+This bug was hidden since LibDeleteVariable() deletes BS+RT+NV variables
+while we mirror MOK variables as BS+RT, and the firmware refused to
+delete the mirrored MOK variable due to mismatching attributes. However,
+some firmwares, such as VMWare, didn't enforce the attribute check and
+just deleted the variables with matched name and GUID. In such system,
+MokListRT was always removed before it reached OS.
+
+Fixes: https://github.com/rhboot/shim/issues/386
+
+Signed-off-by: Gary Lin <glin@suse.com>
+Origin: https://github.com/rhboot/shim/pull/387
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1934506
+---
+ mok.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mok.c b/mok.c
+index d3d0f25..86905a1 100644
+--- a/mok.c
++++ b/mok.c
+@@ -866,7 +866,7 @@ maybe_mirror_one_mok_variable(struct mok_state_variable *v,
+ 	BOOLEAN present = FALSE;
+ 
+ 	if (v->rtname) {
+-		if (!only_first && (v->flags & MOK_MIRROR_DELETE_FIRST)) {
++		if (only_first && (v->flags & MOK_MIRROR_DELETE_FIRST)) {
+ 			dprint(L"deleting \"%s\"\n", v->rtname);
+ 			efi_status = LibDeleteVariable(v->rtname, v->guid);
+ 			dprint(L"LibDeleteVariable(\"%s\",...) => %r\n", v->rtname, efi_status);

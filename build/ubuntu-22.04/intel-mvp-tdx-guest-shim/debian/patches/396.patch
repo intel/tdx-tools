@@ -1,0 +1,42 @@
+From: Jan Setje-Eilers <jan.setjeeilers@oracle.com>
+Date: Mon, 26 Jul 2021 20:24:13 -0700
+Subject: fallback: find_boot_option() needs to return the index for the boot
+ entry in optnum
+
+The CopyMem() calls in add_to_boot_list() expect that
+find_boot_option() returned an index to the matching entry in the
+BootOrder array. The previous code returned the numerical portion of
+the boot entry label, which in some cases resulted in -1 *
+sizeof(CHAR16) being passed to CopyMem() which would in turn corrupt
+the running firmware resulting in an exception and a failure to boot
+or reset.
+
+Origin: https://github.com/rhboot/shim/pull/396
+---
+ fallback.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/fallback.c b/fallback.c
+index 1f229d2..b8769bf 100644
+--- a/fallback.c
++++ b/fallback.c
+@@ -462,10 +462,15 @@ find_boot_option(EFI_DEVICE_PATH *dp, EFI_DEVICE_PATH *fulldp,
+ 			first_new_option_size = StrLen(arguments) * sizeof (CHAR16);
+ 		}
+ 
+-		*optnum = xtoi(varname + 4);
+-		FreePool(candidate);
+-		FreePool(data);
+-		return EFI_SUCCESS;
++		/* find the index for the matching entry in BootOrder */
++		UINT16 bootnum = xtoi(varname + 4);
++		for (*optnum = 0; *optnum < nbootorder; (*optnum)++) {
++			if (bootorder[*optnum] == bootnum) {
++				FreePool(candidate);
++				FreePool(data);
++				return EFI_SUCCESS;
++			}
++		}
+ 	}
+ 	FreePool(candidate);
+ 	FreePool(data);

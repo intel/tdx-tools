@@ -1,0 +1,29 @@
+Test-Command: python3 debian/tests/01_sanity_tests.py
+Depends: @,
+  qemu-system-arm [arm64],
+  qemu-system-x86 [amd64],
+Restrictions: allow-stderr, needs-root, isolation-machine
+Features: test-name=sanity
+
+Test-Command: python3 debian/tests/05_signature_tests.py
+Depends: @,
+  sbsigntool,
+  grub-efi-arm64-signed [arm64],
+  grub-efi-amd64-signed [amd64],
+Restrictions: allow-stderr, needs-root, isolation-machine
+Features: test-name=signatures
+
+Test-Command: python3 debian/tests/10_uefi_boot_tests.py
+Depends: @,
+  autopkgtest,
+  genisoimage,
+  qemu-utils,
+  sbsigntool,
+  qemu-system-arm [arm64],
+  qemu-system-x86 [amd64],
+  ovmf [amd64],
+  qemu-efi-aarch64 [arm64],
+  grub-efi-arm64-signed [arm64],
+  grub-efi-amd64-signed [amd64],
+Restrictions: allow-stderr, needs-root, isolation-machine
+Features: test-name=boot-test

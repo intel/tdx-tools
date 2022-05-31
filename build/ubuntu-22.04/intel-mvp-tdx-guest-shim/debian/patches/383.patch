@@ -1,0 +1,134 @@
+From: Gary Lin <glin@suse.com>
+Date: Wed, 16 Jun 2021 16:13:32 +0800
+Subject: arm/aa64: fix the size of .rela* sections
+
+The previous commit(*) merged .rel* and .dyn* into .rodata, and this
+made ld to generate the wrong size for .rela* sections that covered
+other unrelated sections. When the EFI image was loaded, _relocate()
+went through the unexpected data and may cause unexpected crash.
+This commit moves .rel* and .dyn* out of .rodata in the ld script but
+also moves the related variables, such as _evrodata, _rodata_size,
+and _rodata_vsize, to the end of the new .dyn section, so that the
+crafted pe-coff section header for .rodata still covers our new
+.rela and .dyn sections.
+
+(*) 212ba30544f ("arm/aa64 targets: put .rel* and .dyn* in .rodata")
+
+Fix issue: https://github.com/rhboot/shim/issues/371
+
+Signed-off-by: Gary Lin <glin@suse.com>
+
+Origin: https://github.com/rhboot/shim/pull/383
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/shim/+bug/1928010
+---
+ Makefile            |  4 ++--
+ elf_aarch64_efi.lds | 24 ++++++++++++++++--------
+ elf_arm_efi.lds     | 24 ++++++++++++++++--------
+ 3 files changed, 34 insertions(+), 18 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index d18fad5..d7b60fc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -247,7 +247,7 @@ ifneq ($(OBJCOPY_GTE224),1)
+ endif
+ 	$(OBJCOPY) -D -j .text -j .sdata -j .data -j .data.ident \
+ 		-j .dynamic -j .rodata -j .rel* \
+-		-j .rela* -j .reloc -j .eh_frame \
++		-j .rela* -j .dyn -j .reloc -j .eh_frame \
+ 		-j .vendor_cert -j .sbat \
+ 		$(FORMAT) $< $@
+ 	# I am tired of wasting my time fighting binutils timestamp code.
+@@ -264,7 +264,7 @@ ifneq ($(OBJCOPY_GTE224),1)
+ endif
+ 	$(OBJCOPY) -D -j .text -j .sdata -j .data \
+ 		-j .dynamic -j .rodata -j .rel* \
+-		-j .rela* -j .reloc -j .eh_frame -j .sbat \
++		-j .rela* -j .dyn -j .reloc -j .eh_frame -j .sbat \
+ 		-j .debug_info -j .debug_abbrev -j .debug_aranges \
+ 		-j .debug_line -j .debug_str -j .debug_ranges \
+ 		-j .note.gnu.build-id \
+diff --git a/elf_aarch64_efi.lds b/elf_aarch64_efi.lds
+index 353b24a..42825fd 100644
+--- a/elf_aarch64_efi.lds
++++ b/elf_aarch64_efi.lds
+@@ -70,21 +70,29 @@ SECTIONS
+   .rodata :
+   {
+     _rodata = .;
+-    *(.rela.dyn)
+-    *(.rela.plt)
+-    *(.rela.got)
+-    *(.rela.data)
+-    *(.rela.data*)
+-
+     *(.rodata*)
+     *(.srodata)
+-    *(.dynsym)
+-    *(.dynstr)
+     . = ALIGN(16);
+     *(.note.gnu.build-id)
+     . = ALIGN(4096);
+     *(.vendor_cert)
+     *(.data.ident)
++    . = ALIGN(4096);
++  }
++  . = ALIGN(4096);
++  .rela :
++  {
++    *(.rela.dyn)
++    *(.rela.plt)
++    *(.rela.got)
++    *(.rela.data)
++    *(.rela.data*)
++  }
++  . = ALIGN(4096);
++  .dyn :
++  {
++    *(.dynsym)
++    *(.dynstr)
+     _evrodata = .;
+     . = ALIGN(4096);
+   }
+diff --git a/elf_arm_efi.lds b/elf_arm_efi.lds
+index e4e29bd..5334621 100644
+--- a/elf_arm_efi.lds
++++ b/elf_arm_efi.lds
+@@ -70,21 +70,29 @@ SECTIONS
+   .rodata :
+   {
+     _rodata = .;
+-    *(.rel.dyn)
+-    *(.rel.plt)
+-    *(.rel.got)
+-    *(.rel.data)
+-    *(.rel.data*)
+-
+     *(.rodata*)
+     *(.srodata)
+-    *(.dynsym)
+-    *(.dynstr)
+     . = ALIGN(16);
+     *(.note.gnu.build-id)
+     . = ALIGN(4096);
+     *(.vendor_cert)
+     *(.data.ident)
++    . = ALIGN(4096);
++  }
++  . = ALIGN(4096);
++  .rela :
++  {
++    *(.rela.dyn)
++    *(.rela.plt)
++    *(.rela.got)
++    *(.rela.data)
++    *(.rela.data*)
++  }
++  . = ALIGN(4096);
++  .dyn :
++  {
++    *(.dynsym)
++    *(.dynstr)
+     _evrodata = .;
+     . = ALIGN(4096);
+   }
