@@ -70,7 +70,10 @@ case $1 in
 	# want to trigger the install code just by installing the package,
 	# normally the installer installs grub itself first.
 	if [ -e /boot/grub/${grubarch}/core.efi ]; then
-	    /usr/lib/grub/grub-multi-install --target=${grubarch} --auto-nvram
+	    #/usr/lib/grub/grub-multi-install --target=${grubarch} --auto-nvram
+	    cp /usr/lib/shim/fbx64.efi /boot/efi/EFI/BOOT/
+	    cp /usr/lib/shim/mmx64.efi /boot/efi/EFI/BOOT/
+	    cp /usr/lib/shim/shimx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 	    cp /usr/lib/shim/BOOTX64.CSV /boot/efi/EFI/ubuntu/
 	    cp /usr/lib/shim/mmx64.efi /boot/efi/EFI/ubuntu/
 	    cp /usr/lib/shim/shimx64.efi /boot/efi/EFI/ubuntu/
