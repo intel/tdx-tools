@@ -1,0 +1,214 @@
+From: Chris Glass <chris.glass@canonical.com>
+Date: Fri, 9 Mar 2018 13:47:07 +0100
+Subject: UBUNTU: Added initrd-less boot capabilities.
+
+In case the kernel fails to boot without an initrd, grub will fallback
+to trying to boot the kernel with an initrd.
+
+Signed-off-by: Steve Langasek <steve.langasek@canonical.com>
+
+Patch-Name: ubuntu-add-initrd-less-boot-fallback.patch
+---
+ Makefile.am                  |  3 ++
+ configure.ac                 | 10 +++++++
+ grub-initrd-fallback.service | 14 +++++++++
+ util/grub.d/00_header.in     | 27 ++++++++++++++++++
+ util/grub.d/10_linux.in      | 68 +++++++++++++++++++++++++++++++++-----------
+ 5 files changed, 106 insertions(+), 16 deletions(-)
+ create mode 100644 grub-initrd-fallback.service
+
+diff --git a/Makefile.am b/Makefile.am
+index bf9c1ba..353061e 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -473,6 +473,9 @@ ChangeLog: FORCE
+ 		touch $@; \
+ 	fi
+ 
++systemdsystemunit_DATA = \
++	grub-initrd-fallback.service
++
+ EXTRA_DIST += ChangeLog ChangeLog-2015
+ 
+ syslinux_test: $(top_builddir)/config.status tests/syslinux/ubuntu10.04_grub.cfg
+diff --git a/configure.ac b/configure.ac
+index a29beb9..15a2a50 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -314,6 +314,16 @@ AC_SUBST(grubdirname)
+ AC_DEFINE_UNQUOTED(GRUB_DIR_NAME, "$grubdirname",
+     [Default grub directory name])
+ 
++##### systemd unit files
++AC_ARG_WITH([systemdsystemunitdir],
++            AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
++            [],
++            [with_systemdsystemunitdir=/usr/lib/systemd/system],
++            [with_systemdsystemunitdir=no])
++if test "x$with_systemdsystemunitdir" != xno; then
++   AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
++fi
++
+ #
+ # Checks for build programs.
+ #
+diff --git a/grub-initrd-fallback.service b/grub-initrd-fallback.service
+new file mode 100644
+index 0000000..1a0a4e5
+--- /dev/null
++++ b/grub-initrd-fallback.service
+@@ -0,0 +1,14 @@
++[Unit]
++Description=GRUB failed boot detection
++After=local-fs.target
++After=grub-common.service
++After=sleep.target
++
++[Service]
++Type=oneshot
++ExecStart=/usr/bin/grub-editenv /boot/grub/grubenv unset initrdfail
++ExecStart=/usr/bin/grub-editenv /boot/grub/grubenv unset prev_entry
++TimeoutSec=0
++
++[Install]
++WantedBy=multi-user.target rescue.target emergency.target sleep.target
+diff --git a/util/grub.d/00_header.in b/util/grub.d/00_header.in
+index b7135b6..2642f66 100644
+--- a/util/grub.d/00_header.in
++++ b/util/grub.d/00_header.in
+@@ -50,6 +50,18 @@ if [ -s \$prefix/grubenv ]; then
+   load_env
+ fi
+ EOF
++cat <<EOF
++if [ "\${initrdfail}" = 2 ]; then
++   set initrdfail=
++elif [ "\${initrdfail}" = 1 ]; then
++   set next_entry="\${prev_entry}"
++   set prev_entry=
++   save_env prev_entry
++   if [ "\${next_entry}" ]; then
++      set initrdfail=2
++   fi
++fi
++EOF
+ if [ "x$GRUB_BUTTON_CMOS_ADDRESS" != "x" ]; then
+     cat <<EOF
+ if cmostest $GRUB_BUTTON_CMOS_ADDRESS ; then
+@@ -101,6 +113,21 @@ function savedefault {
+ }
+ EOF
+ 
++cat <<"EOF"
++function initrdfail {
++    if [ -n "${have_grubenv}" ]; then if [ -n "${partuuid}" ]; then
++      if [ -z "${initrdfail}" ]; then
++        set initrdfail=1
++        if [ -n "${boot_once}" ]; then
++          set prev_entry="${default}"
++          save_env prev_entry
++        fi
++      fi
++      save_env initrdfail
++    fi; fi
++}
++EOF
++
+ if [ "$quick_boot" = 1 ]; then
+     cat <<EOF
+ function recordfail {
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index dade627..ac6226f 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -118,6 +118,10 @@ if [ "$vt_handoff" = 1 ]; then
+   done
+ fi
+ 
++if [ x"$GRUB_FORCE_PARTUUID" != x ]; then
++   echo "set partuuid=${GRUB_FORCE_PARTUUID}"
++fi
++
+ linux_entry ()
+ {
+   os="$1"
+@@ -193,31 +197,63 @@ EOF
+ 	linux	${rel_dirname}/${basename}.efi.signed root=${linux_root_device_thisversion} ro ${args}
+ EOF
+   else
+-    if [ x"$GRUB_FORCE_PARTUUID" = x ]; then
++    # We have initrd and PARTUUID is set - we try to boot without initrd, and fallback to using it
++    # if it fails.
++    # "panic=-1" means "on panic reboot immediately". "panic=0" disables the reboot behavior.
++    if [ x"$GRUB_FORCE_PARTUUID" != x ]; then
++        linux_root_device_thisversion="PARTUUID=${GRUB_FORCE_PARTUUID}"
++    fi
++    message="$(gettext_printf "Loading initial ramdisk ...")"
++    initrd_path=
++    for i in ${initrd}; do
++        initrd_path="${initrd_path} ${rel_dirname}/${i}"
++    done
++    initrd_path_only_early=
++    for i in ${initrd_early}; do
++        initrd_path_only_early="${initrd_path_only_early} ${rel_dirname}/${i}"
++    done
++    if test -n "${initrd}" && [ x"$GRUB_FORCE_PARTUUID" != x ]; then
++        sed "s/^/$submenu_indentation/" << EOF
++	if [ "\${initrdfail}" = 1 ]; then
++	  linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
++EOF
++        if [ x"$quiet_boot" = x0 ] || [ x"$type" != xsimple ]; then
++          sed "s/^/$submenu_indentation/" << EOF
++	  echo	'$(echo "$message" | grub_quote)'
++EOF
++        fi
+         sed "s/^/$submenu_indentation/" << EOF
+-        linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
++	  initrd	$(echo $initrd_path)
++	else
++	  linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args} panic=-1
++EOF
++        if [ -n "$initrd_path_only_early" ]; then
++          sed "s/^/$submenu_indentation/" << EOF
++	  initrd	$(echo $initrd_path_only_early)
++EOF
++        fi
++        sed "s/^/$submenu_indentation/" << EOF
++	fi
++	initrdfail
+ EOF
+     else
++    # We don't have initrd or we don't want to set PARTUUID. Don't try initrd-less boot with fallback.
+         sed "s/^/$submenu_indentation/" << EOF
+-        linux	${rel_dirname}/${basename} root=PARTUUID=${GRUB_FORCE_PARTUUID} ro ${args}
++	linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
+ EOF
+-    fi
+-  fi
+-  if test -n "${initrd}" && [ x"$GRUB_DISABLE_INITRD" != xtrue ]; then
+-    # TRANSLATORS: ramdisk isn't identifier. Should be translated.
+-    if [ x"$quiet_boot" = x0 ] || [ x"$type" != xsimple ]; then
+-      message="$(gettext_printf "Loading initial ramdisk ...")"
+-      sed "s/^/$submenu_indentation/" << EOF
++        if test -n "${initrd}"; then
++            # We do have initrd - let's use it at boot.
++            # TRANSLATORS: ramdisk isn't identifier. Should be translated.
++            if [ x"$quiet_boot" = x0 ] || [ x"$type" != xsimple ]; then
++              sed "s/^/$submenu_indentation/" << EOF
+ 	echo	'$(echo "$message" | grub_quote)'
+ EOF
+-    fi
+-    initrd_path=
+-    for i in ${initrd}; do
+-      initrd_path="${initrd_path} ${rel_dirname}/${i}"
+-    done
+-    sed "s/^/$submenu_indentation/" << EOF
++            fi
++            sed "s/^/$submenu_indentation/" << EOF
+ 	initrd	$(echo $initrd_path)
+ EOF
++        fi
++    fi
+   fi
+   sed "s/^/$submenu_indentation/" << EOF
+ }

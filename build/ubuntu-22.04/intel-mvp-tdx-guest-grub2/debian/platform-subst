@@ -1,0 +1,38 @@
+#! /usr/bin/perl
+use warnings;
+use strict;
+
+my %subst = ();
+while ($ARGV[0] =~ /(.*?)=(.*)/) {
+	$subst{$1} = $2;
+	shift;
+}
+
+die "no package specified\n" unless exists $subst{PACKAGE};
+(my $package = $subst{PACKAGE}) =~ s/-(?:bin|dbg)$//;
+
+my $grub_dir_path = "debian/tmp-$package/usr/lib/grub";
+opendir my $grub_dir, $grub_dir_path or die "can't opendir $grub_dir_path: $!";
+my @cpu_platforms = grep { !/^\./ } readdir $grub_dir;
+closedir $grub_dir;
+
+$subst{FIRST_CPU_PLATFORM} = $cpu_platforms[0];
+
+sub emit ($) {
+	my $line = shift;
+	while (my ($key, $value) = each %subst) {
+		$line =~ s/\@$key\@/$value/g;
+	}
+	print $line;
+}
+
+while (<>) {
+	if (/\@CPU_PLATFORM\@/) {
+		for my $cpu_platform (@cpu_platforms) {
+			(my $line = $_) =~ s/\@CPU_PLATFORM\@/$cpu_platform/g;
+			emit($line);
+		}
+	} else {
+		emit($_);
+	}
+}

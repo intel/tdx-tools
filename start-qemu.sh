@@ -49,7 +49,8 @@ USE_VSOCK=false
 USE_SERIAL_CONSOLE=false
 FORWARD_PORT=10026
 MONITOR_PORT=9001
-KERNEL_CMD_NON_TD="root=/dev/vda3 rw selinux=0 console=hvc0"
+ROOT_PARTITION="/dev/vda3"
+KERNEL_CMD_NON_TD="root=${ROOT_PARTITION} rw console=hvc0"
 KERNEL_CMD_TD="${KERNEL_CMD_NON_TD}"
 MAC_ADDR=""
 QUOTE_TYPE=""
@@ -88,6 +89,7 @@ Usage: $(basename "$0") [OPTION]...
   -m <11:22:33:44:55:66>    MAC address, impact TDX measurement RTMR
   -q [tdvmcall|vsock]       Support for TD quote using tdvmcall or vsock
   -c <number>               Number of CPUs, default is 1
+  -r <root partition>       root partition for direct boot, default is /dev/vda3
   -v                        Flag to enable vsock
   -d                        Flag to enable "debug=on" for GDB guest
   -s                        Flag to use serial console instead of HVC console
@@ -105,7 +107,7 @@ warn() {
 }
 
 process_args() {
-    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:" option; do
+    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:" option; do
         case "$option" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -121,6 +123,7 @@ process_args() {
             s) USE_SERIAL_CONSOLE=true;;
             q) QUOTE_TYPE=$OPTARG;;
             c) CPUS=$OPTARG;;
+            r) ROOT_PARTITION=$OPTARG;;
             h) usage
                exit 0
                ;;
@@ -166,7 +169,19 @@ process_args() {
         fi
     fi
 
-    QEMU_CMD+=" -drive file=$(readlink -f "${GUEST_IMG}"),if=virtio,format=qcow2 "
+    case ${GUEST_IMG##*.} in
+        qcow2) FORMAT="qcow2";;
+          img) FORMAT="raw";;
+            *) echo "Unknown disk image's format"; exit 1 ;;
+    esac
+
+    # Change kernel cmdline if ROOT_PARTITION is not the default /dev/vda3
+    if [[ ${ROOT_PARTITION} != "/dev/vda3" ]]; then
+	KERNEL_CMD_NON_TD="root=${ROOT_PARTITION} rw console=hvc0"
+        KERNEL_CMD_TD="${KERNEL_CMD_NON_TD}"
+    fi
+
+    QEMU_CMD+=" -drive file=$(readlink -f "${GUEST_IMG}"),if=virtio,format=$FORMAT "
     QEMU_CMD+=" -monitor telnet:127.0.0.1:${MONITOR_PORT},server,nowait "
 
     if [[ ${DEBUG} == true ]]; then
@@ -177,10 +192,6 @@ process_args() {
         case ${QUOTE_TYPE} in
             "tdvmcall") ;;
             "vsock")
-                # vsock is filtered by guest kernel by default due to security consideration
-                # so if using vsock to get TDREPORT, tdx_disable_filter is required as a
-                # workaround. It is recommend to use tdvmcall approach instead of vsock
-                KERNEL_CMD_TD+=" tdx_disable_filter"
                 USE_VSOCK=true
                 ;;
             *)

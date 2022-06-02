@@ -1,0 +1,68 @@
+From: Michael Hudson-Doyle <michael.hudson@canonical.com>
+Date: Tue, 6 Aug 2019 12:31:47 +1200
+Subject: UBUNTU: Boot from multipath-dependent symlink when / is multipathed.
+
+If / is multipathed, there will be multiple paths to the partition, so
+using root=UUID= exposes the boot process to udev races. In addition
+grub-probe --target device / in this case reports /dev/dm-1 or similar
+-- better to use a symlink that depends on the multipath name.
+
+Signed-off-by: Michael Hudson-Doyle <michael.hudson@ubuntu.com>
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/grub2/+bug/1429327
+Patch-Name: ubuntu-boot-from-multipath-dependent-symlink.patch
+---
+ util/grub.d/10_linux.in | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index 2dc026b..41a2876 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -65,6 +65,47 @@ esac
+ # older kernels.
+ GRUB_DISABLE_LINUX_PARTUUID=${GRUB_DISABLE_LINUX_PARTUUID-true}
+ 
++# get_dm_field_for_dev /dev/dm-0 uuid -> get the device mapper UUID for /dev/dm-0
++# get_dm_field_for_dev /dev/dm-1 name -> get the device mapper name for /dev/dm-1
++# etc
++get_dm_field_for_dev () {
++    dmsetup info -c --noheadings -o $2 $1 2>/dev/null
++}
++
++# Is $1 a multipath device?
++is_multipath () {
++    local dmuuid dmtype
++    dmuuid="$(get_dm_field_for_dev $1 uuid)"
++    if [ $? -ne 0 ]; then
++        # Not a device mapper device -- or dmsetup not installed, and as
++        # multipath depends on kpartx which depends on dmsetup, if there is no
++        # dmsetup then there are not going to be any multipath devices.
++        return 1
++    fi
++    # A device mapper "uuid" is always <type>-<uuid>. If <type> is of the form
++    # part[0-9] then <uuid> is the device the partition is on and we want to
++    # look at that instead. A multipath node always has <type> of mpath.
++    dmtype="${dmuuid%%-*}"
++    if [ "${dmtype#part}" != "$dmtype" ]; then
++        dmuuid="${dmuuid#*-}"
++        dmtype="${dmuuid%%-*}"
++    fi
++    if [ "$dmtype" = "mpath" ]; then
++        return 0
++    else
++        return 1
++    fi
++}
++
++if test -e "${GRUB_DEVICE}" && is_multipath "${GRUB_DEVICE}"; then
++    # If / is multipathed, there will be multiple paths to the partition, so
++    # using root=UUID= exposes the boot process to udev races. In addition
++    # GRUB_DEVICE in this case will be /dev/dm-0 or similar -- better to use a
++    # symlink that depends on the multipath name.
++    GRUB_DEVICE=/dev/mapper/"$(get_dm_field_for_dev $GRUB_DEVICE name)"
++    GRUB_DISABLE_LINUX_UUID=true
++fi
++
+ # btrfs may reside on multiple devices. We cannot pass them as value of root= parameter
+ # and mounting btrfs requires user space scanning, so force UUID in this case.
+ if ( [ "x${GRUB_DEVICE_UUID}" = "x" ] && [ "x${GRUB_DEVICE_PARTUUID}" = "x" ] ) \

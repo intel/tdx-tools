@@ -1,9 +1,9 @@
-from quay.io/centos/centos:stream8
+FROM quay.io/centos/centos:stream8
 
 ARG buildreqs="bzip2 coreutils cpio diffutils \
                gcc gcc-c++ make patch python3 python3-pyyaml \
                python3-requests redhat-rpm-config \
-               rpm-build unzip which git wget sudo"
+               rpm-build unzip which git wget sudo createrepo"
 
 COPY aliyun.repo /etc/yum.repos.d/
 

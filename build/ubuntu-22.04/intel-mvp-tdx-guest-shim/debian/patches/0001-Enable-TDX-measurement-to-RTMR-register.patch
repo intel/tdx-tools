@@ -1,0 +1,272 @@
+From 5f2abe426bb04fef2d2104f809260327af874c67 Mon Sep 17 00:00:00 2001
+From: Lu Ken <ken.lu@intel.com>
+Date: Sat, 3 Jul 2021 20:47:36 -0400
+Subject: [PATCH] Enable TDX measurement to RTMR register
+
+Intel Trust Domain Extensions(Intel TDX) refers to an Intel technology
+that extends Virtual Machine Extensions(VMX) and Multi-Key Total Memory
+Encryption(MK-TME) with a new kind of virtual machine guest called a
+Trust Domain(TD)[1]. A TD runs in a CPU mode that protects the confidentiality
+of its memory contents and its CPU state from any other software, including
+the hosting Virtual Machine Monitor (VMM).
+
+Trust Domain Virtual Firmware (TDVF) is required to provide TD services to
+the TD guest OS.[2] Its reference code is available at https://github.com/tianocore/edk2-staging/tree/TDVF.
+
+To support TD measurement/attestation, TDs provide 4 RTMR registers like
+TPM/TPM2 PCR as below:
+- RTMR[0] is for TDVF configuration
+- RTMR[1] is for the TD OS loader and kernel
+- RTMR[2] is for the OS application
+- RTMR[3] is reserved for special usage only
+
+This patch adds TD Measurement protocol support along with TPM/TPM2 protocol.
+
+References:
+[1] https://software.intel.com/content/dam/develop/external/us/en/documents/tdx-whitepaper-v4.pdf
+[2] https://software.intel.com/content/dam/develop/external/us/en/documents/tdx-virtual-firmware-design-guide-rev-1.pdf
+
+Signed-off-by: Lu Ken <ken.lu@intel.com>
+---
+ Makefile       |   6 +--
+ include/guid.h |   1 +
+ include/tdx.h  | 101 +++++++++++++++++++++++++++++++++++++++++++++++++
+ lib/guid.c     |   1 +
+ shim.h         |   1 +
+ tdx.c          |  46 ++++++++++++++++++++++
+ tpm.c          |   2 +
+ 7 files changed, 155 insertions(+), 3 deletions(-)
+ create mode 100644 include/tdx.h
+ create mode 100644 tdx.c
+
+diff --git a/Makefile b/Makefile
+index 8c66459..6d1edc0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -38,12 +38,12 @@ CFLAGS += -DENABLE_SHIM_CERT
+ else
+ TARGETS += $(MMNAME) $(FBNAME)
+ endif
+-OBJS	= shim.o mok.o netboot.o cert.o replacements.o tpm.o version.o errlog.o sbat.o sbat_data.o pe.o httpboot.o csv.o
++OBJS	= shim.o mok.o netboot.o cert.o replacements.o tpm.o tdx.o version.o errlog.o sbat.o sbat_data.o pe.o httpboot.o csv.o
+ KEYS	= shim_cert.h ocsp.* ca.* shim.crt shim.csr shim.p12 shim.pem shim.key shim.cer
+-ORIG_SOURCES	= shim.c mok.c netboot.c replacements.c tpm.c errlog.c sbat.c pe.c httpboot.c shim.h version.h $(wildcard include/*.h)
++ORIG_SOURCES	= shim.c mok.c netboot.c replacements.c tpm.c tdx.c errlog.c sbat.c pe.c httpboot.c shim.h version.h $(wildcard include/*.h)
+ MOK_OBJS = MokManager.o PasswordCrypt.o crypt_blowfish.o errlog.o sbat_data.o
+ ORIG_MOK_SOURCES = MokManager.c PasswordCrypt.c crypt_blowfish.c shim.h $(wildcard include/*.h)
+-FALLBACK_OBJS = fallback.o tpm.o errlog.o sbat_data.o
++FALLBACK_OBJS = fallback.o tpm.o tdx.o errlog.o sbat_data.o
+ ORIG_FALLBACK_SRCS = fallback.c
+ SBATPATH = $(TOPDIR)/data/sbat.csv
+ 
+diff --git a/include/guid.h b/include/guid.h
+index 07a19a9..02dab90 100644
+--- a/include/guid.h
++++ b/include/guid.h
+@@ -27,6 +27,7 @@ extern EFI_GUID EFI_HTTP_PROTOCOL_GUID;
+ extern EFI_GUID EFI_IP4_CONFIG2_GUID;
+ extern EFI_GUID EFI_IP6_CONFIG_GUID;
+ extern EFI_GUID EFI_LOADED_IMAGE_GUID;
++extern EFI_GUID EFI_TD_PROTOCOL_GUID;
+ extern EFI_GUID EFI_TPM_GUID;
+ extern EFI_GUID EFI_TPM2_GUID;
+ extern EFI_GUID EFI_SECURE_BOOT_DB_GUID;
+diff --git a/include/tdx.h b/include/tdx.h
+new file mode 100644
+index 0000000..0cc374d
+--- /dev/null
++++ b/include/tdx.h
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: BSD-2-Clause-Patent
++
++#ifndef SHIM_TDX_H
++#define SHIM_TDX_H
++
++typedef struct tdEFI_TD_VERSION {
++	uint8_t Major;
++	uint8_t Minor;
++} __attribute__((packed)) EFI_TD_VERSION;
++
++typedef uint32_t EFI_TD_EVENT_LOG_BITMAP;
++typedef uint32_t EFI_TD_EVENT_LOG_FORMAT;
++typedef uint32_t EFI_TD_EVENT_ALGORITHM_BITMAP;
++typedef uint32_t EFI_TD_MR_INDEX;
++
++typedef struct tdEFI_TD_EVENT_HEADER {
++	//
++	// Size of the event header itself (sizeof(EFI_TD_EVENT_HEADER)).
++	//
++	uint32_t HeaderSize;
++	//
++	// Header version. For this version of this specification, the value
++	// shall be 1.
++	//
++	uint16_t HeaderVersion;
++	//
++	// Index of the MR that shall be extended.
++	//
++	EFI_TD_MR_INDEX MrIndex;
++	//
++	// Type of the event that shall be extended (and optionally logged).
++	//
++	uint32_t EventType;
++} __attribute__((packed)) EFI_TD_EVENT_HEADER;
++
++typedef struct tdEFI_TD_EVENT {
++	//
++	// Total size of the event including the Size component, the header and
++	// the Event data.
++	//
++	uint32_t Size;
++	EFI_TD_EVENT_HEADER Header;
++	uint8_t Event[1];
++} __attribute__((packed)) EFI_TD_EVENT;
++
++typedef struct tdEFI_TD_BOOT_SERVICE_CAPABILITY {
++	//
++	// Allocated size of the structure
++	//
++	uint8_t Size;
++	//
++	// Version of the EFI_TD_BOOT_SERVICE_CAPABILITY structure itself.
++	// For this version of the protocol, the Major version shall be set to 1
++	// and the Minor version shall be set to 1.
++	//
++	EFI_TD_VERSION StructureVersion;
++	//
++	// Version of the EFI TD protocol.
++	// For this version of the protocol, the Major version shall be set to 1
++	// and the Minor version shall be set to 1.
++	//
++	EFI_TD_VERSION ProtocolVersion;
++	//
++	// Supported hash algorithms
++	//
++	EFI_TD_EVENT_ALGORITHM_BITMAP HashAlgorithmBitmap;
++	//
++	// Bitmap of supported event log formats
++	//
++	EFI_TD_EVENT_LOG_BITMAP SupportedEventLogs;
++	//
++	// False = TD not present
++	//
++	BOOLEAN TdPresentFlag;
++} EFI_TD_BOOT_SERVICE_CAPABILITY;
++
++struct efi_td_protocol {
++	EFI_STATUS(EFIAPI *get_capability)
++	(struct efi_td_protocol *this,
++	 EFI_TD_BOOT_SERVICE_CAPABILITY *ProtocolCapability);
++	EFI_STATUS(EFIAPI *get_event_log)
++	(struct efi_td_protocol *this, EFI_TD_EVENT_LOG_FORMAT EventLogFormat,
++	 EFI_PHYSICAL_ADDRESS *EventLogLocation,
++	 EFI_PHYSICAL_ADDRESS *EventLogLastEntry, BOOLEAN *EventLogTruncated);
++	EFI_STATUS(EFIAPI *hash_log_extend_event)
++	(struct efi_td_protocol *this, uint64_t Flags,
++	 EFI_PHYSICAL_ADDRESS DataToHash, uint64_t DataToHashLen,
++	 EFI_TD_EVENT *EfiTdEvent);
++	EFI_STATUS(EFIAPI *map_pcr_to_mr_index)
++	(struct efi_td_protocol *this, uint32_t PcrIndex,
++	 EFI_TD_MR_INDEX *MrIndex);
++};
++
++typedef struct efi_td_protocol efi_td_protocol_t;
++
++EFI_STATUS tdx_log_event_raw(EFI_PHYSICAL_ADDRESS buf, UINTN size, UINT8 pcr,
++                             const CHAR8 *log, UINTN logsize, UINT32 type,
++                             CHAR8 *hash);
++
++#endif /* SHIM_TDX_H */
++// vim:fenc=utf-8:tw=75
+diff --git a/lib/guid.c b/lib/guid.c
+index 143e0bb..2cf1d6e 100644
+--- a/lib/guid.c
++++ b/lib/guid.c
+@@ -26,6 +26,7 @@ EFI_GUID EFI_HTTP_PROTOCOL_GUID = { 0x7a59b29b, 0x910b, 0x4171, {0x82, 0x42, 0xa
+ EFI_GUID EFI_IP4_CONFIG2_GUID = { 0x5b446ed1, 0xe30b, 0x4faa, {0x87, 0x1a, 0x36, 0x54, 0xec, 0xa3, 0x60, 0x80 } };
+ EFI_GUID EFI_IP6_CONFIG_GUID = { 0x937fe521, 0x95ae, 0x4d1a, {0x89, 0x29, 0x48, 0xbc, 0xd9, 0x0a, 0xd3, 0x1a } };
+ EFI_GUID EFI_LOADED_IMAGE_GUID = EFI_LOADED_IMAGE_PROTOCOL_GUID;
++EFI_GUID EFI_TD_PROTOCOL_GUID = { 0x96751a3d, 0x72f4, 0x41a6, {0xa7, 0x94, 0xed, 0x5d, 0x0e, 0x67, 0xae, 0x6b } };
+ EFI_GUID EFI_TPM_GUID = { 0xf541796d, 0xa62e, 0x4954, {0xa7, 0x75, 0x95, 0x84, 0xf6, 0x1b, 0x9c, 0xdd } };
+ EFI_GUID EFI_TPM2_GUID = { 0x607f766c, 0x7455, 0x42be, {0x93, 0x0b, 0xe4, 0xd7, 0x6d, 0xb2, 0x72, 0x0f } };
+ EFI_GUID EFI_SECURE_BOOT_DB_GUID =  { 0xd719b2cb, 0x3d3a, 0x4596, { 0xa3, 0xbc, 0xda, 0xd0, 0x0e, 0x67, 0x65, 0x6f } };
+diff --git a/shim.h b/shim.h
+index 69ad2cc..80048d1 100644
+--- a/shim.h
++++ b/shim.h
+@@ -179,6 +179,7 @@
+ #include "include/simple_file.h"
+ #include "include/str.h"
+ #include "include/tpm.h"
++#include "include/tdx.h"
+ #include "include/ucs2.h"
+ #include "include/variables.h"
+ #include "include/hexdump.h"
+diff --git a/tdx.c b/tdx.c
+new file mode 100644
+index 0000000..eee20c6
+--- /dev/null
++++ b/tdx.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: BSD-2-Clause-Patent
++#include "shim.h"
++
++EFI_STATUS
++tdx_log_event_raw(EFI_PHYSICAL_ADDRESS buf, UINTN size, UINT8 pcr,
++                  const CHAR8 *log, UINTN logsize, UINT32 type, CHAR8 *hash)
++{
++	EFI_STATUS efi_status;
++	EFI_TD_EVENT *event;
++	efi_td_protocol_t *tdx;
++	EFI_TD_MR_INDEX mr;
++
++	efi_status = LibLocateProtocol(&EFI_TD_PROTOCOL_GUID, (VOID **)&tdx);
++	if (EFI_ERROR(efi_status) || tdx == NULL)
++		return EFI_SUCCESS;
++
++	efi_status = tdx->map_pcr_to_mr_index(tdx, pcr, &mr);
++	if (EFI_ERROR(efi_status))
++		return EFI_NOT_FOUND;
++
++	UINTN event_size = sizeof(*event) - sizeof(event->Event) + logsize;
++
++	event = AllocatePool(event_size);
++	if (!event) {
++		perror(L"Unable to allocate event structure\n");
++		return EFI_OUT_OF_RESOURCES;
++	}
++
++	event->Header.HeaderSize = sizeof(EFI_TD_EVENT_HEADER);
++	event->Header.HeaderVersion = 1;
++	event->Header.MrIndex = mr;
++	event->Header.EventType = type;
++	event->Size = event_size;
++	CopyMem(event->Event, (VOID *)log, logsize);
++	if (hash) {
++		efi_status = tdx->hash_log_extend_event(tdx, PE_COFF_IMAGE, buf,
++		                                        (UINT64)size, event);
++	}
++
++	if (!hash || EFI_ERROR(efi_status)) {
++		efi_status = tdx->hash_log_extend_event(tdx, 0, buf,
++		                                        (UINT64)size, event);
++	}
++	FreePool(event);
++	return efi_status;
++}
+diff --git a/tpm.c b/tpm.c
+index 808e044..9028cdb 100644
+--- a/tpm.c
++++ b/tpm.c
+@@ -114,6 +114,8 @@ static EFI_STATUS tpm_log_event_raw(EFI_PHYSICAL_ADDRESS buf, UINTN size,
+ 	BOOLEAN old_caps;
+ 	EFI_TCG2_BOOT_SERVICE_CAPABILITY caps;
+ 
++	tdx_log_event_raw(buf, size, pcr, log, logsize, type, hash);
++
+ 	efi_status = tpm_locate_protocol(&tpm, &tpm2, &old_caps, &caps);
+ 	if (EFI_ERROR(efi_status)) {
+ #ifdef REQUIRE_TPM
+-- 
+2.30.2
+

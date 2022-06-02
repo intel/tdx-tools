@@ -1,0 +1,55 @@
+From: Seth Forshee <seth.forshee@canonical.com>
+Date: Sat, 5 Jun 2021 07:34:44 -0500
+Subject: Don't unhook ExitBootServices() when EBS protection is disabled
+
+When EBS protection is disabled the code which hooks into EBS is
+complied out, but on unhook it's the code which restores Exit() that
+is disabled. This appears to be a mistake, and it can result in
+writing NULL to EBS in the boot services table.
+
+Fix this by moving the ifdefs to compile out the code to unhook EBS
+instead of the code to unhook Exit(). Also ifdef the definition of
+system_exit_boot_services to safeguard against its accidental use.
+
+Fixes: 4b0a61dc9a95 ("shim: compile time option to bypass the ExitBootServices() check")
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+---
+ replacements.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/replacements.c b/replacements.c
+index 278a8e7..daa2e0f 100644
+--- a/replacements.c
++++ b/replacements.c
+@@ -33,7 +33,9 @@ get_active_systab(void)
+ static typeof(systab->BootServices->LoadImage) system_load_image;
+ static typeof(systab->BootServices->StartImage) system_start_image;
+ static typeof(systab->BootServices->Exit) system_exit;
++#if !defined(DISABLE_EBS_PROTECTION)
+ static typeof(systab->BootServices->ExitBootServices) system_exit_boot_services;
++#endif /* !defined(DISABLE_EBS_PROTECTION) */
+ 
+ static EFI_HANDLE last_loaded_image;
+ 
+@@ -45,7 +47,9 @@ unhook_system_services(void)
+ 
+ 	systab->BootServices->LoadImage = system_load_image;
+ 	systab->BootServices->StartImage = system_start_image;
++#if !defined(DISABLE_EBS_PROTECTION)
+ 	systab->BootServices->ExitBootServices = system_exit_boot_services;
++#endif /* !defined(DISABLE_EBS_PROTECTION) */
+ 	gBS = systab->BootServices;
+ }
+ 
+@@ -181,11 +185,8 @@ hook_system_services(EFI_SYSTEM_TABLE *local_systab)
+ void
+ unhook_exit(void)
+ {
+-#if !defined(DISABLE_EBS_PROTECTION)
+ 	systab->BootServices->Exit = system_exit;
+ 	gBS = systab->BootServices;
+-#endif /* defined(DISABLE_EBS_PROTECTION) */
+-	return;
+ }
+ 
+ void

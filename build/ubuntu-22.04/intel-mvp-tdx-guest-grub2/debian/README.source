@@ -1,0 +1,44 @@
+Git Tree
+========
+
+The grub2 packaging is maintained via the grub-team project on Salsa:
+https://salsa.debian.org/grub-team
+
+The primary git tree is grub-team/grub.  It can be obtained with:
+
+     git clone https://salsa.debian.org/grub-team/grub
+
+Git Subtrees
+------------
+
+grub.git/debian/grub-extras is maintained using git subtree merges.  To
+update it to a given commit, first ensure that you have the relevant
+upstream remote, e.g.:
+
+    git remote add -f grub-extras https://git.sv.gnu.org/git/grub-extras.git
+
+And then:
+
+    git subtree merge -P debian/grub-extras <commit>
+
+Git Branches
+------------
+
+grub-team/grub uses git-dpm and contains the following branches:
+
+- upstream:
+
+  The master branch of the upstream grub.git tree, at the point
+  corresponding to the current Debian package version.
+
+- master:
+
+  The main packaging branch, based on upstream.  debian/patches
+  maintained using git-dpm.
+
+- pristine-tar:
+
+  pritine-tar metadata based on upstream (not upstream).
+
+Ubuntu unapplies git-dpm patches, and instead uses gbp pq
+import|export --no-patch-numbers.

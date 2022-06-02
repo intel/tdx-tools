@@ -1,0 +1,4 @@
+../../debian/legacy/update-grub			usr/lib/grub-legacy
+../../debian/legacy/upgrade-from-grub-legacy	usr/sbin
+
+usr/share/man/man8/grub-bios-setup.8

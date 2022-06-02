@@ -1,0 +1,66 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Tue, 30 Nov 2021 19:49:13 +0100
+Subject: "single" -> "recovery" when friendly-recovery is installed
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+If configured with --enable-ubuntu-recovery, also set nomodeset for
+recovery mode, and disable 'set gfxpayload=keep' even if the system
+normally supports it.  See
+https://launchpad.net/ubuntu/+spec/desktop-o-xorg-tools-and-processes.
+
+Author: Stéphane Graber <stgraber@ubuntu.com>
+Forwarded: no
+Last-Update: 2013-12-25
+---
+ util/grub.d/10_linux_zfs.in | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index d128b82..302df63 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -19,6 +19,7 @@ set -e
+ 
+ prefix="@prefix@"
+ datarootdir="@datarootdir@"
++ubuntu_recovery="@UBUNTU_RECOVERY@"
+ 
+ . "${pkgdatadir}/grub-mkconfig_lib"
+ 
+@@ -764,7 +765,9 @@ zfs_linux_entry () {
+         if [ "${GRUB_GFXPAYLOAD_LINUX}" != "text" ]; then
+             echo "${submenu_indentation}	load_video"
+         fi
+-        echo "${submenu_indentation}	set gfxpayload=\${linux_gfx_mode}"
++        if [ "${ubuntu_recovery}" = 0 ] || [ "${type}" != "recovery" ]; then
++            echo "${submenu_indentation}	set gfxpayload=\${linux_gfx_mode}"
++        fi
+     fi
+ 
+     echo "${submenu_indentation}	insmod gzio"
+@@ -775,7 +778,7 @@ zfs_linux_entry () {
+ 
+     linux_default_args="${GRUB_CMDLINE_LINUX} ${GRUB_CMDLINE_LINUX_DEFAULT}"
+     if [ ${type} = "recovery" ]; then
+-        linux_default_args="single ${GRUB_CMDLINE_LINUX}"
++        linux_default_args="${GRUB_CMDLINE_LINUX_RECOVERY} ${GRUB_CMDLINE_LINUX}"
+     fi
+ 
+     # echo in echo trims end of line spaces
+@@ -808,6 +811,14 @@ generate_grub_menu() {
+         CLASS="--class $(echo ${GRUB_DISTRIBUTOR} | tr 'A-Z' 'a-z' | cut -d' ' -f1 | LC_ALL=C sed 's,[^[:alnum:]_],_,g') ${CLASS}"
+     fi
+ 
++    if [ -x /lib/recovery-mode/recovery-menu ]; then
++        GRUB_CMDLINE_LINUX_RECOVERY=recovery
++    else
++        GRUB_CMDLINE_LINUX_RECOVERY=single
++    fi
++    if [ "${ubuntu_recovery}" = 1 ]; then
++        GRUB_CMDLINE_LINUX_RECOVERY="${GRUB_CMDLINE_LINUX_RECOVERY} nomodeset"
++    fi
+ 
+     # IFS is set to TAB (ASCII 0x09)
+     echo "${menu_metadata}" |

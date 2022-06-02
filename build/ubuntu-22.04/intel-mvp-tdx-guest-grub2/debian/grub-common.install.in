@@ -1,0 +1,55 @@
+../../debian/apport/source_grub2.py	usr/share/apport/package-hooks/
+../../debian/grub.d			etc
+../../debian/init-select.cfg		etc/default/grub.d
+../../debian/grub-check-signatures usr/share/grub/
+../../debian/grub-multi-install usr/lib/grub/
+../../debian/canonical-uefi-ca.crt usr/share/grub/
+
+etc/grub.d
+usr/bin/grub-editenv
+usr/bin/grub-file
+usr/bin/grub-fstest
+usr/bin/grub-glue-efi
+usr/bin/grub-kbdcomp
+usr/bin/grub-menulst2cfg
+usr/bin/grub-mkfont
+usr/bin/grub-mkimage
+usr/bin/grub-mklayout
+usr/bin/grub-mknetdir
+usr/bin/grub-mkpasswd-pbkdf2
+usr/bin/grub-mkrelpath
+usr/bin/grub-mkrescue
+usr/bin/grub-mkstandalone
+usr/bin/grub-render-label
+usr/bin/grub-script-check
+usr/bin/grub-syslinux2cfg
+usr/lib/systemd/system/grub-initrd-fallback.service lib/systemd/system
+usr/sbin/grub-macbless
+usr/sbin/grub-mkconfig
+usr/sbin/grub-mkdevicemap
+usr/sbin/grub-probe
+usr/share/grub/*.h
+usr/share/grub/*.pf2
+usr/share/grub/grub-mkconfig_lib
+usr/share/locale
+usr/share/man/man1/grub-editenv.1
+usr/share/man/man1/grub-file.1
+usr/share/man/man1/grub-fstest.1
+usr/share/man/man1/grub-glue-efi.1
+usr/share/man/man1/grub-kbdcomp.1
+usr/share/man/man1/grub-menulst2cfg.1
+usr/share/man/man1/grub-mkfont.1
+usr/share/man/man1/grub-mkimage.1
+usr/share/man/man1/grub-mklayout.1
+usr/share/man/man1/grub-mknetdir.1
+usr/share/man/man1/grub-mkpasswd-pbkdf2.1
+usr/share/man/man1/grub-mkrelpath.1
+usr/share/man/man1/grub-mkrescue.1
+usr/share/man/man1/grub-mkstandalone.1
+usr/share/man/man1/grub-render-label.1
+usr/share/man/man1/grub-script-check.1
+usr/share/man/man1/grub-syslinux2cfg.1
+usr/share/man/man8/grub-macbless.8
+usr/share/man/man8/grub-mkconfig.8
+usr/share/man/man8/grub-mkdevicemap.8
+usr/share/man/man8/grub-probe.8

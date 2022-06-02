@@ -1,0 +1,108 @@
+#! /bin/sh
+set -e
+
+# Must load the confmodule for our template to be installed correctly.
+. /usr/share/debconf/confmodule
+
+config_item ()
+{
+    if [ -f /etc/default/grub ]; then
+	. /etc/default/grub || return
+	for x in /etc/default/grub.d/*.cfg; do
+	    if [ -e "$x" ]; then
+		. "$x"
+	    fi
+	done
+    fi
+    eval echo "\$$1"
+}
+
+sign_dkms_modules()
+{
+	for kern in `dpkg -l linux-image-[0-9]\* | awk '/^ii/ { sub("linux-image-","",$2); print $2 }'`;
+	do
+		for dkms in `dkms status -k $(uname -r) | grep 'installed' | awk -F,\  '{print $1"/"$2}'`;
+		do
+			dkms uninstall -k "$kern" "$dkms" || :
+			if ! dkms status -k "$kern" "$dkms" | grep -q 'built$'
+			then
+				cat <<EOF
+
+shim-signed: failed to prepare dkms module for signing; ignoring.
+  module: $dkms
+  kernel: $kern
+EOF
+				continue
+			fi
+			mods=$(find /var/lib/dkms/${dkms}/${kern}/$(uname -m)/module/ -name "*.ko")
+			for mod in $mods; do
+				kmodsign sha512 \
+					/var/lib/shim-signed/mok/MOK.priv \
+					/var/lib/shim-signed/mok/MOK.der \
+					$mod
+			done
+			dkms install -k "$kern" "${dkms}"
+		done
+	done
+}
+
+case $(dpkg --print-architecture) in
+    amd64)
+	grubarch=x86_64-efi
+	;;
+    arm64)
+	grubarch=arm64-efi
+	;;
+esac
+case $1 in
+    triggered)
+	if [ -e /var/lib/shim-signed/mok/MOK.priv ]; then
+	    SHIM_NOTRIGGER=y update-secureboot-policy --enroll-key
+	fi
+	;;
+    configure)
+	bootloader_id="$(config_item GRUB_DISTRIBUTOR | tr A-Z a-z | \
+			 cut -d' ' -f1)"
+	case $bootloader_id in
+	    kubuntu) bootloader_id=ubuntu ;;
+	esac
+	# Check /boot/grub to see if we previously installed to an ESP. We don't
+	# want to trigger the install code just by installing the package,
+	# normally the installer installs grub itself first.
+	if [ -e /boot/grub/${grubarch}/core.efi ]; then
+	    #/usr/lib/grub/grub-multi-install --target=${grubarch} --auto-nvram
+	    cp /usr/lib/shim/fbx64.efi /boot/efi/EFI/BOOT/
+	    cp /usr/lib/shim/mmx64.efi /boot/efi/EFI/BOOT/
+	    cp /usr/lib/shim/shimx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+	    cp /usr/lib/shim/BOOTX64.CSV /boot/efi/EFI/ubuntu/
+	    cp /usr/lib/shim/mmx64.efi /boot/efi/EFI/ubuntu/
+	    cp /usr/lib/shim/shimx64.efi /boot/efi/EFI/ubuntu/
+	    if dpkg --compare-versions "$2" lt-nl "1.22~"; then
+	        rm -f /boot/efi/EFI/ubuntu/MokManager.efi
+	    fi
+	fi
+
+
+	# Upgrade case, capture pre-existing DKMS packages.
+	if dpkg --compare-versions "$2" lt-nl "1.30" \
+	   && [ -d /var/lib/dkms ]
+	then
+		find /var/lib/dkms -maxdepth 1 -type d -print \
+		| LC_ALL=C sort	> /var/lib/shim-signed/dkms-list
+	fi
+
+	# Upgrade case, migrate all existing kernels/dkms module combinations
+	# to self-signed modules.
+	if dpkg --compare-versions "$2" lt "1.34.7" \
+	   && [ -d /var/lib/dkms ]
+	then
+		SHIM_NOTRIGGER=y update-secureboot-policy --new-key
+		sign_dkms_modules
+		SHIM_NOTRIGGER=y update-secureboot-policy --enroll-key
+	fi
+	;;
+esac
+
+#DEBHELPER#
+
+exit 0

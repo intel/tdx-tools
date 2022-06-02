@@ -1,0 +1,8 @@
+usr/bin/grub-emu
+usr/bin/grub-emu-lite
+usr/lib/grub/*-*/*.img
+usr/lib/grub/*-*/*.lst
+usr/lib/grub/*-*/*.mod
+usr/lib/grub/*-*/config.h
+usr/lib/grub/*-*/modinfo.sh
+usr/share/man/man1/grub-emu.1

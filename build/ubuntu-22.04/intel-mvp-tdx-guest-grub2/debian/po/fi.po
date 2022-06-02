@@ -1,0 +1,555 @@
+# Esko Arajärvi <edu@iki.fi>, 2009, 2010.
+# Timo Jyrinki <timo.jyrinki@iki.fi>, 2012, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: grub2\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2014-12-27 18:53+0200\n"
+"Last-Translator: Timo Jyrinki <timo.jyrinki@iki.fi>\n"
+"Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "Ladataanko ketjutettuna tiedostosta menu.lst?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"GRUBin päivityskomentosarjat ovat löytäneet vanhoja GRUB-asetuksia "
+"tiedostosta /boot/grub."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Järjestelmässä olevan vanhan GRUB-version korvaamiseksi on suositeltavaa "
+"muokata tiedostoa /boot/grub/menu.lst siten, että GRUB 2 ladataan olemassa "
+"olevista vanhoista GRUB-asetuksista. Tämä voidaan tehdä automaattisesti nyt."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"On suositeltavaa, että hyväksyt GRUB 2:n ketjutetun lataamisen tiedostosta "
+"menu.lst ja varmistat uusien GRUB 2 -asetusten toimivuuden ennen kuin "
+"asennat ne pääkäynnistyslohkoon (MBR)."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Riippumatta valinnasta vanha MBR voidaan korvata GRUB 2:lla myöhemmin "
+"suorittamalla seuraava komento pääkäyttäjänä:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "Laitteet joille GRUB asennetaan:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"grub-pc-pakettia päivitetään. Tästä valikosta voit valita, mille laitteille "
+"grub-install suoritetaan automaattisesti."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"grub-install:n suorittaminen automaattisesti on suositeltavaa useimmissa "
+"tilanteissa, jotta asennettu GRUB-ydin ei tulisi epäyhteensopivaksi GRUB-"
+"moduulien tai grub.cfg:n kanssa."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"Jos et ole varma, mikä asema on määritelty käynnistysasemaksi koneen BIOS-"
+"asetuksissa, on usein hyvä ajatus asentaa GRUB kaikille asemille."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Huomaa: GRUB voidaan asentaa myöt osion käynnistystietoihin, ja joitain "
+"sopivia osioita on ohessa tarjolla. Tämä kuitenkin pakottaa GRUBin "
+"käyttämään lohkoluettelomekanisia, mikä tekee siitä vähemmän luotettavan "
+"eikä ole suositeltavaa."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"GRUB-käynnistyslatain oli aiemmin asennettuna levylle, jota ei ole enää "
+"käytössä tai jonka yksilöllinen tunniste on muuttunut jostain syystä. On "
+"tärkeää varmistaa, että asennettu GRUB-ydinkuva pysyy ajan tasalla GRUB-"
+"moduulien ja grub-cfg:n kanssa. Tarkista vielä uudelleen varmistaaksesi, "
+"että GRUB kirjoitetaan oikeille käynnistyslaitteille."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "GRUBin kirjoittaminen käynnistyslaitteelle epäonnistui. Jatketaanko?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "GRUBia ei voitu asentaa seuraaville laitteille:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Valitse haluatko jatkaa tästä huolimatta. Jos jatkat, järjestelmä ei "
+"välttämättä käynnisty kunnolla."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr ""
+"GRUBin kirjoittaminen käynnistyslaitteelle epäonnistui. Yritetäänkö "
+"uudelleen?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"Voit ehkä asentaa GRUBin jollekin toiselle levylle. Varmista tällöin, että "
+"järjestelmäsi voidaan käynnistää kyseiseltä levyltä. Muussa tapauksessa "
+"GRUBin aiemman version päivitys perutaan."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "Jatketaanko asentamatta GRUBia?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Päätit olla asentamatta GRUBia millekään laitteelle. Jos jatkat, "
+"alkulatausohjelman asetukset saattavat olla väärät ja kun kone käynnistetään "
+"uudelleen seuraavan kerran, se käyttää käynnistyslohkon aiempia asetuksia. "
+"Jos käynnistyslohkossa on GRUB 2:n aiempi versio, se ei välttämättä pysty "
+"lataamaan moduuleja tai käsittelemään nykyistä asetustiedostoa."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"Jos käytät jo muuta alkulatausohjelmaa ja haluat jatkaa sen käyttöä tai jos "
+"käytössäsi on erityinen ympäristö, jossa et tarvitse alkulatausohjelmaa, "
+"voit jatkaa asennusta. Muussa tapauksessa sinun tulisi asentaa GRUB johonkin."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "Poistetaanko GRUB 2 kohteesta /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "Haluat poistaa kaikki GRUB 2 -tiedostot kohteesta /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Tämä tekee järjestelmästä käynnistyskelvottoman, ellei toista "
+"käynnistyslatainta ole asennettu."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "Saatetaanko siirtyminen GRUB 2:een loppuun nyt?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Järjestelmässä on edelleen GRUBin aiemman version tiedostoja, mutta myös "
+"GRUB 2:n käynnistystiedot on asennettu seuraaville levyille:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"GRUBin aiempi versio ei luultavasti ole enää käytössä ja näillä levyillä "
+"olevat GRUB 2:n levykuvat tulisi päivittää ja siirtyminen GRUB 2:een saattaa "
+"loppuun poistamalla vanhat GRUB-tiedostot. Jos et päivitä GRUB 2:n kuvia, "
+"uusien pakettien kanssa voi tulla yhteensopivuusongelmia ja järjestelmän "
+"käynnistys ei ehkä toimi oikein."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"Yleisesti ottaen siirtyminen GRUB 2:een tulisi saattaa loppuun ellei näitä "
+"käynnistystietoja luotu johonkin toiseen käyttöjärjestelmään asennetulla "
+"GRUB 2:lla."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Linuxin komentorivi:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"GRUBin aiemman version tiedostosta menu.lst parametrista ”kopt” tai "
+"tiedostosta /etc/default/grub löydettiin seuraava Linuxin komentorivi. "
+"Varmista, että se on kunnossa ja muuta sitä tarvittaessa. Komentorivin on "
+"sallittua myös olla tyhjä."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Linuxin oletuskomentorivi:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"Seuraavaa merkkijonoa käytetään Linuxin käynnistysvalikon oletusvalinnan "
+"parametreina, mutta ei toipumistilassa."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr "Pakotetaanko lisäasennus irrotettavissa olevan median EFI-polkuun?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"Jotkin EFI-järjestelmät sisältävät ohjelmavirheitä joidenka takia ne eivät "
+"käsittele alkulatausohjelmia oikein. Jos pakotat GRUB:n lisäasentamisen "
+"irrotettavissa olevan median EFI-polkuun, järjestelmän pitäisi kyetä "
+"käynnistämään Debian riippumatta kyseisenkaltaisista ongelmista. Tämä "
+"kuitenkin saattaa poistaa mahdollisuuden muiden käyttöjärjestelmien "
+"käynnistämiseen, mikäli ne riippuvat samasta polusta. Tässä tapauksessa "
+"tulee varmistaa, että GRUBin asetukset on tehty niin, että GRUBista voidaan "
+"käynnistää nämä muut käyttöjärjestelmät oikein."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"grub-pc-pakettia päivitetään. Tästä valikosta voit valita, mille laitteille "
+"grub-install suoritetaan automaattisesti."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Päätit olla asentamatta GRUBia millekään laitteelle. Jos jatkat, "
+"alkulatausohjelman asetukset saattavat olla väärät ja kun kone käynnistetään "
+"uudelleen seuraavan kerran, se käyttää käynnistyslohkon aiempia asetuksia. "
+"Jos käynnistyslohkossa on GRUB 2:n aiempi versio, se ei välttämättä pysty "
+"lataamaan moduuleja tai käsittelemään nykyistä asetustiedostoa."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "kFreeBSD:n komentorivi:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"GRUBin aiemman version tiedostosta menu.lst parametrista ”kopt” tai "
+"tiedostosta /etc/default/grub löydettiin seuraava kFreeBSD:n komentorivi. "
+"Varmista, että se on kunnossa ja muuta sitä tarvittaessa. Komentorivin on "
+"sallittua myös olla tyhjä."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "kFreeBSD:n oletuskomentorivi:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"Seuraavaa merkkijonoa käytetään kFreeBSD:n käynnistysvalikon oletusvalinnan "
+"parametreina, mutta ei toipumistilassa."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map on luotu uudelleen"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "Tiedosto /boot/grub/device.map on kirjoitettu uudelleen käyttäen pysyviä "
+#~ "laitenimiä. Useimmissa tapauksissa tämän pitäisi huomattavasti vähentää "
+#~ "tarvetta sen muuttamiseen ja GRUBin luomien käynnistysvalikon rivien "
+#~ "pitäisi toimia edelleen."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Koska järjestelmässä kuitenkin on useampia levyjä, on mahdollista, että "
+#~ "järjestelmä on riippuvainen vanhasta laitekartasta. Tarkista onko "
+#~ "käynnistysvalikossa rivejä, joissa käytetään GRUBin laitenumerointia "
+#~ "(hdN), ja päivitä ne tarvittaessa."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "Jos et ymmärrä tätä viestiä tai käynnistysvalikossa ei ole erityisiä "
+#~ "rivejä, voit jättää tämän viestin huomiotta."
+
+#~ msgid ""
+#~ "In either case, whenever you want GRUB 2 to be loaded directly from MBR, "
+#~ "you can do so by issuing (as root) the following command:"
+#~ msgstr ""
+#~ "Kun haluat asentaa GRUB 2:n latautumaan suoraan pääkäynnistyslohkosta, "
+#~ "voit joka tapauksessa tehdä sen ajamalla pääkäyttäjänä seuraavan komennon:"
+
+#~ msgid "GRUB installation failed. Continue?"
+#~ msgstr "GRUBin asennus epäonnistui. Jatketaanko?"

@@ -1,0 +1,121 @@
+Template: grub2/linux_cmdline
+Type: string
+_Description: Linux command line:
+ The following Linux command line was extracted from /etc/default/grub or the
+ `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is correct,
+ and modify it if necessary. The command line is allowed to be empty.
+
+Template: grub2/linux_cmdline_default
+Type: string
+Default: @DEFAULT_CMDLINE@
+_Description: Linux default command line:
+ The following string will be used as Linux parameters for the default menu
+ entry but not for the recovery mode.
+
+Template: grub2/no_efi_extra_removable
+Type: boolean
+Default: false
+_Description: Skip extra installation to the EFI removable media path?
+ Some EFI-based systems are buggy and do not handle new bootloaders correctly.
+ If you do not make an extra installation of GRUB to the EFI removable media
+ path, this may prevent your system from booting Debian correctly in case it is
+ affected by this problem. However, it may remove the ability to boot any other
+ operating systems that also depend on this path. If so, you will need to make
+ sure that GRUB is configured successfully to be able to boot any other OS
+ installations correctly.
+
+Template: grub2/update_nvram
+Type: boolean
+Default: true
+_Description: Update NVRAM variables to automatically boot into Debian?
+ GRUB can configure your platform's NVRAM variables so that it boots into
+ Debian automatically when powered on. However, you may prefer to disable
+ this behavior and avoid changes to your boot configuration. For example,
+ if your NVRAM variables have been set up such that your system contacts a
+ PXE server on every boot, this would preserve that behavior.
+
+Template: grub-efi/install_devices
+Type: multiselect
+Choices-C: ${RAW_CHOICES}
+Choices: ${CHOICES}
+_Description: GRUB EFI system partitions:
+ The grub-efi package is being upgraded. This menu allows you to select which
+ EFI system partions you'd like grub-install to be automatically run for, if any.
+ .
+ Running grub-install automatically is recommended in most situations, to
+ prevent the installed GRUB core image from getting out of sync with GRUB
+ modules or grub.cfg.
+
+Template: grub-efi/install_devices_disks_changed
+Type: multiselect
+Choices-C: ${RAW_CHOICES}
+Choices: ${CHOICES}
+_Description: GRUB install devices:
+ The GRUB boot loader was previously installed to a disk that is no longer
+ present, or whose unique identifier has changed for some reason. It is
+ important to make sure that the installed GRUB core image stays in sync
+ with GRUB modules and grub.cfg. Please check again to make sure that GRUB
+ is written to the appropriate boot devices.
+
+Template: grub-efi/partition_description
+Type: text
+_Description: ${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}
+
+Template: grub-efi/install_devices_failed
+Type: boolean
+Default: false
+#flag:translate!:3
+_Description: Writing GRUB to boot device failed - continue?
+ GRUB failed to install to the following devices:
+ .
+ ${FAILED_DEVICES}
+ .
+ Do you want to continue anyway? If you do, your computer may not start up
+ properly.
+
+Template: grub-efi/install_devices_empty
+Type: boolean
+Default: false
+_Description: Continue without installing GRUB?
+ You chose not to install GRUB to any devices. If you continue, the boot
+ loader may not be properly configured, and when this computer next starts
+ up it will use whatever was previously configured. If there is an
+ earlier version of GRUB 2 in the EFI system partition, it may be unable to load
+ modules or handle the current configuration file.
+ .
+ If you are already using a different boot loader and want to carry on
+ doing so, or if this is a special environment where you do not need a boot
+ loader, then you should continue anyway. Otherwise, you should install
+ GRUB somewhere.
+
+# still unused
+Template: grub2/kfreebsd_cmdline
+Type: string
+_Description: kFreeBSD command line:
+ The following kFreeBSD command line was extracted from /etc/default/grub or the
+ `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is correct,
+ and modify it if necessary. The command line is allowed to be empty.
+
+# still unused
+Template: grub2/kfreebsd_cmdline_default
+Type: string
+Default: @DEFAULT_CMDLINE@
+_Description: kFreeBSD default command line:
+ The following string will be used as kFreeBSD parameters for the default menu
+ entry but not for the recovery mode.
+
+Template: grub2/unsigned_kernels_title
+Type: title
+_Description: unsigned kernels
+
+Template: grub2/unsigned_kernels
+Type: note
+_Description: Cannot upgrade Secure Boot enforcement policy due to unsigned kernels
+ Your system has UEFI Secure Boot enabled in firmware, and the following kernels
+ present on your system are unsigned:
+ .
+  ${unsigned_versions}
+ .
+ These kernels cannot be verified under Secure Boot.  To ensure your system
+ remains bootable, GRUB will not be upgraded on your disk until these kernels are
+ removed or replaced with signed kernels.

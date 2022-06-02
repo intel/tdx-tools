@@ -1,0 +1,45 @@
+From: Colin Watson <cjwatson@debian.org>
+Date: Mon, 13 Jan 2014 12:12:58 +0000
+Subject: If GRUB Legacy is still around, tell packaging to ignore it
+
+Bug-Debian: http://bugs.debian.org/586143
+Forwarded: not-needed
+Last-Update: 2021-09-24
+
+Patch-Name: install-stage2-confusion.patch
+---
+ util/grub-install.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/util/grub-install.c b/util/grub-install.c
+index 0fbe7f7..48e2d37 100644
+--- a/util/grub-install.c
++++ b/util/grub-install.c
+@@ -42,6 +42,7 @@
+ #include <grub/emu/config.h>
+ #include <grub/util/ofpath.h>
+ #include <grub/hfsplus.h>
++#include <grub/emu/hostfile.h>
+ 
+ #include <string.h>
+ 
+@@ -1727,6 +1728,19 @@ main (int argc, char *argv[])
+ 
+ 	    grub_set_install_backup_ponr ();
+ 	  }
++
++	/* If vestiges of GRUB Legacy still exist, tell the Debian packaging
++	   that they can ignore them.  */
++	if (!rootdir && grub_util_is_regular ("/boot/grub/stage2") &&
++	    grub_util_is_regular ("/boot/grub/menu.lst"))
++	  {
++	    grub_util_fd_t fd;
++
++	    fd = grub_util_fd_open ("/boot/grub/grub2-installed",
++				    GRUB_UTIL_FD_O_WRONLY);
++	    grub_util_fd_close (fd);
++	  }
++
+ 	break;
+       }
+     case GRUB_INSTALL_PLATFORM_SPARC64_IEEE1275:

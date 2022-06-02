@@ -1,0 +1,1 @@
+ZFS_CPPFLAGS = -I$(top_srcdir)/contrib/zfs/include

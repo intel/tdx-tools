@@ -1,0 +1,553 @@
+# Turkish messages for debian-installer.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the debian-installer package.
+# Atila KOÇ <koc@artielektronik.com.tr>, 2012, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: debian-installer\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2017-01-20 15:18+0300\n"
+"Last-Translator: Mert Dirik <mertdirik@gmail.com>\n"
+"Language-Team: Debian L10n Turkish <debian-l10n-turkish@lists.debian.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "menu.lst dosyasından zincirleme yükleme yapılsın mı?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"GRUB yükseltme betikleri /boot/grub altında eski bir GRUB kurulumu algıladı."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Sisteminizdeki eski sürüm GRUB kurulumunu değiştirmek için, /boot/grub/menu."
+"lst dosyasının bir GRUB 2 önyükleme görüntüsünü var olan eski GRUB "
+"kurulumundan yüklenmesine olanak tanıyacak şekilde değiştirilmesi "
+"gerekmektedir. Bu adım şimdi otomatik olarak gerçekleştirilebilir."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"Yeni GRUB 2 kurulumu Ana Önyükleme Kaydı'na (MBR) yazılmadan önce GRUB 2'nin "
+"menu.lst'den zincirleme önyüklemesini kabul etmeniz ve GRUB 2 kurulumunun "
+"çalıştığını doğrulamanız önerilir."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Seçiminiz ne olursa olsun, root kimliği ile aşağıdaki komutu çalıştırarak "
+"eski MBR görüntüsünü GRUB 2 ile değiştirebilirsiniz:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "GRUB kurulum aygıtları:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"grub-pc paketi yükseltiliyor. Bu menü, eğer varsa, grub-install komutunun "
+"hangi aygıtlar için otomatik olarak çalıştırılacağını seçmenize olanak tanır."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"Sistemde kurulu olan GRUB çekirdek görüntüsünün GRUB modülleri veya grub.cfg "
+"ile uyumunun bozulmasını engellemek için, çoğu durumda grub-install "
+"komutunun otomatik olarak çalıştırılması önerilir."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"Eğer hangi sürücünün BIOS tarafından önyükleme sürücüsü olarak "
+"belirlendiğinden emin değilseniz, GRUB'u tüm sürücülere kurmak yerinde "
+"olacaktır."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Not: GRUB'u disk bölümlerinin önyükleme kayıtlarına kurmak da olanak "
+"dahilindedir ve duruma uygun bazı bölümler burada listelenmiştir. Öte "
+"yandan, bu seçim GRUB'u daha az güvenilir kılan engelleme listesi "
+"(blocklist) mekanizmasını kullanmaya zorlayacağından önerilmemektedir."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"GRUB önyükleyici şu anda var olmayan ya da benzersiz tanımlayıcısı bir "
+"şekilde değişmiş olan bir diske kurulmuş durumda. Kurulu olan GRUB çekirdek "
+"görüntüsünün GRUB modülleri ve grub.cfg ile uyum içinde olduğundan emin "
+"olmak önemlidir. Bu nedenle GRUB'un doğru önyükleme aygıtlarına yazılmış "
+"olduğundan emin olun."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr ""
+"GRUB'u önyükleme aygıtına yazma işlemi başarısız oldu. Yine de devam edilsin "
+"mi?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "Aşağıdaki aygıtlara GRUB kurulumu yapılamadı:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Yine de devam edilsin mi? Devam edilirse bilgisayarınız düzgün "
+"başlayamayabilir."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr ""
+"GRUB'u önyükleme aygıtına yazma işlemi başarısız oldu. Tekrar denensin mi?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"GRUB'u başka bir aygıta kurabilirsiniz, ancak sisteminizin o aygıttan "
+"başlatılabileceğinden emin olmalısınız. Aksi durumda, eski GRUB'dan "
+"yükseltme yapılmayacaktır."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "GRUB kurulmadan devam edilsin mi?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"GRUB'u hiçbir aygıta kurmamayı seçtiniz. Devam ederseniz önyükleyici düzgün "
+"yapılandırılmayabilir ve bu bilgisayar bir sonraki açılışında önyükleme "
+"sektöründe daha önceden bulunan kayıtları kullanır. Eğer önyükleme "
+"sektöründe GRUB 2'nin eski bir sürümü varsa, mevcut yapılandırma dosyasını "
+"kullanamayabilir veya modülleri yükleyemeyebilir."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"Şu anda başka bir önyükleyici kullanıyorsanız ve kullanmaya devam "
+"edecekseniz; ya da bu sizin bir önyükleyiciye gerek duymadığınız özel bir "
+"ortam ise, bu şekilde devam edebilirsiniz. Aksi durumda GRUB'u bir yere "
+"kurmanız gerekmektedir."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "GRUB 2, /boot/grub yolundan kaldırılsın mı?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr ""
+"/boot/grub yolundan bütün GRUB 2 dosyalarının kaldırılmasını istiyor musunuz?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Başka bir önyükleyici kurulu değilse yapılan bu işlem sistemi başlatılamaz "
+"kılacaktır."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "GRUB 2'ye dönüşüm tamamlansın mı?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Bu sistemde eski GRUB kurulumundan kalmış dosyalar var; ama şimdi bir de şu "
+"disklere yazılmış GRUB 2 önyükleme kayıtları var:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"Göründüğü kadarı ile eski GRUB kurulumu artık kullanılmıyor, dolayısıyla bu "
+"disklerdeki eski GRUB dosyalarını kaldırıp GRUB 2 görüntülerine yükseltme "
+"yaparak dönüşümü tamamlamalısınız. Eğer bu GRUB 2 görüntülerini "
+"yükseltmezseniz, yeni paketlerle uyum sorunları yaşanabilir ve bu durum "
+"sisteminizin düzgün bir biçimde başlamasına engel olabilir."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"Bu önyükleme kayıtları başka bir işletim sistemindeki bir GRUB 2 kurulumu "
+"tarafından oluşturulmamışsa GRUB 2 kurulumunu tamamlamanız gerekmektedir."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Linux komut satırı:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Aşağıdaki Linux komut satırı /etc/default/grub'dan ya da eski GRUB menu.lst "
+"dosyasındaki 'kopt' parametresinden alınmıştır. Lütfen doğruluğundan emin "
+"olun ve gerekirse düzeltin. Komut satırı boş bırakılabilir."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Öntanımlı Linux komut satırı:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"Aşağıdaki dizgi öntanımlı menü girişinin Linux parametreleri olarak "
+"kullanılacak; fakat kurtarma kipi için kullanılmayacaktır."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr "EFI taşınabilir ortam yoluna fazladan bir kurulum yapılsın mı?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"Bazı EFI tabanlı sistemler hatalı olduklarından yeni önyükleyicileri olması "
+"gerektiği gibi yönetemeyebilirler. Buna rağmen GRUB'un fazladan bir "
+"kopyasının EFI taşınabilir ortam yoluna kurulmasını zorlamanız, Debian'ın "
+"düzgün bir biçimde başlamasını sağlayacaktır. Öte yandan bu durum aynı ortam "
+"yoluna bağlı başka işletim sistemleri varsa, onların önyüklenebilirliğini "
+"ortadan kaldırabilir. Böyle bir durumda, GRUB'un diğer işletim sistemlerini "
+"de düzgün bir biçimde başlatabilecek şekilde başarı ile yapılandırıldığından "
+"emin olmalısınız."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr "NVRAM değişkenleri Debian'ı önyükleyecek şekilde güncellensin mi?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+"GRUB, platform NVRAM değişkenlerini, bilgisayarınız açıldığında otomatik "
+"olarak Debian'ı başlatacak şekilde yapılandırılabilir. Bu davranışı devre "
+"dışı bırakarak önyükleme yapılandırmasında herhangi bir değişiklik "
+"yapılmamasını sağlayabilirsiniz. Bu durumda, örneğin NVRAM değişkenleri her "
+"açılışta PXE sunucuları ile iletişim kuracak şekilde ayarlanmışsa bu "
+"davranış aynı şekilde devam edecektir."
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"grub-pc paketi yükseltiliyor. Bu menü, eğer varsa, grub-install komutunun "
+"hangi aygıtlar için otomatik olarak çalıştırılacağını seçmenize olanak tanır."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"GRUB'u hiçbir aygıta kurmamayı seçtiniz. Devam ederseniz önyükleyici düzgün "
+"yapılandırılmayabilir ve bu bilgisayar bir sonraki açılışında önyükleme "
+"sektöründe daha önceden bulunan kayıtları kullanır. Eğer önyükleme "
+"sektöründe GRUB 2'nin eski bir sürümü varsa, mevcut yapılandırma dosyasını "
+"kullanamayabilir veya modülleri yükleyemeyebilir."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "kFreeBSD komut satırı:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Aşağıdaki kFreeBSD komut satırı /etc/default/grub'dan ya da eski GRUB menu."
+"lst dosyasındaki 'kopt' parametresinden alınmıştır. Lütfen doğruluğundan "
+"emin olun ve gerekirse düzeltin. Komut satırı boş bırakılabilir."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "Öntanımlı kFreeBSD komut satırı:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"Aşağıdaki dizgi öntanımlı menü girişinin kFreeBSD parametreleri olarak "
+"kullanılacak; fakat kurtarma kipi için kullanılmayacaktır."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map dosyası yeniden oluşturuldu"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "/boot/grub/device.map dosyası kararlı aygıt isimlerini kullanacak şekilde "
+#~ "yeniden yazıldı. Bu işlem çoğu durumda ileride gerekebilecek bir "
+#~ "düzenleme gereksinimini ciddi biçimde azaltır ve GRUB tarafından "
+#~ "oluşturulan önyükleme menüsü seçeneklerini etkilemez."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Öte yandan sistemde birden fazla disk olduğu için, sistemin eski aygıt "
+#~ "eşlemine bağlı kalmış olması olasıdır. GRUB'un (hdN) sürücü "
+#~ "numaralandırmasını kullanan herhangi bir özel önyükleme menüsü seçeneği "
+#~ "olup olmadığını denetleyin ve gerekirse bunları güncelleyin."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "Bu uyarıyı anlayamadıysanız veya herhangi bir özel önyükleme menüsü "
+#~ "seçeneği yok ise, bu uyarıyı gözardı edebilirsiniz."

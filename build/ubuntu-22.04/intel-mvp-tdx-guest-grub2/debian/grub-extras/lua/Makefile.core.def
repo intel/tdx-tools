@@ -1,0 +1,39 @@
+AutoGen definitions Makefile.tpl;
+
+module = {
+  name = lua;
+  common = contrib/lua/lapi.c;
+  common = contrib/lua/lcode.c;
+  common = contrib/lua/ldebug.c;
+  common = contrib/lua/ldo.c;
+  common = contrib/lua/ldump.c;
+  common = contrib/lua/lfunc.c;
+  common = contrib/lua/lgc.c;
+  common = contrib/lua/llex.c;
+  common = contrib/lua/lmem.c;
+  common = contrib/lua/lobject.c;
+  common = contrib/lua/lopcodes.c;
+  common = contrib/lua/lparser.c;
+  common = contrib/lua/lstate.c;
+  common = contrib/lua/lstring.c;
+  common = contrib/lua/ltable.c;
+  common = contrib/lua/ltm.c;
+  common = contrib/lua/lundump.c;
+  common = contrib/lua/lvm.c;
+  common = contrib/lua/lzio.c;
+  common = contrib/lua/lauxlib.c;
+  common = contrib/lua/lbaselib.c;
+  common = contrib/lua/linit.c;
+  common = contrib/lua/ltablib.c;
+  common = contrib/lua/lstrlib.c;
+  common = contrib/lua/grub_main.c;
+  common = contrib/lua/grub_lib.c;
+
+  cflags = '$(CFLAGS_POSIX)';
+  cppflags = '$(CPPFLAGS_POSIX)';
+  pci_cppflags = '$(CPPFLAGS_POSIX) -DENABLE_LUA_PCI';
+};
+
+/* Extra libraries for lua
+   script/lua/lmathlib.c script/lua/loslib.c script/lua/liolib.c
+   script/lua/ldblib.c script/lua/loadlib.c  */

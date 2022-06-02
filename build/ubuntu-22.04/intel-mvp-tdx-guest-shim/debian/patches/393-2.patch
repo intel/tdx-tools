@@ -1,0 +1,53 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Fri, 30 Jul 2021 12:48:36 +0200
+Subject: shim: Dump load options in verbose mode
+
+Dump the load options before parsing them so that we can
+see which things are failing to parse.
+
+Origin: https://github.com/rhboot/shim/pull/393
+(patch 2)
+---
+ include/hexdump.h | 8 ++++++++
+ shim.c            | 3 +++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/include/hexdump.h b/include/hexdump.h
+index 381e1a6..d1554eb 100644
+--- a/include/hexdump.h
++++ b/include/hexdump.h
+@@ -137,6 +137,7 @@ hexdumpat(const char *file, int line, const char *func, const void *data, unsign
+ 	hexdumpf(file, line, func, L"", data, size, at);
+ }
+ 
++#ifndef SHIM_UNIT_TEST
+ #define LogHexdump(data, sz) LogHexdump_(__FILE__, __LINE__, __func__, data, sz)
+ #define dhexdump(data, sz)   hexdump(__FILE__, __LINE__, __func__, data, sz)
+ #define dhexdumpat(data, sz, at) \
+@@ -144,5 +145,12 @@ hexdumpat(const char *file, int line, const char *func, const void *data, unsign
+ #define dhexdumpf(fmt, data, sz, at, ...) \
+ 	hexdumpf(__FILE__, __LINE__ - 1, __func__, fmt, data, sz, at, ##__VA_ARGS__)
+ 
++#else
++#define LogHexdump(data, sz)
++#define dhexdump(data, sz)
++#define dhexdumpat(data, sz, at)
++#define dhexdumpf(fmt, data, sz, at, ...)
++#endif
++
+ #endif /* STATIC_HEXDUMP_H */
+ // vim:fenc=utf-8:tw=75:noet
+diff --git a/shim.c b/shim.c
+index 3d32b55..c6cc3f3 100644
+--- a/shim.c
++++ b/shim.c
+@@ -1471,6 +1471,9 @@ EFI_STATUS set_second_stage (EFI_HANDLE image_handle)
+ 		return efi_status;
+ 	}
+ 
++	dprint(L"full load options:\n");
++	dhexdumpat(li->LoadOptions, li->LoadOptionsSize, 0);
++
+ 	/* Sanity check since we make several assumptions about the length */
+ 	if (li->LoadOptionsSize % 2 != 0)
+ 		return EFI_INVALID_PARAMETER;

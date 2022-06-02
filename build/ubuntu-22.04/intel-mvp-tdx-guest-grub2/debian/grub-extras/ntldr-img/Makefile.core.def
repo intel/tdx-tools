@@ -1,0 +1,32 @@
+AutoGen definitions Makefile.tpl;
+
+image = {
+  name = g2hdr;
+  i386_pc = contrib/ntldr-img/g2hdr.S;
+  i386_pc_ldflags = '$(TARGET_IMG_LDFLAGS)';
+  i386_pc_ldflags = '$(TARGET_IMG_BASE_LDOPT),0x0';
+  objcopyflags = '-O binary';
+  enable = i386_pc;
+};
+
+image = {
+  name = grldr;
+  i386_pc = contrib/ntldr-img/grldrstart.S;
+  i386_pc = contrib/ntldr-img/ntfsbs.S;
+  i386_pc_ccasflags = -DGRLDR_MBR;
+  i386_pc_ldflags = '$(TARGET_IMG_LDFLAGS)';
+  i386_pc_ldflags = '$(TARGET_IMG_BASE_LDOPT),0x7c00';
+  objcopyflags = '-O binary';
+  enable = i386_pc;
+};
+
+image = {
+  name = g2ldr;
+  i386_pc = contrib/ntldr-img/grldrstart.S;
+  i386_pc = contrib/ntldr-img/ntfsbs.S;
+  i386_pc_ccasflags = '-DGRLDR_MBR -DBOOTGRUB2';
+  i386_pc_ldflags = '$(TARGET_IMG_LDFLAGS)';
+  i386_pc_ldflags = '$(TARGET_IMG_BASE_LDOPT),0x7c00';
+  objcopyflags = '-O binary';
+  enable = i386_pc;
+};

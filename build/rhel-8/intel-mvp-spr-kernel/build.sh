@@ -5,7 +5,7 @@ set -ex
 CURR_DIR="$(dirname "$(readlink -f "$0")")"
 
 DOWNSTREAM_GIT_URI="https://github.com/intel/linux-kernel-dcp.git"
-DOWNSTREAM_TAG="SPR-BKC-PC-v4.20"
+DOWNSTREAM_TAG="SPR-BKC-PC-v8.8"
 
 SPEC_FILE="${CURR_DIR}/spr-kernel.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"

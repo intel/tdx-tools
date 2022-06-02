@@ -1,0 +1,81 @@
+From: Chris Glass <chris.glass@canonical.com>
+Date: Thu, 10 Nov 2016 13:44:25 -0500
+Subject: UBUNTU: Added knobs to allow non-initrd boot config
+
+Added GRUB_FORCE_PARTUUID and GRUB_DISABLE_INITRD configuration knobs to allow
+users to generate grub menu entries that boot directly to the kernel, without
+using an initramfs.
+
+Signed-off-by: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+
+Patch-Name: ubuntu-support-initrd-less-boot.patch
+---
+ docs/grub.texi          | 13 +++++++++++++
+ util/grub-mkconfig.in   |  4 +++-
+ util/grub.d/10_linux.in | 12 +++++++++---
+ 3 files changed, 25 insertions(+), 4 deletions(-)
+
+diff --git a/docs/grub.texi b/docs/grub.texi
+index 86e46f3..0cc2f24 100644
+--- a/docs/grub.texi
++++ b/docs/grub.texi
+@@ -1582,6 +1582,19 @@ This option sets the English text of the string that will be displayed in
+ parentheses to indicate that a boot option is provided to help users recover
+ a broken system.  The default is "recovery mode".
+ 
++@item GRUB_FORCE_PARTUUID
++This option forces the root disk entry to be the specified PARTUUID instead
++of whatever would be used instead. This is useful when you control the
++partitioning of the disk but cannot guarantee what the actual hardware
++will be, for example in virtual machine images.
++Setting this option to @samp{12345678-01} will produce:
++root=PARTUUID=12345678-01
++
++@item GRUB_DISABLE_INITRD
++Then set to @samp{true}, this option prevents an initrd to be used at boot
++time, regardless of whether one is detected or not. @command{grub-mkconfig}
++will therefore not generate any initrd lines.
++
+ @end table
+ 
+ The following options are still accepted for compatibility with existing
+diff --git a/util/grub-mkconfig.in b/util/grub-mkconfig.in
+index 0d39c8f..4cf8d19 100644
+--- a/util/grub-mkconfig.in
++++ b/util/grub-mkconfig.in
+@@ -262,7 +262,9 @@ export GRUB_DEFAULT \
+   GRUB_OS_PROBER_SKIP_LIST \
+   GRUB_DISABLE_SUBMENU \
+   GRUB_RECORDFAIL_TIMEOUT \
+-  GRUB_RECOVERY_TITLE
++  GRUB_RECOVERY_TITLE \
++  GRUB_FORCE_PARTUUID \
++  GRUB_DISABLE_INITRD
+ 
+ if test "x${grub_cfg}" != "x"; then
+   rm -f "${grub_cfg}.new"
+diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
+index 9a23c3a..dade627 100644
+--- a/util/grub.d/10_linux.in
++++ b/util/grub.d/10_linux.in
+@@ -193,11 +193,17 @@ EOF
+ 	linux	${rel_dirname}/${basename}.efi.signed root=${linux_root_device_thisversion} ro ${args}
+ EOF
+   else
+-    sed "s/^/$submenu_indentation/" << EOF
+-	linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
++    if [ x"$GRUB_FORCE_PARTUUID" = x ]; then
++        sed "s/^/$submenu_indentation/" << EOF
++        linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
++EOF
++    else
++        sed "s/^/$submenu_indentation/" << EOF
++        linux	${rel_dirname}/${basename} root=PARTUUID=${GRUB_FORCE_PARTUUID} ro ${args}
+ EOF
++    fi
+   fi
+-  if test -n "${initrd}" ; then
++  if test -n "${initrd}" && [ x"$GRUB_DISABLE_INITRD" != xtrue ]; then
+     # TRANSLATORS: ramdisk isn't identifier. Should be translated.
+     if [ x"$quiet_boot" = x0 ] || [ x"$type" != xsimple ]; then
+       message="$(gettext_printf "Loading initial ramdisk ...")"

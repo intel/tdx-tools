@@ -1,0 +1,74 @@
+From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+Date: Fri, 18 Mar 2022 15:21:33 +0100
+Subject: [PATCH 1/1] efivar: check that efivarfs is writeable
+
+Some UEFI implementations (notably U-Boot) don't implement the
+SetVariable() runtime service. On these systems the GRUB installation
+must be completed manually. Write a warning in this case but avoid
+throwing an error.  (LP: #1965288)
+
+Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+---
+ grub-core/osdep/unix/efivar.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/grub-core/osdep/unix/efivar.c b/grub-core/osdep/unix/efivar.c
+index d34df0f..732f939 100644
+--- a/grub-core/osdep/unix/efivar.c
++++ b/grub-core/osdep/unix/efivar.c
+@@ -38,7 +38,10 @@
+ #include <grub/misc.h>
+ #include <grub/emu/exec.h>
+ #include <grub/emu/getroot.h>
++#include <linux/magic.h>
+ #include <sys/types.h>
++#include <sys/vfs.h>
++#include <sys/statvfs.h>
+ #include <ctype.h>
+ #include <errno.h>
+ #include <stdbool.h>
+@@ -511,6 +514,29 @@ devices_equal (const_efidp a, const_efidp b)
+   return false;
+ }
+ 
++/**
++ * efivar_is_rw - detect if the efivar file system exists and is writeable
++ *
++ * Return:	true if efivarfs is writeable
++ */
++static bool
++efivar_is_rw (void)
++{
++  int ret;
++  const char *mount = "/sys/firmware/efi/efivars";
++  struct statfs stat;
++
++  ret = statfs(mount, &stat);
++  if (ret == -1)
++    return false;
++  if (stat.f_type != EFIVARFS_MAGIC)
++      return false;
++  if (stat.f_flags & ST_RDONLY)
++    return false;
++
++  return true;
++}
++
+ int
+ grub_install_efivar_register_efi (grub_device_t efidir_grub_dev,
+ 				  const char *efidir, const char *efifile_path,
+@@ -528,6 +554,14 @@ grub_install_efivar_register_efi (grub_device_t efidir_grub_dev,
+   int rc;
+   bool is_boot_efi;
+ 
++  /* Check if EFI variable can be written */
++  if (!efivar_is_rw ())
++    {
++      grub_util_warn ("EFI variables cannot be set on this system");
++      grub_util_warn ("You will have to complete the GRUB setup manually");
++      return 0;
++    }
++
+   is_boot_efi = strstr (efidir, "/boot/efi") != NULL;
+   efidir_disk = grub_util_biosdisk_get_osdev (efidir_grub_dev->disk);
+   efidir_part = efidir_grub_dev->disk->partition ? efidir_grub_dev->disk->partition->number + 1 : 1;

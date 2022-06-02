@@ -1,0 +1,45 @@
+From: Matthew Garrett <mjg@redhat.com>
+Date: Mon, 13 Jan 2014 12:13:09 +0000
+Subject: Don't permit loading modules on UEFI secure boot
+
+Author: Colin Watson <cjwatson@ubuntu.com>
+Origin: vendor, http://pkgs.fedoraproject.org/cgit/grub2.git/tree/grub-2.00-no-insmod-on-sb.patch
+Forwarded: no
+Last-Update: 2013-12-25
+
+Patch-Name: no-insmod-on-sb.patch
+---
+ grub-core/kern/dl.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/grub-core/kern/dl.c b/grub-core/kern/dl.c
+index 48f8a79..51a800a 100644
+--- a/grub-core/kern/dl.c
++++ b/grub-core/kern/dl.c
+@@ -38,6 +38,10 @@
+ #define GRUB_MODULES_MACHINE_READONLY
+ #endif
+ 
++#ifdef GRUB_MACHINE_EFI
++#include <grub/efi/efi.h>
++#endif
++
+ 
+ 
+ #pragma GCC diagnostic ignored "-Wcast-align"
+@@ -695,6 +699,15 @@ grub_dl_load_file (const char *filename)
+   void *core = 0;
+   grub_dl_t mod = 0;
+ 
++#ifdef GRUB_MACHINE_EFI
++  if (grub_efi_get_secureboot() == GRUB_EFI_SECUREBOOT_MODE_ENABLED)
++    {
++      grub_error (GRUB_ERR_ACCESS_DENIED,
++		  "Secure Boot forbids loading module from %s", filename);
++      return 0;
++    }
++#endif
++
+   grub_boot_time ("Loading module %s", filename);
+ 
+   file = grub_file_open (filename, GRUB_FILE_TYPE_GRUB_MODULE);

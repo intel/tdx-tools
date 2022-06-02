@@ -1,0 +1,23 @@
+
+MAKE SURE YOU ARE RUNNING THE LATEST VERSION
+
+The grub packages never update the installed version of GRUB
+automatically, except if you choose a device in the debconf prompt
+`GRUB install devices', which is currently only implemented for grub-pc.
+
+Because of this, you need to make sure you're running the LATEST VERSION of
+GRUB before you report a bug.  Use grub-install to update it, and then check
+if the bug still applies.  Debugging problems we already fixed makes us waste
+valuable time, so please try to avoid it.
+
+IMPORTANT NOTE WHEN SUBMITTING PATCHES
+
+Like many other FSF projects, GRUB upstream has specific requirements for
+accepting patches with regard to copyright assignment.  If you're going to
+submit a patch, it is likely that it will only be accepted in upstream if you're
+willing to submit your paperwork as well.
+
+Because of this, we want to avoid diverging from upstream by adding patches to
+the Debian package unless we know the copyright issues can be sorted out.  We
+encourage you to submit your work to upstream directly by sending a mail to the
+GRUB maintainers <grub-devel@gnu.org>.

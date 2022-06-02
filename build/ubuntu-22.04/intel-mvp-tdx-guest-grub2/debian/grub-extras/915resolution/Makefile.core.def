@@ -1,0 +1,7 @@
+AutoGen definitions Makefile.tpl;
+
+module = {
+  name = '915resolution';
+  i386_pc = contrib/915resolution/915resolution.c;
+  enable = i386_pc;
+};

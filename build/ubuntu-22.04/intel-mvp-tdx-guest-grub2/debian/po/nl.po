@@ -1,0 +1,566 @@
+# Dutch translation of grub2 debconf templates.
+# Copyright (C) 2008-2011 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the grub2 package.
+# Paul Gevers <paul@climbing.nl>, 2008-2010.
+# Jeroen Schot <schot@a-eskwadraat.nl>, 2011.
+# Frans Spiesschaert <Frans.Spiesschaert@yucom.be>, 2014, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: grub2 2.02~beta3-4\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2017-01-20 17:35+0100\n"
+"Last-Translator: Frans Spiesschaert <Frans.Spiesschaert@yucom.be>\n"
+"Language-Team: Debian Dutch l10n Team <debian-l10n-dutch@lists.debian.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.6\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "Doorschakelen vanuit menu.lst?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"GRUBs opwaardeerscripts hebben een oude-stijl GRUB opstelling in /boot/grub "
+"gedetecteerd."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Om de oude-stijl versie van GRUB op uw systeem te vervangen wordt het "
+"aangeraden om het bestand /boot/grub/menu.lst zo te laten aanpassen dat er "
+"een GRUB 2 opstart-image wordt geladen vanuit uw bestaande oude-stijl GRUB "
+"opstelling. Deze stap kan nu automatisch worden uitgevoerd."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"U wordt aangeraden om het doorschakelen van GRUB 2 vanuit menu.lst te "
+"accepteren, en daarna te verifiëren dat de nieuwe GRUB 2 opstelling werkt "
+"voordat het in de MBR (Master Boot Record) wordt geïnstalleerd."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Waar u ook voor kiest, u kunt het oude MBR-image later door GRUB 2 vervangen "
+"door het volgende commando uit te voeren (met beheerdersrechten (root)):"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "Apparaten waarop GRUB moet komen:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"Het pakket grub-pc wordt bijgewerkt. Dit menu stelt u in staat om desgewenst "
+"de apparaten te selecteren waarvoor u wilt dat grub-install automatisch "
+"wordt uitgevoerd."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"Het wordt over het algemeen aanbevolen om grub-install automatisch te laten "
+"uitvoeren om te voorkomen dat het geïnstalleerde image van de GRUB-kern niet "
+"langer gesynchroniseerd zou zijn met de modules van GRUB of met grub.cfg."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"Indien u niet zeker weet welk station door het BIOS wordt gebruikt als "
+"opstartstation, is het vaak een goed idee om GRUB op alle stations te "
+"installeren."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Merk op dat het ook mogelijk is om GRUB naar opstartstructuren op partities "
+"te installeren. Enkele geschikte partities worden hier aangeboden. Dit wordt "
+"echter niet aangeraden omdat het GRUB dwingt om een bloklijstmechanisme te "
+"gebruiken waar het minder betrouwbaar van wordt."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"Het GRUB opstartprogramma was voorheen geïnstalleerd op een schijf die niet "
+"langer aanwezig is, of waarvan de unieke identificatie om een of andere "
+"reden is veranderd. Het is belangrijk om ervoor te zorgen dat het "
+"geïnstalleerde image van de GRUB-kern gesynchroniseerd blijft met GRUB "
+"modules en grub.cfg. Controleer of GRUB wel naar de juiste opstartapparaten "
+"wordt geschreven."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "Schrijven van GRUB naar opstartapparaat mislukt. Doorgaan?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "Het installeren van GRUB op de volgende apparaten is mislukt: "
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Wilt u desondanks verder gaan? Verder gaan kan ervoor zorgen dat uw computer "
+"niet meer goed opstart."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "Schrijven van GRUB naar opstartapparaat mislukt. Opnieuw proberen?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"U kunt proberen om GRUB te installeren op een ander apparaat, maar het wordt "
+"aangeraden om eerst te controleren of u kunt opstarten vanaf dat apparaat. "
+"In het andere geval zal het opwaarderen van GRUB oude-stijl geannuleerd "
+"worden."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "Verder gaan zonder GRUB te installeren?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"U heeft ervoor gekozen om GRUB op geen enkele schijf te installeren. Als u "
+"nu doorgaat zou het kunnen dat het opstartprogramma niet correct "
+"geconfigureerd is en dat de computer bij de volgende start de informatie "
+"gebruikt die vroeger in de opstartsector stond. Indien daar een eerdere "
+"versie van GRUB 2 staat, kan het zijn dat modules niet geladen kunnen worden "
+"of dat het huidige configuratiebestand niet verwerkt kan worden."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"U kunt verder gaan als u al een ander opstartprogramma gebruikt en dat wilt "
+"blijven gebruiken, of als dit een speciale omgeving is waar u geen "
+"opstartprogramma nodig heeft. In de overige gevallen zou u GRUB ergens "
+"moeten installeren."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "GRUB 2 uit /boot/grub verwijderen?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "Wilt u dat alle GRUB 2 bestanden worden verwijderd uit /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Dit heeft tot gevolg dat het systeem niet opgestart kan worden tenzij er een "
+"ander opstartprogramma is geïnstalleerd."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "Wilt u het omschakelen naar GRUB 2 nu afronden?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Er staan op dit systeem nog steeds bestanden van het opstartprogramma GRUB  "
+"oude-stijl, maar op de volgende schijven is nu ook een instantie van het "
+"opstartprogramma GRUB 2 geïnstalleerd:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"Het lijkt erop dat GRUB oude-stijl niet langer gebruikt wordt en dat u er "
+"best aan doet om de images van GRUB 2 op die schijven op te waarderen en de "
+"omschakeling naar GRUB 2 af te ronden door de bestanden van GRUB oude-stijl "
+"te verwijderen. Indien u de GRUB 2 images niet opwaardeert, is het mogelijk "
+"dat ze incompatibel zijn met de nieuwe pakketten en kunnen ze uw systeem "
+"verhinderen correct op te starten."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"In het algemeen zult u de conversie naar GRUB 2 willen afmaken, tenzij deze "
+"opstart-images gemaakt zijn bij het installeren van GRUB 2 met een ander "
+"besturingssysteem."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Linux-commandoregel:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"De volgende Linux-commandoregel is gebaseerd op /etc/default/grub of op de "
+"'kopt'-parameter, gevonden in het bestand menu.lst van GRUB oude-stijl. "
+"Gelieve deze op correctheid te controleren en indien nodig aan te passen. De "
+"commandoregel mag leeg zijn."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Standaard Linux-commandoregel:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"De volgende regel zal, behalve in de herstelmodus, gebruikt worden voor de "
+"Linux parameters in de standaard menuoptie."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr ""
+"Een extra installatie verplichten in het EFI-pad voor verwijderbare media?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"Sommige op EFI gebaseerde systemen bevatten fouten en gaan niet correct om "
+"met de nieuwe opstartprogramma's. Indien u een extra installatie van GRUB in "
+"het EFI-pad voor verwijderbare media vraagt, zou dit moeten garant staan "
+"voor het feit dat dit systeem ondanks dit probleem Debian toch correct zal "
+"opstarten. Dit kan er evenwel toe leiden dat andere besturingssystemen die "
+"ook van dit pad gebruik maken, niet langer in staat zullen zijn op te "
+"starten. In voorkomend geval zult u er moeten zorg voor dragen dat GRUB "
+"succesvol geconfigureerd wordt om eventueel andere geïnstalleerde "
+"besturingssystemen correct te kunnen opstarten."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr "De NVRAM-variabelen aanpassen om automatisch Debian op te starten?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+"GRUB kan de NVRAM-variabelen van uw platform zo configureren dat het "
+"automatisch Debian opstart wanneer het systeem aangezet wordt. Maar "
+"misschien wenst u dat gedrag liever niet te activeren en vermijdt u liever "
+"wijzigingen aan uw opstartconfiguratie. Indien bijvoorbeeld uw NVRAM-"
+"variabelen zo ingesteld werden dat uw systeem, telkens het opgestart wordt, "
+"een PXE-server contacteert, dan blijft op die manier dit gedrag gehandhaafd."
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"Het pakket grub-pc wordt bijgewerkt. Dit menu stelt u in staat om desgewenst "
+"de apparaten te selecteren waarvoor u wilt dat grub-install automatisch "
+"wordt uitgevoerd."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"U heeft ervoor gekozen om GRUB op geen enkele schijf te installeren. Als u "
+"nu doorgaat zou het kunnen dat het opstartprogramma niet correct "
+"geconfigureerd is en dat de computer bij de volgende start de informatie "
+"gebruikt die vroeger in de opstartsector stond. Indien daar een eerdere "
+"versie van GRUB 2 staat, kan het zijn dat modules niet geladen kunnen worden "
+"of dat het huidige configuratiebestand niet verwerkt kan worden."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "kFreeBSD-commandoregel:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"De volgende kFreeBSD-commandoregel is gebaseerd op /etc/default/grub of op "
+"de 'kopt'-parameter, gevonden in het bestand menu.lst van GRUB oude-stijl. "
+"Gelieve deze op correctheid te controleren en indien nodig aan te passen. De "
+"commandoregel mag leeg zijn."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "Standaard kFreeBSD-commandoregel:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"De volgende regel zal, behalve in de herstelmodus, gebruikt worden voor de "
+"kFreeBSD parameters in de standaard menuoptie."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map is opnieuw aangemaakt"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "Het bestand /boot/grub/device.map is zo herschreven dat het stabiele "
+#~ "namen gebruikt voor apparaten. In de meeste gevallen zal dit toekomstige "
+#~ "veranderingen minder noodzakelijk maken. Dit heeft geen invloed op de "
+#~ "door GRUB gegenereerde opstartmenu-items."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Aangezien het systeem meer dan één schijf heeft, is het evenwel mogelijk "
+#~ "dat het steunde op de oude lijst van apparaten. Ga daarom na of het "
+#~ "opstartmenu lokaal aangepaste items bevat die gebruik maken van het "
+#~ "systeem dat GRUB gebruikte bij het nummeren van schijven (hdN) en pas ze "
+#~ "zo nodig aan."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "U kunt deze melding negeren indien u deze melding niet begrijpt, of als "
+#~ "er geen zelfgemaakte menu-items aanwezig zijn."

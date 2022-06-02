@@ -1,0 +1,32 @@
+From: Ian Campbell <ijc@debian.org>
+Date: Sun, 30 Nov 2014 12:12:52 +0000
+Subject: Arrange to insmod xzio and lzopio when booting a kernel as a Xen
+ guest
+
+This is needed in case the Linux kernel is compiled with CONFIG_KERNEL_XZ or
+CONFIG_KERNEL_LZO rather than CONFIG_KERNEL_GZ (gzio is already loaded by
+grub.cfg today).
+
+Signed-off-by: Ian Campbell <ijc@debian.org>
+
+Bug-Debian: https://bugs.debian.org/755256
+Forwarded: http://lists.gnu.org/archive/html/grub-devel/2014-11/msg00091.html
+Last-Update: 2014-11-30
+
+Patch-Name: insmod-xzio-and-lzopio-on-xen.patch
+---
+ util/grub.d/10_linux_zfs.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index 4bacf6e..735b46a 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -854,6 +854,7 @@ zfs_linux_entry () {
+     fi
+ 
+     echo "${submenu_indentation}	insmod gzio"
++    echo "${submenu_indentation}	if [ \"\${grub_platform}\" = xen ]; then insmod xzio; insmod lzopio; fi"
+ 
+     echo "$(prepare_grub_to_access_device_cached "${boot_device}" "${submenu_level}")"
+ 

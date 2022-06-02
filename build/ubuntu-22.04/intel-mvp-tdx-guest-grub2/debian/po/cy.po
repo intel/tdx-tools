@@ -1,0 +1,531 @@
+# Translation of grub2 debconf template to Welsh
+#
+# Copyright (C) 2012
+#
+# This file is distributed under the same license as the grub2 package.
+#
+# Dafydd Tomos <l10n@da.fydd.org>, 2012
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: grub2\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2012-06-16 22:25-0000\n"
+"Last-Translator: Dafydd Tomos <l10n@da.fydd.org>\n"
+"Language-Team: Welsh\n"
+"Language: cy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Welsh\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "Cadwyn-lwytho o menu.lst?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"Mae sgriptiau uwchraddio GRUB wedi canfod gosodiad GRUB etifeddol yn /boot/"
+"grub."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Er mwyn disodli yr hen fersiwn o GRUB yn eich system, argymhellir fod /boot/"
+"grub/menu.lst yn cael ei addasu i lwytho delwedd ymgychwyn GRUB 2 o'ch "
+"gosodiad GRUB etifeddol. Gall y cam hwn gael ei wneud yn awtomatig nawr."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"Argymhellir eich bod yn derbyn cadwyn-lwytho GRUB 2 o menu.lst, a gwirio fod "
+"y gosodiad GRUB 2 yn gweithio cyn iddo gael ei ysgrifennu i'r Cofnod "
+"Ymgychwyn Meistr (MBR)."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Beth bynnag yw eich dewis, fe allwch chi ddisodli eich hen ddelwedd MBR gyda "
+"GRUB 2 nes ymlaen drwy redeg y gorchymyn canlynol fel root:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "Dyfeisiau sefydlu GRUB:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"Mae'r pecyn grub-bc yn cael ei uwchraddio. Mae'r fwydlen yma yn eich "
+"caniatáu i ddewis pa ddyfeisiau yr hoffech redeg grub-install arno, os o "
+"gwbl."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"Argymhellir rhedeg grub-install yn awtomatig yn y rhan fwyaf o sefyllfaoedd, "
+"i wneud yn siwr fod y ddelwedd GRUB craidd yn gyson gyda'r modiwlau GRUB a "
+"grub.cfg."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"Os nad ydych yn siwr pa ddisg sydd wedi ei benodi fel disg ymgychwyn gan "
+"eich BIOS, mae yn syniad da fel arfer i sefydlu GRUB i bob un."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Nodyn: mae'n bosibl sefydlu GRUB i gofnodion ymgychwyn rhaniadau hefyd, a "
+"mae rhai rhaniadau addas yn cael eu cynnig yma. Fodd bynnag, mae hyn yn "
+"gorfodi GRUB i ddefnyddio techneg rhestr flocio, sy'n ei wneud yn llai "
+"dibynnadwy, a felly ni argymhellir ei ddefnyddio."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"Roedd y llwythwr ymgychwyn GRUB wedi ei osod yn flaenorol i ddisg sydd ddim "
+"yn bresennol bellach, neu fod ei rif unigryw wedi newid am rhyw reswm. Mae'n "
+"bwysig i wneud yn siwr fod y ddelwedd craidd GRUB a osodwyd yn gyson gyda "
+"modiwlau GRUB a grub.cfg. Gwiriwch eto i wneud yn siwr fod GRUB yn "
+"ysgrifennu i'r dyfeisiau ymgychwyn addas."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "Methwyd ysgrifennu GRUB i'r ddyfais ymgychwyn - parhau?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "Methwyd sefydlu GRUB i'r dyfeisiau canlynol:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Ydych am barhau beth bynnag? Os ydych, mae'n bosib na fydd eich cyfrifiadur "
+"yn dechrau'n gywir."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "Methwyd ysgrifennu GRUB o'r ddyfais ymgychwyn - ceisio eto?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"Mae'n bosib y gallwch sefydlu GRUB i ryw ddyfais arall, ond fe ddylech wirio "
+"fod y system yn gallu ymgychwyn o'r ddyfais honno. Fel arall, i fydd "
+"uwchraddio o GRUB etifeddol yn cael ei ganslo."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "Parhau heb sefydlu GRUB?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Fe ddewisoch i beidio sefydlu GRUB i unrhyw ddyfeisiau. Os ydych yn parhau, "
+"mae'n bosib na fydd y llwythwr ymgychwyn wedi ei gyflunio'n gywir, a'r tro "
+"nesa fydd y cyfrifiadur hwn yn dechrau mi fydd yn defnyddio beth bynnag oedd "
+"yn y sector ymgychwyn o'r blaen. Os oes fersiwn cynharach o GRUB 2 yn y "
+"sector ymgychwyn, mae'n bosib na fydd yn gallu llwytho modiwlau na deall y "
+"ffeil gyfluniad presennol."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"Os ydych yn defnyddio llwythwr ymgychwyn gwahanol yn barod ac eisiau parhau "
+"i wneud hynny, neu os yw hwn yn amgylchedd arbennig lle nad oes angen "
+"llwythwr ymgychwyn, yna fe allwch barhau beth bynnag. Fel arall, fe ddylech "
+"sefydlu GRUB yn rhywle."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "Dileu GRUB 2 o /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "Ydych am i holl ffeiliau GRUB 2 cael eu dileu o /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Mi fydd hyn yn golygu na fydd y system yn gallu cychwyn nes i lwythwr "
+"ymgychwyn arall ei sefydlu."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "Cwblhau y newid i GRUB 2 nawr?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Mae yna ffeiliau o lwythwr ymgychwyn GRUB etifeddol dal i fod ar y system "
+"hwn, ond mae yna hefyd gofnodion ymgychwyn GRUB 2 wedi ei sefydlu ar y "
+"disgiau hyn:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"Mae'n edrych yn debyg nad yw GRUB etifeddol yn cael ei ddefnyddio rhagor, a "
+"fe ddylech uwchraddio i'r delweddau GRUB 2 ar y disgiau hyn a cwblhau y "
+"newid i GRUB 2 drwy ddileu yr hen ffeiliau GRUB etifeddol. Os nad ydych yn "
+"uwchraddio'r delweddau GRUB 2, mae'n bosib y byddant yn anghydnaws gyda'r "
+"pecynnau newydd a fe allai hyn atal eich system rhag dechrau yn gywir."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"Yn gyffredinol, fe ddylech gwblhau'r newid i GRUB 2 heblaw fod y cofnodion "
+"ymgychwyn hyn wedi eu creu gan sefydliad GRUB 2 gan ryw system weithredu "
+"arall."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Llinell orchymyn Linux:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Mae'r llinell orchymyn Linux canlynol wedi ei dynnu o /etc/default/grub "
+"neu'r paramedr 'kopt' yn ffeil menu.lst GRUB etifeddol. Gwiriwch fod hyn yn "
+"gywir a newidwch os oes angen. Caniateir i'r linell orchymyn fod yn wag."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Llinell orchymyn ddiofyn Linux:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"Defnyddir y llinyn canlynol fel paramedrau Linux ar gyfer y cofnod bwydlen "
+"diofyn ond ddim ar gyfer y modd achub."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"Mae'r pecyn grub-bc yn cael ei uwchraddio. Mae'r fwydlen yma yn eich "
+"caniatáu i ddewis pa ddyfeisiau yr hoffech redeg grub-install arno, os o "
+"gwbl."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Fe ddewisoch i beidio sefydlu GRUB i unrhyw ddyfeisiau. Os ydych yn parhau, "
+"mae'n bosib na fydd y llwythwr ymgychwyn wedi ei gyflunio'n gywir, a'r tro "
+"nesa fydd y cyfrifiadur hwn yn dechrau mi fydd yn defnyddio beth bynnag oedd "
+"yn y sector ymgychwyn o'r blaen. Os oes fersiwn cynharach o GRUB 2 yn y "
+"sector ymgychwyn, mae'n bosib na fydd yn gallu llwytho modiwlau na deall y "
+"ffeil gyfluniad presennol."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "Llinell orchymyn kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Mae'r llinell orchymyn kFreeBSD canlynol wedi ei dynnu o /etc/default/grub "
+"neu'r paramedr 'kopt' yn ffeil menu.lst GRUB etifeddol. Gwiriwch fod hyn yn "
+"gywir a newidwch os oes angen. Caniateir i'r linell orchymyn fod yn wag."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "Llinell orchymyn ddiofyn kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"Defnyddir y llinyn canlynol fel paramedrau kFreeBSD ar gyfer y cofnod "
+"bwydlen diofyn ond ddim ar gyfer y modd achub."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "Mae'r ffeil /boot/grub/device.map wedi ei ail-greu"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "Mae'r ffeil /boot/grub/device.map wedi ei ailsgrifennu i ddefnyddio enwau "
+#~ "dyfeisiau sefydlog. Yn y rhan fwyaf o achosion, fe ddylai hwn leihau'n "
+#~ "sylweddol yr angen i'w newid yn dyfodol, a ni ddylai hyn effeithio ar y "
+#~ "cofnodion bwydlen ymgychwyn a gynhyrchir gan GRUB."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Fodd bynnag, gan fod mwy na un disg yn bresennol yn y system, mae'n bosib "
+#~ "fod y system yn dibynnu ar hen fap dyfais. Gwiriwch os oes unrhyw "
+#~ "gofnodion bwydlen ymgychwyn sydd wedi'i addasu ac yn dibynnu ar rhifo "
+#~ "disg GRUB (hdN), a diweddarwch nhw os oes angen."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "Os nad ydych yn deall y neges hwn, neu os nad oes unrhyw gofnodion "
+#~ "bwydlen ymgychwyn wedi'i addasu, fe allwch chi anwybyddu'r neges hwn."

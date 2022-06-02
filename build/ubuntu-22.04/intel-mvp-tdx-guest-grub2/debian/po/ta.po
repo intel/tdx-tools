@@ -1,0 +1,520 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Dr,T,Vasudevan <agnihot3@gmail.com>, 2010.
+# Dr.T.Vasudevan <agnihot3@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: ta\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2012-02-16 10:15+0530\n"
+"Last-Translator: Dr.T.Vasudevan <agnihot3@gmail.com>\n"
+"Language-Team: Tamil <Ubuntu-l10n-tam@lists.ubuntu.com>\n"
+"Language: ta\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "menu.lst இலிருந்து சங்கிலிஏற்றம் செய்யலாமா?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr "/boot/grub இல் பாரம்பரிய க்ரப் அமைப்பு உள்ளதாக க்ரப் மேம்படுத்தல் நிரல் கண்டது."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+" பாரம்பரிய க்ரப் அமைப்பை உங்கள் கணினியிலிருந்து மாற்ற இப்போதுள்ள பாரம்பரிய க்ரப் அமைப்பின் /"
+"boot/grub/menu.lst ஐ க்ரப்2 துவக்கி பிம்பத்தில் இருந்து ஏற்றம்  செய்ய சரிக்கட்ட "
+"பரிந்துரைக்கப்படுகிறது. இந்த படி இப்போது தானியங்கியாக செய்யப்பட முடியும்."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+" menu.lst இலிருந்து க்ரப்2 ஐ சங்கிலி ஏற்றம் செய்ய இப்போது ஒப்புக்கொள்ள பரிந்துரை "
+"செய்யப்படுகிறது. மேலும் உங்கள் புதிய க்ரப்2 அமைப்பு செயல் சரியாக உள்ளதா என்பதையும் சரி "
+"பார்த்த பின் எம்பிஆர் (மாஸ்டர் பூட் ரெகார்ட்) இல்  நிறுவிக்கொள்ளலாம்."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"நீங்கள் என்ன முடிவு செய்தாலும் பழைய எம்பிஆர் பிம்பத்தை, பின்னால் பின் வரும் கட்டளையை ரூட் ஆக "
+"இட்டு க்ரப் 2 ஆல் மாற்றிக்கொள்ளலாம்."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "க்ரப் நிறுவல் சாதனங்கள்: "
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"க்ரப்-பிசி பொதி மேம்படுத்தப்படுகிறது. இந்த மெனு க்ரப் நிறுவல் தானியங்கியாக இயங்க "
+"சாதனங்கள் ஏதும் இருந்தால் அதை தேர்ந்தெடுக்க இது அனுமதிக்கிறது."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"பெரும்பாலான நேரங்களில் தானியங்கியாக க்ரப் நிறுவியை இயக்குவது பரிந்துரைக்கப்படுகிறது. "
+"இது க்ரப் கரு பிம்பம் க்ரப் மாட்யூல்கள் அல்லது grub.cfg இலிருந்து ஒத்திசைவு இல்லாமல் போவதை "
+"தடுக்கிறது."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"நீங்கள் எந்த தொகுதி பூட் தொகுதியாக உங்கள் பயாஸால் அமர்த்தப்பட்டுள்ளது என தெரியவில்லையானால் "
+"எல்லாவற்றிலும் க்ரப் ஐ நிறுவுவது நல்ல தேர்வாகும்."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"குறிப்பு: க்ரப் ஐ பகிர்வுகளின் பூட் பதிவில் நிறுவவும் இயலும். சில பொருத்தமான பகிர்வுகள் "
+"இங்கு தரப்படுகின்றன. ஆனால் இது க்ரப்பை தடுப்புப்பட்டியல் பாங்கை பயன்படுத்த "
+"வலியுறுத்துகிறது. அதனால் இது கொஞ்சம் நம்பகத்தன்மை குறைவானது. ஆகவே இதை "
+"பரிந்துரைப்பதில்லை."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"க்ரப் பூட் ஏற்றி முன்பு ஒரு வட்டில் பதியப்பட்டது; அந்த வட்டு இப்போது இல்லை அல்லது ஏனோ அதன் "
+"பிரத்யேக அடையாளம்காணி மாறிவிட்டது. க்ரப் கரு பிம்பம் க்ரப் மாட்யூல்கள் அல்லது grub.cfg "
+"உடன் ஒத்திசைவு இருப்பது அவசியம். பொருத்தமான பூட் சாதனங்களில் க்ரப் எழுதப்பட்டுள்ளது என "
+"மீண்டும் சோதித்து உறுதி செய்து கொள்க."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} எம்பி (MB); ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} எம்பி(MB); ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "பூட் சாதனத்துக்கு க்ரப் ஐ எழுதுவது தோவியடைந்தது - தொடரலாமா?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "பின் வரும் சாதனங்களில் க்ரப் நிறுவுதல் தோல்வியடைந்தது:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"எப்படியும் தொடர வேண்டுமா? தொடர்ந்தால் உங்கள் கணினி சரியாக துவங்க முடியாமல் போகலாம்."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "பூட் சாதனத்துக்கு க்ரப் ஐ நிறுவுதல் தோல்வியடைந்தது. மீண்டும் முயற்சிக்கலாமா?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"நீங்கள் வேறு சாதனத்தில் க்ரப் ஐ நிறுவ முடியலாம். ஆனால் உங்கள் கணினி  அந்த சாதனத்தில் "
+"இருந்து பூட் ஆகும் என்பதை உறுதி செய்து கொள்ள வேண்டும். இல்லையெனில் பாரம்பரிய க்ரப் "
+"இலிருந்து மேம்படுத்துதல் ரத்து செய்யப்படும். "
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "க்ரப் ஐ நிறுவாமல் தொடரலாமா?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"நீங்கள் எந்த சாதனத்திலும் க்ரப் ஐ நிறுவாமல் இருக்க தேர்ந்தெடுத்து உள்ளீர்கள். நீங்கள் தொடர்ந்தால் "
+"பூட் ஏற்றி சரியாக வடிவமைக்கப்படாமல் போகலாம். அதனால் கணினி மீண்டும் துவங்கும்போது முன்பு "
+"பூட் தொகுதியில் என்ன இருந்ததோ அதையே பயன்படுத்தும். அங்கே க்ரப் 2 இன் முந்தைய பதிப்பு "
+"இருப்பின் மாட்யூல்களை ஏற்றுதலும் நடப்பு வடிவமைப்பு கோப்பை கையாளுவதும் இயலாமல் போகலாம்."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"நீங்கள் ஏற்கெனெவே வேறு துவக்க ஏற்றியை பயன்படுத்திக்கொண்டு இருந்து அதையே தொடர நினைத்தால், "
+"அல்லது இது ஒரு விசேஷ சூழலாக இருந்து உங்களுக்கு துவக்கி தேவையில்ல்லாமல் இருந்தால், "
+"எப்படியும் நீங்கள் தொடர வேண்டும். அல்லது க்ரப் ஐ வேறு இடத்தில் நிறுவ வேண்டும்."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "க்ரப் 2 ஐ  /boot/grub இலிருந்து நீக்கவா?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "எல்லா க்ரப் 2 கோப்புக்களையும் /boot/grub இலிருந்து நீக்க விருப்பமா?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"இது வேறு ஒரு துவக்கியை நிறுவி இருந்தால் ஒழிய கணினியை துவக்க முடியாமல் ஆக்கும்."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "க்ரப் 2 க்கு மாற்றத்தை இப்போது முடிக்கலாமா?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"இந்த கணினியில் இன்னும் க்ரப் பாரம்பரிய துவக்கி நிறுவப்பட்டுள்ளது. ஆனால் இப்போது க்ரப் 2 பூட் "
+"பதிவுகளும் பின் வரும் வட்டுகளில் நிறுவப்பட்டுள்ளது:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"பாரம்பரிய க்ரப் இப்போது புழக்கத்தில் இல்லை என்று தெரிகிறது. நீங்கள் இந்த வட்டுகளில் உள்ள க்ரப் "
+"2 பிம்பங்களை மேம்படுத்த வேண்டும். பழைய பார்மபரிய க்ரப் கோப்புக்களை நீக்கி மாற்றத்தை இறுதி "
+"செய்ய வேண்டும். நீங்கள் இந்த பிம்பங்களை மேம்படுத்தாவிட்டால் புதிய பொதிகளுடன் அவை "
+"பொருத்தமில்லாமல் போய் உங்கள் கணினி சரியாக துவங்க முடியாமல் போகலாம்."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"இந்த பூட் பதிவுகள் வேறு ஒரு இயங்கு தளத்தை நிறுவும் போது க்ரப் 2 ஆல் "
+"உருவாக்கப்பட்டிருந்தால் ஒழிய  நீங்கள் பொதுவாக க்ரப் 2 மாற்றத்தை முடிக்க வேண்டும்."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "லீனக்ஸ் கட்டளை வரி:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"பின் வரும் லீனக்ஸ் கட்டளை வரி /etc/default/grub இலிருந்து அல்லது க்ரப் இன் பாரம்பரிய "
+"menu.lst இன் `kopt' அளபுருவிலிருந்து பெறப்பட்டது. இது சரியா என்று சோதித்து "
+"தேவையானால் மற்றவும். இந்த கட்டளை வரி காலியாக இருக்க அனுமதி உண்டு."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "லீனக்ஸ் முன்னிருப்பு கட்டளை வரி:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"பின் வரும் சரங்கள் முன்னிருப்பு மெனு உள்ளீட்டுக்கு லீனக்ஸ் அளபுருக்களாக பயன்படுத்தப்படும்; "
+"ஆனால் மீட்டெடுப்பு பாங்குக்கு அல்ல"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"க்ரப்-பிசி பொதி மேம்படுத்தப்படுகிறது. இந்த மெனு க்ரப் நிறுவல் தானியங்கியாக இயங்க "
+"சாதனங்கள் ஏதும் இருந்தால் அதை தேர்ந்தெடுக்க இது அனுமதிக்கிறது."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} எம்பி (MB); ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"நீங்கள் எந்த சாதனத்திலும் க்ரப் ஐ நிறுவாமல் இருக்க தேர்ந்தெடுத்து உள்ளீர்கள். நீங்கள் தொடர்ந்தால் "
+"பூட் ஏற்றி சரியாக வடிவமைக்கப்படாமல் போகலாம். அதனால் கணினி மீண்டும் துவங்கும்போது முன்பு "
+"பூட் தொகுதியில் என்ன இருந்ததோ அதையே பயன்படுத்தும். அங்கே க்ரப் 2 இன் முந்தைய பதிப்பு "
+"இருப்பின் மாட்யூல்களை ஏற்றுதலும் நடப்பு வடிவமைப்பு கோப்பை கையாளுவதும் இயலாமல் போகலாம்."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "கேப்ரீபிஎஸ்டி கட்டளை வரி:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"பின் வரும் கேப்ரீபிஎஸ்டி கட்டளை வரி /etc/default/grub இலிருந்து அல்லது க்ரப் இன் "
+"பாரம்பரிய menu.lst இன் `kopt' அளபுருவிலிருந்து பெறப்பட்டது. இது சரியா என்று "
+"சோதித்து தேவையானால் மற்றவும். இந்த கட்டளை வரி காலியாக இருக்க அனுமதி உண்டு."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "கேப்ரீபிஎஸ்டி முன்னிருப்பு கட்டளை வரி:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"பின் வரும் சரங்கள் முன்னிருப்பு மெனு உள்ளீட்டுக்கு கேப்ரீபிஎஸ்டி அளபுருக்களாக "
+"பயன்படுத்தப்படும்; ஆனால் மீட்டெடுப்பு பாங்குக்கு அல்ல"
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map மறு உருவாக்கப்பட்டது"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ " /boot/grub/device.map கோப்பு நிலையான சாதனங்களின் பெயரை பயன்படுத்துமாறு மீண்டும் "
+#~ "உருவாக்கப்பட்டது. பெரும்பாலான சமயங்களில் இது எதிர்காலத்தில் மாற்ற வேன்டிய அவசியம் "
+#~ "ஏற்படாது. க்ரப் ஆல் உருவாக்கப்படும் பூட் மெனு உள்ளீடுகள் பாதிக்கப்படாது."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "இருப்பினும் கணினியில் ஒன்றுக்கு மேற்பட்ட வட்டுகள் இருப்பதால் கணினி பழைய சாதன "
+#~ "வரைபடத்தை சார்ந்து  பயன்படுத்திக்கொண்டு இருக்க வாய்ப்பு உண்டு. க்ரப் இன் (hdN) எண்ணிடலை "
+#~ "சார்ந்த தனிப்பயன் பூட் மெனு ஏதும் உள்ளதா என தயை செய்து சோதிக்கவும்; அப்படி இருப்பின் "
+#~ "அவற்றை மேம்படுத்தவும்."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "இந்த செய்தி உங்களுக்குப் புரியவில்லையானால், அல்லது தனிப்பயன் பூட் மெனு உள்ளீடுகள் "
+#~ "இல்லையானால் இந்த செய்தியை உதாசீனம் செய்யலாம்."
+
+#~ msgid ""
+#~ "In either case, whenever you want GRUB 2 to be loaded directly from MBR, "
+#~ "you can do so by issuing (as root) the following command:"
+#~ msgstr ""
+#~ "எப்படி இருந்தாலும்நீங்கள் க்ரப்2 ஐ எம்பிஆர் இலிருந்து நேரடியாக ஏற்ற விரும்பினால் எப்போது "
+#~ "வேண்டுமானாலும்  ரூட் ஆக கீழ் கண்ட கட்டளை மூலம் அதை செய்யலாம்."

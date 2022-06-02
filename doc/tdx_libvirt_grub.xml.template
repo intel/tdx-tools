@@ -51,7 +51,7 @@
   </launchSecurity>
   <qemu:commandline>
     <qemu:arg value='-cpu'/>
-    <qemu:arg value='host,-kvm-steal-time,pmu=off'/>
+    <qemu:arg value='host,-shstk,-kvm-steal-time'/>
   </qemu:commandline>
 </domain>
 

@@ -1,0 +1,15 @@
+[Unit]
+Description=Record successful boot for GRUB
+After=sleep.target
+ConditionPathExists=/boot/grub/grub.cfg
+
+[Service]
+Type=oneshot
+Restart=no
+ExecStartPre=/bin/sh -c '[ -s /boot/grub/grubenv ] || rm -f /boot/grub/grubenv; mkdir -p /boot/grub'
+ExecStart=grub-editenv /boot/grub/grubenv unset recordfail
+ExecStartPost=/bin/sh -c 'if grub-editenv /boot/grub/grubenv list | grep -q initrdless_boot_fallback_triggered=1; then echo "grub: GRUB_FORCE_PARTUUID set, initrdless boot paniced, fallback triggered."; fi'
+StandardOutput=kmsg
+
+[Install]
+WantedBy=multi-user.target sleep.target

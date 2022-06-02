@@ -1,0 +1,26 @@
+#! /bin/sh
+set -e
+
+which update-grub >/dev/null 2>&1 || exit 0
+
+if type systemd-detect-virt >/dev/null 2>&1 &&
+   systemd-detect-virt --quiet --container; then
+	exit 0
+fi
+
+set -- $DEB_MAINT_PARAMS
+mode="${1#\'}"
+mode="${mode%\'}"
+case $0:$mode in
+    # Only run on postinst configure and postrm remove, to avoid wasting
+    # time by calling update-grub multiple times on upgrade and removal.
+    # Also run if we have no DEB_MAINT_PARAMS, in order to work with old
+    # kernel packages.
+    */postinst.d/*:|*/postinst.d/*:configure|*/postrm.d/*:|*/postrm.d/*:remove)
+	if [ -e /boot/grub/grub.cfg ]; then
+		exec update-grub
+	fi
+	;;
+esac
+
+exit 0

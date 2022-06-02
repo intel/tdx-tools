@@ -1,0 +1,32 @@
+Source: shim
+Section: admin
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Steve Langasek <vorlon@debian.org>
+Standards-Version: 4.5.0
+Build-Depends: debhelper-compat (= 12), libelf-dev, dos2unix, dh-buildinfo, xxd
+Vcs-Git: https://git.launchpad.net/~ubuntu-core-dev/shim/+git/shim
+
+Package: shim
+Architecture: amd64 arm64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Breaks: shim-signed (<< 1.33~)
+Description: boot loader to chain-load signed boot loaders under Secure Boot
+ This package provides a minimalist boot loader which allows verifying
+ signatures of other UEFI binaries against either the Secure Boot DB/DBX or
+ against a built-in signature database.  Its purpose is to allow a small,
+ infrequently-changing binary to be signed by the UEFI CA, while allowing
+ an OS distributor to revision their main bootloader independently of the CA.
+
+Package: shim-dbg
+Architecture: amd64 arm64
+Section: debug
+Depends: ${shlibs:Depends}, ${misc:Depends}, shim (= ${binary:Version})
+Description: boot loader to chain-load signed boot loaders under Secure Boot (dbg symbols)
+ This package provides a minimalist boot loader which allows verifying
+ signatures of other UEFI binaries against either the Secure Boot DB/DBX or
+ against a built-in signature database.  Its purpose is to allow a small,
+ infrequently-changing binary to be signed by the UEFI CA, while allowing
+ an OS distributor to revision their main bootloader independently of the CA.
+ .
+ Debug symbols.

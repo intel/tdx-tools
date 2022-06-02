@@ -1,0 +1,10 @@
+usr/share/grub/grub-mkconfig_lib	usr/lib/grub/grub-mkconfig_lib
+
+usr/share/bash-completion/completions/grub	usr/share/bash-completion/completions/grub-editenv
+usr/share/bash-completion/completions/grub	usr/share/bash-completion/completions/grub-mkconfig
+usr/share/bash-completion/completions/grub	usr/share/bash-completion/completions/grub-mkfont
+usr/share/bash-completion/completions/grub	usr/share/bash-completion/completions/grub-mkimage
+usr/share/bash-completion/completions/grub	usr/share/bash-completion/completions/grub-mkpasswd-pbkdf2
+usr/share/bash-completion/completions/grub	usr/share/bash-completion/completions/grub-mkrescue
+usr/share/bash-completion/completions/grub	usr/share/bash-completion/completions/grub-probe
+usr/share/bash-completion/completions/grub	usr/share/bash-completion/completions/grub-script-check

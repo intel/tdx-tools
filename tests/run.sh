@@ -6,7 +6,7 @@ TEST_OUTPUT=${CURR_DIR}/output
 USER=$(whoami)
 REPORT_FILE_DATE=$(date +'report-%F-%H-%M-%S')
 HOST=$(cat /proc/sys/kernel/hostname)
-GUEST=centosstream
+GUEST=rhel
 SUITE="nosuite"
 KEEP_ISSUE_VM=false
 CASES=()
@@ -17,6 +17,7 @@ Usage: $(basename "$0") [OPTION]...
   -s Run all tests
   -c Multiple options for individual cases file like "-c tests/test_vm_coexist.py"
   -k Keep unhealthy VM
+  -g Set Guest OS type
   -h Show this
 EOM
     exit 0
@@ -24,11 +25,17 @@ EOM
 
 process_args() {
 
-    while getopts "c:skh" opt; do
+    while getopts "c:g:skh" opt; do
         case $opt in
         s) SUITE="all";;
         c) CASES+=("$OPTARG");;
         k) KEEP_ISSUE_VM=true;;
+        g) GUEST="$OPTARG"
+            [[ ! $GUEST =~ rhel|centosstream ]] && {
+               echo "Incorrect guest name $GUEST provided."
+               exit 1
+           }
+           ;;
         h) usage;;
         *) usage;;
         esac

@@ -12,7 +12,8 @@
     <topology sockets='1' cores='4' threads='4'/>
   </cpu>
   <os>
-    <type arch='x86_64' machine='pc-q35-5.1'>hvm</type>
+    <type arch='x86_64' machine='q35'>hvm</type>
+    <loader>/usr/share/qemu-kvm/bios.bin</loader>
     <boot dev='hd'/>
   </os>
   <features>
@@ -39,24 +40,17 @@
       <driver name='qemu' type='qcow2'/>
       <source file='REPLACEME_IMAGE' />
       <target dev='vda' bus='virtio'/>
-      <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </disk>
     <console type='pty'>
       <target type='virtio' port='0'/>
     </console>
     <interface type='bridge'>
-      <mac address='52:54:00:c5:9e:eb' />
-      <source bridge='br0'/>
+      <source bridge='virbr0'/>
       <model type='virtio'/>
-      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </interface>
   </devices>
   <qemu:commandline>
     <qemu:arg value='-cpu'/>
-    <qemu:arg value='host,host-phys-bits,+sgx,+sgx-debug,+sgx-exinfo,+sgx-kss,+sgx-mode64,+sgx-provisionkey,+sgx-tokenkey,+sgx1,+sgx2,+sgxlc'/>
-    <qemu:arg value='-object'/>
-    <qemu:arg value='memory-backend-epc,id=mem1,size=512M,prealloc'/>
-    <qemu:arg value='-sgx-epc'/>
-    <qemu:arg value='id=epc1,memdev=mem1'/>
+    <qemu:arg value='host'/>
   </qemu:commandline>
 </domain>

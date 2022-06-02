@@ -27,26 +27,19 @@ below diagram:
 
 | Name | Stack | Description |
 | -- | -- | -- |
-| [TDX Host Kernel](https://github.com/intel/tdx/tree/kvm) | IaaS Host| The modified kernel for baremetal server with TDX KVM patches |
-| [TDX Qemu-KVM](https://github.com/intel/qemu-tdx) | IaaS Host | The modified Qemu VMM to support to create TDX guest VM |
-| [TDX Libvirt](https://github.com/intel/libvirt-tdx) | IaaS Host | The modified libvirt to create TDX guest domain via Qemu |
-| [TDVF](https://github.com/tianocore/edk2-staging/tree/TDVF) | IaaS Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |
-| [TDX Guest Kernel](https://github.com/intel/tdx/tree/guest) | PaaS VM | The modified kernel for guest VM with TDX patches |
-| [TDX Grub2](https://github.com/intel/grub-tdx) | VM Guest | The modified grub for guest VM to support TDX measurement |
-| [TDX shim](https://github.com/intel/shim-tdx) | VM Guest | The modified shim for guest VM to support TDX measurement |
+| [SPR Kernel](https://github.com/intel/linux-kernel-dcp) | Host + Guest | Linux kernel for Sapphire Rapids platform |
+| [SPR Qemu-KVM](https://github.com/intel/qemu-dcp) | Host | Qemu VMM for Sapphire Rapids platform |
+| [TDX SEAM Module](https://github.com/intel/tdx-module/) | Host | TDX Secure Arbitration Module |
+| [TDX Libvirt](https://github.com/intel/libvirt-tdx) | Host | The modified libvirt to create TDX guest domain via Qemu |
+| [TDVF](https://github.com/tianocore/edk2-staging/tree/TDVF) | Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |
+| [TDX Grub2](https://github.com/intel/grub-tdx) | Guest | The modified grub for guest VM to support TDX measurement |
+| [TDX shim](https://github.com/intel/shim-tdx) | Guest | The modified shim for guest VM to support TDX measurement |
 
 ## 3. Getting Started
 
 ### 3.1 Install TDX Linux Stack
 
-The component can be installed via pre-build distro package or built from
-scratch.
-
-#### 3.1.1 Install Pre-built Packages
-
-TBD
-
-#### 3.1.2 Build Packages from scratch
+#### 3.1.1 Build Packages from scratch
 
 To build all components, run the following commands:
 
@@ -55,7 +48,14 @@ cd build/centos-stream-8
 ./build-repo.sh
 ```
 
-This will build all packages and create two repositories, one for guest and one for host. Move the host repo to a known location:
+_NOTE:_ Please refer detail instructions for different distros in `build`
+directory.
+
+This will build all packages and create two repositories, one for guest and one for host.
+
+#### 3.1.1 Install RPM repo on the target host
+
+Move the host repo to a known location:
 
 ```
 sudo mkdir -p /srv/
@@ -76,13 +76,18 @@ module_hotfixes=true
 Finally, install packages as follows:
 
 ```
-sudo dnf install intel-mvp-tdx-host-kernel intel-mvp-tdx-tdvf intel-mvp-tdx-qemu-kvm intel-mvp-tdx-libvirt
+sudo dnf install intel-mvp-spr-kernel intel-mvp-tdx-tdvf intel-mvp-spr-qemu-kvm intel-mvp-tdx-libvirt
 ```
+
+_NOTE_: Please get separated RPM for signed build `TDX SEAM Module` and install via
+`sudo dnf install intel-mvp-tdx-module-spr`. After installation, please reboot
+machine with `tdx_host=on` in host kernel command via grub menu. Finally, please
+[verify TDX host](./doc/verify_tdx_host.md).
 
 ### 3.2 Prepare TDX Guest Image
 
 After building TDX components packages please refer to [Setup TDX Guest Image](/doc/create_guest_image.md) to install
-them into cloud image. It uses `CentOS Stream 8` as example distro.
+them into a cloud image. It uses `CentOS Stream 8` as example distro.
 
 ## 4. Launch TD VM Guest
 
@@ -122,3 +127,5 @@ After TDX guest image is created, please refer to [TDX Tests](/doc/run_tests.md)
 
 - [How to check memory encryption for TDX guest](/doc/check_memory_encryption.md)
 - [How to debug a TDX guest via Qemu GDB server](/doc/debug_td_guest.md)
+- [Secure boot for TDX](./doc/secure_boot.md)
+- [Measured boot and TDX tool](./utils/pytdxmeasure/README.md)

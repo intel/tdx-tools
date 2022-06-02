@@ -47,7 +47,9 @@ move_packages() {
     dest=$2
 
     for package in "${packages[@]}"; do
-        mv repo/"${begin}"/x86_64/"${package}"* repo/"${dest}"/x86_64/
+        if ls repo/"${begin}"/x86_64/"${package}"* >/dev/null 2>&1; then
+            mv repo/"${begin}"/x86_64/"${package}"* repo/"${dest}"/x86_64/
+        fi
     done
 }
 
@@ -66,8 +68,8 @@ finalize() {
 # Check whether createrepo tool installed
 if ! command -v "createrepo"
 then
-    echo "Did not find createrepo package, install..."
-    dnf install createrepo -y
+    echo "Did not find createrepo package, please install it by dnf install createrepo"
+    exit 1
 fi
 
 # Build host repo

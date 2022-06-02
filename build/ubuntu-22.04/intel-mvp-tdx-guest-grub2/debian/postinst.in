@@ -1,0 +1,861 @@
+#!/bin/bash
+set -e
+
+# Apply a sed expression using extended regular expressions in place to a
+# file, if it exists.  The file is the first argument in order to work
+# neatly with apply_conf_tweaks.
+sed_conf()
+{
+  if [ -e "$1" ]; then
+    sed -i -re "$2" "$1"
+  fi
+}
+
+# Substitute a debconf answer into a configuration file with the syntax of
+# /etc/default/grub.
+merge_debconf_into_conf()
+{
+  local tmpfile; tmpfile="$1"
+  local setting; setting="$2"
+  local template; template="$3"
+
+  db_get "$template"
+  local value; value="$(echo "$RET" | sed -e 's,[$`"\],\\&,g')"
+  if grep -q "^${setting}=" "$tmpfile"; then
+    value="$(echo "$value" | sed -e 's,[\@],\\&,g')"
+    sed -i -re "s@^(${setting}=).*@\1\"${value}\"@" "$tmpfile"
+  else
+    echo >> "$tmpfile"
+    echo "${setting}=\"${value}\"" >> "$tmpfile"
+  fi
+}
+
+# Apply the same configuration tweak to multiple files.
+apply_conf_tweaks()
+{
+  local files; files="$1"
+  local cmd; cmd="$2"
+  local file
+  shift 2
+
+  for file in $files; do
+    if [ -e "$file" ]; then
+      "$cmd" "$file" "$@"
+    fi
+  done
+}
+
+get_wubi_device()
+{
+  if [ ! -x /usr/share/lupin-support/grub-mkimage ] || \
+     ! /usr/share/lupin-support/grub-mkimage --test; then
+    return 1
+  fi
+
+  local bootdev="$(grub-probe --target=device /boot)" || true
+  local loop_file=
+  case $bootdev in
+    /dev/loop/*|/dev/loop[0-9])
+      loop_file="$(losetup "$bootdev" | sed -e "s/^[^(]*(\([^)]\+\)).*/\1/")"
+      # If it's loop-mounted from another device, it isn't Wubi.
+      case $loop_file in
+        /dev/*) return 1 ;;
+      esac
+    ;;
+    *) return 1 ;;
+  esac
+
+  echo "$bootdev"
+}
+
+# This only works on a Linux system with udev running.  This is probably the
+# vast majority of systems where we need any of this, though, and we fall
+# back reasonably gracefully if we don't have it.
+cached_available_ids=
+available_ids()
+{
+  local id path
+
+  if [ "$cached_available_ids" ]; then
+    echo "$cached_available_ids"
+    return
+  fi
+
+  [ -d /dev/disk/by-id ] || return
+  cached_available_ids="$(
+    for path in /dev/disk/by-id/*; do
+      [ -e "$path" ] || continue
+      printf '%s %s\n' "$path" "$(readlink -f "$path")"
+    done | sort -k2 -s -u | cut -d' ' -f1
+  )"
+  echo "$cached_available_ids"
+}
+
+# Returns non-zero and no output if no mapping can be found.
+device_to_id()
+{
+  local id
+  for id in $(available_ids); do
+    if [ "$(readlink -f "$id")" = "$(readlink -f "$1")" ]; then
+      echo "$id"
+      return 0
+    fi
+  done
+  # Fall back to the plain device name if there's no by-id link for it.
+  if [ -e "$1" ]; then
+    echo "$1"
+    return 0
+  fi
+  return 1
+}
+
+all_disks()
+{
+  local id
+  for id in $(available_ids); do
+    case $id in
+      *-part*) ;;
+      *) echo "$id" ;;
+    esac
+  done
+}
+
+all_partitions()
+{
+  local id ids
+  ids=
+  for id in $(available_ids); do
+    if [ "$id" != "$1" ] && [ "${id%-part*}" = "$1" ]; then
+      ids="${ids:+$ids }$id"
+    fi
+  done
+  echo "$ids"
+}
+
+# In order to determine whether we accidentally ran grub-install without
+# upgrade-from-grub-legacy on versions older than 1.98+20100617-1, we need
+# to be able to scan a disk to determine whether GRUB 2 was installed in its
+# boot sector.  This is specific to i386-pc (but that's the only platform
+# where we need it).
+scan_grub2()
+{
+  if ! dd if="$1" bs=512 count=1 2>/dev/null | grep -aq GRUB; then
+    # No version of GRUB is installed.
+    return 1
+  fi
+
+  # The GRUB boot sector always starts with a JMP instruction.
+  initial_jmp="$(dd if="$1" bs=2 count=1 2>/dev/null | od -Ax -tx1 | \
+                 head -n1 | cut -d' ' -f2,3)"
+  [ "$initial_jmp" ] || return 1
+  initial_jmp_opcode="${initial_jmp%% *}"
+  [ "$initial_jmp_opcode" = eb ] || return 1
+  initial_jmp_operand="${initial_jmp#* }"
+  case $initial_jmp_operand in
+    47|4b|4c|63)
+      # I believe this covers all versions of GRUB 2 up to the package
+      # version where we gained a more explicit mechanism.  GRUB Legacy
+      # always had 48 here.
+      return 0
+    ;;
+  esac
+
+  return 1
+}
+
+# for Linux
+sysfs_size()
+{
+  local num_sectors sector_size size
+  # Try to find out the size without relying on a partitioning tool being
+  # installed. This isn't too hard on Linux 2.6 with sysfs, but we have to
+  # try a couple of variants on detection of the sector size.
+  if [ -e "$1/size" ]; then
+    num_sectors="$(cat "$1/size")"
+    sector_size=512
+    if [ -e "$1/queue/logical_block_size" ]; then
+      sector_size="$(cat "$1/queue/logical_block_size")"
+    elif [ -e "$1/queue/hw_sector_size" ]; then
+      sector_size="$(cat "$1/queue/hw_sector_size")"
+    fi
+    size="$(expr "$num_sectors" \* "$sector_size" / 1000 / 1000)"
+  fi
+  [ "$size" ] || size='???'
+  echo "$size"
+}
+
+# for kFreeBSD
+camcontrol_size()
+{
+  local num_sectors sector_size size=
+
+  if num_sectors="$(camcontrol readcap "$1" -q -s -N)"; then
+    sector_size="$(camcontrol readcap "$1" -q -b)"
+    size="$(expr "$num_sectors" \* "$sector_size" / 1000 / 1000)"
+  fi
+
+  [ "$size" ] || size='???'
+  echo "$size"
+}
+
+maybe_udevadm()
+{
+  if command -v udevadm >/dev/null 2>&1; then
+    udevadm "$@" || true
+  fi
+}
+
+# Returns value in $RET, like a debconf command.
+describe_disk()
+{
+  local disk id sysfs_path disk_basename size model
+  disk="$1"
+  id="$2"
+
+  model=
+  case $(uname -s) in
+    Linux)
+      sysfs_path="$(maybe_udevadm info -n "$disk" -q path)"
+      if [ -z "$sysfs_path" ]; then
+        sysfs_path="/block/$(printf %s "${disk#/dev/}" | sed 's,/,!,g')"
+      fi
+      size="$(sysfs_size "/sys$sysfs_path")"
+
+      model="$(maybe_udevadm info -n "$disk" -q property | sed -n 's/^ID_MODEL=//p')"
+      if [ -z "$model" ]; then
+        model="$(maybe_udevadm info -n "$disk" -q property | sed -n 's/^DM_NAME=//p')"
+        if [ -z "$model" ]; then
+          model="$(maybe_udevadm info -n "$disk" -q property | sed -n 's/^MD_NAME=//p')"
+          if [ -z "$model" ] && command -v dmsetup >/dev/null 2>&1; then
+            model="$(dmsetup info -c --noheadings -o name "$disk" 2>/dev/null || true)"
+          fi
+        fi
+      fi
+    ;;
+    GNU/kFreeBSD)
+      disk_basename=$(basename "$disk")
+      size="$(camcontrol_size "$disk_basename")"
+      model="$(camcontrol inquiry "$disk_basename" | sed -ne "s/^pass0: <\([^>]*\)>.*/\1/p")"
+    ;;
+  esac
+
+  [ "$model" ] || model='???'
+
+  db_subst grub-pc/disk_description DEVICE "$disk"
+  db_subst grub-pc/disk_description SIZE "$size"
+  db_subst grub-pc/disk_description MODEL "$model"
+  db_metaget grub-pc/disk_description description
+}
+
+# Returns value in $RET, like a debconf command.
+describe_partition()
+{
+  local disk part id path sysfs_path diskbase partbase size
+  disk="$1"
+  part="$2"
+  id="$3"
+  path="$4"
+
+  sysfs_path="$(maybe_udevadm info -n "$part" -q path)"
+  if [ -z "$sysfs_path" ]; then
+    diskbase="${disk#/dev/}"
+    diskbase="$(printf %s "$diskbase" | sed 's,/,!,g')"
+    partbase="${part#/dev/}"
+    partbase="$(printf %s "$partbase" | sed 's,/,!,g')"
+    sysfs_path="/block/$diskbase/$partbase"
+  fi
+  size="$(sysfs_size "/sys$sysfs_path")"
+
+  db_subst grub-pc/partition_description DEVICE "$part"
+  db_subst grub-pc/partition_description SIZE "$size"
+  db_subst grub-pc/partition_description PATH "$path"
+  db_metaget grub-pc/partition_description description
+}
+
+usable_partitions()
+{
+  local last_partition path partition partition_id
+
+  last_partition=
+  for path in / /boot /boot/grub; do
+    partition="$(grub-probe -t device "$path" || true)"
+    if [ -z "$partition" ] || [ "$partition" = "$last_partition" ]; then
+      continue
+    fi
+    partition_id="$(device_to_id "$partition" || true)"
+    echo "$path:$partition_id"
+    last_partition="$partition"
+  done | sort -t: -k2
+}
+
+get_mountpoint()
+{
+  local relpath boot_mountpoint
+
+  relpath="$(grub-mkrelpath "$1")"
+  boot_mountpoint="${1#$relpath}"
+  echo "${boot_mountpoint:-/}"
+}
+
+# Parse /proc/mounts and find out the mount for the given device.
+# The device must be a real device in /dev, not a symlink to one.
+get_mounted_device()
+{
+  mountpoint="$1"
+  cat /proc/mounts | while read -r line; do
+    set -f
+    set -- $line
+    set +f
+    if [ "$2" = "$mountpoint" ]; then
+      echo "$1"
+      break
+    fi
+  done
+}
+
+config_item()
+{
+  for x in /etc/default/grub /etc/default/grub.d/*.cfg; do
+    if [ -e "$x" ]; then
+      . "$x"
+    fi
+  done
+  if [ "$(eval echo "\${$1+set}")" = set ]; then
+    eval echo "\$$1"
+  else
+    return
+  fi
+}
+
+running_in_container()
+{
+  type systemd-detect-virt >/dev/null 2>&1 && systemd-detect-virt --quiet --container
+}
+
+
+no_extra_removable_arg()
+{
+    if grub-install --help | grep -q no-extra-removable; then
+	    removable=""
+	    no_removable="--no-extra-removable"
+    elif grub-install --help | grep -q force-extra-removable; then
+	    removable="--force-extra-removable"
+	    no_removable=""
+    else
+	    removable=""
+	    no_removable=""
+    fi
+    db_get grub2/no_efi_extra_removable
+    if [ "$RET" = true ]; then
+        NO_EXTRA_REMOVABLE="$no_removable"
+    else
+        NO_EXTRA_REMOVABLE="$removable"
+    fi
+}
+
+
+no_nvram_arg() {
+    db_get grub2/update_nvram
+    if [ "$RET" = false ]; then
+        echo "--no-nvram"
+    fi
+}
+
+run_grub_install()
+{
+    if ! grub-install $@ ; then
+        echo "Failed: grub-install $@" >&2
+        echo "WARNING: Bootloader is not properly installed, system may not be bootable" >&2
+    fi
+}
+
+run_grub_multi_install()
+{
+    tool=/usr/lib/grub/grub-multi-install
+    if [ ! -x $tool ]; then
+	    tool=grub-install
+    fi
+    if ! $tool $@ ; then
+        echo "Failed: grub-install $@" >&2
+        echo "WARNING: Bootloader is not properly installed, system may not be bootable" >&2
+    fi
+}
+
+case "$1" in
+  configure)
+    . /usr/share/debconf/confmodule
+
+    devicemap_regenerated=
+
+    if [ @PACKAGE@ = "grub-efi-amd64" ] && dpkg --compare-versions "$2" lt-nl 2.02-2ubuntu11; then
+      if [ -x /usr/share/grub/grub-check-signatures ]; then
+        /usr/share/grub/grub-check-signatures
+      fi
+    fi
+
+    if egrep -q '^[[:space:]]*post(inst|rm)_hook[[:space:]]*=[[:space:]]*(/sbin/|/usr/sbin/)?update-grub' /etc/kernel-img.conf 2>/dev/null; then
+      echo 'Removing update-grub hooks from /etc/kernel-img.conf in favour of' >&2
+      echo '/etc/kernel/ hooks.' >&2
+      sed -ri /etc/kernel-img.conf -e '\%^[[:space:]]*post(inst|rm)_hook[[:space:]]*=[[:space:]]*(/sbin/|/usr/sbin/)?update-grub%d'
+    fi
+
+    mkdir -p /boot/grub
+
+    case @PACKAGE@ in
+      grub-pc)
+        if test -e /boot/grub/device.map && ! test -e /boot/grub/core.img && \
+           ! test -e /boot/grub/@FIRST_CPU_PLATFORM@/core.img; then
+          # Looks like your device.map was generated by GRUB Legacy, which
+          # used to generate broken device.map (see #422851).  Avoid the risk
+          # by regenerating it.
+          grub-mkdevicemap --no-floppy
+          devicemap_regenerated=1
+        fi
+      ;;
+    esac
+
+    if test -z "$devicemap_regenerated" && \
+       dpkg --compare-versions "$2" lt-nl 1.99~20101210-2 && \
+       grep -qs /md-uuid- /boot/grub/device.map; then
+      echo "Removing MD devices from device.map, since the BIOS cannot read from these." >&2
+      sed -i '/\/md-uuid-/d' /boot/grub/device.map
+    fi
+
+    tmp_default_grub="$(mktemp -t grub.XXXXXXXXXX)"
+    trap "rm -f ${tmp_default_grub}" EXIT
+    cp -p /usr/share/grub/default/grub ${tmp_default_grub}
+
+    # Apply configuration from debconf to both the template configuration
+    # file (so that any ucf conflict resolution is shown with the configured
+    # values in place) and to /etc/default/grub (in order that debconf
+    # changes are effective even if we have to use UCF_FORCE_CONFFOLD=1).
+    #
+    # The config script takes care to read current values from
+    # /etc/default/grub before possibly prompting the user to change them,
+    # so this should comply with policy's strictures on configuration file
+    # handling: the debconf prompts constitute an explicit administrator
+    # request to change the configuration file.
+    #
+    # If the administrator changes their answers to any of these debconf
+    # questions in the same run as a change to the template, then they'll
+    # get a spurious ucf conflict.  To fix this, we'd need to keep track of
+    # the old answers, substitute the old answers into $tmp_default_grub,
+    # and substitute the new answers into /etc/default/grub.  Fortunately,
+    # debconf won't normally ask these questions again during an upgrade, so
+    # this should be rare in practice.
+
+    conf_files="$tmp_default_grub /etc/default/grub"
+
+    apply_conf_tweaks "$conf_files" merge_debconf_into_conf GRUB_CMDLINE_LINUX grub2/linux_cmdline
+    apply_conf_tweaks "$conf_files" merge_debconf_into_conf GRUB_CMDLINE_LINUX_DEFAULT grub2/linux_cmdline_default
+
+    case @PACKAGE@ in
+      grub-pc)
+        apply_conf_tweaks "$conf_files" merge_debconf_into_conf GRUB_TIMEOUT grub-pc/timeout
+        apply_conf_tweaks "$conf_files" sed_conf 's/^(GRUB_TIMEOUT=)"([0-9][0-9]*)"/\1\2/'
+        db_get grub-pc/hidden_timeout
+        if [ "$RET" = false ]; then
+          apply_conf_tweaks "$conf_files" sed_conf 's/^GRUB_HIDDEN_TIMEOUT=/#&/'
+        fi
+      ;;
+      grub-ieee1275)
+        if grep ^platform /proc/cpuinfo | grep -q PowerNV; then
+		cat <<-EOF >>"$tmp_default_grub"
+
+		# Disable os-prober for ppc64el on the PowerNV platform (for Petitboot)
+		GRUB_DISABLE_OS_PROBER=true
+		EOF
+        fi
+        ;;
+    esac
+
+    # If the template configuration file hasn't changed, then no conflict is
+    # possible.  ucf can't figure this out for itself since we apply
+    # debconf-based customisations on top of the template configuration
+    # file.
+    if [ -e /var/lib/grub/ucf/grub.previous ] && \
+       cmp -s /usr/share/grub/default/grub /var/lib/grub/ucf/grub.previous && \
+       [ -e /etc/default/grub ]; then
+      ucf_env=UCF_FORCE_CONFFOLD=1
+    else
+      ucf_env=
+    fi
+
+    env $ucf_env ucf --three-way --debconf-ok --sum-file=/usr/share/grub/default/grub.md5sum "$tmp_default_grub" /etc/default/grub
+    cp -aZ /usr/share/grub/default/grub /var/lib/grub/ucf/grub.previous
+    package="$(ucfq --with-colons /etc/default/grub | cut -d : -f 2)"
+    if echo $package | grep -q "^grub-" ; then
+      ucfr --force @PACKAGE@ /etc/default/grub
+    else
+      ucfr @PACKAGE@ /etc/default/grub
+    fi
+
+    case @PACKAGE@ in
+      grub-pc)
+
+        fix_mixed_system=
+        if test -e /boot/grub/stage2 && test -e /boot/grub/menu.lst && \
+           ! test -e /boot/grub/grub2-installed && \
+           test -z "$UPGRADE_FROM_GRUB_LEGACY"; then
+          # Unfortunately, it's still possible that the user upgraded fully
+          # to GRUB 2 in some way other than running
+          # upgrade-from-grub-legacy; perhaps they ran grub-install by hand
+          # for some reason.  It's really quite difficult to detect this
+          # situation, because the only difference between this and a
+          # working chainloaded setup is that in this case grub-setup has
+          # been run.  So, to try to tell the difference, we scan the boot
+          # sectors of all disks for a GRUB 2 boot sector.  Hopefully this
+          # won't cause too much to explode, since I can't think of a better
+          # method.
+          grub2_disks=
+          for disk in $(all_disks); do
+            if scan_grub2 "$disk"; then
+              grub2_disks="${grub2_disks:+$grub2_disks }$(readlink -f "$disk")"
+            fi
+          done
+          if [ "$grub2_disks" ]; then
+            # No || true here; it's vital that the user sees this, and it's
+            # better to throw an error than to do the wrong thing.
+            db_subst grub-pc/mixed_legacy_and_grub2 DISKS "$grub2_disks"
+            db_fset grub-pc/mixed_legacy_and_grub2 seen false
+            db_input critical grub-pc/mixed_legacy_and_grub2
+            db_go
+            db_get grub-pc/mixed_legacy_and_grub2
+            if [ "$RET" = true ]; then
+              db_reset grub-pc/install_devices
+              UPGRADE_FROM_GRUB_LEGACY=1
+              fix_mixed_system=1
+              # Fall through to normal installation logic.
+            fi
+          fi
+        fi
+
+        # Make sure that Wubi users never see confusing device prompts.
+        # Wubi is a very specialised hack that does complicated things with
+        # grub-install diversions to create an image that's chained from the
+        # Windows boot loader to boot an operating system from a file on a
+        # Windows file system.  In these circumstances, prompting for where
+        # to install GRUB is not going to help anyone.
+        wubi_device="$(get_wubi_device)" || true
+        if [ "$wubi_device" ]; then
+          db_set grub-pc/install_devices "$wubi_device"
+          db_fset grub-pc/install_devices seen true
+        fi
+
+        if test -e /boot/grub/stage2 && test -e /boot/grub/menu.lst && \
+           ! test -e /boot/grub/grub2-installed && \
+           test -z "$UPGRADE_FROM_GRUB_LEGACY"; then
+          db_get grub-pc/chainload_from_menu.lst
+          if $RET ; then
+            # Create core.img (but do not risk writing to MBR).
+            # Using grub-probe instead of "(hd0)" avoids (UUID=) hack slowness
+            # in case /boot/grub is not on (hd0) in device.map.
+            echo "Generating core.img" >&2
+            grub-install --target=i386-pc --no-floppy --grub-setup=/bin/true "$(grub-probe -t drive /boot/grub)" > /dev/null
+
+            # Update menu.lst to reflect that:
+            # - core.img is present now
+            # - core.img has to be the first option
+            echo "Saving menu.lst backup in /boot/grub/menu.lst_backup_by_grub2_postinst" >&2
+            cp /boot/grub/menu.lst{,_backup_by_grub2_postinst}
+            echo "Running update-grub Legacy to hook our core.img in it" >&2
+            LET_US_TRY_GRUB_2=true /usr/lib/grub-legacy/update-grub 2>&1 | sed -e "s/^/    /g" >&2
+            # We just hooked GRUB 2 in menu.lst; then also generate grub.cfg.
+            touch /boot/grub/grub.cfg
+          fi
+        elif running_in_container; then
+          # Skip grub-install in containers.
+          :
+        elif dpkg --compare-versions "$2" ge 2.04-1ubuntu26 && [ -z "$DEBCONF_RECONFIGURE" ]; then
+          # Avoid the possibility of breaking grub on SRU update
+          # due to ABI change
+          :
+        elif test -e /boot/grub/core.img || \
+             test -e /boot/grub/@FIRST_CPU_PLATFORM@/core.img || \
+             test "$UPGRADE_FROM_GRUB_LEGACY" || test "$wubi_device"; then
+          question=grub-pc/install_devices
+          priority=high
+          device_map="$(grub-mkdevicemap -m - | grep -v '^(fd[0-9]\+)' || true)"
+          devices="$(echo "$device_map" | cut -f2)"
+          db_get grub-pc/install_devices
+          valid=1
+          for device in $RET; do
+            if [ ! -e "${device%,}" ]; then
+              valid=0
+              break
+            fi
+          done
+          if [ "$valid" = 0 ]; then
+            question=grub-pc/install_devices_disks_changed
+            priority=critical
+            db_set "$question" "$RET"
+            db_fset "$question" seen false
+            db_fset grub-pc/install_devices_empty seen false
+          fi
+
+          while :; do
+            ids=
+            descriptions=
+            partitions="$(usable_partitions)"
+            for device in $devices; do
+              disk_id="$(device_to_id "$device" || true)"
+              if [ "$disk_id" ]; then
+                ids="${ids:+$ids, }$disk_id"
+                describe_disk "$(readlink -f "$device")" "$disk_id"
+                RET="$(printf %s "$RET" | sed 's/,/\\,/g')"
+                descriptions="${descriptions:+$descriptions, }$RET"
+                for partition_pair in $partitions; do
+                  partition_id="${partition_pair#*:}"
+                  if [ "${partition_id#$disk_id-part}" != "$partition_id" ]; then
+                    ids="${ids:+$ids, }$partition_id"
+                    describe_partition "$(readlink -f "$device")" "$(readlink -f "$partition_id")" "$partition_id" "$(get_mountpoint "${partition_pair%%:*}")"
+                    RET="$(printf %s "$RET" | sed 's/,/\\,/g')"
+                    descriptions="${descriptions:+$descriptions, }$RET"
+                  fi
+                done
+              fi
+            done
+            # Some "partitions" may in fact be at the disk level, e.g. RAID.
+            # List these as well if they haven't already been listed.
+            for partition_pair in $partitions; do
+              partition_id="${partition_pair#*:}"
+              if [ "${partition_id#*-part}" = "$partition_id" ]; then
+                case ", $ids, " in
+                  ", $partition_id, ") ;;
+                  *)
+                    ids="${ids:+$ids, }$partition_id"
+                    describe_disk "$(readlink -f "$partition_id")" "$partition_id"
+                    RET="$(printf %s "$RET" | sed 's/,/\\,/g')"
+                    descriptions="${descriptions:+$descriptions, }$RET"
+                    ;;
+                esac
+              fi
+            done
+            db_subst "$question" RAW_CHOICES "$ids"
+            db_subst "$question" CHOICES "$descriptions"
+            db_input "$priority" "$question" || true
+            db_go
+            db_get "$question"
+            failed_devices=
+            for i in $RET; do
+              real_device="$(readlink -f "${i%,}")"
+              if [ ! -e "$real_device" ]; then
+                echo "$real_device does not exist, so cannot grub-install to it!" >&2
+                failed_devices="$failed_devices $real_device"
+              elif grub-install --target=i386-pc --force --no-floppy $real_device ; then
+                # We just installed GRUB 2; then also generate grub.cfg.
+                touch /boot/grub/grub.cfg
+              else
+                failed_devices="$failed_devices $real_device"
+              fi
+            done
+
+            if [ "$question" != grub-pc/install_devices ] && [ "$RET" ]; then
+              # XXX cjwatson 2019-02-26: The description of
+              # grub-pc/install_devices_disks_changed ought to explain that
+              # selecting no devices will leave the configuration unchanged
+              # so that you'll be prompted again next time, but it's a bit
+              # close to the Debian 10 release to be introducing new
+              # translatable text.  For now, it should be sufficient to
+              # avoid losing configuration data.
+              db_set grub-pc/install_devices "$RET"
+              db_fset grub-pc/install_devices seen true
+            fi
+
+            if [ "$failed_devices" ]; then
+              if [ "$UPGRADE_FROM_GRUB_LEGACY" ]; then
+                db_subst grub-pc/install_devices_failed_upgrade FAILED_DEVICES "$failed_devices"
+                db_fset grub-pc/install_devices_failed_upgrade seen false
+                if db_input critical grub-pc/install_devices_failed_upgrade; then
+                  db_go
+                  db_get grub-pc/install_devices_failed_upgrade
+                  if [ "$RET" = true ]; then
+                    db_fset "$question" seen false
+                    db_fset grub-pc/install_devices_failed_upgrade seen false
+                    continue
+                  else
+                    exit 1
+                  fi
+                else
+                  echo "You must correct your GRUB install devices before proceeding:" >&2
+                  echo >&2
+                  echo "  DEBIAN_FRONTEND=dialog dpkg --configure grub-pc" >&2
+                  echo "  dpkg --configure -a" >&2
+                  exit 1 # noninteractive
+                fi
+              else
+                db_subst grub-pc/install_devices_failed FAILED_DEVICES "$failed_devices"
+                db_fset grub-pc/install_devices_failed seen false
+                if db_input critical grub-pc/install_devices_failed; then
+                  db_go
+                  db_get grub-pc/install_devices_failed
+                  if [ "$RET" = true ]; then
+                    break
+                  else
+                    db_fset "$question" seen false
+                    db_fset grub-pc/install_devices_failed seen false
+                    continue
+                  fi
+                else
+                  echo "You must correct your GRUB install devices before proceeding:" >&2
+                  echo >&2
+                  echo "  DEBIAN_FRONTEND=dialog dpkg --configure grub-pc" >&2
+                  echo "  dpkg --configure -a" >&2
+                  exit 1 # noninteractive
+                fi
+              fi
+            fi
+
+            db_get "$question"
+            if [ -z "$RET" ]; then
+              # Reset the seen flag if the current answer is false, since
+              # otherwise we'll loop with no indication of why.
+              db_get grub-pc/install_devices_empty
+              if [ "$RET" = false ]; then
+                db_fset grub-pc/install_devices_empty seen false
+              fi
+              if db_input critical grub-pc/install_devices_empty; then
+                db_go
+                db_get grub-pc/install_devices_empty
+                if [ "$RET" = true ]; then
+                  break
+                else
+                  db_fset "$question" seen false
+                  db_fset grub-pc/install_devices_empty seen false
+                fi
+              else
+                db_get grub-pc/install_devices_empty
+                if [ "$RET" = true ]; then
+                  break
+                else
+                  echo "You must correct your GRUB install devices before proceeding:" >&2
+                  echo >&2
+                  echo "  DEBIAN_FRONTEND=dialog dpkg --configure grub-pc" >&2
+                  echo "  dpkg --configure -a" >&2
+                  exit 1 # noninteractive
+                fi
+              fi
+            else
+              break
+            fi
+          done
+        fi
+
+        # /boot/grub/ has more chances of being accessible by GRUB
+        for i in /usr/share/grub/unicode.pf2 ; do
+          if test -e $i ; then
+            cp $i /boot/grub/
+          fi
+        done
+
+        if [ "$fix_mixed_system" ]; then
+          # These never contain any valuable information, and they aren't
+          # useful for boot any more, since we just overwrote MBR/PBR.
+          rm -f /boot/grub/{{xfs,reiserfs,e2fs,fat,jfs,minix}_stage1_5,stage{1,2}}
+          # Remove marker file used to indicate that grub-install was run
+          # rather than upgrade-from-grub-legacy.  Since stage2 has been
+          # removed, we don't need this any more.
+          rm -f /boot/grub/grub2-installed
+        fi
+      ;;
+
+      grub-efi-ia32|grub-efi-amd64|grub-efi-ia64|grub-efi-arm|grub-efi-arm64|grub-efi-riscv64)
+        bootloader_id="$(config_item GRUB_DISTRIBUTOR | tr A-Z a-z | \
+                         cut -d' ' -f1)"
+        case $bootloader_id in
+          kubuntu) bootloader_id=ubuntu ;;
+          devuan) bootloader_id=debian ;;
+        esac
+
+        if dpkg --compare-versions "$2" lt-nl 2.02-1~; then
+          # Try to not break people upgrading by suddenly installing things
+          # to /EFI/BOOT without knowing if it might break.
+          db_get grub2/force_efi_extra_removable || true
+          if [ "$RET" = false ]; then
+            db_set grub2/no_efi_extra_removable true
+            db_fset grub2/no_efi_extra_removable seen true
+          fi
+          db_reset grub2/force_efi_extra_removable || true
+          if [ -e "/boot/efi/EFI/${bootloader_id}/fbx64.efi" ]; then
+            rm -f "/boot/efi/EFI/${bootloader_id}/fbx64.efi";
+          fi
+        fi
+
+        case @PACKAGE@ in
+          grub-efi-ia32)  target=i386-efi ;;
+          grub-efi-amd64) target=x86_64-efi ;;
+          grub-efi-ia64)  target=ia64-efi ;;
+          grub-efi-arm)   target=arm-efi ;;
+          grub-efi-arm64) target=arm64-efi ;;
+          grub-efi-riscv64) target=riscv64-efi ;;
+        esac
+        # Check /boot/grub to see if we previously installed to an ESP. We don't
+        # want to trigger the install code just by installing the package,
+        # normally the installer installs grub itself first.
+        if test -e /boot/grub/$target/core.efi; then
+          NO_EXTRA_REMOVABLE="$(no_extra_removable_arg)"
+          NO_NVRAM="$(no_nvram_arg)"
+          run_grub_multi_install --target="$target" "$NO_EXTRA_REMOVABLE" "$NO_NVRAM"
+        fi
+
+        # /boot/grub/ has more chances of being accessible by GRUB
+        for i in /usr/share/grub/unicode.pf2 ; do
+          if test -e $i ; then
+            cp $i /boot/grub/
+          fi
+        done
+
+        if type update-secureboot-policy >/dev/null 2>&1; then
+          update-secureboot-policy || true
+        fi
+      ;;
+
+      grub-ieee1275)
+        case $(dpkg --print-architecture) in
+          powerpc|ppc64|ppc64el)
+            # Output may be empty; if so, just update the core image but
+            # don't install it to any PReP partition.
+            prep_bootdev="$(/usr/lib/grub/powerpc-ieee1275/prep-bootdev)"
+            NO_NVRAM="$(no_nvram_arg)"
+            run_grub_install --target=powerpc-ieee1275 $prep_bootdev "$NO_NVRAM"
+          ;;
+        esac
+      ;;
+
+      grub-yeeloong)
+        run_grub_install --target=mipsel-loongson
+      ;;
+
+      grub-xen)
+        # Install for x86_64 regardless of arch, since a 32-bit userspace can still boot with a 64-bit kernel.
+        mkdir -p /boot/xen
+        run_grub_install --target=x86_64-xen
+        case $(dpkg --print-architecture) in
+          i386)
+            run_grub_install --target=i386-xen
+          ;;
+        esac
+        # Similarly, the PVH boot loader is usable regardless of arch.
+        run_grub_install --target=i386-xen_pvh
+      ;;
+    esac
+
+    # If grub.cfg has been generated, update it.
+    if test -e /boot/grub/grub.cfg && ! running_in_container; then
+      update-grub 3>&-
+    fi
+  ;;
+  abort-upgrade|abort-remove|abort-deconfigure)
+  ;;
+  *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+  ;;
+esac
+
+# dh_installdeb will replace this with shell code automatically
+# generated by other debhelper scripts.
+
+#DEBHELPER#
+
+exit 0

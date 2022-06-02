@@ -1,0 +1,1 @@
+rm_conffile /etc/bash_completion.d/grub 2.02+dfsg1-9~

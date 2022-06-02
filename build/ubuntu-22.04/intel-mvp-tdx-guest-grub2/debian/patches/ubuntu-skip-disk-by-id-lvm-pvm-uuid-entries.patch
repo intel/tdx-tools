@@ -1,0 +1,58 @@
+From: Rafael David Tinoco <rafaeldtinoco@ubuntu.com>
+Date: Mon, 7 Oct 2019 22:53:32 -0300
+Subject: Skip /dev/disk/by-id/lvm-pvm-uuid entries from device iteration
+
+The following LVM2 commit:
+
+commit 417e52c13a8156b11c25c411d44bda8b32bf87e4
+Author: Peter Rajnoha <prajnoha@redhat.com>
+Date: Tue Feb 18 07:27:21 2014
+
+    udev: create /dev/disk/by-id/lvm-pv-uuid-<PV_UUID> symlink for a PV
+
+    We already have /dev/disk/by-id/dm-uuid-... (which encompasses the
+    VG UUID and LV UUID in case of LVs since the mapping's UUID is
+    VG+LV UUID together) and /dev/disk/by-id/dm-name-... (which encompasses
+    the VG and LV name in case of LVs).
+
+    This patch addds /dev/disk/by-id/lvm-pv-uuid-<PV_UUID> that completes
+    this scheme and makes navigation a bit easier using PV UUIDs since
+    one can navigate using PV UUIDs only and there's no need to do extra
+    PV UUID <--> kernel name matching (the PV UUID is stable across reboots).
+    This may come in handy in various scripts.
+
+    Since we already have the PV UUID stored in udev database (as a result
+    of blkid call - returned in ID_FS_UUID blkid's variable), this operation
+    is very cheap indeed, just creating the extra one symlink.
+
+creates a udev rule that populates /dev/disk/by-id with LVM PVs
+according to discovered UUIDs. That will trigger a bad logic in
+debian-installer as the installer depends on grub_util_iterate_devices()
+logic to discover the disks that can have grub installed.
+
+This change only ignores those entries, so debian-installer bad
+execution path is not triggered, just like grub_iterate_devices()
+already does for other similar entries, like the partition ones.
+
+Author: Rafael David Tinoco <rafaeldtinoco@ubuntu.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1838525
+Last-Update: 2019-10-07
+Patch-Name: ubuntu-skip-disk-by-id-lvm-pvm-uuid-entries.patch
+---
+ util/deviceiter.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/util/deviceiter.c b/util/deviceiter.c
+index 3a8f277..d06b667 100644
+--- a/util/deviceiter.c
++++ b/util/deviceiter.c
+@@ -590,6 +590,9 @@ grub_util_iterate_devices (int (*hook) (const char *, int, void *), void *hook_d
+ 	    /* Skip partition entries.  */
+ 	    if (strstr (entry->d_name, "-part"))
+ 	      continue;
++	    /* LVM might create /dev/disk/by-id/lvm-pv-uuid-<PV_UUID> symlinks */
++	    if (strstr (entry->d_name, "lvm-pv-uuid"))
++	      continue;
+ 	    /* Skip device-mapper entries; we'll handle the ones we want
+ 	       later.  */
+ 	    if (strncmp (entry->d_name, "dm-", sizeof ("dm-") - 1) == 0)

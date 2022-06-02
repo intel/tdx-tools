@@ -147,6 +147,7 @@ def do_var_enroll(input_fd, output_fd, pkg_path, sbconfig, build_log):
     :return:
     '''
 
+    # pylint: disable=unnecessary-lambda-assignment
     file_path = lambda file, base_dir: file if os.path.isabs(file) else os.path.join(base_dir, file)
     pk_file = file_path(sbconfig['PK'][1], pkg_path)
     kek_file = file_path(sbconfig['KEK'][1], pkg_path)

@@ -1,0 +1,33 @@
+From: Marius Bakke <marius@gnu.org>
+Date: Sun, 13 Jun 2021 15:11:51 +0200
+Subject: tests/ahci: Change "ide-drive" deprecated QEMU device name to
+ "ide-hd"
+
+The "ide-drive" device was removed in QEMU 6.0. The "ide-hd" has been
+available for more than 10 years now in QEMU. Thus there shouldn't be
+any need for backwards compatible names.
+
+Signed-off-by: Marius Bakke <marius@gnu.org>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+
+Origin: upstream, https://git.savannah.gnu.org/cgit/grub.git/commit/?id=aaea244a6ddd1e35aed60a5c7a08ddc41f51805b
+Last-Update: 2021-09-24
+
+Patch-Name: tests-ahci-update-qemu-device-name.patch
+---
+ tests/ahci_test.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/ahci_test.in b/tests/ahci_test.in
+index 7df5604..d844fe6 100644
+--- a/tests/ahci_test.in
++++ b/tests/ahci_test.in
+@@ -41,7 +41,7 @@ echo "hello" > "$outfile"
+ 
+ tar cf "$imgfile" "$outfile"
+ 
+-if [ "$(echo "nativedisk; source '(ahci0)/$outfile';" | "${grubshell}" --qemu-opts="-drive id=disk,file=$imgfile,if=none -device ahci,id=ahci -device ide-drive,drive=disk,bus=ahci.0 " | tail -n 1)" != "Hello World" ]; then
++if [ "$(echo "nativedisk; source '(ahci0)/$outfile';" | "${grubshell}" --qemu-opts="-drive id=disk,file=$imgfile,if=none -device ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0 " | tail -n 1)" != "Hello World" ]; then
+    rm "$imgfile"
+    rm "$outfile"
+    exit 1

@@ -25,7 +25,7 @@ docker build -t pkg-builder-centos-stream-8 .
 ```
 
 **_NOTE_:** By default, it use Aliyun mirror to accelerate, please change to any
-other mirror for your favorit.
+other mirror for your favorite.
 
 3. Build package
 

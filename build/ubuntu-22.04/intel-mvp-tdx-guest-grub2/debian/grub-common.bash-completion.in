@@ -1,0 +1,1 @@
+debian/tmp-grub-@COMMON_PLATFORM@/etc/bash_completion.d/grub

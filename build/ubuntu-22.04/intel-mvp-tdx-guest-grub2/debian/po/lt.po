@@ -1,0 +1,550 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Rimas Kudelis <rq@akl.lt>, 2012, 2014, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2017-01-20 09:03+0300\n"
+"Last-Translator: Rimas Kudelis <rq@akl.lt>\n"
+"Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Virtaal 0.7.1\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "Paleisti grandininiu būdu iš „menu.lst“?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"„GRUB“ atnaujinimo scenarijai aptiko senojo „GRUB“ konfigūracinius failus „/"
+"boot/grub“ aplanke."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Norint pakeisti senąją sistemoje esančią „GRUB“ versiją, rekomenduojama "
+"pirmiausia papildyti jos konfigūracinį failą „/boot/grub/menu.lst“, "
+"nurodant, kad ji paleistų „GRUB 2“ grandininiu būdu. Šį žingsnį galima "
+"automatiškai atlikti dabar."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"Prieš įrašant „GRUB 2“ į disko paleidimo įrašą, rekomenduojama išbandyti "
+"grandininį jos paleidimą iš „menu.lst“ ir įsitikinti, jog „GRUB 2“ sąranka "
+"veikia tinkamai."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Koks bebūtų Jūsų sprendimas, vėliau MBR turinį galėsite perrašyti „GRUB 2“ "
+"ar vėlesne versija, „root“ teisėmis paleisdami komandą:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "Įrenginiai „GRUB“ diegimui:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"Atnaujinamas „grub-pc“ paketas. Šiame meniu galite pasirinkti, ar kuriems "
+"nors įrenginiams komanda „grub-install“ turėtų būti paleidžiama automatiškai."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"Daugumoje atvejų rekomenduojama automatiškai vykdyti „grub-install“, kad "
+"būtų išvengta neatitikimų tarp pagrindinio „GRUB“ atvaizdžio ir „GRUB“ "
+"modulių ar „grub.cfg“ failo."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"Jeigu tiksliai nežinote, kurį diską kompiuterio BIOS laiko paleidimo disku, "
+"galite įdiegti „GRUB“ į visus diskus – dažniausiai tai yra nebloga mintis."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Pastaba: „GRUB“ galima įdiegti ir į skaidinių paleidimo įrašus, todėl sąraše "
+"yra ir keletas skaidinių. Vis dėlto, šiuo atveju „GRUB“ tektų naudoti blokų "
+"sąrašo (blocklist) mechanizmą, kuris yra mažiau patikimas, todėl paprastai "
+"nepatartinas."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"Anksčiau „GRUB“ paleidyklė buvo įdiegta į diską, kuris dabar nebeprieinamas "
+"arba kurio identifikatorius dėl kokių nors priežasčių pakeistas. Svarbu "
+"užtikrinti pagrindinio „GRUB“ atvaizdžio, „GRUB“ modulių ir „grub.cfg“ failo "
+"suderinamumą. Patikrinkite pasirinkimus dar kartą ir įsitikinkite, jog "
+"„GRUB“ paleidyklė bus įrašyta į reikiamus paleidimo įrenginius."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "„GRUB“ įrašyti į paleidimo įrenginį nepavyko. Ar tęsti?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "Nepavyko „GRUB“ įdiegti į šiuos įrenginius:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Ar tęsti, nepaisant problemos? Jos neišsprendus, kompiuteris gali tinkamai "
+"nepasileisti."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "„GRUB“ įrašyti į paleidimo įrenginį nepavyko. Bandyti dar kartą?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"Galbūt „GRUB“ Jums pavyks įdiegti į kurį nors kitą įrenginį, tačiau "
+"turėtumėte įsitikinti, jog sistemą iš to įrenginio pavyks paleisti. "
+"Priešingu atveju šis atnaujinimas iš senosios „GRUB“ versijos bus atšauktas."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "Ar tęsti neįdiegus „GRUB“?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Galima „GRUB“ paleidyklės ir nediegti į jokį įrenginį. Tokiu atveju ji nebus "
+"tinkamai sukonfigūruota ir kitąkart paleidus šį kompiuterį, bus bandoma "
+"įvykdyti tai, kas paleidimo sektoriuje buvo iki šiol. Jeigu jame įrašyta "
+"ankstesnė „GRUB 2“ versija, tikėtina, jog jai nepavyks įkelti reikiamų "
+"modulių ar tinkamai interpretuoti konfigūracinio failo."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"Jeigu šiame kompiuteryje jau naudojama kita paleidyklė ir Jūs norite ja "
+"naudotis toliau, arba jeigu paleidyklės diegti nereikia dėl kitų priežasčių, "
+"tuomet tiesiog tęskite. Priešingu atveju „GRUB“ reikėtų kur nors įdiegti."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "Pašalinti „GRUB 2“ iš „/boot/grub“?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "Ar pašalinti visus „GRUB 2“ failus iš „/boot/grub“ aplanko?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Tai atlikus, sistemą paleisti gali tapti neįmanoma, nebent joje įdiegta kita "
+"paleidyklė."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "Užbaigti migraciją į „GRUB 2“ dabar?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Šioje sistemoje vis dar likę įdiegtų senosios „GRUB“ failų, tačiau joje yra "
+"įdiegti ir „GRUB 2“ paleidimo įrašai šiuose diskuose:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"Panašu, kad senoji „GRUB“ nebenaudojama ir kad Jums derėtų atnaujinti „GRUB "
+"2“ atvaizdžius šiuose diskuose ir užbaigti migraciją į „GRUB 2“, pašalinant "
+"senosios „GRUB“ failus. Neatnaujinus šių „GRUB 2“ atvaizdžių, naujai įdiegti "
+"paketai gali būti su jais nesuderinami. Tokiu atveju sistema gali apskritai "
+"nepasileisti."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"Paprastai derėtų užbaigti migraciją į „GRUB 2“, nebent šiuos paleidimo "
+"įrašus sukūrė „GRUB 2“ versija, įdiegta su kokia nors kita operacine sistema."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "„Linux“ komandos eilutė:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Iš „/etc/default/grub“ failo arba senosios „GRUB“ konfigūraciniame faile "
+"„menu.lst“ nurodyto „kopt“ parametro išrinkta žemiau pateikta „Linux“ "
+"komandos eilutė. Patikrinkite, ar ji tinkama ir jei reikia, ją "
+"patikslinkite. Komandos eilutė gali būti ir tuščia."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Numatytoji „Linux“ komandos eilutė:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"Ši eilutė bus naudojama kaip įprastiniai „Linux“ branduolio parametrai, bet "
+"ne pasirinkus atkūrimo veikseną."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr "Papildomai priverstinai įdiegti į EFI keičiamųjų laikmenų kelią?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"Kai kurios EFI veiksena veikiančios sistemos turi klaidų ir negeba "
+"korektiškai dirbti su naujomis paleidyklėmis. „GRUB“ paleidyklę papildomai "
+"priverstinai įdiegus į EFI keičiamųjų laikmenų kelią, turėtų būti "
+"užtikrintas korektiškas „Debian“ paleidimas tokiose sistemose. Kita vertus, "
+"tai galimai užkirstų kelią paleisti kitas operacines sistemas, paleidimui "
+"taip pat naudojančias šį kelią. Jeigu taip nutiktų, jums tektų užtikrinti, "
+"kad „GRUB“ paleidyklė sukonfigūruota tinkamai ir geba korektiškai paleisti "
+"šias operacines sistemas."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+"Ar nustatyti NVRAM parametrus taip, kad būtų automatiškai paleidžiama "
+"„Debian“ sistema?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+"„GRUB“ paleidyklė gali nustatyti jūsų sistemos NVRAM parametrus, kad ją "
+"įjungus, būtų automatiškai paleidžiama „Debian“ sistema. Būna situacijų, kai "
+"tai nepageidautina, pavyzdžiui, jei jūsų sistemos NVRAM parametrai nustatyti "
+"taip, kad kaskart pasileisdama, ji susisiektų su PXE serveriu, ir jūs "
+"nenorite šio scenarijaus keisti."
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"Atnaujinamas „grub-pc“ paketas. Šiame meniu galite pasirinkti, ar kuriems "
+"nors įrenginiams komanda „grub-install“ turėtų būti paleidžiama automatiškai."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Galima „GRUB“ paleidyklės ir nediegti į jokį įrenginį. Tokiu atveju ji nebus "
+"tinkamai sukonfigūruota ir kitąkart paleidus šį kompiuterį, bus bandoma "
+"įvykdyti tai, kas paleidimo sektoriuje buvo iki šiol. Jeigu jame įrašyta "
+"ankstesnė „GRUB 2“ versija, tikėtina, jog jai nepavyks įkelti reikiamų "
+"modulių ar tinkamai interpretuoti konfigūracinio failo."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "„kFreeBSD“ komandos eilutė:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Iš „/etc/default/grub“ failo arba senosios „GRUB“ konfigūraciniame faile "
+"„menu.lst“ nurodyto „kopt“ parametro išrinkta žemiau pateikta „kFreeBSD“ "
+"komandos eilutė. Patikrinkite, ar ji tinkama ir jei reikia, ją "
+"patikslinkite. Komandos eilutė gali būti ir tuščia."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "Numatytoji „kFreeBSD“ komandos eilutė:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"Ši eilutė bus naudojama kaip įprastiniai „kFreeBSD“ branduolio parametrai, "
+"bet ne pasirinkus atkūrimo veikseną."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "Failas „boot/grub/device.map“ pergeneruotas"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "Failas „/boot/grub/device.map“ perrašytas taip, kad naudotų stabilius "
+#~ "įrenginių vardus. Tai turėtų žymiai sumažinti poreikį šį failą ateityje "
+#~ "redaguoti, o „GRUB“ sugeneruotų paleidimo įrašų tai neturėtų įtakoti."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Tačiau kadangi šiame kompiuteryje yra daugiau nei vienas diskas, gali "
+#~ "būti, jog sistema pasikliauna senuoju įrenginių planu. Patikrinkite, ar "
+#~ "neturite rankiniu būdu sukūrę paleidimo įrašų, naudojančių „(hdN)“ diskų "
+#~ "numeravimą ir jei reikia, juos patikslinkite."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "Jeigu nesuprantate šio pranešimo, arba neturite rankiniu būdu sukurtų "
+#~ "paleidimo įrašų, šio pranešimo galite nepaisyti."

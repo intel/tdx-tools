@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  install|upgrade)
+    if dpkg --compare-versions "$2" lt 1.98+20100804-2 && \
+       test -h /etc/kernel/postrm.d/zz-update-grub; then
+      rm -f /etc/kernel/postrm.d/zz-update-grub
+    fi
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,157 @@
+From: Didier Roche <didrocks@ubuntu.com>
+Date: Mon, 13 Apr 2020 15:12:21 +0200
+Subject: UBUNTU: Improve performance in bootmenu for zsys
+
+In case there are a lot of zfs snapshots, we end up with a huge delay
+when navigating grub (eg 80 seconds, displaying a black screen, for 100
+system snapshots).
+Reduce the grub.cfg file size by moving the entries in a single
+function with parameter instead of duplicating each entry.
+Ensure the user can still easily edit them easily by naming the
+parameters.
+
+Patch-Name: ubuntu-speed-zsys-history.patch
+---
+ util/grub.d/10_linux_zfs.in | 77 ++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 56 insertions(+), 21 deletions(-)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index 735b46a..8c2e7e5 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -819,9 +819,10 @@ zfs_linux_entry () {
+     boot_device="$5"
+     initrd="$6"
+     kernel="$7"
+-    kernel_additional_args="${8:-}"
++    kernel_version="$8"
++    kernel_additional_args="${9:-}"
++    boot_devices="${10:-}"
+ 
+-    kernel_version=$(basename "${kernel}" | sed -e "s,^[^0-9]*-,,g")
+     submenu_indentation="$(printf %${submenu_level}s | tr " " "${grub_tab}")"
+ 
+     echo "${submenu_indentation}menuentry '$(echo "${title}" | grub_quote)' ${CLASS} \${menuentry_id_option} 'gnulinux-${dataset}-${kernel_version}' {"
+@@ -856,7 +857,15 @@ zfs_linux_entry () {
+     echo "${submenu_indentation}	insmod gzio"
+     echo "${submenu_indentation}	if [ \"\${grub_platform}\" = xen ]; then insmod xzio; insmod lzopio; fi"
+ 
+-    echo "$(prepare_grub_to_access_device_cached "${boot_device}" "${submenu_level}")"
++    if [ -n "$boot_devices" ]; then
++        for device in ${boot_devices}; do
++            echo "${submenu_indentation}	if [ "${boot_device}" = "${device}" ]; then"
++            echo "$(prepare_grub_to_access_device_cached "${device}" $(( submenu_level +1 )) )"
++            echo "${submenu_indentation}	fi"
++        done
++    else
++        echo "$(prepare_grub_to_access_device_cached "${boot_device}" "${submenu_level}")"
++    fi
+ 
+     if [ "${quiet_boot}" = 0 ] || [ "${type}" != simple ]; then
+         echo "${submenu_indentation}	echo $(gettext_printf "Loading Linux %s ..." ${kernel_version} | grub_quote)"
+@@ -925,6 +934,40 @@ generate_grub_menu() {
+ 
+     print_menu_prologue
+ 
++    cat<<'EOF'
++function zsyshistorymenu {
++	# $1: root dataset (eg rpool/ROOT/ubuntu_2zhm07@autozsys_k56fr6)
++	# $2: boot device id (eg 411f29ce1557bfed)
++	# $3: initrd (eg /BOOT/ubuntu_2zhm07@autozsys_k56fr6/initrd.img-5.4.0-21-generic)
++	# $4: kernel (eg /BOOT/ubuntu_2zhm07@autozsys_k56fr6/vmlinuz-5.4.0-21-generic)
++	# $5: kernel_version (eg 5.4.0-21-generic)
++
++	set root_dataset="${1}"
++	set boot_device="${2}"
++	set initrd="${3}"
++	set kernel="${4}"
++	set kversion="${5}"
++
++EOF
++    boot_devices=$(echo "${menu_metadata}" | cut -d"$(printf '\t')" -f6 | sort -u)
++
++    title=$(gettext_printf "Revert system only")
++    zfs_linux_entry 1 "${title}" "simple" '${root_dataset}' '${boot_device}' '${initrd}' '${kernel}' '${kversion}' '' "${boot_devices}"
++
++    title="$(gettext_printf "Revert system and user data")"
++    zfs_linux_entry 1 "${title}" "simple" '${root_dataset}' '${boot_device}' '${initrd}' '${kernel}' '${kversion}' 'zsys-revert=userdata' "${boot_devices}"
++
++    GRUB_DISABLE_RECOVERY="${GRUB_DISABLE_RECOVERY:-}"
++    if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
++        title="$(gettext_printf "Revert system only (%s)" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
++        zfs_linux_entry 1 "${title}" "recovery" '${root_dataset}' '${boot_device}' '${initrd}' '${kernel}' '${kversion}' '' "${boot_devices}"
++
++        title="$(gettext_printf "Revert system and user data (%s)" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
++        zfs_linux_entry 1 "${title}" "recovery" '${root_dataset}' '${boot_device}' '${initrd}' '${kernel}' '${kversion}' 'zsys-revert=userdata' "${boot_devices}"
++    fi
++echo "}"
++echo
++
+     # IFS is set to TAB (ASCII 0x09)
+     echo "${menu_metadata}" |
+     {
+@@ -955,7 +998,8 @@ generate_grub_menu() {
+                     main_dataset_name="${name}"
+                     main_dataset="${dataset}"
+ 
+-                    zfs_linux_entry 0 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                    kernel_version=$(basename "${kernel}" | sed -e "s,^[^0-9]*-,,g")
++                    zfs_linux_entry 0 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}" "${kernel_version}"
+                     at_least_one_entry=1
+                 ;;
+                 advanced)
+@@ -971,12 +1015,12 @@ generate_grub_menu() {
+ 
+                     kernel_version=$(basename "${kernel}" | sed -e "s,^[^0-9]*-,,g")
+                     title="$(gettext_printf "%s%s, with Linux %s" "${last_booted_kernel_marker}" "${name}" "${kernel_version}")"
+-                    zfs_linux_entry 1 "${title}" "advanced" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                    zfs_linux_entry 1 "${title}" "advanced" "${dataset}" "${device}" "${initrd}" "${kernel}" "${kernel_version}"
+ 
+                     GRUB_DISABLE_RECOVERY=${GRUB_DISABLE_RECOVERY:-}
+                     if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
+                         title="$(gettext_printf "%s%s, with Linux %s (%s)" "${last_booted_kernel_marker}" "${name}" "${kernel_version}" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
+-                        zfs_linux_entry 1 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                        zfs_linux_entry 1 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}" "${kernel_version}"
+                     fi
+                     at_least_one_entry=1
+                 ;;
+@@ -994,33 +1038,24 @@ generate_grub_menu() {
+                     fi
+                     echo "	submenu '${title}' \${menuentry_id_option} 'gnulinux-history-${dataset}' {"
+ 
++                    kernel_version=$(basename "${kernel}" | sed -e "s,^[^0-9]*-,,g")
++
+                     # Zsys only: let revert system without destroying snapshots
+                     if [ "${iszsys}" = "yes" ]; then
+-                        title="$(gettext_printf "Revert system only")"
+-                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}"
+-                        title="$(gettext_printf "Revert system and user data")"
+-                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}" "zsys-revert=userdata"
+-
+-                        GRUB_DISABLE_RECOVERY="${GRUB_DISABLE_RECOVERY:-}"
+-                        if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
+-                            title="$(gettext_printf "Revert system only (%s)" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
+-                            zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
+-                            title="$(gettext_printf "Revert system and user data (%s)" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
+-                            zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}" "zsys-revert=userdata"
+-                        fi
++                        echo "${grub_tab}${grub_tab}zsyshistorymenu" \"${dataset}\" \"${device}\" \"${initrd}\" \"${kernel}\" \"${kernel_version}\"
+                     # Non-zsys: boot temporarly on snapshots or rollback (destroying intermediate snapshots)
+                     else
+                         title="$(gettext_printf "One time boot")"
+-                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}" "${kernel_version}"
+ 
+                         GRUB_DISABLE_RECOVERY="${GRUB_DISABLE_RECOVERY:-}"
+                         if [ "${GRUB_DISABLE_RECOVERY}" != "true" ]; then
+                             title="$(gettext_printf "One time boot (%s)" "$(gettext "${GRUB_RECOVERY_TITLE}")")"
+-                            zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}"
++                            zfs_linux_entry 2 "${title}" "recovery" "${dataset}" "${device}" "${initrd}" "${kernel}" "${kernel_version}"
+                         fi
+ 
+                         title="$(gettext_printf "Revert system (all intermediate snapshots will be destroyed)")"
+-                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}" "rollback=yes"
++                        zfs_linux_entry 2 "${title}" "simple" "${dataset}" "${device}" "${initrd}" "${kernel}" "${kernel_version}" "rollback=yes"
+                     fi
+ 
+                     echo "	}"

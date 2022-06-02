@@ -1,0 +1,234 @@
+#! /bin/sh
+set -e
+
+# Copyright (C) 2010, 2011, 2012 Canonical Ltd.
+# Author: Colin Watson <cjwatson@ubuntu.com>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+
+# Make EFI boot images for signing.
+
+if [ $# -lt 7 ]; then
+	echo "usage: $0 GRUB-MKIMAGE GRUB-CORE OUTPUT-DIRECTORY DEB-ARCH PLATFORM EFI-NAME SBAT-CSV [EFI-VENDOR]"
+fi
+
+grub_mkimage="$1"
+grub_core="$2"
+outdir="$3"
+deb_arch="$4"
+platform="$5"
+efi_name="$6"
+sbat_csv="$7"
+efi_vendor="${8:-$(dpkg-vendor --query vendor | tr '[:upper:]' '[:lower:]')}"
+
+# mkfs.msdos may not be on the default PATH.
+export PATH="$PATH:/sbin:/usr/sbin"
+
+workdir=
+
+cleanup () {
+	[ -z "$workdir" ] || rm -rf "$workdir"
+}
+trap cleanup EXIT HUP INT QUIT TERM
+
+rm -rf "$outdir"
+mkdir -p "$outdir"
+
+workdir="$(mktemp -d build-efi-images.XXXXXX)"
+
+# GRUB's rescue parser doesn't understand 'if'.
+echo 'normal (memdisk)/grub.cfg' >"$workdir/grub-bootstrap.cfg"
+
+# Skeleton configuration file which finds the real boot disk.
+cat >"$workdir/grub.cfg" <<EOF
+if [ -z "\$prefix" -o ! -e "\$prefix" ]; then
+	if ! search --file --set=root /.disk/info; then
+		search --file --set=root /.disk/mini-info
+	fi
+	set prefix=(\$root)/boot/grub
+fi
+if [ -e \$prefix/$platform/grub.cfg ]; then
+	source \$prefix/$platform/grub.cfg
+elif [ -e \$prefix/grub.cfg ]; then
+	source \$prefix/grub.cfg
+else
+	source \$cmdpath/grub.cfg
+fi
+EOF
+
+cat >"$workdir/grub-netboot.cfg" <<EOF
+if [ -e \$prefix/$platform/grub.cfg ]; then
+	source \$prefix/$platform/grub.cfg
+elif [ -e \$prefix/grub.cfg-$deb_arch ]; then
+	source \$prefix/grub.cfg-default-$deb_arch
+else
+	source \$prefix/grub.cfg
+fi
+EOF
+
+mkfs.msdos -C "$workdir/memdisk.fat" 64
+mcopy -i "$workdir/memdisk.fat" "$workdir/grub.cfg" ::grub.cfg
+
+mkfs.msdos -C "$workdir/memdisk-netboot.fat" 64
+mcopy -i "$workdir/memdisk-netboot.fat" "$workdir/grub-netboot.cfg" ::grub.cfg
+
+CD_MODULES="
+	all_video
+	boot
+	btrfs
+	cat
+	chain
+	configfile
+	echo
+	efifwsetup
+	efinet
+	ext2
+	fat
+	font
+	gettext
+	gfxmenu
+	gfxterm
+	gfxterm_background
+	gzio
+	halt
+	help
+	hfsplus
+	iso9660
+	jpeg
+	keystatus
+	loadenv
+	loopback
+	linux
+	ls
+	lsefi
+	lsefimmap
+	lsefisystab
+	lssal
+	memdisk
+	minicmd
+	normal
+	ntfs
+	part_apple
+	part_msdos
+	part_gpt
+	password_pbkdf2
+	png
+	probe
+	reboot
+	regexp
+	search
+	search_fs_uuid
+	search_fs_file
+	search_label
+	sleep
+	smbios
+	squash4
+	test
+	true
+	video
+	xfs
+	zfs
+	zfscrypt
+	zfsinfo
+	"
+
+# Platform-specific modules
+case $platform in
+    x86_64-efi|i386-efi)
+	CD_MODULES="$CD_MODULES
+	cpuid
+	linuxefi
+	play
+	tpm
+	"
+	;;
+esac
+
+GRUB_MODULES="$CD_MODULES
+	cryptodisk
+	gcry_arcfour
+	gcry_blowfish
+	gcry_camellia
+	gcry_cast5
+	gcry_crc
+	gcry_des
+	gcry_dsa
+	gcry_idea
+	gcry_md4
+	gcry_md5
+	gcry_rfc2268
+	gcry_rijndael
+	gcry_rmd160
+	gcry_rsa
+	gcry_seed
+	gcry_serpent
+	gcry_sha1
+	gcry_sha256
+	gcry_sha512
+	gcry_tiger
+	gcry_twofish
+	gcry_whirlpool
+	luks
+	lvm
+	mdraid09
+	mdraid1x
+	raid5rec
+	raid6rec
+	"
+NET_MODULES="$CD_MODULES
+	http
+	tftp
+	"
+
+# CD boot image
+echo "Including modules $CD_MODULES in $outdir/gcd$efi_name.efi"
+"$grub_mkimage" -O "$platform" -o "$outdir/gcd$efi_name.efi" \
+	-d "$grub_core" \
+	-c "$workdir/grub-bootstrap.cfg" -m "$workdir/memdisk.fat" \
+	-p /boot/grub \
+	--sbat "$sbat_csv" \
+	$CD_MODULES
+
+# Normal disk boot image
+echo "Including modules $GRUB_MODULES in $outdir/grub$efi_name.efi"
+"$grub_mkimage" -O "$platform" -o "$outdir/grub$efi_name.efi" \
+	-d "$grub_core" -p "/EFI/$efi_vendor" \
+	--sbat "$sbat_csv" \
+	$GRUB_MODULES
+
+# Normal network boot image
+echo "Including modules $NET_MODULES in $outdir/grubnet$efi_name.efi"
+"$grub_mkimage" -O "$platform" -o "$outdir/grubnet$efi_name.efi" \
+	-d "$grub_core" -c "$workdir/grub-bootstrap.cfg" \
+	-m "$workdir/memdisk-netboot.fat" \
+	-p /grub \
+	--sbat "$sbat_csv" \
+	$NET_MODULES
+
+# Special network boot image for d-i to use. Just the same as the
+# normal network boot image, but with a different value baked in for
+# the prefix setting
+#
+# but not on Ubuntu LP: #1863994
+#
+#echo "Including modules $NET_MODULES in $outdir/grubnet$efi_name-installer.efi"
+#"$grub_mkimage" -O "$platform" -o "$outdir/grubnet$efi_name-installer.efi" \
+#	-d "$grub_core" -c "$workdir/grub-bootstrap.cfg" \
+#	-m "$workdir/memdisk-netboot.fat" \
+#	-p "/${efi_vendor}-installer/$deb_arch/grub" \
+#	--sbat "$sbat_csv" \
+#	$NET_MODULES
+
+exit 0

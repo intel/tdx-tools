@@ -1,0 +1,79 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/default.mk
+
+# Other vendors, add your certs here.  No sense in using
+# dpkg-vendor --derives-from, because only Canonical-generated binaries will
+# be signed with this key; so if you are building your own shim binary you
+# should be building the other binaries also.
+ifeq ($(shell dpkg-vendor --is ubuntu && echo yes),yes)
+	cert=debian/canonical-uefi-ca.der
+	dbx=debian/canonical-2021_$(DEB_HOST_ARCH).esl
+	distributor=ubuntu
+else
+	cert=debian/debian-uefi-ca.der
+	distributor=debian
+endif
+
+ifeq ($(DEB_HOST_ARCH),amd64)
+export EFI_ARCH := x64
+endif
+ifeq ($(DEB_HOST_ARCH),arm64)
+export EFI_ARCH := aa64
+endif
+
+COMMON_OPTIONS = \
+	RELEASE=15 \
+	COMMIT_ID=20e4d9486fcae54ee44d2323ae342ffe68c920e6\
+	MAKELEVEL=0 \
+	FALLBACK_NONINTERACTIVE=1 \
+	VENDOR_CERT_FILE=$(cert) \
+	VENDOR_DBX_FILE=$(dbx) \
+	EFIDIR=$(distributor) \
+	DISABLE_EBS_PROTECTION=1 \
+	DISABLE_REMOVABLE_LOAD_OPTIONS=1 \
+	$(NULL)
+
+%:
+	dh $@ --with buildinfo
+
+override_dh_auto_clean:
+	# TODO: dh_auto_clean will remove all files..
+	#dh_auto_clean -- MAKELEVEL=0
+	rm -f data/sbat.$(distributor).csv sbat.$(distributor).csv
+
+override_dh_auto_build:
+	sed -e "s/@DEB_VERSION@/$(DEB_VERSION)/g" \
+		<debian/sbat.$(distributor).csv.in \
+		>data/sbat.$(distributor).csv
+	dh_auto_build -- $(COMMON_OPTIONS)
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/tmp -- $(COMMON_OPTIONS)
+	rm -rf debian/tmp/usr/src
+	rm -rf debian/tmp/boot/efi/EFI/BOOT/BOOT*.EFI
+
+override_dh_strip:
+override_dh_dwz:
+override_dh_shlibdeps:
+	dh_shlibdeps -X.efi
+
+signing=debian/shim-$(DEB_VERSION)-signing/
+signingv=$(signing)/$(DEB_VERSION)
+signing_tar=$(DEB_SOURCE)_$(DEB_VERSION)_$(DEB_HOST_ARCH).tar.gz
+override_dh_builddeb:
+	dh_builddeb -- -Zxz
+	mkdir -p $(signingv)/control
+	echo 'tarball' >$(signingv)/control/options
+	chmod a-x debian/tmp/boot/efi/EFI/*/*.efi
+	cp debian/tmp/boot/efi/EFI/$(distributor)/*.efi $(signingv)/
+	cp debian/tmp/boot/efi/EFI/BOOT/*.efi $(signingv)/
+	tar -C $(signing) -czvf $(CURDIR)/../$(signing_tar) .
+	dpkg-distaddfile $(signing_tar) raw-signing -
+
+override_dh_clean:
+	rm -rf debian/shim-*-signing/
+	dh_clean -Xgnu-efi/lib/Makefile.orig
+
+generate-gnu-efi:
+	git -C gnu-efi archive --prefix=gnu-efi/ HEAD | xz -9 > ../shim_$(DEB_VERSION_UPSTREAM).orig-gnu-efi.tar.xz

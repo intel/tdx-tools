@@ -1,0 +1,36 @@
+From: Adam Williamson <awilliam@redhat.com>
+Date: Thu, 8 Apr 2021 22:39:02 -0700
+Subject: [PATCH] Don't set user_insecure_mode and ignore_db in
+ import_one_mok_state
+
+This seems completely incorrect and unnecessary, unless I'm
+missing something. We already set them both to 0 at the start of
+`import_mok_state`, which is the only thing that uses
+`import_one_mok_state`, so it's unnecessary. It's incorrect
+because it means those variables will be set to 0 even when they
+should be set to 1 - even if they are momentarily set to 1 when
+`import_one_mok_state` is called on the relevant variable, they
+immediately get set back to 0 when it's called on the *next*
+variable.
+
+Signed-off-by: Adam Williamson <awilliam@redhat.com>
+Origin: https://patch-diff.githubusercontent.com/raw/rhboot/shim/pull/361.patch
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/shim/+bug/1925140
+---
+ mok.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/mok.c b/mok.c
+index fc1ee04..9b8fc2b 100644
+--- a/mok.c
++++ b/mok.c
+@@ -888,9 +888,6 @@ EFI_STATUS import_one_mok_state(struct mok_state_variable *v,
+ 	EFI_STATUS ret = EFI_SUCCESS;
+ 	EFI_STATUS efi_status;
+ 
+-	user_insecure_mode = 0;
+-	ignore_db = 0;
+-
+ 	UINT32 attrs = 0;
+ 	BOOLEAN delete = FALSE;
+ 

@@ -1,0 +1,2 @@
+GPXE_CPPFLAGS = '-DFILE_LICENCE(x)=' -I$(srcdir)/contrib/gpxe/src/include -I$(srcdir)/contrib/gpxe/include_wrap
+GPXE_CFLAGS = -Wno-pointer-arith -Wno-error

@@ -1,0 +1,504 @@
+# translation of grub_debian_po.po to Khmer
+# Khoem Sokhem <khoemsokhem@khmeros.info>, 2012.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+msgid ""
+msgstr ""
+"Project-Id-Version: grub_debian_po\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2012-04-05 15:38+0700\n"
+"Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
+"Language-Team: Khmer <support@khmeros.info>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"X-Language: ki-KH\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "ផ្ទុក​ពី menu.lst?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr "GRUB ធ្វើ​ឲ្យ​ស្គ្រីប​ប្រសើរ​ឡើង បាន​រកឃើញ​ការ​រៀបចំ​ចាស់ៗ​របស់ GRUB នៅ​ក្នុង /boot/grub ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"ដើម្បី​ជំនួស​កំណែ​ចាស់ៗ​របស់ GRUB នៅ​ក្នុង​ប្រព័ន្ធ​របស់​អ្នក វា​បានផ្ដល់​អនុសាសន៍​ឲ្យ​កែសម្រួល /boot/grub/"
+"menu.lst ដើម្បី​ផ្ទុក​រូប​ភាព​ចាប់ផ្ដើម GRUB 2 ពី​ការ​រៀបចំ​ចាស់ៗ​នៃ​ GRUB ដែល​មាន​ស្រាប់​របស់​អ្នក ។ "
+"ជំហាន​នេះ​អាច​ត្រូវ​បាន​អនុវត្ត​ដោយ​ស្វ័យ​ប្រវត្ត​ឥឡូវ ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"វា​បានផ្ដល់​អនុសាសន៍​ឲ្យ​អ្នក​ទទួល​យក​​កា​រផ្ទុក​ GRUB 2 ពី menu.lst ហើយ​ផ្ទៀងផ្ទាត់​ថា​ការ​រៀបចំ GRUB 2 "
+"ថ្មី​ដំណើរការ​មុន​ពេល​វា​ត្រូវ​បាន​សរសេរ​ទៅ​កាន់ MBR (Master Boot Record) ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"មិន​ថា​អ្នក​សម្រេចចិត្ត​ថា​ម៉េច​ក៏​ដោយ អ្នក​អាច​ជំនួស​រូបភាព MBR ចាស់​ដោយ​ GRUB 2 ពេល​​ក្រោយ ដោយ​ប្រើ​ពាក្យ​"
+"បញ្ជា​​ដូ​ចខា​ងក្រោម​ជា root ៖"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "GRUB ដំឡើង​ឧបករណ៍ ៖"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"កញ្ចប់ grub-pc កំពុង​ត្រូវ​បាន​ធ្វើ​ឲ្យ​ប្រសើរឡើង ។ ម៉ឺនុយ​នេះ​អនុញ្ញាត​ឲ្យ​អ្នក​ជ្រើស​ឧបករណ៍​ណាមួយ​ ដែល​អ្នក​"
+"ចង់​ grub-install ដំណើរការ​ដោយ​ស្វ័យ​ប្រវត្តិ ប្រសិនបើ​មាន ។"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"ករណី​ភាគ​ច្រើន​កា​រដំណើរការ grub-install ដោយ​ស្វ័យ​ប្រវត្តិ​ត្រូវ​បាន​ផ្ដល់​អនុសាសន៍ ដើម្បីការពារ​រូបភាព "
+"GRUB សំខាន់​ដែល​បាន​ដំឡើង​ពី​ការ​ធ្វើ​សមកាលកម្ម​ជា​មួយ​ម៉ូឌុល GRUB ឬ grub.cfg ។"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"ប្រសិនបើ​អ្នក​​មិន​ប្រាកដ​ថា​ដ្រាយ​ណាមួយ​ត្រូវ​បាន​ផ្ដល់​ជា​ដ្រាយ​ចាប់ផ្ដើម ដោយ​ BIOS របស់​អ្នក វា​ជា​គំនិត​ដ៏​ល្អ​គឺ​"
+"ត្រូវ​ដំឡើង​ GRUB ទៅ​កាន់​ពួក​វា​ទាំងអស់ ។"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"ចំណាំ ៖ អាច​ដំឡើង GRUB ទៅ​ភាគ​​ចាប់ផ្ដើម​បាន​ផង​ដែរ ភាគ​ដែលសមស្រប​មួយ​ចំនួន​ត្រូវ​បាន​ផ្ដល់​នៅ​ទីនេះ ។ ទោះ​"
+"ជា​យ៉ាង​ណា​ក៏​ដោយ វា​បង្ខំ GRUB ឲ្យ​ប្រើ​យន្តការ​បញ្ជី​ទប់ស្កាត់ ដែល​ធ្វើ​ឲ្យ​វា​អាច​ទុកចិត្ត​បាន​តិចតួច ហើយ​"
+"ដូច្នេះ​មិន​ត្រូវ​បាន​ផ្ដល់​អនុសាសន៍​ទេ ។"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"កម្មវិធី​ចាប់ផ្ដើម​ប្រព័ន្ធ GRUB ត្រូវ​បាន​ដំឡើង​ពី​មុន ទៅ​ថាស​ដែល​លែង​ប្រើ ឬ​អត្តសញ្ញាណ​តែ​មួយ​គត់​របស់​វា​បាន​"
+"ផ្លាស់ប្ដូរ​ដោយ​​មូលហេតុ​មួយ​ចំនួន ។ វា​មាន​សារៈ​សំខាន់​ត្រូវ​​ប្រាកដថា រូបភាព​ GRUB ដែល​បាន​ដំឡើង​ធ្វើ​"
+"សមកាលកម្ម​ជា​មួយ​ម៉ូឌុល GRUB និង grub.cfg ។ សូម​ពិនិត្យ​មើល​ម្ដង​ទៀត ដើម្បី​ប្រាកដថា  GRUB ត្រូវ​បាន​"
+"សរសេរ​ទៅ​កាន់​ឧបករណ៍​ចាប់ផ្ដើម​ដែល​ត្រឹមត្រូវ ។"
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "បាន​បរាជ័យ​ក្នុង​ការ​សរសេរ​ GRUB ទៅ​​ឧបករណ៍​ចាប់ផ្ដើម បន្ត ?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "GRUB បាន​បរាជ័យ​ក្នុង​ការ​ដំឡើង​ឧបករណ៍​ដូ​ចខាង​ក្រោម ៖"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"អញ្ចឹង តើ​អ្នក​ចង់​បន្ត​ដែរ​ឬទេ ? ប្រសិន​បើ​អ្នក​បន្ត កុំព្យូទ័រ​របស់​អ្នក​មិន​អាច​ចាប់ផ្ដើម​បាន​ត្រឹមត្រូវ​ទេ ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "បាន​បរាជ័យ​ក្នុង​ការ​សរសេរ GRUB ទៅ​ឧបករណ៍​ចាប់ផ្ដើម ព្យាយាម​ម្ដង​ទៀត ?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"អ្នក​អាច​ដំឡើង GRUB ទៅ​ឧបករណ៍​មួយ​ចំនួន​បាន ទោះ​បី​ជា​អ្នក​​ដឹង​ថា ប្រព័ន្ធ​របស់​អ្នក​នឹង​ចាប់ផ្ដើម​ពី​ឧបករណ៍​នោះ​ក៏​"
+"ដោយ ។ បើ​មិន​ដូច្នេះ​ទេ ការ​ធ្វើ​ឲ្យ​ប្រសើរ​ឡើង​ពី GRUB ចាស់ៗ​នឹង​ត្រូវ​បាន​បោះបង់ ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "បន្ត​ដោយ​មិន​ដំឡើង GRUB?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"អ្នក​បាន​ជ្រើសរើស​ថា​មិន​ដំឡើង​ GRUB ក្នុង​ឧបករណ៍​ណាមួយ​ទេ ។ ប្រសិនបើ​អ្នក​បន្ត ​កម្មវិធី​ចាប់ផ្ដើម​ប្រព័ន្ធ​អាច​"
+"មិន​​ត្រូវ​បាន​កំណត់​រចនាសម្ព័ន្ធ​ត្រឹមត្រូវ​ទេ ហើយ​នៅ​ពេល​កុំព្យូទ័រ​នេះ​ចាប់ផ្ដើម​ពេល​ក្រោយ វា​នឹង​ប្រើ​អ្វី​ដែល​មាន​"
+"ពីមុន​នៅ​ក្នុង​ផ្នែក​ចាប់ផ្ដើម ។ ប្រសិន​បើ​គ្មាន​កំណែ GRUB 2 ពី​មុន​នៅ​ក្នុង​ផ្នែក​ចាប់ផ្ដើម​ទេ វា​​មិន​អាច​ផ្ទុក​"
+"ម៉ូឌុល ឬ​ដោះស្រាយ​ឯកសារ​កំណត់​រចនាសម្ព័ន្ធ​បច្ចុប្បន្ន​បាន​ទេ ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"ប្រសិ​ន​បើ​អ្នក​កំពុង​ប្រើ​កម្មវិធី​ចាប់ផ្ដើម​ប្រព័ន្ធ​ផ្សេង​ហើយ ហើយ​ចង់​បន្ត​ប្រើ​វា​ទៀត​នោះ ឬ​ប្រសិន​បើ​មាន​បរិស្ថាន​"
+"ពិសេស​ដែល​អ្កន​មិន​ត្រូវ​ការ​កម្មវិធី​ចាប់ផ្ដើម​ប្រព័ន្ធ នោះ​អ្នក​គួរ​បន្ត ។ បើ​មិន​ដូច្នេះ​ទេ អ្នក​គួរ​ដំឡោះង "
+"GRUB នៅ​កន្លែង​ណាមួយ ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "យក GRUB 2 ចេញ ពី /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "តើ​អ្នក​ចង់​​យក​ឯកសារ​របស់ GRUB 2 ទាំង​អស់​ចេញ​ពី /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr "វា​នឹង​ធ្វើ​ឲ្យ​ប្រព័ន្ធ​មិន​អាច​ចាប់ផ្ដើម​បាន លុះត្រា​តែ​​ដំឡើង​កម្មវិធី​ចាប់ផ្ដើម​ប្រព័ន្ធ​ផ្សេង ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "បញ្ចប់ការ​បម្លែងទៅ​ GRUB 2 ឥឡូវ ?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"ប្រព័ន្ធ​នេះ​នៅ​តែ​មាន​ឯកសារ​ពី​កម្មវិធី​ចាប់ផ្ដើម​ប្រព័ន្ធ​ចាស់​ៗ​របស់ GRUB ដែល​បាន​ដំឡើង ប៉ុន្តែ​ឥឡូវ​ក៏​មាន​ផ្នែក​"
+"ចាប់ផ្ដើម GRUB 2 បាន​ដំឡើង​នៅ​ក្នុង​ថាស​ទាំង​នេះ​ដែរ ៖"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"វា​ហាក់បី​ដូចជា​ភាព​ចាស់ៗ​របស់​ GRUB លែង​ប្រើ​ហើយ ហើយ​អ្នក​គួរ​ជំនួស​ការ​ធ្វើ​ឲ្យ​រូបភាព GRUB 2 ប្រសើ​រឡើង​"
+"នៅ​លើ​ថាស​ទាំង​នេះ ហើយ​បញ្ចប់​ការ​បម្លែង​ទៅ GRUB 2 ដោយ​​យក​ឯកសារ​ចាស់ៗ​របស់ GRUB ចាស់​ចេញ ។ ប្រសិន​បើ​"
+"អ្នក​មិន​ធ្វើ​ឲ្យ​រូបភាព GRUB 2 ទាំង​នេះ​ប្រសើ​រឡើង​ទេ នោះ​ពួក​វា​អាច​មិន​ត្រូវ​គ្នា​ជា​មួយ​នឹង​កញ្ចប់​ថ្មីៗ ហើយ​"
+"ធ្វើ​ឲ្យ​ប្រព័ន្ធ​របស់​អ្នក​បញ្ឈប់​ការ​ចាប់ផ្ដើម​ ។"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"ជា​ទូទៅ អ្នក​គួរ​តែ​បញ្ចប់​ការ​បម្លែង​ទៅ GRUB 2 លុះត្រា​តែ​ផ្នែក​ចាប់ផ្ដើម​ត្រូវ​បាន​បង្កើត​ដោយ​ការ​ដំឡើង "
+"GRUB 2 នៅ​លើ​ប្រព័ន្ធ​ប្រតិបត្តិការ​ផ្សេង ។"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "ពាក្យ​បញ្ជា​លីនុច ៖"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"ពាក្យ​បញ្ជា​លីនុច​ដូច​ខាង​ក្រោម​ត្រូវ​បាន​ដកស្រង់​ចេញ​ពី /etc/default/grub ឬ​ប៉ារ៉ាម៉ែត្រ `kopt' នៅ​ក្នុង "
+"menu.lst ចាស់​របស់​ GRUB ។ សូម​ផ្ទៀងផ្ទាត់​ថា​តើ​វា​ត្រឹមត្រូវ​ដែរឬទេ ហើយ​កែប្រែ​វា​ប្រសិន​បើ​ចាំបាច់ ។ "
+"ពាក្យ​បញ្ជា​ត្រូវ​បាន​អនុញ្ញាត​ឲ្យ​ទទេរ ។"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "ពាក្យ​បញ្ជា​លំនាំ​ដើម​របស់​លីនុច ៖"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"ឃ្លា​ដូច​ខាង​ក្រោម​នឹង​ត្រូវ​បាន​ប្រើ​ជា​ប៉ារ៉ាម៉ែត្រ​លីនុច​សម្រាប់​ធាតុ​ម៉ឺនុយ​លំនាំដើម ប៉ុន្តែ​មិន​សម្រាប់​របៀប​សង្គ្រោះ​"
+"ទេ ។"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"កញ្ចប់ grub-pc កំពុង​ត្រូវ​បាន​ធ្វើ​ឲ្យ​ប្រសើរឡើង ។ ម៉ឺនុយ​នេះ​អនុញ្ញាត​ឲ្យ​អ្នក​ជ្រើស​ឧបករណ៍​ណាមួយ​ ដែល​អ្នក​"
+"ចង់​ grub-install ដំណើរការ​ដោយ​ស្វ័យ​ប្រវត្តិ ប្រសិនបើ​មាន ។"
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"អ្នក​បាន​ជ្រើសរើស​ថា​មិន​ដំឡើង​ GRUB ក្នុង​ឧបករណ៍​ណាមួយ​ទេ ។ ប្រសិនបើ​អ្នក​បន្ត ​កម្មវិធី​ចាប់ផ្ដើម​ប្រព័ន្ធ​អាច​"
+"មិន​​ត្រូវ​បាន​កំណត់​រចនាសម្ព័ន្ធ​ត្រឹមត្រូវ​ទេ ហើយ​នៅ​ពេល​កុំព្យូទ័រ​នេះ​ចាប់ផ្ដើម​ពេល​ក្រោយ វា​នឹង​ប្រើ​អ្វី​ដែល​មាន​"
+"ពីមុន​នៅ​ក្នុង​ផ្នែក​ចាប់ផ្ដើម ។ ប្រសិន​បើ​គ្មាន​កំណែ GRUB 2 ពី​មុន​នៅ​ក្នុង​ផ្នែក​ចាប់ផ្ដើម​ទេ វា​​មិន​អាច​ផ្ទុក​"
+"ម៉ូឌុល ឬ​ដោះស្រាយ​ឯកសារ​កំណត់​រចនាសម្ព័ន្ធ​បច្ចុប្បន្ន​បាន​ទេ ។"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "ពាក្យ​បញ្ជា kFreeBSD ៖"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"ពាក្យ​បញ្ជា kFreeBSD ដូច​ខាង​ក្រោម​ត្រូវ​បាន​ដកស្រង់​ចេញ​ពី /etc/default/grub ឬ menu.lst ចាស់ៗ​"
+"នៅ​ក្នុង GRUB ។ សូម​ផ្ទៀងផ្ទាត់​ថា​វា​ត្រឹមត្រូវ ។ ពាក្យ​បញ្ជា​ត្រូវ​បាន​អនុញ្ញាត​ឲ្យ​ទទេ ។"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "ពាក្យ​បញ្ជា​លំនាំដើម​របស់ kFreeBSD ៖"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"ឃ្លា​ដូច​ខាង​ក្រោម​នឹង​ត្រូវ​បាន​ប្រើ​ជា​ប៉ារ៉ាម៉ែត្រ kFreeBSD សម្រាប់​ធាតុ​ម៉ឺនុយ​លំនាំដើម ប៉ុន្តែ​មិន​សម្រាប់​របៀប​"
+"សង្គ្រោះ​ទេ ។"
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map ត្រូវ​បាន​បង្កើត​ឡើង​វិញ"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "ឯកសារ /boot/grub/device.map ត្រូវ​បាន​សរសេរ​ឡើង​វិញ ដើម្បី​ប្រើ​ឈ្មោះ​ឧបករណ៍​ថេរ ។ ក្នុង​ករណី​"
+#~ "ភាគ​ច្រើន វា​គួរ​កាត់​បន្ថយ​តម្រូវការ ដើម្បី​ផ្លាស់ប្ដូរ​វា​​នា​ពេល​អនាគត់ ហើយ​ធាតុ​ម៉ឺមុយ​ចាប់ផ្ដើម​ដែល​បាន​"
+#~ "បង្កើត​ដោយ GRUB មិន​គួរ​ប៉ះពាល់​ទេ ។"
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "ទោះ​ជា​យ៉ាង​ណា​ក៏​ដោយ ព្រោះ​ថា​មាន​ថាស​ច្រើន​ជាង​មួយ​នៅ​ក្នុង​ប្រព័ន្ធ ​ប្រព័ន្ធ​អាស្រ័យ​លើ​ការ​ផ្គូផ្គង​ឧបករណ៍​"
+#~ "ចាស់ ។ សូម​ពិនិត្យ​មើល​ថាតើ មាន​ធាតុ​​ម៉ឺនុយ​ចាប់ផ្ដើម​ផ្ទាល់ខ្លួន​ដែល​អាស្រ័យ​លើ​​ចំនួន​ដ្រាយ GRUB's (hdN) "
+#~ "ហើយ​ធ្វើ​បច្ចុប្បន្ន​ភាព​ពួក​វា​ប្រសិនបើ​ចាំបាច់ ។"
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "ប្រសិន​បើ​អ្នក​មិន​យល់​សារ​នេះ​ទេ ឬ​ប្រសិនបើ​គ្មាន​ធាតុម៉ឺនុយ​ចាប់ផ្ដើម​ផ្ទាល់​ខ្លួន អ្នក​អាច​មិនអើពើ​សារ​នេះ ។"

@@ -1,0 +1,106 @@
+From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+Date: Mon, 29 Nov 2021 16:00:28 +0100
+Subject: efinet: correct closing of SNP protocol
+
+In the context of the implementation of the EFI_LOAD_FILE2_PROTOCOL for
+the initial ramdisk it was observed that opening the SNP protocol failed.
+https://lists.gnu.org/archive/html/grub-devel/2021-10/msg00020.html
+This is due to an incorrect call to CloseProtocol().
+
+The first parameter of CloseProtocol() is the handle, not the interface.
+
+We call OpenProtocol() with ControllerHandle = NULL. Hence we must also
+call CloseProtcol with ControllerHandel = NULL.
+
+Each call of OpenProtocol() for the same network card handle is expected to
+return the same interface pointer. If we want to close the protocol which
+we opened non-exclusively when searching for a card, we have to do this
+before opening the protocol exclusively.
+
+As there is no guarantee that we successfully open the protocol add checks
+in the transmit and receive functions.
+
+Reported-by: Andreas Schwab <schwab@linux-m68k.org>
+Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+
+Origin: upstream
+---
+ grub-core/net/drivers/efi/efinet.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/grub-core/net/drivers/efi/efinet.c b/grub-core/net/drivers/efi/efinet.c
+index f189209..9273bb7 100644
+--- a/grub-core/net/drivers/efi/efinet.c
++++ b/grub-core/net/drivers/efi/efinet.c
+@@ -43,6 +43,9 @@ send_card_buffer (struct grub_net_card *dev,
+   grub_uint64_t limit_time = grub_get_time_ms () + 4000;
+   void *txbuf;
+ 
++  if (net == NULL)
++    return grub_error (GRUB_ERR_IO,
++		       N_("network protocol not available, can't send packet"));
+   if (dev->txbusy)
+     while (1)
+       {
+@@ -105,6 +108,9 @@ get_card_packet (struct grub_net_card *dev)
+   struct grub_net_buff *nb;
+   int i;
+ 
++  if (net == NULL)
++    return NULL;
++
+   for (i = 0; i < 2; i++)
+     {
+       if (!dev->rcvbuf)
+@@ -152,12 +158,20 @@ open_card (struct grub_net_card *dev)
+ {
+   grub_efi_simple_network_t *net;
+ 
+-  /* Try to reopen SNP exlusively to close any active MNP protocol instance
+-     that may compete for packet polling
++  if (dev->efi_net != NULL)
++    {
++      efi_call_4 (grub_efi_system_table->boot_services->close_protocol,
++		  dev->efi_handle, &net_io_guid,
++		  grub_efi_image_handle, NULL);
++      dev->efi_net = NULL;
++    }
++  /*
++   * Try to reopen SNP exlusively to close any active MNP protocol instance
++   * that may compete for packet polling
+    */
+   net = grub_efi_open_protocol (dev->efi_handle, &net_io_guid,
+ 				GRUB_EFI_OPEN_PROTOCOL_BY_EXCLUSIVE);
+-  if (net)
++  if (net != NULL)
+     {
+       if (net->mode->state == GRUB_EFI_NETWORK_STOPPED
+ 	  && efi_call_1 (net->start, net) != GRUB_EFI_SUCCESS)
+@@ -196,13 +210,12 @@ open_card (struct grub_net_card *dev)
+ 	  efi_call_6 (net->receive_filters, net, filters, 0, 0, 0, NULL);
+ 	}
+ 
+-      efi_call_4 (grub_efi_system_table->boot_services->close_protocol,
+-		  dev->efi_net, &net_io_guid,
+-		  grub_efi_image_handle, dev->efi_handle);
+       dev->efi_net = net;
++    } else {
++      return grub_error (GRUB_ERR_NET_NO_CARD, "%s: can't open protocol",
++			 dev->name);
+     }
+ 
+-  /* If it failed we just try to run as best as we can */
+   return GRUB_ERR_NONE;
+ }
+ 
+@@ -212,8 +225,8 @@ close_card (struct grub_net_card *dev)
+   efi_call_1 (dev->efi_net->shutdown, dev->efi_net);
+   efi_call_1 (dev->efi_net->stop, dev->efi_net);
+   efi_call_4 (grub_efi_system_table->boot_services->close_protocol,
+-	      dev->efi_net, &net_io_guid,
+-	      grub_efi_image_handle, dev->efi_handle);
++	      dev->efi_handle, &net_io_guid,
++	      grub_efi_image_handle, 0);
+ }
+ 
+ static struct grub_net_card_driver efidriver =

@@ -13,4 +13,4 @@ jobs:
       - name: Build tdx-guest-kernel 
         uses: ./build/centos-stream-8/pkg-builder
         with:
-          package: intel-mvp-tdx-guest-kernel
+          package: intel-mvp-spr-kernel

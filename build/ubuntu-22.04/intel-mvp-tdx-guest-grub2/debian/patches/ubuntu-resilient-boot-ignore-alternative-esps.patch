@@ -1,0 +1,207 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Fri, 3 Apr 2020 13:43:49 +0200
+Subject: UBUNTU: efivar: Ignore alternative ESPs
+
+This is an ugly hack to get resilient boot somewhat working:
+We pass in a list of all ESPS in _UBUNTU_ALTERNATIVE_ESPS, and
+then we ignore those when looking for entries to change/remove.
+
+Patch-Name: ubuntu-resilient-boot-ignore-alternative-esps.patch
+---
+ grub-core/osdep/unix/efivar.c | 130 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 125 insertions(+), 5 deletions(-)
+
+diff --git a/grub-core/osdep/unix/efivar.c b/grub-core/osdep/unix/efivar.c
+index 4a58328..41d39c4 100644
+--- a/grub-core/osdep/unix/efivar.c
++++ b/grub-core/osdep/unix/efivar.c
+@@ -37,9 +37,11 @@
+ #include <grub/list.h>
+ #include <grub/misc.h>
+ #include <grub/emu/exec.h>
++#include <grub/emu/getroot.h>
+ #include <sys/types.h>
+ #include <ctype.h>
+ #include <errno.h>
++#include <stdbool.h>
+ #include <stdlib.h>
+ #include <string.h>
+ 
+@@ -336,14 +338,12 @@ get_edd_version (void)
+   return 1;
+ }
+ 
+-static struct efi_variable *
+-make_boot_variable (int num, const char *disk, int part, const char *loader,
+-		    const char *label)
++static ssize_t
++make_efidp (const char *disk, int part, const char *loader, efidp *out)
+ {
+-  struct efi_variable *entry = new_boot_variable ();
+   uint32_t options;
+   uint32_t edd10_devicenum;
+-  ssize_t dp_needed, loadopt_needed;
++  ssize_t dp_needed;
+   efidp dp = NULL;
+ 
+   options = EFIBOOT_ABBREV_HD;
+@@ -374,6 +374,27 @@ make_boot_variable (int num, const char *disk, int part, const char *loader,
+   if (dp_needed < 0)
+     goto err;
+ 
++  *out = dp;
++  return dp_needed;
++
++err:
++  free (dp);
++  *out = NULL;
++  return -1;
++}
++
++static struct efi_variable *
++make_boot_variable (int num, const char *disk, int part, const char *loader,
++		    const char *label)
++{
++  struct efi_variable *entry = new_boot_variable ();
++  ssize_t dp_needed, loadopt_needed;
++  efidp dp = NULL;
++
++  dp_needed = make_efidp (disk, part, loader, &dp);
++  if (dp_needed < 0)
++    goto err;
++
+   loadopt_needed = efi_loadopt_create (NULL, 0, LOAD_OPTION_ACTIVE,
+ 				       dp, dp_needed, (unsigned char *) label,
+ 				       NULL, 0);
+@@ -398,6 +419,71 @@ err:
+   return NULL;
+ }
+ 
++// I hurt my grub today, to see what I can do.
++static efidp *
++get_alternative_esps (void)
++{
++  size_t result_size = 0;
++  efidp *result = NULL;
++  char *alternatives = getenv ("_UBUNTU_ALTERNATIVE_ESPS");
++  char *esp;
++
++  if (!alternatives)
++    goto out;
++
++  for (esp = strtok (alternatives, ", "); esp; esp = strtok (NULL, ", "))
++    {
++      while (isspace (*esp))
++	esp++;
++      if (!*esp)
++	continue;
++
++      char *devname = grub_util_get_grub_dev (esp);
++      if (!devname)
++	continue;
++      grub_device_t dev = grub_device_open (devname);
++      free (devname);
++      if (!dev)
++	continue;
++
++      const char *disk = grub_util_biosdisk_get_osdev (dev->disk);
++      int part = dev->disk->partition ? dev->disk->partition->number + 1 : 1;
++
++      result = xrealloc (result, (++result_size) * sizeof (*result));
++      if (make_efidp (disk, part, "", &result[result_size - 1]) < 0)
++	continue;
++      grub_device_close (dev);
++    }
++
++out:
++  result = xrealloc (result, (++result_size) * sizeof (*result));
++  result[result_size - 1] = NULL;
++  return result;
++}
++
++/* Check if both efidp are on the same device. */
++static bool
++devices_equal (const_efidp a, const_efidp b)
++{
++  while (a && b)
++    {
++      // We reached a file, so we must be on the same device, woohoo
++      if (efidp_subtype (a) == EFIDP_MEDIA_FILE
++	  && efidp_subtype (b) == EFIDP_MEDIA_FILE)
++	return true;
++      if (efidp_node_size (a) != efidp_node_size (b))
++	break;
++      if (memcmp (a, b, efidp_node_size (a)) != 0)
++	break;
++      if (efidp_next_node (a, &a) < 0)
++	break;
++      if (efidp_next_node (b, &b) < 0)
++	break;
++    }
++
++  return false;
++}
++
+ int
+ grub_install_efivar_register_efi (grub_device_t efidir_grub_dev,
+ 				  const char *efifile_path,
+@@ -407,11 +493,20 @@ grub_install_efivar_register_efi (grub_device_t efidir_grub_dev,
+   int efidir_part;
+   struct efi_variable *entries = NULL, *entry;
+   struct efi_variable *order;
++  efidp *alternatives;
++  efidp this;
+   int entry_num = -1;
+   int rc;
+ 
+   efidir_disk = grub_util_biosdisk_get_osdev (efidir_grub_dev->disk);
+   efidir_part = efidir_grub_dev->disk->partition ? efidir_grub_dev->disk->partition->number + 1 : 1;
++  alternatives = get_alternative_esps ();
++
++  if (make_efidp (efidir_disk, efidir_part, "", &this) < 0)
++    {
++      grub_util_warn ("Internal error");
++      return 1;
++    }
+ 
+ #ifdef __linux__
+   /*
+@@ -453,6 +548,8 @@ grub_install_efivar_register_efi (grub_device_t efidir_grub_dev,
+     {
+       efi_load_option *load_option = (efi_load_option *) entry->data;
+       const char *label;
++      efidp path;
++      efidp *alt;
+ 
+       if (entry->num < 0)
+ 	continue;
+@@ -460,6 +557,29 @@ grub_install_efivar_register_efi (grub_device_t efidir_grub_dev,
+       if (strcasecmp (label, efi_distributor) != 0)
+ 	continue;
+ 
++      path = efi_loadopt_path (load_option, entry->data_size);
++      if (!path)
++	continue;
++
++      /* Do not remove this entry if it's an alternative ESP, but do reuse
++       * or remove this entry if it is for the current ESP or any unspecified
++       * ESP */
++      if (!devices_equal (path, this))
++	{
++	  for (alt = alternatives; *alt; alt++)
++	    {
++	      if (devices_equal (path, *alt))
++		break;
++	    }
++
++	  if (*alt)
++	    {
++	      grub_util_info ("not deleting alternative EFI variable %s (%s)",
++			      entry->name, label);
++	      continue;
++	    }
++	}
++
+       /* To avoid problems with some firmware implementations, reuse the first
+          matching variable we find rather than deleting and recreating it.  */
+       if (entry_num == -1)

@@ -1,0 +1,39 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          grub-common
+# Required-Start:    $all
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Record successful boot for GRUB
+# Description:       GRUB displays the boot menu at the next boot if it
+#                    believes that the previous boot failed. This script
+#                    informs it that the system booted successfully.
+### END INIT INFO
+
+which grub-editenv >/dev/null 2>&1 || exit 0
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
+
+case $1 in
+    start|restart|force-reload)
+	log_action_msg "Recording successful boot for GRUB"
+	[ -s /boot/grub/grubenv ] || rm -f /boot/grub/grubenv
+	mkdir -p /boot/grub
+	grub-editenv /boot/grub/grubenv unset recordfail
+	log_end_msg $?
+	;;
+    stop)
+	;;
+    status)
+	exit 0
+	;;
+    *)
+	echo "Usage: $0 {start|stop|status|restart|force-reload}" >&2
+	exit 3
+	;;
+esac
+
+exit 0

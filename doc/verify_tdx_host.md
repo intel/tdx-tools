@@ -36,10 +36,12 @@ After reboot into TDX host kernel,
   sudo dnf install -y msr-tools
   ```
 
-- Check TDX SEAM module version
+- Check TDX SEAM module version, build date should be 20220131,
+major version should be 0x1
 
   ```
-  cat /sys/firmware/tdx_seam/*
+  cat /sys/firmware/tdx/tdx_module/build_date
+  cat /sys/firmware/tdx/tdx_module/major_version
   ```
 
 - Check MK-TME is enabled according to [Intel&reg; Architecture Memory
@@ -50,9 +52,9 @@ the bit 1 should be 1 for MSR IA32_TME_ACTIVATE
   rdmsr -f 1:1 0x982
   ```
 
-- Check TDX keys
+- Check `MK-TME` keys
 
-  1. Read the bits MK_TME_KEYID_BITS ( 35:32 ) of the value of MSR 0x982
+  Read the bits MK_TME_KEYID_BITS ( 35:32 ) of the value of MSR 0x982
 according [Intel&reg; Architecture Memory
 Encryption Technologies](https://software.intel.com/sites/default/files/managed/a5/16/Multi-Key-Total-Memory-Encryption-Spec.pdf)
 
@@ -60,7 +62,7 @@ Encryption Technologies](https://software.intel.com/sites/default/files/managed/
   rdmsr -f 35:32 0x982
   ```
 
-  2. Calculte the value of 2 ^ MK_TME_KEYID_BITS - 2
+  A non-zero return value means `MK-TME` is supported.
 
 ### Verify Guest
 

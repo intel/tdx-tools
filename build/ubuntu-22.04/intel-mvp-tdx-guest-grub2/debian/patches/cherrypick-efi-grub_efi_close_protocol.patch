@@ -1,0 +1,79 @@
+From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+Date: Mon, 29 Nov 2021 16:00:29 +0100
+Subject: efi: library function grub_efi_close_protocol()
+
+Create a library function for CloseProtocol() and use it for the SNP
+driver.
+
+Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+
+Origin: upstream
+---
+ grub-core/kern/efi/efi.c           | 12 ++++++++++++
+ grub-core/net/drivers/efi/efinet.c |  8 ++------
+ include/grub/efi/efi.h             |  3 +++
+ 3 files changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/grub-core/kern/efi/efi.c b/grub-core/kern/efi/efi.c
+index a3cae1e..69c283d 100644
+--- a/grub-core/kern/efi/efi.c
++++ b/grub-core/kern/efi/efi.c
+@@ -117,6 +117,18 @@ grub_efi_open_protocol (grub_efi_handle_t handle,
+   return interface;
+ }
+ 
++grub_efi_status_t
++grub_efi_close_protocol (grub_efi_handle_t handle, grub_efi_guid_t *protocol)
++{
++  grub_efi_boot_services_t *b = grub_efi_system_table->boot_services;
++  grub_efi_status_t status;
++
++  status = efi_call_4 (b->close_protocol, handle, protocol,
++		       grub_efi_image_handle, NULL);
++
++  return status;
++}
++
+ int
+ grub_efi_set_text_mode (int on)
+ {
+diff --git a/grub-core/net/drivers/efi/efinet.c b/grub-core/net/drivers/efi/efinet.c
+index 9273bb7..a5d0539 100644
+--- a/grub-core/net/drivers/efi/efinet.c
++++ b/grub-core/net/drivers/efi/efinet.c
+@@ -160,9 +160,7 @@ open_card (struct grub_net_card *dev)
+ 
+   if (dev->efi_net != NULL)
+     {
+-      efi_call_4 (grub_efi_system_table->boot_services->close_protocol,
+-		  dev->efi_handle, &net_io_guid,
+-		  grub_efi_image_handle, NULL);
++      grub_efi_close_protocol (dev->efi_handle, &net_io_guid);
+       dev->efi_net = NULL;
+     }
+   /*
+@@ -224,9 +222,7 @@ close_card (struct grub_net_card *dev)
+ {
+   efi_call_1 (dev->efi_net->shutdown, dev->efi_net);
+   efi_call_1 (dev->efi_net->stop, dev->efi_net);
+-  efi_call_4 (grub_efi_system_table->boot_services->close_protocol,
+-	      dev->efi_handle, &net_io_guid,
+-	      grub_efi_image_handle, 0);
++  grub_efi_close_protocol (dev->efi_handle, &net_io_guid);
+ }
+ 
+ static struct grub_net_card_driver efidriver =
+diff --git a/include/grub/efi/efi.h b/include/grub/efi/efi.h
+index 08f6ee0..58ac621 100644
+--- a/include/grub/efi/efi.h
++++ b/include/grub/efi/efi.h
+@@ -35,6 +35,9 @@ EXPORT_FUNC(grub_efi_locate_handle) (grub_efi_locate_search_type_t search_type,
+ void *EXPORT_FUNC(grub_efi_open_protocol) (grub_efi_handle_t handle,
+ 					   grub_efi_guid_t *protocol,
+ 					   grub_efi_uint32_t attributes);
++grub_efi_status_t
++EXPORT_FUNC(grub_efi_close_protocol) (grub_efi_handle_t handle,
++				      grub_efi_guid_t *protocol);
+ int EXPORT_FUNC(grub_efi_set_text_mode) (int on);
+ void EXPORT_FUNC(grub_efi_stall) (grub_efi_uintn_t microseconds);
+ void *

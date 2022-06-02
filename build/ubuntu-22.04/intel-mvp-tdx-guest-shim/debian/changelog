@@ -1,0 +1,420 @@
+shim (15.4-mvp3) jammy; urgency=medium
+
+  * Enable TDX measurement
+
+ -- ken <ken.lu@intel.com>  Mon, 27 Sep 2021 20:27:46 +0800
+
+shim (15.4-mvp2) jammy; urgency=medium
+
+  * Enable TDX measurement
+
+ -- ken <ken.lu@intel.com>  Mon, 27 Sep 2021 20:27:46 +0800
+
+mvp-tdx-guest-shim (15.4-99mvp1) jammy; urgency=medium
+
+  * Enable TDX measurement
+
+ -- ken <ken.lu@intel.com>  Mon, 27 Sep 2021 20:27:46 +0800
+
+shim (15.4-0ubuntu9) hirsute; urgency=medium
+
+  * Fix booting installer media on some machines (LP: #1937115)
+    - Always fallback to the default loader (PR #393)
+    - Dump load options parsed (PR #393)
+    - Disable load option parsing on removable media path (PR #399)
+  * trivial: Fix a minor overflow in the mok importing code (PR #365)
+  * Fix fall back loader to find the correct boot entry, avoiding potential
+    corruption of firmware (PR #396).
+
+ -- Julian Andres Klode <juliank@ubuntu.com>  Fri, 06 Aug 2021 13:16:33 +0200
+
+shim (15.4-0ubuntu7) hirsute; urgency=medium
+
+  * Fix load option parsing, and thus fwupd execution (LP: #1929471) (PR #379)
+  * Fix occasional crashes in _relocate() on arm64 (LP: #1928010) (PR #383)
+  * Fix accidental deletion of RT variables (LP: #1934506) (PR #387)
+  * mok: relax the maximum variable size check (LP: #1934780) (PR #369)
+
+ -- Julian Andres Klode <juliank@ubuntu.com>  Wed, 07 Jul 2021 10:57:35 +0200
+
+shim (15.4-0ubuntu5) hirsute; urgency=medium
+
+  * Rebuild in hirsute to get a more stable target to keep shim reproducible
+    for a longer time.
+
+ -- Julian Andres Klode <juliank@ubuntu.com>  Wed, 16 Jun 2021 12:52:45 +0200
+
+shim (15.4-0ubuntu3) impish; urgency=medium
+
+  [ Steve Langasek ]
+  * Use -Zxz compression, for compatibility with dpkg in older releases.
+    LP: #1925673
+
+  [ Julian Andres Klode ]
+  * Stop addending vendor dbx to MokListXRT during MokListX mirroring. This
+    is causing systems to run out of EFI storage space, or just hang up
+    when trying to write it (LP: #1924605) (LP: #1928434)
+  * Further relax the check for variable mirroring on non-secureboot systems
+    avoiding boot failures on out of space conditons (pull request #372)
+
+  [ Seth Forshee ]
+  * Don't unhook ExitBootServices() when EBS protection is disabled (LP: #1931136)
+    (pull request #378)
+
+ -- Julian Andres Klode <juliank@ubuntu.com>  Tue, 08 Jun 2021 16:42:17 +0200
+
+shim (15.4-0ubuntu2) hirsute; urgency=medium
+
+  [ Balint Reczey ]
+  * Fix boot on EFI 1.10 machines, for example on some MacBooks (LP: #1925010)
+
+  [ Dimitri John Ledkov ]
+  * Fix kernel warning when allocating MOK table (LP: #1925139)
+  * Fix booting with shim SBState disabled (LP: #1925140)
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Tue, 20 Apr 2021 15:24:29 +0100
+
+shim (15.4-0ubuntu1) hirsute; urgency=medium
+
+  [ Dimitri John Ledkov ]
+  * New upstream release 15.4 LP: #1921134
+    - Update the commit hash in debian/rules
+  * debian/rules: add request to sign EFI binaries with archive signing key.
+  * debian/rules: stop using ENABLE_SHIM_CERT=1.
+  * debian/rules: add canonical 2021 DBX.
+  * deiban/rules: start using DISABLE_EBS_PROTECTION=1 to allow
+    chainloading shim to shim, and shim to kernel.efi.
+  * Add shim-dbg package, skip stripping files.
+  * Update watch file, now uscan can generate new upstream tarballs.
+  * Upgrade to debhelper 12.
+  * Drop gnu-efi build-dep, now vendored upstream.
+  * Add debian/rules target to generate gnu-efi components.
+  * Do not clean gnu-efi Makefile.orig
+  * Remove fallback 5s delay with TPM. LP: #1922581
+  * Add xxd build-dep to run unittests.
+
+  [ Chris Coulson ]
+  * Drop patches that are fixed upstream:
+    - debian/patches/Fix-OBJ_create-to-tolerate-a-NULL-sn-and-ln.patch
+    - debian/patches/MokManager-avoid-unaligned.patch
+    - debian/patches/tpm-correctness-1.patch
+    - debian/patches/tpm-correctness-2.patch
+    - debian/patches/tpm-correctness-3.patch
+    - debian/patches/MokManager-hidpi-support.patch
+    - debian/patches/fix-path-checks.patch
+  * Drop the ENABLE_HTTPBOOT option - this is always built now.
+    - update debian/rules
+  * Add vendor SBAT metadata to shim.
+    - add debian/sbat.ubuntu.csv.in
+    - update debian/rules
+  * Add vendor dbx esl to include-binaries
+  * Build-depend on dos2unix
+    - update debian/control
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 24 Mar 2021 11:32:25 +0000
+
+shim (15+1552672080.a4a1fbe-0ubuntu2) focal; urgency=medium
+
+  * d/patches/fix-path-checks.patch: Cherry-pick upstream fix for regression
+    in loading fwupd, or anything else specified as an argument (LP: #1864223)
+
+ -- Julian Andres Klode <juliank@ubuntu.com>  Fri, 20 Mar 2020 16:19:14 +0100
+
+shim (15+1552672080.a4a1fbe-0ubuntu1) eoan; urgency=medium
+
+  * New upstream snapshot 15+1552672080.a4a1fbe.
+  * debian/patches/VLogError-Avoid-NULL-pointer-dereferences-in-V-Sprin.patch,
+    debian/patches/fixup_git.patch: drop patches included in upstream.
+  * debian/patches/MokManager-avoid-unaligned.patch: Fix compilation with GCC9:
+    avoid -Werror=address-of-packed-member errors in MokManager.
+  * debian/patches/tpm-correctness-1.patch,
+    debian/patches/tpm-correctness-2.patch: fix issues in TPM calls to ensure
+    the measurements are consistent with what is entered in the TPM event log.
+  * debian/patches/tpm-correctness-3.patch: Don't log duplicate identical
+    TPM events.
+  * debian/patches/MokManager-hidpi-support.patch: Do a little bit more to
+    try to get a more usable screen resolution for MokManager when running on
+    HiDPI screens; by trying to detect such cases and switching to mode 0.
+  * debian/rules: update COMMIT_ID explicitly for this new snapshot.
+
+ -- Mathieu Trudel-Lapierre <cyphermox@ubuntu.com>  Fri, 11 Oct 2019 16:32:32 -0400
+
+shim (15+1533136590.3beb971-0ubuntu2) eoan; urgency=medium
+
+  * debian/copyright: Update upstream source location.
+  * d/p/VLogError-Avoid-NULL-pointer-dereferences-in-V-Sprin.patch: Fix
+    NULL pointer dereferences that lead to an exception error on arm64.
+    (LP: #1811722)
+  * d/p/Fix-OBJ_create-to-tolerate-a-NULL-sn-and-ln.patch: Fix NULL
+    pointer dereference when calling OBJ_create() that leads to an
+    exception error on arm64. (LP: #1811901)
+  * debian/rules: Fix syntax of else statement when setting EFI_ARCH.
+
+ -- dann frazier <dannf@ubuntu.com>  Tue, 30 Apr 2019 12:45:02 -0600
+
+shim (15+1533136590.3beb971-0ubuntu1) cosmic; urgency=medium
+
+  [ Steve Langasek ]
+  * Fix Vcs link.
+
+  [ dann frazier ]
+  * Enable arm64 build.
+
+  [ Mathieu Trudel-Lapierre ]
+  * New upstream snapshot.
+  * debian/patches/abort_abort_abort.patch: dropped patch, included upstream.
+  * debian/rules:
+    - define RELEASE and COMMIT_ID for the snapshot.
+    - Set ENABLE_HTTPBOOT to enable the HTTP Boot feature.
+  * debian/patches/fixup_git.patch: don't run git in clean; we're not really
+    in a git tree.
+
+ -- Mathieu Trudel-Lapierre <cyphermox@ubuntu.com>  Wed, 22 Aug 2018 10:52:10 -0400
+
+shim (13-0ubuntu2) bionic; urgency=medium
+
+  * debian/patches/abort_abort_abort.patch: signtool.exe isn't happy with some
+    of the structure of our binary, partly because abort() is thought to be an
+    external symbol, which causes some relocalisations to appear.
+
+ -- Mathieu Trudel-Lapierre <cyphermox@ubuntu.com>  Tue, 07 Nov 2017 10:19:04 -0500
+
+shim (13-0ubuntu1) artful; urgency=medium
+
+  * New upstream release: 13
+  * debian/control: add a Build-Depends on libelf-dev.
+  * debian/control: add Breaks: for the previous shim-signed builds given
+    that shim will now build and ship BOOT.CSV by itself.
+  * debian/rules:
+    - Update dh_auto_build/dh_auto_clean/dh_auto_install for new upstream
+      options: set MAKELEVEL.
+    - Define an EFI_ARCH variable, and use that for paths to shim. This
+      makes it possible to build a shim for other architectures than amd64.
+    - Set EFIDIR=ubuntu for dh_auto_install; that will let files be installed
+      in the "right" final directories, and makes boot.csv for us.
+    - Set ENABLE_SHIM_CERT, to keep using ephemeral self-signed certs built
+      at compile-time for MokManager and fallback.
+    - Set ENABLE_SBSIGN, to use sbsign instead of pesign for signing fallback
+      and MokManager.
+  * debian/patches/second-stage-path: dropped; the default loader path now
+    includes an arch suffix.
+  * debian/patches/sbsigntool-no-pesign: dropped; no longer needed..
+  * debian/patches/0001-shim-fix-the-mirroring-MokSBState-fail.patch: dropped,
+    included upstream.
+  * debian/shim.install: update paths in light of using shim's upstream install
+    target.
+  * debian/rules, debian/shim.install: make sure the 'make install' step does
+    what it's meant to do by upstream: we can easily make use of the end result
+    to have the files we need.
+
+ -- Mathieu Trudel-Lapierre <cyphermox@ubuntu.com>  Fri, 29 Sep 2017 15:11:28 -0400
+
+shim (0.9+1474479173.6c180c6-1ubuntu1) zesty; urgency=medium
+
+  [ Steve Langasek ]
+  * Merge (not yet NEW cleared) changes from Debian branch.
+
+  [ Mathieu Trudel-Lapierre ]
+  * debian/patches/0001-shim-fix-the-mirroring-MokSBState-fail.patch: guard
+    against errors in mirroring MokSBState to MokSBStateRT. Thanks to Ivan Hu
+    for the patch. This will fix issues updating MokSBStateRT if the variable
+    already exists with different attributes. (LP: #1644806)
+
+ -- Mathieu Trudel-Lapierre <cyphermox@ubuntu.com>  Thu, 01 Dec 2016 16:55:50 -0500
+
+shim (0.9+1474479173.6c180c6-1) unstable; urgency=medium
+
+  [ Steve Langasek ]
+  * Initial Debian upload.  Closes: #820052.
+  * Update Standards-Version.
+  * Embed the newly-minted Debian CA certificate.
+  * Vendorize debian/rules so that the same package can be used in both
+    Debian and Ubuntu without modification.
+  * Fix debian/copyright to match the spec (last match wins, not first)
+  * Fix shim.efi to not be executable.
+  * Add watchfile.
+  * Support parallel builds, because eh why not
+  * Update Vcs-Bzr.
+  * Resync with Ubuntu, including patch to fix debian/copyright.
+
+  [ Julien Cristau ]
+  * Add some missing copyright holders in d/copyright, update
+    Upstream-Contact.  Thanks to Helen Koike for the help.
+
+ -- Julien Cristau <jcristau@debian.org>  Sat, 15 Oct 2016 15:17:34 +0200
+
+shim (0.9+1474479173.6c180c6-0ubuntu1) yakkety; urgency=medium
+
+  [ Helen Koike ]
+  * debian/copyright: add OpenSSL license 
+
+  [ Mathieu Trudel-Lapierre ]
+  * New upstream release. (LP: #1624096)
+  * debian/copyright: patches should be BSD, like the rest of the upstream
+    code.
+  * debian/patches/unused-variable: dropped; applied upstream.
+  * debian/patches/binutils-version-matching: dropped, fixed upstream.
+  * debian/shim.install: built EFI binaries were renamed; update our install
+    file to properly pick up shim (shim$arch), MokManager (mm$arch), and
+    fallback (fb$arch).
+
+ -- Mathieu Trudel-Lapierre <cyphermox@ubuntu.com>  Thu, 22 Sep 2016 15:02:20 -0400
+
+shim (0.9+1465500757.14a5905-0ubuntu1) yakkety; urgency=medium
+
+  * New upstream release.
+    - Better handle LoadOptions. (LP: #1581299)
+    - Measure state and second stage in TPM.
+    - Mirror MokSBState in runtime as MokSBStateRT.
+    - Fix failure to build with GCC 5. (LP: #1429978)
+    - Various bug fixes and other improvements.
+  * Refreshed patches.
+    - Remaining patches:
+      + second-stage-path
+      + sbsigntool-not-pesign 
+  * debian/patches/unused-variable: remove unused variable size.
+  * debian/patches/binutils-version-matching: revert d9a4c912 to correctly
+    match objcopy's version on Ubuntu.
+  * debian/copyright: update copyright for patches.
+
+ -- Mathieu Trudel-Lapierre <cyphermox@ubuntu.com>  Tue, 26 Jul 2016 16:48:32 -0400
+
+shim (0.8-0ubuntu2) wily; urgency=medium
+
+  * No-change rebuild against gnu-efi 3.0v-5ubuntu1.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 12 May 2015 17:48:30 +0000
+
+shim (0.8-0ubuntu1) wily; urgency=medium
+
+  * New upstream release.
+    - Clarify meaning of insecure_mode. (LP: #1384973)
+  * debian/patches/CVE-2014-3675.patch, debian/patches/CVE-2014-3677.patch,
+    debian/patches/0001-Update-openssl-to-0.9.8za.patch: dropped, included
+    in the upstream release.
+  * debian/patches/sbsigntool-not-pesign,debian/patches/second-stage-path:
+    refreshed.
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Mon, 11 May 2015 19:50:49 -0400
+
+shim (0.7-0ubuntu4) utopic; urgency=medium
+
+  * SECURITY UPDATE: heap overflow and out-of-bounds read access when
+    parsing DHCPv6 information
+    - debian/patches/CVE-2014-3675.patch: apply proper bounds checking
+      when parsing data provided in DHCPv6 packets.
+    - CVE-2014-3675
+    - CVE-2014-3676
+  * SECURITY UPDATE: memory corruption when processing user-provided key
+    lists
+    - debian/patches/CVE-2014-3677.patch: detect malformed machine owner
+      key (MOK) lists and ignore them, avoiding possible memory corruption.
+    - CVE-2014-3677
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 08 Oct 2014 06:40:40 +0000
+
+shim (0.7-0ubuntu2) utopic; urgency=medium
+
+  * Restore debian/patches/prototypes, which still is needed on shim 0.7
+    but only detected on the buildds.
+  * Update debian/patches/prototypes with some new declarations needed for
+    openssl 0.9.8za update.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 07 Oct 2014 16:20:08 -0700
+
+shim (0.7-0ubuntu1) utopic; urgency=medium
+
+  * New upstream release.
+    - fix spurious error message when fallback.efi is not present, as will
+      always be the case for removable media.  LP: #1297069.
+    - drop most patches, included upstream.
+  * debian/patches/0001-Update-openssl-to-0.9.8za.patch: cherry-pick
+    openssl 0.9.8za in via upstream.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 07 Oct 2014 05:40:41 +0000
+
+shim (0.4-0ubuntu5) utopic; urgency=low
+
+  * Install fallback.efi.signed as well, to lay the groundwork for fallback
+    handling (wanted when we have to move a drive between machines, or when
+    the firmware loses its marbles^W nvram).
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Mon, 04 Aug 2014 12:11:13 +0200
+
+shim (0.4-0ubuntu4) saucy; urgency=low
+
+  * debian/patches/fix-tftp-prototype: pass the right arguments to
+    EFI_PXE_BASE_CODE_TFTP_READ_FILE.
+  * debian/patches/build-with-Werror: Build with -Werror to catch future
+    prototype mismatches.
+  * debian/patches/fix-compiler-warnings: Fix remaining compiler
+    warnings in netboot.c.
+  * debian/patches/tftp-proper-nul-termination: fix nul termination
+    errors in filenames passed to tftp.
+  * debian/patches/netboot-cleanup: roll-up of miscellaneous fixes to
+    the netboot code.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Mon, 23 Sep 2013 00:30:00 -0700
+
+shim (0.4-0ubuntu3) saucy; urgency=low
+
+  [ Steve Langasek ]
+  * Install MokManager.efi.signed in the package.
+  * debian/patches/no-output-by-default.patch: Don't print any
+    informational messages.  Closes LP: #1074302.
+
+  [ Stéphane Graber ]
+  * debian/patches/no-print-on-unsigned: Don't print an error message when
+    validating an unsigned binary as that tends to hang Lenovo machines.
+    (LP: #1087501)
+
+ -- Stéphane Graber <stgraber@ubuntu.com>  Thu, 08 Aug 2013 17:12:12 +0200
+
+shim (0.4-0ubuntu2) saucy; urgency=low
+
+  * Add missing build-dependency on openssl.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 02 Jul 2013 20:30:43 +0000
+
+shim (0.4-0ubuntu1) saucy; urgency=low
+
+  * New upstream release.
+  * Drop debian/patches/shim-before-loadimage; upstream has changed this to
+    not call loadimage at all.
+  * debian/patches/sbsigntool-not-pesign: Sign MokManager with
+    sbsigntool instead of pesign.
+  * Add a versioned build-dependency on gnu-efi.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 02 Jul 2013 12:53:24 -0700
+
+shim (0~20120906.bcd0a4e8-0ubuntu4) quantal-proposed; urgency=low
+
+  * debian/patches/shim-before-loadimage: Use direct verification first
+    before LoadImage.  Addresses an issue where Lenovo's SecureBoot
+    implementation pops an error message on any verification failure - avoid
+    calling LoadImage at all unless we have to.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 10 Oct 2012 15:28:40 -0700
+
+shim (0~20120906.bcd0a4e8-0ubuntu3) quantal; urgency=low
+
+  * debian/patches/second-stage-path: Chainload grubx64.efi, not
+    grub.efi.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 05 Oct 2012 11:20:58 -0700
+
+shim (0~20120906.bcd0a4e8-0ubuntu2) quantal; urgency=low
+
+  * debian/patches/prototypes: Include missing prototypes, and disable
+    use of BIO_new_file.
+  * Only build the package for amd64; we're not signing an i386 shim at this
+    stage so there's no point in building it.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 04 Oct 2012 17:47:04 +0000
+
+shim (0~20120906.bcd0a4e8-0ubuntu1) quantal; urgency=low
+
+  * Initial release.
+  * Include the Canonical Secure Boot master CA.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 04 Oct 2012 00:01:06 -0700

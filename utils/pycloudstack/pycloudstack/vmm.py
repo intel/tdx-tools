@@ -112,15 +112,9 @@ class VMMBase:
         """
         raise NotImplementedError
 
-    def update_cpu_topology(self, cpu_topology):
+    def update_vmspec(self, new_vmspec):
         """
-        Update cpu topology
-        """
-        raise NotImplementedError
-
-    def update_memsize(self, memsize):
-        """
-        Update memory size of vm
+        Update VM spec include CPU topology and memory size
         """
         raise NotImplementedError
 
@@ -150,13 +144,14 @@ class VMMLibvirt(VMMBase):
         xmlobj = VirtXml.clone(
             self._TEMPLATE[self.vminst.vmtype],
             self.vminst.name)
-        xmlobj.memory = int(self.vminst.memsize * 1024 * 1024)
+        xmlobj.memory = self.vminst.vmspec.memsize
         xmlobj.uuid = self.vminst.vmid
         xmlobj.imagefile = self.vminst.image.filepath
-        xmlobj.vcpu = self.vminst.cpu_topology.vcpus
-        xmlobj.sockets = self.vminst.cpu_topology.sockets
-        xmlobj.cores = self.vminst.cpu_topology.cores
-        xmlobj.threads = self.vminst.cpu_topology.threads
+        xmlobj.logfile = "/tmp/" + self.vminst.name + ".log"
+        xmlobj.vcpu = self.vminst.vmspec.vcpus
+        xmlobj.sockets = self.vminst.vmspec.sockets
+        xmlobj.cores = self.vminst.vmspec.cores
+        xmlobj.threads = self.vminst.vmspec.threads
 
         var_filename = "OVMF_VARS." + xmlobj.uuid + ".fd"
         var_fullpath = os.path.join(tempfile.gettempdir(), var_filename)
@@ -181,14 +176,15 @@ class VMMLibvirt(VMMBase):
             xmlobj.set_cpu_params(
                 "host,host-phys-bits,+sgx,+sgx-debug,+sgx-exinfo,"
                 "+sgx-kss,+sgx-mode64,+sgx-provisionkey,+sgx-tokenkey,+sgx1,+sgx2,+sgxlc")
+            xmlobj.set_epc_params(self.vminst.vmspec.epc)
         elif self.vminst.vmtype == VM_TYPE_TD:
             xmlobj.loader = BIOS_OVMF_CODE
             xmlobj.nvram = var_fullpath
             if DUT.get_cpu_base_freq() < 1000000:
                 xmlobj.set_cpu_params(
-                    "host,-kvm-steal-time,pmu=off,tsc-freq=1000000000")
+                    "host,-shstk,-kvm-steal-time,pmu=off,tsc-freq=1000000000")
             else:
-                xmlobj.set_cpu_params("host,-kvm-steal-time,pmu=off")
+                xmlobj.set_cpu_params("host,-shstk,-kvm-steal-time,pmu=off")
 
         if self.vminst.boot == BOOT_TYPE_GRUB:
             xmlobj.kernel = None
@@ -199,7 +195,7 @@ class VMMLibvirt(VMMBase):
 
         return xmlobj
 
-    def _connect_virt(self):    # pylint: disable=no-self-use
+    def _connect_virt(self):
         LOG.debug("Create libvirt connection")
         try:
             conn = libvirt.open("qemu:///system")
@@ -217,7 +213,11 @@ class VMMLibvirt(VMMBase):
 
     def _get_domain(self):
         assert self._virt_conn is not None
-        return self._virt_conn.lookupByUUIDString(self.vminst.vmid)
+        try:
+            return self._virt_conn.lookupByUUIDString(self.vminst.vmid)
+        except libvirt.libvirtError:
+            LOG.warning("Fail to get the domain %s", self.vminst.vmid)
+            return None
 
     def __del__(self):
         self._close_virt()
@@ -264,6 +264,17 @@ class VMMLibvirt(VMMBase):
             except (OSError, IOError):
                 LOG.warning("Fail to delete Virt XML %s", self._xml.filepath)
 
+    def delete_log(self):
+        """
+        Delete VM log file.
+        """
+        if os.path.exists(self._xml.logfile):
+            try:
+                os.remove(self._xml.logfile)
+                LOG.debug("Delete VM log file %s", self._xml.logfile)
+            except (OSError, IOError):
+                LOG.warning("Fail to delete VM log file %s", self._xml.logfile)
+
     def start(self):
         """
         Start a VM if VM is not started.
@@ -297,12 +308,19 @@ class VMMLibvirt(VMMBase):
         dom = self._get_domain()
         dom.reboot()
 
-    def shutdown(self):
+    def shutdown(self, mode=None):
         """
         Shutdown a VM.
         """
         dom = self._get_domain()
-        dom.shutdown()
+        if mode is None:
+            dom.shutdown()
+        elif mode == "default":
+            dom.shutdownFlags(libvirt.VIR_DOMAIN_SHUTDOWN_DEFAULT)
+        elif mode == "acpi":
+            dom.shutdownFlags(libvirt.VIR_DOMAIN_SHUTDOWN_ACPI_POWER_BTN)
+        elif mode == "agent":
+            dom.shutdownFlags(libvirt.VIR_DOMAIN_SHUTDOWN_GUEST_AGENT)
 
     def is_running(self):
         """
@@ -389,15 +407,9 @@ class VMMLibvirt(VMMBase):
         """
         raise NotImplementedError
 
-    def update_cpu_topology(self, cpu_topology):
+    def update_vmspec(self, new_vmspec):
         """
-        Update cpu topology
-        """
-        raise NotImplementedError
-
-    def update_memsize(self, memsize):
-        """
-        Update memory size of vm
+        Update VM spec include CPU topology and memory size
         """
         raise NotImplementedError
 

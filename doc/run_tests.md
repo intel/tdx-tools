@@ -16,6 +16,13 @@ running. It uses `CentOS Stream 8` as example distro.
     sudo sudo dnf install python3-virtualenv python3-libvirt-6.0.0 libguestfs-devel libvirt-devel python3-devel
     ```
 
+- Make sure libvirt service is started. If not, start libvirt service.
+
+     ```
+    sudo systemctl status libvirtd
+    sudo systemctl start libvirtd
+    ```
+
 - Setup environment:
 
     Run below command to setup the pythone environment
@@ -69,3 +76,10 @@ running. It uses `CentOS Stream 8` as example distro.
 
   - The guest image has docker/podman installed.
   - The guest image contains docker image redis:latest.
+
+- User can specify guest image OS with `-g`. Currently only `rhel` and `centosstream`
+is supported. RHEL guest image is used by default if `-g` is not specified:
+
+    ```
+    sudo ./run.sh -g centosstream -s all
+    ```  

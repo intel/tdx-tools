@@ -1,0 +1,543 @@
+# translation of grub_debian_po_is.po to Icelandic
+# Copyright (C) 2010 Free Software Foundation
+# This file is distributed under the same license as the GRUB package.
+#
+# Sveinn í Felli <sveinki@nett.is>, 2010, 2011, 2012, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: grub_debian_po_is\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: 2014-12-13 23:20+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+">\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "Raðhlaða (chainload) úr menu.lst?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"Uppfærsluskriftur GRUB hafa fundið eldri uppsetningu GRUB í /boot/grub."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"Til að skipta eldri uppsetningu GRUB út af kerfinu, þá er mælt með því að /"
+"boot/grub/menu.lst sé stillt til að raðhlaða (chainload) GRUB 2 ræsidiskmynd "
+"frá þessari eldri uppsetningu á GRUB.  Hægt er að framkvæma þetta skref "
+"sjálfvirkt núna."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"Mælt með því að þú samþykkir að raðhlaða GRUB 2 úr menu.lst, auk þess að þú "
+"skoðir hvort nýja GRUB 2 uppsetningin virki fyrir þig, áður en þetta er "
+"skrifað á MBR ræsigeirann (Master Boot Record)."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"Hvað svosem þú ákveður, þá getur þú síðar skipt gömlu MBR myndinni út fyrir "
+"GRUB2 með því að gefa eftirfarandi skipun (sem kerfisstjóri/root):"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "GRUB uppsetningartæki:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"Verið er að uppfæra grub-pc pakkann. Þessi valmynd gerir þér kleift að velja "
+"af hvaða tækjum hægt er að keyra grub-install sjálfvirkt, ef þá nokkrum."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"Mælt er með í flestum tilfellum að keyra grub-install sjálfvirkt, til þess "
+"að koma í veg fyrir að uppsetta GRUB aðalmyndin hætti að vera samstillt við "
+"GRUB-einingar eða grub.cfg stilliskrána."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"Ef þú ert ekki viss um hvaða diskur er skilgreindur sem ræsidrif í BIOS, þá "
+"er oft góð hugmynd að setja GRUB upp á alla diskana."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"Athugasemd: Það er líka hægt að setja GRUB upp á ræsigeira disksneiða, hér "
+"eru nokkrar viðeigandi disksneiðar í boði. Á móti kemur að þetta þvingar "
+"GRUB til að nota blokklista (blocklist mechanism), sem gerir GRUB ekki eins "
+"áreiðanlegt; því er ekki mælt með þessu."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"GRUB ræsistjórinn vað áður uppsettur á disk sem ekki er lengur til staðar "
+"eða sem hefur af einhverjum ástæðum fengið nýtt auðkenni/tilvísun. Það er "
+"mikilvægt að ganga úr skugga um að uppsetta GRUB aðalmyndin sé samstillt við "
+"GRUB-einingar og grub.cfg stilliskrána.. Athugaðu aftur hvort GRUB sé "
+"skrifað á viðeigandi ræsitæki."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "Uppsetning GRUB á ræsitæki mistókst. Halda áfram?"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "Uppsetning GRUB mistókst á eftirfarandi tækjum:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"Viltu samt halda áfram? Ef þú gerir það er ekki víst að tölvan þín ræsist "
+"aftur eðlilega."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "Uppsetning GRUB á ræsitæki mistókst. Reyna aftur?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"Þú gætir hugsanlega sett GRUB upp á eitthvað annað tæki, samt ættirðu að "
+"skoða vel hvort kerfið þitt sé fært um að ræsa upp af því tæki.  Að öðrum "
+"kosti verður hætt við uppfærslu gamla GRUB ræsistjórans."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "Halda áfram án þess að setja upp GRUB?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Þú valdir að setja GRUB ekki upp á neitt tæki. Ef þú heldur áfram verður "
+"ræsistjórinn ekki rétt stilltur, og þegar tölvan þín ræsist næst mun hún "
+"nota hvað það sem fyrir er núna á ræsigeiranum. Ef á ræsigeiranum er til "
+"dæmis eldri útgáfa af GRUB 2, er möguleiki á að hún ráði ekki við að hlaða "
+"inn ákveðnum kjarnaeiningum eða nái ekki að lesa stillingaskrána fyrir þetta "
+"stýrikerfi."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"Ef þú ert þegar að nota einhvern annan ræsistjóra og ætlar að halda því "
+"áfram, eða ef þetta er eitthvað sérhannað kerfi sem ekki þarfnast "
+"ræsistjóra; þá ættirðu að halda samt áfram. Ef ekki, ættirðu að setja GRUB "
+"upp einhversstaðar."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "Fjarlægja GRUB 2 úr /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "Viltu láta fjarlægja allar GRUB 2 skrár úr /boot/grub?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"Þetta mun gera kerfið óræsanlegt nema einhver annar ræsistjóri sé settur upp."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "Ljúka núna umbreytingu í GRUB 2 ?"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"Þetta kerfi er ennþá með uppsettar skrár frá eldri uppsetningu GRUB, en er "
+"núna einnig með GRUB 2 ræsifærslur uppsettar á þessum diskum:"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"Það lítur út fyrir að eldra GRUB sé ekki lengur í notkun og að þú ættir þá "
+"að uppfæra GRUB 2 myndirnar á þessum diskum og ljúka svo yfirfærslunni í "
+"GRUB 2 með því að fjarlægja gömlu GRUB skrárnar. Ef þú uppfærir ekki þessar "
+"GRUB 2 myndir gætu þær orðið ósamhæfðar við nýju pakkana og koma í veg fyrir "
+"að kerfið ræsist eðlilega."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"Almennt ættirðu að ljúka umbreytingu í GRUB 2 nema ef þessar ræsifærslur "
+"hafi verið útbúnar af GRUB 2 uppsetningu í einhverju öðru stýrikerfi."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "Linux skipanalína:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Eftirfarandi Linux skipanalína fannst í /etc/default/grub eða í `kopt' "
+"viðfanginu í eldri GRUB menu.lst. Gakktu úr skugga um að þetta sé rétt og "
+"breyttu því ef það er nauðsynlegt. Skipanalínan má vera auð."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "Sjálfgefin Linux skipanalína:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"Eftirfarandi strengur verður notaður sem Linux viðfang í sjálfgefnu "
+"valmyndarfærslunni en ekki í viðgerðarham."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid "Force extra installation to the EFI removable media path?"
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr "Þvinga aukauppsetningu inn á EFI-slóðina fyrir útskiptanlega miðla?"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+#, fuzzy
+#| msgid ""
+#| "Some EFI-based systems are buggy and do not handle new bootloaders "
+#| "correctly. If you force an extra installation of GRUB to the EFI "
+#| "removable media path, this should ensure that this system will boot "
+#| "Debian correctly despite such a problem. However, it may remove the "
+#| "ability to boot any other operating systems that also depend on this "
+#| "path. If so, you will need to make sure that GRUB is configured "
+#| "successfully to be able to boot any other OS installations correctly."
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+"Sum EFI-kerfi eru ekki villulaus og meðhöndla nýja ræsistjóra (bootloaders) "
+"ekki rétt. Ef þú þvingar aukauppsetningu af GRUB inn á EFI-slóðina fyrir "
+"útskiptanlega miðla, ætti það að tryggja að Debian ræsist rétt þrátt fyrir "
+"slíka galla. Hinsvegar, þetta gæti líka skemmt hæfnina til að ræsa önnur "
+"stýrikerfi sem einnig eru háð notkun á þessari slóð. Ef sú er raunin, þá "
+"verður þú að ganga úr skugga um að GRUB sé sett upp á fullnægjandi máta til "
+"þess að geta ræst rétt öll önnur stýrikerfi."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"Verið er að uppfæra grub-pc pakkann. Þessi valmynd gerir þér kleift að velja "
+"af hvaða tækjum hægt er að keyra grub-install sjálfvirkt, ef þá nokkrum."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"Þú valdir að setja GRUB ekki upp á neitt tæki. Ef þú heldur áfram verður "
+"ræsistjórinn ekki rétt stilltur, og þegar tölvan þín ræsist næst mun hún "
+"nota hvað það sem fyrir er núna á ræsigeiranum. Ef á ræsigeiranum er til "
+"dæmis eldri útgáfa af GRUB 2, er möguleiki á að hún ráði ekki við að hlaða "
+"inn ákveðnum kjarnaeiningum eða nái ekki að lesa stillingaskrána fyrir þetta "
+"stýrikerfi."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "kFreeBSD skipanalína:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"Eftirfarandi kFreeBSD skipanalína fannst í /etc/default/grub eða í `kopt' "
+"viðfanginu í eldri GRUB menu.lst. Gakktu úr skugga um að þetta sé rétt og "
+"breyttu því ef það er nauðsynlegt. Skipanalínan má vera auð."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "Sjálfgefin kFreeBSD skipanalína:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"Eftirfarandi strengur verður notaður sem kFreeBSD viðfang í sjálfgefnu "
+"valmyndarfærslunni en ekki í viðgerðarham."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map var endurskrifað"
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "Skráin /boot/grub/device.map hefur verið endurskrifuð til að nota föst "
+#~ "tækjaheiti. Í flestum tilfellum þýðir þetta að færri ástæður geta komið "
+#~ "upp til að breyta þeim í framtíðinni og að færslur í GRUB ræsivalmyndinni "
+#~ "ættu síður að verða fyrir breytingum."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "Aftur á móti, þar sem fleiri en einn diskur eru til staðar í kerfinu, þá "
+#~ "er alveg hugsanlegt að kerfið reiði sig á gömlu tækjaskrána (device map). "
+#~ "Athugaðu hvort það séu einhverjar sérsniðnar ræsifærslur sem nota eldri "
+#~ "GRUB (hdN) diskaskilgreiningar, og uppfærðu þær þá ef nauðsyn krefur."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "Ef þú skilur ekki þessi skilaboð, eða ef þú hefur engar sérsniðnar "
+#~ "ræsifærslur, þá geturðu hunsað skilaboðin."

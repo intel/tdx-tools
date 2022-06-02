@@ -1,0 +1,50 @@
+From: Julian Andres Klode <julian.klode@canonical.com>
+Date: Tue, 30 Nov 2021 17:22:53 +0100
+Subject: Add configure option to bypass boot menu if possible
+
+If other operating systems are installed, then automatically unhide the
+menu.  Otherwise, if GRUB_HIDDEN_TIMEOUT is 0, then use keystatus if
+available to check whether Shift is pressed.  If it is, show the menu,
+otherwise boot immediately.  If keystatus is not available, then fall
+back to a short delay interruptible with Escape.
+
+This may or may not remain Ubuntu-specific, although it's not obviously
+wanted upstream.  It implements a requirement of
+https://wiki.ubuntu.com/DesktopExperienceTeam/KarmicBootExperienceDesignSpec#Bootloader.
+
+If the previous boot failed (defined as failing to get to the end of one
+of the normal runlevels), then show the boot menu regardless.
+
+Author: Richard Laager <rlaager@wiktel.com>
+Author: Robie Basak <robie.basak@ubuntu.com>
+Forwarded: no
+Last-Update: 2015-09-04
+
+Patch-Name: quick-boot.patch
+---
+ util/grub.d/10_linux_zfs.in | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index caead8a..5aedc6c 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -21,6 +21,7 @@ prefix="@prefix@"
+ datarootdir="@datarootdir@"
+ ubuntu_recovery="@UBUNTU_RECOVERY@"
+ quiet_boot="@QUIET_BOOT@"
++quick_boot="@QUICK_BOOT@"
+ 
+ . "${pkgdatadir}/grub-mkconfig_lib"
+ 
+@@ -771,6 +772,10 @@ zfs_linux_entry () {
+ 
+     echo "${submenu_indentation}menuentry '$(echo "${title}" | grub_quote)' ${CLASS} \${menuentry_id_option} 'gnulinux-${dataset}-${kernel_version}' {"
+ 
++    if [ "${quick_boot}" = 1 ]; then
++        echo "${submenu_indentation}	recordfail"
++    fi
++
+     if [ "${type}" != "recovery" ] ; then
+         GRUB_SAVEDEFAULT=${GRUB_SAVEDEFAULT:-}
+         default_entry="$(save_default_entry)"

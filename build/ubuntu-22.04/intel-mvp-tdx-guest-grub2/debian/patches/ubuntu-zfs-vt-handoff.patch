@@ -1,0 +1,77 @@
+From: Colin Watson <cjwatson@ubuntu.com>
+Date: Mon, 13 Jan 2014 12:13:30 +0000
+Subject: Add configure option to use vt.handoff=7
+
+This is used for non-recovery Linux entries only; it enables
+flicker-free booting if gfxpayload=keep is in use and a suitable kernel
+is present.
+
+Author: Andy Whitcroft <apw@canonical.com>
+Forwarded: not-needed
+Last-Update: 2013-12-25
+
+Patch-Name: vt-handoff.patch
+---
+ util/grub.d/10_linux_zfs.in | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/util/grub.d/10_linux_zfs.in b/util/grub.d/10_linux_zfs.in
+index ee1d1d2..055a542 100755
+--- a/util/grub.d/10_linux_zfs.in
++++ b/util/grub.d/10_linux_zfs.in
+@@ -23,6 +23,7 @@ ubuntu_recovery="@UBUNTU_RECOVERY@"
+ quiet_boot="@QUIET_BOOT@"
+ quick_boot="@QUICK_BOOT@"
+ gfxpayload_dynamic="@GFXPAYLOAD_DYNAMIC@"
++vt_handoff="@VT_HANDOFF@"
+ 
+ . "${pkgdatadir}/grub-mkconfig_lib"
+ 
+@@ -737,6 +738,23 @@ generate_grub_menu_metadata() {
+ # Note:
+ #   If 10_linux runs these part will be defined twice in grub configuration
+ print_menu_prologue() {
++    cat << 'EOF'
++function gfxmode {
++	set gfxpayload="${1}"
++EOF
++    if [ "${vt_handoff}" = 1 ]; then
++        cat << 'EOF'
++	if [ "${1}" = "keep" ]; then
++		set vt_handoff=vt.handoff=1
++	else
++		set vt_handoff=
++	fi
++EOF
++    fi
++    cat << EOF
++}
++EOF
++
+     # Use ELILO's generic "efifb" when it's known to be available.
+     # FIXME: We need an interface to select vesafb in case efifb can't be used.
+     GRUB_GFXPAYLOAD_LINUX="${GRUB_GFXPAYLOAD_LINUX:-}"
+@@ -832,7 +850,7 @@ zfs_linux_entry () {
+ 
+     if ([ "${ubuntu_recovery}" = 0 ] || [ "${type}" != "recovery" ]) && \
+         ([ "${GRUB_GFXPAYLOAD_LINUX}" != "" ] || [ "${gfxpayload_dynamic}" = 1 ]); then
+-        echo "${submenu_indentation}	set gfxpayload=\${linux_gfx_mode}"
++        echo "${submenu_indentation}	gfxmode \${linux_gfx_mode}"
+     fi
+ 
+     echo "${submenu_indentation}	insmod gzio"
+@@ -896,6 +914,14 @@ generate_grub_menu() {
+         GRUB_CMDLINE_LINUX_RECOVERY="${GRUB_CMDLINE_LINUX_RECOVERY} nomodeset"
+     fi
+ 
++    if [ "${vt_handoff}" = 1 ]; then
++        for word in ${GRUB_CMDLINE_LINUX_DEFAULT}; do
++            if [ "${word}" = splash ]; then
++                GRUB_CMDLINE_LINUX_DEFAULT="${GRUB_CMDLINE_LINUX_DEFAULT} \${vt_handoff}"
++            fi
++        done
++    fi
++
+     print_menu_prologue
+ 
+     # IFS is set to TAB (ASCII 0x09)

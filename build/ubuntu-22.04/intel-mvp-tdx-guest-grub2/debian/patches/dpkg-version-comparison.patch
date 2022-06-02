@@ -1,0 +1,37 @@
+From: Robert Millan <rmh@aybabtu.com>
+Date: Mon, 13 Jan 2014 12:12:52 +0000
+Subject: Improve handling of Debian kernel version numbers
+
+Forwarded: not-needed
+Last-Update: 2013-12-20
+
+Patch-Name: dpkg-version-comparison.patch
+---
+ util/grub-mkconfig_lib.in | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/util/grub-mkconfig_lib.in b/util/grub-mkconfig_lib.in
+index 301d1ac..17f9b3e 100644
+--- a/util/grub-mkconfig_lib.in
++++ b/util/grub-mkconfig_lib.in
+@@ -243,8 +243,9 @@ version_test_numeric ()
+ 
+ version_test_gt ()
+ {
+-  version_test_gt_a="`echo "$1" | sed -e "s/[^-]*-//"`"
+-  version_test_gt_b="`echo "$2" | sed -e "s/[^-]*-//"`"
++  version_test_gt_sedexp="s/[^-]*-//;s/[._-]\(pre\|rc\|test\|git\|old\|trunk\)/~\1/g"
++  version_test_gt_a="`echo "$1" | sed -e "$version_test_gt_sedexp"`"
++  version_test_gt_b="`echo "$2" | sed -e "$version_test_gt_sedexp"`"
+   version_test_gt_cmp=gt
+   if [ "x$version_test_gt_b" = "x" ] ; then
+     return 0
+@@ -254,7 +255,7 @@ version_test_gt ()
+     *.old:*) version_test_gt_a="`echo "$version_test_gt_a" | sed -e 's/\.old$//'`" ; version_test_gt_cmp=gt ;;
+     *:*.old) version_test_gt_b="`echo "$version_test_gt_b" | sed -e 's/\.old$//'`" ; version_test_gt_cmp=ge ;;
+   esac
+-  version_test_numeric "$version_test_gt_a" "$version_test_gt_cmp" "$version_test_gt_b"
++  dpkg --compare-versions "$version_test_gt_a" "$version_test_gt_cmp" "$version_test_gt_b"
+   return "$?"
+ }
+ 

@@ -1,0 +1,113 @@
+#!/usr/bin/python3
+
+import os
+import sys
+
+if len(sys.argv) < 4 or len(sys.argv) > 5:
+    print('Usage: module-check <flavor> <prev_abidir> <abidir> [<skipmodule>]')
+    sys.exit(2)
+
+flavor, prev_abidir, abidir = sys.argv[1:4]  # pylint: disable=W0632
+if len(sys.argv) > 4:
+    skipmodule = sys.argv[4]
+else:
+    skipmodule = ''
+
+print('II: Checking modules for {}...'.format(flavor), end='')
+
+if ((os.path.exists('{}/ignore.modules'.format(prev_abidir)) or
+     os.path.exists('{}/{}.ignore.modules'.format(prev_abidir, flavor)))):
+    print('explicitly ignoring modules')
+    sys.exit(0)
+
+curr_modules = '{}/{}.modules'.format(abidir, flavor)
+prev_modules = '{}/{}.modules'.format(prev_abidir, flavor)
+if not os.path.exists(curr_modules) or not os.path.exists(prev_modules):
+    print('previous or current modules file missing!')
+    print('   {}'.format(curr_modules))
+    print('   {}'.format(prev_modules))
+    sys.exit(0 if skipmodule else 1)
+
+print()
+
+modules = {}
+modules_ignore = {}
+missing = 0
+new = 0
+errors = 0
+
+# See if we have any ignores
+prev_modules_ignore = '{}/../modules.ignore'.format(prev_abidir)
+if os.path.exists(prev_modules_ignore):
+    ignore = 0
+    with open(prev_modules_ignore) as fh:
+        for mod in fh:
+            mod = mod.strip()
+            if mod.startswith('#'):
+                continue
+            modules_ignore[mod] = 1
+            ignore += 1
+    print('read {} modules.'.format(ignore))
+
+# Read new modules first
+print('   reading new modules...', end='')
+new_count = 0
+for f in (curr_modules, curr_modules + '.builtin'):
+    if not os.path.exists(f):
+        continue
+    with open(f) as fh:
+        for mod in fh:
+            mod = mod.strip()
+            modules[mod] = 1
+            new_count += 1
+print('read {} modules.'.format(new_count))
+
+# Now the old modules, checking for missing ones
+print('   reading old modules...', end='')
+old_count = 0
+for f in (prev_modules, prev_modules + '.builtin'):
+    if not os.path.exists(f):
+        continue
+    with open(f) as fh:
+        for mod in fh:
+            mod = mod.strip()
+            if mod not in modules:
+                if not missing:
+                    print()
+                missing += 1
+                if mod not in modules_ignore:
+                    print('      MISS: {}'.format(mod))
+                    errors += 1
+                else:
+                    print('      MISS: {} (ignored)'.format(mod))
+            else:
+                modules[mod] += 1
+            old_count += 1
+# Check for new modules
+for mod, cnt in modules.items():
+    if cnt < 2:
+        if not missing and not new:
+            print()
+        print('      NEW: {}'.format(mod))
+        new += 1
+if new or missing:
+    print('      read {} modules : new({})  missing({})'.format(old_count, new, missing))
+else:
+    print('read {} modules.'.format(old_count))
+
+# Let's see where we stand...
+if errors:
+    if skipmodule:
+        print('WW: Explicitly asked to ignore failures')
+    else:
+        print('EE: Missing modules')
+        sys.exit(1)
+
+if new:
+    print('II: New modules')
+else:
+    print('II: No new modules')
+
+print('II: Done')
+
+sys.exit(0)

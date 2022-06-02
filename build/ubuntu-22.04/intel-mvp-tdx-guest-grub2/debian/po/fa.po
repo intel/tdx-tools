@@ -1,0 +1,526 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: fa\n"
+"Report-Msgid-Bugs-To: grub2@packages.debian.org\n"
+"POT-Creation-Date: 2020-04-09 12:18+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Behrad Eslamifar <behrad_es@yahoo.com>\n"
+"Language-Team: debian-l10n-persian <debian-l10n-persian@lists.debian.org>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Persian\n"
+"X-Poedit-Country: IRAN, ISLAMIC REPUBLIC OF\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "Chainload from menu.lst?"
+msgstr "بارگزاری به صورت Chainload از menu.lst؟"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid "GRUB upgrade scripts have detected a GRUB Legacy setup in /boot/grub."
+msgstr ""
+"اسکریپت ارتقاء GRUB, نسخه قدیمی GRUB‌ نصب شده در /boot/grub را پیدا کرده است."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"In order to replace the Legacy version of GRUB in your system, it is "
+"recommended that /boot/grub/menu.lst is adjusted to load a GRUB 2 boot image "
+"from your existing GRUB Legacy setup. This step can be automatically "
+"performed now."
+msgstr ""
+"برای جایگزینی نسخه قدیمی GRUB در سیستم شما، پیشنهاد می‌شود /boot/grub/menu."
+"lst تنظیم گردد تا یک تصویر بوت‌ GRUB 2 از چینش قدیمی GRUB کنونی بارگذاری "
+"شود . اکنون این مرحله به صورت خودکار انجام می شود."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"It's recommended that you accept chainloading GRUB 2 from menu.lst, and "
+"verify that the new GRUB 2 setup works before it is written to the MBR "
+"(Master Boot Record)."
+msgstr ""
+"توصیه می‌شود که chainloading گراب۲ از menu.lst را بپذیرید، و بازبینی کنید که "
+"چینش جدید GRUB 2 قبل از اینکه بر روی MBR (Master Boot Record) نوشته شود کار "
+"می‌کند."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:2001
+msgid ""
+"Whatever your decision, you can replace the old MBR image with GRUB 2 later "
+"by issuing the following command as root:"
+msgstr ""
+"تصمیم شما هر چه باشد، می‌توانید بعداً تصویر قدیم MBR را با GRUB 2 با فرمان زیر "
+"توسط کاربر ریشه جایگزین کنید:"
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+#: ../templates.in:6001
+msgid "GRUB install devices:"
+msgstr "دستگاه‌های نصب گراب:"
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001
+msgid ""
+"The grub-pc package is being upgraded. This menu allows you to select which "
+"devices you'd like grub-install to be automatically run for, if any."
+msgstr ""
+"بستهٔ grub-pc در حال ارتقاء است. این منو به شما اجازه می‌دهد که هر یک از "
+"دستگاه‌ها را، در صورت وجود، که مایلید grub-install به صورت خودکار برایش اجرا "
+"گردد را انتخاب کنید."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../templates.in:5001
+msgid ""
+"Running grub-install automatically is recommended in most situations, to "
+"prevent the installed GRUB core image from getting out of sync with GRUB "
+"modules or grub.cfg."
+msgstr ""
+"اجرای خودکار grub-install در بیشتر مواقع، برای جلوگیری خارج‌شدن هستهٔ تصویر "
+"گراب از sync با ماژولهای گراب یا grub.cfg توصیه‌شده است."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"If you're unsure which drive is designated as boot drive by your BIOS, it is "
+"often a good idea to install GRUB to all of them."
+msgstr ""
+"اگر مطمئن نیستید کدام درایو به عنوان درایو بوت توسط BIOS تعیین شده است، اغلب "
+"ایدهٔ خوبی است که گراب را بر روی همهٔ آنها نصب کنید."
+
+#. Type: multiselect
+#. Description
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:3001 ../grub-pc.templates.in:4001
+msgid ""
+"Note: it is possible to install GRUB to partition boot records as well, and "
+"some appropriate partitions are offered here. However, this forces GRUB to "
+"use the blocklist mechanism, which makes it less reliable, and therefore is "
+"not recommended."
+msgstr ""
+"توجه: امکان دارد که گراب را در رکوردهای بوت پارتیشن نیز نصب کنید، و برخی از "
+"پارتیشن‌های مناسب نیز اینجا پیشنهاد شده است. اگرچه، این گراب را مجبور می‌کند "
+"که از مکانیزم blocklist استفاده کند که قابل اطمینان بودن آنرا کاهش می‌دهد و "
+"بنابراین توصیه نمی‌گردد."
+
+#. Type: multiselect
+#. Description
+#: ../grub-pc.templates.in:4001 ../templates.in:6001
+msgid ""
+"The GRUB boot loader was previously installed to a disk that is no longer "
+"present, or whose unique identifier has changed for some reason. It is "
+"important to make sure that the installed GRUB core image stays in sync with "
+"GRUB modules and grub.cfg. Please check again to make sure that GRUB is "
+"written to the appropriate boot devices."
+msgstr ""
+"بارگذار بوت گراب قبلاً در دیسکی نصب شده است که دیگر در دسترس نیست، یا unique "
+"identifier آن بنا به دلیلی تغییر کرده است. مهم است که اطمینان حاصل کنید که "
+"نصویر هستهٔ گراب نصب شده در sync با ماژول‌های گراب و grub.cfg باقی بماند. لطفاً "
+"دوباره بررسی کنید تا مطمئن گردید که گراب در دستگاه‌های بوت مناسب نوشته شده "
+"است."
+
+#. Type: text
+#. Description
+#. Disk sizes are in decimal megabytes, to match how disk manufacturers
+#. usually describe them.
+#: ../grub-pc.templates.in:5001
+msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: text
+#. Description
+#. The "-" is used to indicate indentation. Leading spaces may not work.
+#: ../grub-pc.templates.in:6001
+msgid "- ${DEVICE} (${SIZE} MB; ${PATH})"
+msgstr "- ${DEVICE} (${SIZE} MB; ${PATH})"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid "Writing GRUB to boot device failed - continue?"
+msgstr "نصب GRUB روی ابزار بوت با شکست مواجه شد - ادامه می‌دهید؟"
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../grub-pc.templates.in:8001
+#: ../templates.in:8001
+msgid "GRUB failed to install to the following devices:"
+msgstr "GRUB نتوانست که تجهیزات مورد نظر را نصب کند."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:7001 ../templates.in:8001
+msgid ""
+"Do you want to continue anyway? If you do, your computer may not start up "
+"properly."
+msgstr ""
+"آیا شما می‌خواهید در هر حال ادامه دهید ؟ اگر ادامه دهید، ممکن است که کامپیوتر "
+"شما به طور مناسب باید بالا نیاید."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid "Writing GRUB to boot device failed - try again?"
+msgstr "نصب GRUB روی دستگاه بوت با شکست مواجه شد - دوباره امتحان می‌کنید؟"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:8001
+msgid ""
+"You may be able to install GRUB to some other device, although you should "
+"check that your system will boot from that device. Otherwise, the upgrade "
+"from GRUB Legacy will be canceled."
+msgstr ""
+"شما ممکن است قادر باشید که GRUB را بر روی بعضی از ابزارهای دیگر نیز نصب "
+"کنید ، هرچند که شما باید چک کنید که سیستم شما قادر به راه‌اندازی شدن با آن "
+"ابزار هست یا خیر. وگرنه ، ارتقا گراب قدیمی متوقف خواهد شد."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid "Continue without installing GRUB?"
+msgstr "آیا بدون نصب کردن GRUB ، ادامه می دهید ؟"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously in the boot sector. If there is an "
+"earlier version of GRUB 2 in the boot sector, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"شما نصب GRUB را برای هیچ ابزاری انتخاب نکرده‌اید. اگر ادامه دهید، ممکن است که "
+"راه‌انداز به درستی تنظیم نشده باشد، و هنگام بالا آمدن بعدی این کامپیوتر، از "
+"آن چه که قبلاً بر روی بوت سکتور بوده است استفاده می‌کند. اگر نسخهٔ قدیمی‌تری از "
+"گراب۲ بر روی بوت سکتور وجود دارد، ممکن است که قادر نباشد ماژول‌ها را بارگذاری "
+"کند و یا پیکربندی کنونی فایل را به کار بندد."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:9001 ../templates.in:9001
+msgid ""
+"If you are already using a different boot loader and want to carry on doing "
+"so, or if this is a special environment where you do not need a boot loader, "
+"then you should continue anyway. Otherwise, you should install GRUB "
+"somewhere."
+msgstr ""
+"اگر شما از راه‌انداز بوت دیگری استفاده می‌کنید و می‌خواهید که با همان ادامه "
+"دهید، یا اگر اینجا یک محیط خاص است که شما به راه‌انداز بوت نیاز ندارید، پس "
+"می‌بایست به هر ترتیب ادامه دهید. در غیر این‌صورت، باید GRUB را در جایی نصب "
+"کنید."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Remove GRUB 2 from /boot/grub?"
+msgstr "GRUB 2 از /boot/grub برداشته شود؟"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid "Do you want to have all GRUB 2 files removed from /boot/grub?"
+msgstr "آیا می‌خواهید همهٔ فایل‌های GRUB 2 از /boot/grub برداشته شود؟"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:10001
+msgid ""
+"This will make the system unbootable unless another boot loader is installed."
+msgstr ""
+"این باعث غیر قابل بوت‌شدن سیستم می‌شود مگر آنکه بارگذار بوت دیگری نصب است."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid "Finish conversion to GRUB 2 now?"
+msgstr "ارتباط با GRUB۲ اکنون پایان یابد؟"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"This system still has files from the GRUB Legacy boot loader installed, but "
+"it now also has GRUB 2 boot records installed on these disks:"
+msgstr ""
+"این سیستم هنوز فایل هایی مربوط به GRUB قدیمی را به صورت نصب شده دارد ، اما "
+"اکنون بوت رکورد های GRUB2 بر روی این دیسک ها نصب شده است :"
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"It seems likely that GRUB Legacy is no longer in use, and that you should "
+"instead upgrade the GRUB 2 images on these disks and finish the conversion "
+"to GRUB 2 by removing old GRUB Legacy files. If you do not upgrade these "
+"GRUB 2 images, then they may be incompatible with the new packages and cause "
+"your system to stop booting properly."
+msgstr ""
+"به نظر می‌آید که احتمالاً GRUB قدیمی دیگر در استفاده نیست، و شما می‌بایست "
+"تصاویر GRUB2 را بر روی این دیسک‌ها ارتقاء دهید و با پاک کردن فایل‌های گراب "
+"قدیمی تبدیل به GRUB2 را به اتمام برسانید. اگر شما این تصاویر GRUB2 را ارتقا "
+"ندهید، ممکن است این تصاویر با بسته‌های جدید ناسازگار باشند و باعث جلوگیری از "
+"راه‌اندازی مناسب سیستم شوند."
+
+#. Type: boolean
+#. Description
+#: ../grub-pc.templates.in:11001
+msgid ""
+"You should generally finish the conversion to GRUB 2 unless these boot "
+"records were created by a GRUB 2 installation on some other operating system."
+msgstr ""
+"شما باید معمولاً به ارتباط GRUB2 پایان دهید، مگر آنکه این رکورد های بوت ساخته "
+"شده توسط GRUB2 مربوط به سیستم عامل های دیگر باشد."
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid "Linux command line:"
+msgstr "خط فرمان لینوکس:"
+
+#. Type: string
+#. Description
+#: ../templates.in:1001
+msgid ""
+"The following Linux command line was extracted from /etc/default/grub or the "
+"`kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"خط فرمان لینوکس ذیل از /etc/default/grub یا پارامتر های `kopt' در فایل menu."
+"lst از گراب قدیمی استخراج شده است. لطفاً صحت آن را بررسی کنید، و در صورت لزوم "
+"آن را تغییردهید. این خط فرمان می‌تواند خالی باشد."
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid "Linux default command line:"
+msgstr "خط فرمان پیش فرض لینوکس:"
+
+#. Type: string
+#. Description
+#: ../templates.in:2001
+msgid ""
+"The following string will be used as Linux parameters for the default menu "
+"entry but not for the recovery mode."
+msgstr ""
+"این رشته به عنوان یکی از پارامتر های لینوکس برای منوی پیش فرض استفاده خواهد "
+"شد و نه برای حالت بازیابی."
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid "Skip extra installation to the EFI removable media path?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:3001
+msgid ""
+"Some EFI-based systems are buggy and do not handle new bootloaders "
+"correctly. If you do not make an extra installation of GRUB to the EFI "
+"removable media path, this may prevent your system from booting Debian "
+"correctly in case it is affected by this problem. However, it may remove the "
+"ability to boot any other operating systems that also depend on this path. "
+"If so, you will need to make sure that GRUB is configured successfully to be "
+"able to boot any other OS installations correctly."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid "Update NVRAM variables to automatically boot into Debian?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates.in:4001
+msgid ""
+"GRUB can configure your platform's NVRAM variables so that it boots into "
+"Debian automatically when powered on. However, you may prefer to disable "
+"this behavior and avoid changes to your boot configuration. For example, if "
+"your NVRAM variables have been set up such that your system contacts a PXE "
+"server on every boot, this would preserve that behavior."
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+msgid "GRUB EFI system partitions:"
+msgstr ""
+
+#. Type: multiselect
+#. Description
+#: ../templates.in:5001
+#, fuzzy
+#| msgid ""
+#| "The grub-pc package is being upgraded. This menu allows you to select "
+#| "which devices you'd like grub-install to be automatically run for, if any."
+msgid ""
+"The grub-efi package is being upgraded. This menu allows you to select which "
+"EFI system partions you'd like grub-install to be automatically run for, if "
+"any."
+msgstr ""
+"بستهٔ grub-pc در حال ارتقاء است. این منو به شما اجازه می‌دهد که هر یک از "
+"دستگاه‌ها را، در صورت وجود، که مایلید grub-install به صورت خودکار برایش اجرا "
+"گردد را انتخاب کنید."
+
+#. Type: text
+#. Description
+#: ../templates.in:7001
+#, fuzzy
+#| msgid "${DEVICE} (${SIZE} MB; ${MODEL})"
+msgid "${DEVICE} (${SIZE} MB; ${PATH}) on ${DISK_SIZE} MB ${DISK_MODEL}"
+msgstr "${DEVICE} (${SIZE} MB; ${MODEL})"
+
+#. Type: boolean
+#. Description
+#: ../templates.in:9001
+#, fuzzy
+#| msgid ""
+#| "You chose not to install GRUB to any devices. If you continue, the boot "
+#| "loader may not be properly configured, and when this computer next starts "
+#| "up it will use whatever was previously in the boot sector. If there is an "
+#| "earlier version of GRUB 2 in the boot sector, it may be unable to load "
+#| "modules or handle the current configuration file."
+msgid ""
+"You chose not to install GRUB to any devices. If you continue, the boot "
+"loader may not be properly configured, and when this computer next starts up "
+"it will use whatever was previously configured. If there is an earlier "
+"version of GRUB 2 in the EFI system partition, it may be unable to load "
+"modules or handle the current configuration file."
+msgstr ""
+"شما نصب GRUB را برای هیچ ابزاری انتخاب نکرده‌اید. اگر ادامه دهید، ممکن است که "
+"راه‌انداز به درستی تنظیم نشده باشد، و هنگام بالا آمدن بعدی این کامپیوتر، از "
+"آن چه که قبلاً بر روی بوت سکتور بوده است استفاده می‌کند. اگر نسخهٔ قدیمی‌تری از "
+"گراب۲ بر روی بوت سکتور وجود دارد، ممکن است که قادر نباشد ماژول‌ها را بارگذاری "
+"کند و یا پیکربندی کنونی فایل را به کار بندد."
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid "kFreeBSD command line:"
+msgstr "خط فرمان kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:10001
+msgid ""
+"The following kFreeBSD command line was extracted from /etc/default/grub or "
+"the `kopt' parameter in GRUB Legacy's menu.lst. Please verify that it is "
+"correct, and modify it if necessary. The command line is allowed to be empty."
+msgstr ""
+"خط فرمان kFreeBSD ذیل از /etc/default/grub یا پارامتر های `kopt' در فایل "
+"menu.lst از گراب قدیمی استخراج شده است. لطفاً صحت آن را بررسی کنید، و در صورت "
+"لزوم آن را تغییردهید. این خط فرمان می‌تواند خالی باشد."
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid "kFreeBSD default command line:"
+msgstr "خط فرمان پیش فرض kFreeBSD:"
+
+#. Type: string
+#. Description
+#: ../templates.in:11001
+msgid ""
+"The following string will be used as kFreeBSD parameters for the default "
+"menu entry but not for the recovery mode."
+msgstr ""
+"این رشته به عنوان یکی از پارامتر های kFreeBSD برای منوی پیش فرض استفاده "
+"خواهد شد و نه برای حالت بازیابی."
+
+#. Type: title
+#. Description
+#: ../templates.in:12001
+msgid "unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid "Cannot upgrade Secure Boot enforcement policy due to unsigned kernels"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"Your system has UEFI Secure Boot enabled in firmware, and the following "
+"kernels present on your system are unsigned:"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid " ${unsigned_versions}"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../templates.in:13001
+msgid ""
+"These kernels cannot be verified under Secure Boot.  To ensure your system "
+"remains bootable, GRUB will not be upgraded on your disk until these kernels "
+"are removed or replaced with signed kernels."
+msgstr ""
+
+#~ msgid "/boot/grub/device.map has been regenerated"
+#~ msgstr "/boot/grub/device.map بازسازی شده است."
+
+#~ msgid ""
+#~ "The file /boot/grub/device.map has been rewritten to use stable device "
+#~ "names. In most cases, this should significantly reduce the need to change "
+#~ "it in future, and boot menu entries generated by GRUB should not be "
+#~ "affected."
+#~ msgstr ""
+#~ "فایل /boot/grub/device.map به منظور استفاده از نام تجهیزات دائمی و "
+#~ "پایدار، بازنویسی شده است. در بیشتر موارد، این می‌بایست به شدت نیاز به "
+#~ "تغییر درآینده را کاهش دهد، و مدخل‌های منوی بوت ایجاد شده توسط GRUB نبایست "
+#~ "تحت تأثیر قرار گرفته باشد."
+
+#~ msgid ""
+#~ "However, since more than one disk is present in the system, it is "
+#~ "possible that the system is depending on the old device map. Please check "
+#~ "whether there are any custom boot menu entries that rely on GRUB's (hdN) "
+#~ "drive numbering, and update them if necessary."
+#~ msgstr ""
+#~ "اگرچه، از آنجا که بیش از یک دیسک در سیستم موجود است، ممکن است سیستم به "
+#~ "device map قدیمی وابسته باشد. لطفاً بررسی کنید اگر مدخل‌های سفارشی بوت که "
+#~ "روی نام‌گذاری درایو (hdN) گراب تکیه دارند وجود داشته باشند، و در صورت نیاز "
+#~ "آنها را به روز نمائید."
+
+#~ msgid ""
+#~ "If you do not understand this message, or if there are no custom boot "
+#~ "menu entries, you can ignore this message."
+#~ msgstr ""
+#~ "اگر این پیام را متوجه نمی‌شوید، یا اگر هیچ مدخل سفارشی منوی بوت وجود "
+#~ "ندارد، می‌توانید این پیام را نادیده بگیرید."
+
+#~ msgid ""
+#~ "In either case, whenever you want GRUB 2 to be loaded directly from MBR, "
+#~ "you can do so by issuing (as root) the following command:"
+#~ msgstr ""
+#~ "در هر صورت, هر زمان که شما بخواهید مستقیماً GRUB 2 را از MBR بارگزاری "
+#~ "کنید, می توانید این کار را با اجرای دستوری که در ادامه آمده, تحت کاربر "
+#~ "ریشه, انجام دهید:"

@@ -1,0 +1,1 @@
+dir_to_symlink /usr/share/doc/@PACKAGE@ grub-common 1.99-1~

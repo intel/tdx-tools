@@ -1,0 +1,29 @@
+From: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+Date: Wed, 3 Jul 2019 15:21:16 -0400
+Subject: UBUNTU: Have the lzma decompressor image only contain the .text
+ section
+
+Previously binutils/objcopy did that correctly, now it seems to be padding to
+an arbitrary size with zeros. Work around this broken by being explicit about
+what we want.
+
+Patch-Name: ubuntu-fix-lzma-decompressor-objcopy.patch
+
+Signed-off-by: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+---
+ grub-core/Makefile.core.def | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
+index f252725..0b5b4e7 100644
+--- a/grub-core/Makefile.core.def
++++ b/grub-core/Makefile.core.def
+@@ -550,7 +550,7 @@ image = {
+   i386_pc = boot/i386/pc/startup_raw.S;
+   i386_pc_nodist = rs_decoder.h;
+ 
+-  objcopyflags = '-O binary';
++  objcopyflags = '-O binary -j .text';
+   ldflags = '$(TARGET_IMG_LDFLAGS) $(TARGET_IMG_BASE_LDOPT),0x8200';
+   enable = i386_pc;
+ };

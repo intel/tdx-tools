@@ -27,7 +27,7 @@ eval virt-install \
     --ram 16384 \
     --vcpus 8 \
     --os-type linux \
-    --os-variant rhel8 \
+    --os-variant rhel8.5 \
     --network bridge=virbr0 \
     --nographics \
     --disk=${IMAGE_NAME},bus=virtio,format=qcow2,size=${IMAGE_SIZE} \
