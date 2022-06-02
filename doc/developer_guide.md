@@ -5,9 +5,9 @@ This section introduces the steps to build source from scratch on any *inux syst
 for hacking and developing purpose.
 
 _NOTE:_ For production build in release purpose, please refer:
-- Source RPM build [here](https://github.com/intel/tdx-tools/tree/main/build/centos-stream-8) for RHEL 8 build
-- Source RPM build [here](https://github.com/intel/tdx-tools/tree/main/build/rhel-8) for CentOS Stream 8 build
-- Debian build [here](https://github.com/intel/tdx-tools/tree/main/build/ubuntu-22.04) for Ubuntu 22.04 build
+- Source RPM build [here](https://github.com/intel/tdx-tools/tree/2022ww23/build/centos-stream-8) for RHEL 8 build
+- Source RPM build [here](https://github.com/intel/tdx-tools/tree/2022ww23/build/rhel-8) for CentOS Stream 8 build
+- Debian build [here](https://github.com/intel/tdx-tools/tree/2022ww23/build/ubuntu-22.04) for Ubuntu 22.04 build
 
 ### Build and Setup Kernel
 
@@ -22,7 +22,7 @@ Please install these packages via distro's package manager.
    $ git clone https://github.com/intel/linux-kernel-dcp.git
    ```
 
-   Please switch to specific branch or tag for stable release. Use [SPR-BKC-PC-v4.20](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-spr-kernel/build.sh#L8) as example:
+   Please switch to specific branch or tag for stable release. Use [SPR-BKC-PC-v4.20](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-spr-kernel/build.sh) as example:
 
    ```
    $ git checkout SPR-BKC-PC-v4.20
@@ -30,7 +30,7 @@ Please install these packages via distro's package manager.
 
 3. Kernel config
 
-   Please use the common platform's kernel config file [here](https://github.com/intel/linux-kernel-dcp/tree/main/arch/x86/configs)
+   Please use the common platform's kernel config file [here](https://github.com/intel/linux-kernel-dcp/tree/SPR-BKC-PC-v4.20/arch/x86/configs)
    for both TDX guest and host, or enable following specific kernel config on
    any existing kernel config
    ```
@@ -38,9 +38,8 @@ Please install these packages via distro's package manager.
    CONFIG_INTEL_TDX_ATTESTATION=y
    CONFIG_INTEL_TDX_HOST=y
    ```
-   Please refer [TDX kernel documentation](https://github.com/intel/linux-kernel-dcp/blob/main/Documentation/virt/kvm/intel-tdx.rst)
-   and [INTEL_TDX_GUEST](https://github.com/intel/linux-kernel-dcp/blob/33c8154984b118d8fb14b7462f264252968b786f/arch/x86/Kconfig#L877)
-   and [INTEL_TDX_HOST](https://github.com/intel/linux-kernel-dcp/blob/33c8154984b118d8fb14b7462f264252968b786f/arch/x86/Kconfig#L1384)
+   Please refer [TDX kernel documentation](https://github.com/intel/linux-kernel-dcp/blob/SPR-BKC-PC-v4.20/Documentation/virt/kvm/intel-tdx.rst)
+   and CONFIG_INTEL_TDX_GUEST, CONFIG_INTEL_TDX_HOST at [here](https://github.com/intel/linux-kernel-dcp/blob/SPR-BKC-PC-v4.20/arch/x86/Kconfig)
 
 4. Build kernel
 
@@ -63,7 +62,7 @@ Please install these packages via distro's package manager.
    ```
 
    Please switch to specific branch or tag for stable release.
-   Use [SPR-BKC-QEMU-pub-v1](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-spr-qemu-kvm/build.sh#L8) as example:
+   Use [SPR-BKC-QEMU-pub-v1](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-spr-qemu-kvm/build.sh) as example:
 
    ```
    $ git checkout SPR-BKC-QEMU-pub-v1
@@ -90,7 +89,7 @@ Please install these packages via distro's package manager.
    ```
 
    Please switch to specific branch or tag for stable release.
-   Use [tdx-libvirt-2022.03.18](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-tdx-libvirt/build.sh#L10) as example:
+   Use [tdx-libvirt-2022.03.18](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-tdx-libvirt/build.sh) as example:
 
    ```
    $ git checkout tdx-libvirt-2022.03.18
@@ -116,7 +115,7 @@ Please install these packages via distro's package manager.
    ```
 
    Please switch to specific branch or tag for stable release.
-   Use [tdvf-2022-ww10.2](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-tdx-tdvf/build.sh#L7) as example:
+   Use [tdvf-2022-ww10.2](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-tdx-tdvf/build.sh) as example:
 
    ```
    $ git checkout tdvf-2022-ww10.2
