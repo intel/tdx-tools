@@ -26,14 +26,13 @@ class VerifyActor:
 
     def _verify_single_rtmr(self, rtmr_index: int, rtmr_value_1: RTMR,
         rtmr_value_2: RTMR) -> None:
-        # pylint: disable=no-self-use
 
         if rtmr_value_1 == rtmr_value_2:
             LOG.info("RTMR[%d] passed the verification.", rtmr_index)
         else:
             LOG.error("RTMR[%d] did not pass the verification", rtmr_index)
 
-    def verify_rtmr(self) -> None:  # pylint: disable=no-self-use
+    def verify_rtmr(self) -> None:
         """
         Get TD report and RTMR replayed by event log to do verification.
         """

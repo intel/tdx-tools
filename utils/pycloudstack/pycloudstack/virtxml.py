@@ -668,7 +668,6 @@ class VirtXml:
             LOG.error("Could not find the template at %s", template_full_path)
             return None
 
-        # TODO: consider to support other type output directory in future
         newxml_full_path = os.path.join(
             cls.get_output_dir(), new_name + ".xml")
 

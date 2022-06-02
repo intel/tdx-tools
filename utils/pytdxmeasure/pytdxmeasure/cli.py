@@ -36,7 +36,7 @@ class TDXEventLogsCmd(TDXMeasurementCmdBase):
     Cmd executor for dump TDX event logs.
     """
 
-    def run(self):  # pylint: disable=no-self-use
+    def run(self):
         """
         Run cmd
         """
@@ -66,7 +66,7 @@ class TDXVerifyCmd(TDXMeasurementCmdBase):
     Cmd executor for verify RTMR
     """
 
-    def run(self):  # pylint: disable=no-self-use
+    def run(self):
         """
         Run cmd
         """
@@ -79,7 +79,7 @@ class TDXTDReportCmd(TDXMeasurementCmdBase):
     Cmd executor to dump TD report.
     """
 
-    def run(self):  # pylint: disable=no-self-use
+    def run(self):
         """
         Run cmd
         """

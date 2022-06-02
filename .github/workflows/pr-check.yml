@@ -35,5 +35,5 @@ jobs:
       - name: Analysing the code with pylint
         run: |
           set -ex
-          export PYTHONPATH=utils/pycloudstack:utils/pytdxmeasure
-          find . -name *.py -print0 | xargs -n 1 -0 pylint
+          export PYTHONPATH=$PWD/utils/pycloudstack:$PWD/utils/pytdxmeasure
+          find . -path ./build -prune -o -name *.py -print0 | xargs -n 1 -0 pylint

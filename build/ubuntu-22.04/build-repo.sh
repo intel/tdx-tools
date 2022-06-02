@@ -3,7 +3,7 @@
 set -ex
 
 THIS_DIR=$(dirname "$(readlink -f "$0")")
-GUEST_REPO="tdx-guest-debs"
+GUEST_REPO="repo"
 
 pushd $THIS_DIR
 mkdir -p $GUEST_REPO

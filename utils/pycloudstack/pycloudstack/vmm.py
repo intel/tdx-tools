@@ -195,7 +195,7 @@ class VMMLibvirt(VMMBase):
 
         return xmlobj
 
-    def _connect_virt(self):    # pylint: disable=no-self-use
+    def _connect_virt(self):
         LOG.debug("Create libvirt connection")
         try:
             conn = libvirt.open("qemu:///system")

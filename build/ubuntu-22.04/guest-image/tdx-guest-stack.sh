@@ -2,10 +2,12 @@
 
 export LIBGUESTFS_BACKEND=direct
 
+THIS_DIR=$(dirname "$(readlink -f "$0")")
+
 IMG_URL=https://cloud-images.ubuntu.com/jammy/current
 CLOUD_IMG=jammy-server-cloudimg-amd64.img
 TD_IMG=td-guest-ubuntu-22.04.qcow2
-REPO_DIR="../tdx-guest-debs"
+REPO_DIR="${THIS_DIR}/../repo"
 
 if ! readlink -f ${REPO_DIR} ; then
     echo "${REPO_DIR} does not exist, please build it via build-repo.sh"
@@ -21,7 +23,7 @@ if [[ ! -f ${CLOUD_IMG} ]] ; then
     wget ${IMG_URL}/${CLOUD_IMG}
 fi
 
-# The original image is in qcow2 format already. 
+# The original image is in qcow2 format already.
 cp $CLOUD_IMG $TD_IMG
 
 virt-customize -a ${TD_IMG} --root-password password:123456
