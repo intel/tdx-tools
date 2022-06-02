@@ -12,25 +12,25 @@ rm -rf usr/ lib/
 
 ### Launch via qemu-kvm
 
-Make use of the provided [start_qemu.sh](https://github.com/intel/tdx-tools/blob/main/start-qemu.sh) script to start a TD
+Make use of the provided [start-qemu.sh](https://github.com/intel/tdx-tools/blob/main/start-qemu.sh) script to start a TD
 via QEMU.
 
 A simple usage of the script would be as follows:
 
 ```
-./start_qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz
+./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz
 ```
 
 Or to use the guest's grub bootloader:
 
 ```
-./start_qemu.sh -i td-guest-rhel-8.5.qcow2 -b grub
+./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -b grub
 ```
 
 For more advanced configurations, please check the help menu:
 
 ```
-./start_qemu.sh -h
+./start-qemu.sh -h
 ```
 
 ### Launch via Libvirt
