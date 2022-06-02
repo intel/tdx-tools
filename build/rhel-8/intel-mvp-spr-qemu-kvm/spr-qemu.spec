@@ -1043,7 +1043,7 @@ rom_link() {
 
 pushd %{qemu_kvm_build}
 echo "Testing %{name}-build"
-%make_build check
+#%make_build check
 popd
 
 # endif !tools_only
