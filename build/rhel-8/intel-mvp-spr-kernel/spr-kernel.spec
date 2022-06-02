@@ -31,8 +31,8 @@ Summary: The Linux kernel
 %global released_kernel 0
 
 %define rcver 0
-%define downstream_tag SPR.BKC.PC.v4.20
-%define relver 24
+%define downstream_tag SPR.BKC.PC.v8.8
+%define relver 33
 
 %if %{rcver}
 %global distro_build 0.rc%{rcver}.%{downstream_tag}.mvp%{relver}

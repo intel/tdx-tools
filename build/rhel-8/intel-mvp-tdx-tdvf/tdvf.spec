@@ -3,8 +3,8 @@
 # This spec file began as CentOS's ovmf spec file, then cut down and modified.
 
 Name:       intel-mvp-tdx-tdvf
-Version:    2022.3.10
-Release:    ww10.2.mvp34
+Version:    2022.5.16
+Release:    ww20.1.mvp37
 Summary:    UEFI firmware for 64-bit virtual machines supporting trusted domains
 Group:      Applications/Emulators
 License:    BSD and OpenSSL and MIT
