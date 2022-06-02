@@ -5,8 +5,8 @@ This section introduces the steps to build source from scratch on any *inux syst
 for hacking and developing purpose.
 
 _NOTE:_ For production build in release purpose, please refer:
-- Source RPM build [here](https://github.com/intel/tdx-tools/tree/main/build/centos-stream-8) for RHEL 8 build
-- Source RPM build [here](https://github.com/intel/tdx-tools/tree/main/build/rhel-8) for CentOS Stream 8 build
+- Source RPM build [here](https://github.com/intel/tdx-tools/tree/main/build/rhel-8) for RHEL 8 build
+- Source RPM build [here](https://github.com/intel/tdx-tools/tree/main/build/centos-stream-8) for CentOS Stream 8 build
 - Debian build [here](https://github.com/intel/tdx-tools/tree/main/build/ubuntu-22.04) for Ubuntu 22.04 build
 
 ### Build and Setup Kernel
