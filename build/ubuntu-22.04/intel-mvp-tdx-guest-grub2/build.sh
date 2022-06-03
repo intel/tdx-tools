@@ -8,8 +8,8 @@ DOWNSTREAM_GIT_URI="https://github.com/intel/grub-tdx"
 DOWNSTREAM_TAG="tdx-guest-ubuntu-22.04-2021.12.27"
 PACKAGE="mvp-tdx-guest-grub2"
 
-if [[ $(grep "Ubuntu 22.04" /etc/os-release) == "" ]]; then
-    echo "Please build the packages in Ubuntu 22.04"
+if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
+    echo "Please build the packages in Ubuntu"
     exit 1
 fi
 

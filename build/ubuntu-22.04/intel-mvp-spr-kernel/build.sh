@@ -9,6 +9,11 @@ DOWNSTREAM_GIT_URI="https://github.com/intel/linux-kernel-dcp.git"
 DOWNSTREAM_TAG="SPR-BKC-PC-v8.5"
 PACKAGE="mvp-linux-kernel"
 
+if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
+    echo "Please build the packages in Ubuntu"
+    exit 1
+fi
+
 get_source() {
     echo "Get downstream source code..."
     cd ${CURR_DIR}

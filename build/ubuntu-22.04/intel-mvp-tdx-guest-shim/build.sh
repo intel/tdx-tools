@@ -7,15 +7,10 @@ DOWNSTREAM_GIT_URI="https://github.com/intel/shim-tdx"
 DOWNSTREAM_TAG="tdx-guest-ubuntu-20.04-2021.09.27"
 PACKAGE="mvp-tdx-guest-shim"
 
-get_origin() {
-    echo "Download origin package..."
-    cd ${CURR_DIR}
-    if [[ ! -f ${PACKAGE}_${UPSTREAM_VERSION}.orig.tar.bz2 ]]; then
-        wget $UPSTREAM_URI
-        tar xjvf shim-15.4.tar.bz2
-        cd shim-15.4 && tar cjvf ../${PACKAGE}_${UPSTREAM_VERSION}.orig.tar.bz2 .
-    fi
-}
+if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
+    echo "Please build the packages in Ubuntu"
+    exit 1
+fi
 
 get_source() {
     echo "Get downstream source code..."
@@ -43,7 +38,6 @@ build() {
     debuild -uc -us -i -I -b
 }
 
-get_origin
 get_source
 prepare
 build
