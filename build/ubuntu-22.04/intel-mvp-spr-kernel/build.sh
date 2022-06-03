@@ -6,7 +6,7 @@ CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_VERSION="5.15"
 DOWNSTREAM_GIT_URI="https://github.com/intel/linux-kernel-dcp.git"
 
-DOWNSTREAM_TAG="SPR-BKC-PC-v7.7"
+DOWNSTREAM_TAG="SPR-BKC-PC-v8.5"
 PACKAGE="mvp-linux-kernel"
 
 get_source() {
