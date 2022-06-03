@@ -13,6 +13,7 @@ get_source() {
     echo "Get downstream source code..."
     cd ${CURR_DIR}
     if [[ ! -d ${PACKAGE}-${UPSTREAM_VERSION} ]]; then
+	# add safe directory for running in docker
 	git config --global --add safe.directory /github/workspace
 	git config --global --add safe.directory /repo
         git clone --branch ${DOWNSTREAM_TAG} --single-branch --depth 1 \
@@ -30,7 +31,7 @@ prepare() {
 
     sudo apt update
     sudo apt install software-properties-common -y
-    sudo add-apt-repository "deb-src http://linux-ftp.sh.intel.com/pub/mirrors/ubuntu/ jammy main multiverse universe restricted" -y -s
+    sudo add-apt-repository "deb-src http://mirrors.aliyun.com/ubuntu/ jammy main multiverse universe restricted" -y -s
     sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai apt install tzdata -y
 }
 

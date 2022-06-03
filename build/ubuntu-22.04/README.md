@@ -1,6 +1,13 @@
 
 # TDX Guest build for Ubuntu 22.04
 
+- Build requirements
+
+```
+apt install --no-install-recommends --yes build-essential \
+        fakeroot devscripts wget git equivs liblz4-tool sudo python-is-python3 pkg-config unzip
+```
+
 - Build guest debian packages for TDX
 
 ```
