@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-set -x
+set -ex
 
 export LIBGUESTFS_BACKEND=direct
 
