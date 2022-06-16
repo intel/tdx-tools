@@ -1,3 +1,9 @@
+linux (5.15.0-mvp4v8+8.spr) jammy; urgency=medium
+
+  * jammy/linux: 5.15.0-mvp4v8+8.spr -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Thu, 15 Jun 2022 11:08:00 +0800
+
 linux (5.15.0-mvp3v8-5.spr) jammy; urgency=medium
 
   * jammy/linux: 5.15.0-mvp3v8-5.spr -proposed tracker (LP: #1990000)

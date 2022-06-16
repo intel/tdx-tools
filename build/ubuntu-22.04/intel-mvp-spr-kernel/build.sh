@@ -6,7 +6,7 @@ CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_VERSION="5.15"
 DOWNSTREAM_GIT_URI="https://github.com/intel/linux-kernel-dcp.git"
 
-DOWNSTREAM_TAG="SPR-BKC-PC-v8.5"
+DOWNSTREAM_TAG="SPR-BKC-PC-v8.8"
 PACKAGE="mvp-linux-kernel"
 
 if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
@@ -41,8 +41,16 @@ prepare() {
 }
 
 build() {
-    echo "Build..."
     cd ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION}
+    echo "Patch..."
+    # fix BLR-665 Kernel SPR-BKC-PC-v8.8 fails to build on Ubuntu 22.04
+    patch -N -p1 -i ${CURR_DIR}/patches/0001-efi-x86-stub-fix-absolute-symbol-reference.patch
+    # fix BLR-670 Ubuntu 22.04: kernel panic when enabling TDX
+    patch -N -p1 -i ${CURR_DIR}/patches/0001-X86-VIRTEXT-Fix-false-alarm-of-vmptrst-failure-in-ra.patch
+    # fix BLR-667 Call trace UBSAN: shift-out-of-bounds in Ubuntu TDX kernel
+    patch -N -p1 -i ${CURR_DIR}/patches/0001-x86-MM-Use-pgprot_cc_guest-in-__ioremap_caller-for-T.patch
+
+    echo "Build..."
     sudo -E mk-build-deps --install --build-dep --build-indep '--tool=apt-get --no-install-recommends -y' debian/control
     dpkg-source --before-build .
     debuild -uc -us -b
