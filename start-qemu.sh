@@ -310,11 +310,16 @@ process_args() {
 }
 
 launch_vm() {
+    # remap CTRL-C to CTRL ]
+    echo "Remapping CTRL-C to CTRL-]"
+    stty intr ^]
     echo "Launch VM:"
     # shellcheck disable=SC2086,SC2090
     echo ${QEMU_CMD}
     # shellcheck disable=SC2086
     eval ${QEMU_CMD}
+    # restore CTRL-C mapping
+    stty intr ^c
 }
 
 process_args "$@"
