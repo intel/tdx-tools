@@ -1,0 +1,32 @@
+From: Vagrant Cascadian <vagrant@reproducible-builds.org>
+Date: Sun, 21 Jun 2020 19:38:39 +0000
+X-Dgit-Generated: 1:5.0-6~0~20200621~20 92cdacf1c512114ca313800748a5fc162775f51e
+Subject: roms/seabios-hppa: Use consistent date and remove hostname.
+
+Two issues break reproducibility; the time and hostname get embedded
+in the resulting seabios binary.
+
+Simply drop the hostname from the embedded version string, as it
+shouldn't be needed in Debian package builds.
+
+Use the SOURCE_DATE_EPOCH environment variable to set the build date
+rather than the current time:
+
+  https://reproducible-builds.org/docs/source-date-epoch/
+
+---
+
+--- qemu-5.0.orig/roms/seabios-hppa/scripts/buildversion.py
++++ qemu-5.0/roms/seabios-hppa/scripts/buildversion.py
+@@ -125,9 +125,8 @@ def main():
+         if not ver:
+             ver = "?"
+     if not cleanbuild:
+-        btime = time.strftime("%Y%m%d_%H%M%S")
+-        hostname = socket.gethostname()
+-        ver = "%s-%s-%s" % (ver, btime, hostname)
++        btime = time.strftime("%Y%m%d_%H%M%S", time.gmtime(int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))))
++        ver = "%s-%s" % (ver, btime)
+     write_version(outfile, ver + options.extra, toolstr)
+ 
+ if __name__ == '__main__':

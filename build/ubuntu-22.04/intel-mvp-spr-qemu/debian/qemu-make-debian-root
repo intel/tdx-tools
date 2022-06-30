@@ -1,0 +1,141 @@
+#! /bin/sh -e
+#
+# $Id: qemu-make-debian-root 353 2008-10-16 20:28:22Z aurel32 $
+#
+# Script to make a debian root image.
+#
+
+set -e
+
+which debootstrap >/dev/null || {
+    echo "error: missing debootstrap package" >&2
+    exit 1
+}
+which sfdisk >/dev/null || {
+    echo "error: missing fdisk package" >&2
+    exit 1
+}
+which mke2fs >/dev/null || {
+    echo "error: missing e2fsprogs package" >&2
+    exit 1
+}
+
+KEEPFS=0
+SPARSE=0
+
+while :; do
+    case "$1" in
+        -k)
+            KEEPFS=1
+            ;;
+        -s)
+            SPARSE=1
+            ;;
+        -ks|-sk)
+            KEEPFS=1
+            SPARSE=1
+            ;;
+        *)
+            break
+            ;;
+    esac
+    shift
+done
+
+if [ $# -lt 4 ]; then
+    echo Usage: "$0 [-ks] size-in-MB distrib deburl image [files_to_copy_in_/root]" >&2
+    echo "eg $0 150 sid http://proxy:10000/debian qemu" >&2
+    echo "-k keep file system          -s sparse image" >&2
+    echo "$0 is normally run as root." >&2
+    exit 1
+fi
+
+SIZE=$1 # In Mib
+DISTRO=$2
+URL=$3
+IMAGE=$4
+shift 4
+
+# now files to copy are in "$@".  We don't put them in a variable
+# because that would coufuse spaces-in-filenames with
+# whitespace-separation.
+
+
+if [ $SIZE -lt 130 ]; then
+    echo 'Size must be at least 130 megabytes (Debian unstable takes 100)' >&2
+    exit 1
+fi
+
+cleanup()
+{
+    echo Cleaning up... >&2
+    umount -d $TMP_DIR || true
+    losetup -d $LOOP || true
+    rm -f $IMAGE
+}
+
+trap cleanup EXIT
+
+# Create a filesystem: one track for partition table.
+if [ "$SPARSE" = "1" ]; then
+    truncate -s ${SIZE}M "$IMAGE"
+else
+    dd bs=1M count=$SIZE if=/dev/zero of=$IMAGE
+fi
+
+SECT=63	# first sector of a partition
+
+# Partition so one partition covers entire disk.
+echo "$SECT," | sfdisk -uS -L $IMAGE
+
+# Find an unused loop device and set it up.
+LOOP=`losetup -f`
+losetup -o $(($SECT*512)) $LOOP $IMAGE
+
+# Create filesystem.
+mke2fs -q -m1 $LOOP
+
+TMP_DIR="$(mktemp -d /tmp/mount.XXXXXX)" || \
+         { echo >&2 "Failed to create temporary directory"; exit 1; }
+
+# Mount it.
+mount $LOOP $TMP_DIR
+
+# Do debian install on it.
+debootstrap --variant=minbase $DISTRO $TMP_DIR $URL
+
+# Final configuration.
+cat > $TMP_DIR/etc/fstab <<EOF
+/dev/hda1 / ext2 errors=remount-ro 0 1
+proc /proc proc defaults 0 0
+EOF
+
+# Console on ttyS0, not tty1, and no other gettys.
+sed 's,1:2345:respawn:/sbin/getty 38400 tty1,1:2345:respawn:/sbin/getty 38400 ttyS0,' < $TMP_DIR/etc/inittab | sed 's,^.:23:respawn.*,,' > $TMP_DIR/etc/inittab.new
+mv $TMP_DIR/etc/inittab.new $TMP_DIR/etc/inittab
+
+# Set hostname to base of image name.
+basename $IMAGE > $TMP_DIR/etc/hostname
+
+# Create /etc/shadow
+chroot $TMP_DIR pwconv
+
+# Set root password to "root"
+sed 's/^root:[^:]*/root:$1$aybpiIGf$cB7iFDNZvViQtQjEZ5HFQ0/' < $TMP_DIR/etc/shadow > $TMP_DIR/etc/shadow.new
+mv $TMP_DIR/etc/shadow.new $TMP_DIR/etc/shadow
+
+# Remove packages we don't need
+chroot $TMP_DIR /usr/bin/dpkg --remove console-common console-tools console-data base-config man-db manpages
+# Try to remove all libraries: some won't be removable.
+chroot $TMP_DIR dpkg --remove `chroot $TMP_DIR dpkg --get-selections | sed -n 's/^\(lib[^ \t]*\)[\t ]*install/\1/p'` 2>/dev/null || true
+
+
+# Copy wanted files to /root if asked to
+if [ $# -gt 0 ]; then
+    cp -a "$@" $TMP_DIR/root/
+fi
+umount -d $TMP_DIR
+
+trap "" EXIT
+
+echo Done.

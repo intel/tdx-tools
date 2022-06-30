@@ -1,0 +1,20 @@
+.TH kvm 1 2020-07 "5.0" Debian
+.SH NAME
+kvm \- kvm-enabling link for qemu-system-@ARCH@
+.SH DESCRIPTION
+When executed as
+.BR kvm ,
+qemu-system is run with preference to native hardware-based
+virtualization, instead of relying solely on emulation.
+Essentially
+.B kvm
+is equivalent to
+.B qemu-system-@ARCH@
+.I -machine accel=kvm:tcg
+so when the host CPU support the kvm mode, native hardware
+virtualization is enabled, or qemu-system-@ARCH@ falls back
+to the emulation (TCG) mode.
+.SH SEE ALSO
+.BR qemu-system-@ARCH@ (1).
+.SH AUTHOR
+This manual page was written by Michael Tokarev <mjt@tls.msk.ru>.

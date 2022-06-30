@@ -1,0 +1,17 @@
+.TH kvm-spice 1 2020-07 "5.0" Ubuntu
+.SH NAME
+kvm-spice, qemu-system-x86_64-spice \- compatibility names for qemu-system-x86_64
+.SH DESCRIPTION
+The two names are aliases for
+.BR qemu-system-x86_64 ,
+where kvm-spice enables kvm native hardware mode by default.
+These names are kept for backward compatibility
+wih old package, when spice-enabled qemu were packaged
+separately. Now main qemu-system has spice functionality
+built in. Please use
+.B qemu-system-x86_64
+instead of the old compat names.
+.SH SEE ALSO
+.BR qemu-system-x86_64 (1).
+.SH AUTHOR
+This manual page was written by Michael Tokarev <mjt@tls.msk.ru>.

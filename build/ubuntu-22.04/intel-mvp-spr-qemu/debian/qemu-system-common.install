@@ -1,0 +1,19 @@
+debian/qemu-ifdown etc/
+debian/tmp/usr/share/man/man1/qemu-system.1
+debian/tmp/usr/share/qemu/trace-events-all
+debian/tmp/usr/bin/qemu-pr-helper
+debian/tmp/usr/share/man/man8/qemu-pr-helper.8
+debian/tmp/usr/share/man/man7/qemu-qmp-ref.7
+debian/tmp/usr/share/man/man7/qemu-block-drivers.7
+debian/tmp/usr/share/man/man7/qemu-cpu-models.7
+debian/tmp/usr/share/doc/qemu/system usr/share/doc/qemu-system-common
+debian/tmp/usr/bin/qemu-storage-daemon
+debian/tmp/usr/share/man/man1/qemu-storage-daemon.1
+debian/tmp/usr/share/man/man7/qemu-storage-daemon-qmp-ref.7
+# common modules. gui modules has been moved into place in d/rules.
+debian/tmp/usr/lib/*/qemu/accel-tcg-*.so
+debian/tmp/usr/lib/*/qemu/audio-*.so
+debian/tmp/usr/lib/*/qemu/chardev-*.so
+debian/tmp/usr/lib/*/qemu/hw-*.so
+debian/tmp/usr/lib/*/qemu/ui-*.so
+debian/qemu-kvm-init /usr/share/qemu/init

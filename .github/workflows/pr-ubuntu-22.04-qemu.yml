@@ -1,0 +1,29 @@
+name: Validate PR for Ubuntu-22.04 spr-qemu
+
+on:
+  pull_request:
+    paths:
+    - 'build/ubuntu-22.04/intel-mvp-spr-qemu/*'
+
+jobs:
+  build_package:
+    name: Build spr-qemu for Ubuntu 22.04
+    runs-on: ubuntu-22.04
+    steps:
+      - id: cleanup_workspace
+        name: Cleanup workspace for the job (self hosted only)
+        run: |
+          sudo rm -fr *
+      - id: checkout_self
+        name: Check out PR
+        uses: actions/checkout@v2
+      - id: build_ubuntu
+        name: Build the source and binary packages
+        run: |
+          sudo apt update
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt install --no-install-recommends --yes build-essential \
+            fakeroot devscripts wget git equivs liblz4-tool sudo python-is-python3 pkg-config unzip
+          sudo apt -y install libcurl3-gnutls libudev1
+          cd build/ubuntu-22.04/intel-mvp-spr-qemu/
+          ./build.sh

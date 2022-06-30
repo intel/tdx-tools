@@ -1,0 +1,62 @@
+Description: tolerate ipxe size change on migrations to >=18.04
+
+Older IPXE roms were smaller, but just changing this size on ipxe upgrades
+breaks migration and save/restore as the PCI bar sizes are not allowed to
+change.
+
+This is essentially a per Distribution release detail depending
+on which ipxe roms (and which options, builds) are bundled with an qemu.
+To fix migrations define a compat for anything older than the bump of the
+rom size and map older machine types to filenames. We can then provide
+compat-roms (old or built differently) for those.
+
+We only support the defaults for migrations (shutdown, move, start and
+essentially everything that does a full restart/init works without this
+indirection), so only map those whose default rom was on the efi-* roms
+that existed and now crossed 256k.
+
+Some more info and links can be found at:
+https://cpaelzer.github.io/blogs/002-migration-with-changed-roms
+
+Forwarded: yes (to Debian for a common solution, does not apply to upstream)
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1713490
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=881263
+Last-Update: 2018-02-19
+
+[diffstat]
+ compat.h |   41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+--- a/hw/core/machine.c
++++ b/hw/core/machine.c
+@@ -63,8 +63,29 @@ const size_t hw_compat_2_11_len = G_N_EL
+ GlobalProperty hw_compat_2_10[] = {
+     { "virtio-mouse-device", "wheel-axis", "false" },
+     { "virtio-tablet-device", "wheel-axis", "false" },
++    { "e1000", "romfile", "compat-256k-efi-e1000.rom" },
++    { "ne2000", "romfile", "compat-256k-efi-ne2k_pci.rom" },
++    { "pcnet", "romfile", "compat-256k-efi-pcnet.rom" },
++    { "rtl8139", "romfile", "compat-256k-efi-rtl8139.rom" },
++    { "virtio-net-pci", "romfile", "compat-256k-efi-virtio.rom" },
+ };
+ const size_t hw_compat_2_10_len = G_N_ELEMENTS(hw_compat_2_10);
++/*
++ * ^^ (LP: #1713490)
++ * older IPXE roms were smaller, but just changing this size on ipxe upgrades
++ * breaks migration and save/restore as the PCI bar sizes are not allowed to
++ * change.
++ * This is essentially a per Distribution release detail depending
++ * on which ipxe roms (and which options on build) are bundled with an qemu.
++ * To fix migrations define a compat for anything older than the bump of the
++ * rom size (=pre-bionic = <=2.10) and map older machine types to filenames.
++ * We can then provide compat-roms (essentially the old build on new paths) for
++ * those.
++ * We only support the defaults for migrations (shutdown, move, start and
++ * essentially everything that does a full restart/init works without this
++ * indirection), so only map those whose default rom was on the efi-* roms
++ * which now crossed 256k to use the newer roms for anything else.
++ */
+ 
+ GlobalProperty hw_compat_2_9[] = {
+     { "pci-bridge", "shpc", "off" },

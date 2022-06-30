@@ -1,0 +1,20 @@
+Description: Don't warn on deprecated declarations when building skiboot
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/qemu/+bug/1952448
+Bug: https://github.com/open-power/skiboot/issues/271
+Forwarded: not-needed
+Author: Paride Legovini <paride.legovini@canonical.com>
+Last-Update: 2021-11-26
+
+--- a/roms/skiboot/Makefile.main
++++ b/roms/skiboot/Makefile.main
+@@ -48,6 +48,10 @@ ifeq ($(cc-name),clang)
+ CWARNS += -Wno-error
+ endif
+ 
++# Workaround for OpenSSL 3.0 FTBFS (LP: #1952448)
++# Upstream issue: https://github.com/open-power/skiboot/issues/271
++CWARNS += -Wno-deprecated-declarations
++
+ # Host tools and options
+ HOSTCC=gcc
+ HOSTEND=$(shell uname -m | sed -e 's/^i.*86$$/LITTLE/' -e 's/^x86.*/LITTLE/' -e 's/^ppc64le/LITTLE/' -e 's/^ppc.*/BIG/')

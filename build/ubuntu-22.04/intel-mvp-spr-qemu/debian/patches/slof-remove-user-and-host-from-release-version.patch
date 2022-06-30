@@ -1,0 +1,21 @@
+From: Vagrant Cascadian <vagrant@reproducible-builds.org>
+Date: Mon, 22 Jun 2020 03:48:55 +0000
+X-Dgit-Generated: 1:5.0-6~0~20200622~4 7ad3e07212ae4baf17ca3734670f0774d06403a7
+Subject: roms/SLOF/Makefile.gen: Remove user and host from release version.
+
+This version string ends up in the slof.bin, leading to
+reproducibility issues.
+
+---
+
+--- qemu-5.0.orig/roms/SLOF/Makefile.gen
++++ qemu-5.0/roms/SLOF/Makefile.gen
+@@ -26,7 +26,7 @@ RELEASE=git-$(shell git rev-parse --shor
+ export DRIVER_NAME=git-$(shell git rev-parse --short=12 HEAD)
+ else
+ ifneq (,$(shell cat ../VERSION))
+-RELEASE="$(USER)@$(HOSTNAME) release $(shell cat ../VERSION)"
++RELEASE="release $(shell cat ../VERSION)"
+ export DRIVER_NAME=HEAD
+ else
+ RELEASE="$(USER)@$(HOSTNAME)(private build)"

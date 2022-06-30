@@ -1,0 +1,43 @@
+.TH QEMU-IO 1 "December 18, 2011"
+.SH NAME
+qemu-io \- QEMU Disk exerciser
+.SH SYNOPSIS
+.B qemu-io [-h] [-V] [-rsnm] [-c cmd] ... [file]
+.SH DESCRIPTION
+qemu-io is a command line utility to exercise the QEMU I/O path.
+.SH OPTIONS
+.TP
+.B \-c,\ \-\-cmd\ <cmd>
+Command to execute
+.TP
+.B \-r,\ \-\-read-only
+Export read-only
+.TP
+.B \-s,\ \-\-snapshot
+Use snapshot file
+.TP
+.B \-n,\ \-\-nocache
+Disable host cache
+.TP
+.B \-g,\ \-\-growable
+Allow file to grow (only applies to protocols)
+.TP
+.B \-m,\ \-\-misalign
+Misalign allocations for O_DIRECT
+.TP
+.B \-k,\ \-\-native-aio
+Use kernel AIO implementation (on Linux only)
+.TP
+.B \-h,\ \-\-help
+Display help and exit
+.TP
+.B \-V,\ \-\-version
+Output version information and exit
+.SH SEE ALSO
+.BR qemu-img (1),
+.BR qemu-nbd (8)
+.SH AUTHOR
+QEMU project
+.PP
+This manual page was written by Asias He <asias.hejun@gmail.com>, for the Debian project (and may be used by others). Permission is  granted to  copy, distribute and/or modify this document under the terms of the Creative Commons Attribution-Share Alike 3.0 United States License. (See http://creativecommons.org/licenses/by-sa/3.0/us/legalcode)
+.

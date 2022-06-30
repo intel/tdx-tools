@@ -1,0 +1,20 @@
+# hppa firmware
+qemu-system-data: arch-dependent-file-in-usr-share usr/share/qemu/hppa-firmware.img
+qemu-system-data: arch-independent-package-contains-binary-or-object usr/share/qemu/hppa-firmware.img
+qemu-system-data: statically-linked-binary usr/share/qemu/hppa-firmware.img
+# s390x firmware
+qemu-system-data: arch-independent-package-contains-binary-or-object usr/share/qemu/s390-*.img
+qemu-system-data: arch-dependent-file-in-usr-share usr/share/qemu/s390-*.img
+qemu-system-data: shared-library-lacks-prerequisites usr/share/qemu/s390-*.img
+# palcode-clipper
+qemu-system-data: arch-independent-package-contains-binary-or-object usr/share/qemu/palcode-clipper
+qemu-system-data: arch-dependent-file-in-usr-share usr/share/qemu/palcode-clipper
+qemu-system-data: statically-linked-binary usr/share/qemu/palcode-clipper
+# openbios binaries
+qemu-system-data: arch-dependent-file-in-usr-share usr/share/qemu/openbios-*
+qemu-system-data: arch-independent-package-contains-binary-or-object usr/share/qemu/openbios-*
+qemu-system-data: statically-linked-binary usr/share/qemu/openbios-*
+# opensbi binaries
+qemu-system-data: arch-dependent-file-in-usr-share usr/share/qemu/opensbi-*
+qemu-system-data: arch-independent-package-contains-binary-or-object usr/share/qemu/opensbi-*
+qemu-system-data: statically-linked-binary usr/share/qemu/opensbi-*

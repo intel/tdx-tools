@@ -1,0 +1,5 @@
+debian/tmp/usr/bin/qemu-ga /usr/sbin
+debian/tmp/usr/share/man/man8/qemu-ga.8 /usr/share/man/man8
+debian/tmp/usr/share/man/man7/qemu-ga-ref.7 /usr/share/man/man7
+qga/qapi-schema.json /usr/share/doc/qemu-guest-agent
+scripts/qemu-guest-agent/fsfreeze-hook /etc/qemu/

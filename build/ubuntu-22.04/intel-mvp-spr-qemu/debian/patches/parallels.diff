@@ -1,0 +1,16 @@
+From: Michael Tokarev <mjt@tls.msk.ru>
+Subject: drop unneeded libxml2 dependency for parallels
+Date: Wed, 19 Jan 2022 12:17:12 +0300
+
+parallels block image format does not use and thus
+does not require libxml. Drop the condition.
+
+A more complete version of this change has been sent upstream.
+
+diff --git a/block/meson.build b/block/meson.build
+index deb73ca389..bdf0d61aba 100644
+--- a/block/meson.build
++++ b/block/meson.build
+@@ -61 +61 @@ block_ss.add(when: 'CONFIG_QED', if_true: files(
+-block_ss.add(when: [libxml2, 'CONFIG_PARALLELS'],
++block_ss.add(when: ['CONFIG_PARALLELS'],

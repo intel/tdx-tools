@@ -1,0 +1,34 @@
+Description: Enable svm by default for qemu64 cpu on AMD
+ Upstream changed the default behavior late in 2014 with the patch:
+ .
+ 75d373ef97: target-i386: Disable SVM by default in KVM mode.
+ .
+ We enable vmx by default for intel, so continue to enable svm by default
+ as well.
+ .
+ This is not appropriate for upstreaming, as enabling svm is a distro
+ decision.
+Author: Stefan Bader <stefan.bader@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1561019
+Forwarded: no
+
+--- a/hw/i386/pc_piix.c
++++ b/hw/i386/pc_piix.c
+@@ -328,7 +328,6 @@ static void pc_compat_2_2_fn(MachineStat
+ static void pc_compat_2_1_fn(MachineState *machine)
+ {
+     pc_compat_2_2_fn(machine);
+-    x86_cpu_change_kvm_default("svm", NULL);
+ }
+ 
+ static void pc_compat_2_0_fn(MachineState *machine)
+--- a/target/i386/kvm/kvm-cpu.c
++++ b/target/i386/kvm/kvm-cpu.c
+@@ -130,7 +130,6 @@ static PropValue kvm_default_props[] = {
+     { "kvm-msi-ext-dest-id", "off" },
+     { "acpi", "off" },
+     { "monitor", "off" },
+-    { "svm", "off" },
+     { NULL, NULL },
+ };
+ 

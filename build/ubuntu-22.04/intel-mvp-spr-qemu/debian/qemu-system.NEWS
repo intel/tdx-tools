@@ -1,0 +1,47 @@
+qemu (1.3.0+dfsg-4exp) experimental; urgency=low
+
+  Starting from 1.3.0 release, qemu-system package, which provided
+  QEMU system emulation targets for many architectures, has been
+  split into several packages, each providing a related,
+  per-base-architecture, set of emulators, and qemu-system-misc
+  package which contains some "other" architectures.  There are
+  also qemu-system-common package, which provides common files for
+  all other qemu-system-*, packages.  Former qemu-system package
+  now become a meta-package which installs emulators for all
+  available targets as before.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Tue, 22 Jan 2013 01:38:27 +0400
+
+qemu (0.12.3+dfsg-3) unstable; urgency=low
+
+  Starting with QEMU 0.12.0, KQEMU support has been removed from
+  upstream, as it has not seen active development for a few years now,
+  while causing regressions or limitations for non-KQEMU users.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 24 Mar 2010 23:14:35 +0100
+
+qemu (0.10.3-2) unstable; urgency=low
+
+  Starting with QEMU 0.10.0, it is possible to control how the host
+  cache is used to access block data, using the cache= suboption of the
+  -drive option. The following suboptions are available:
+  * none: The host page cache is entirely avoided.
+  * writeback (default in QEMU 0.9.x): Writeback caching reports data
+    writes as completed as soon as the data is present in the host page
+    cache. This is safe as long as you trust your host. If your host 
+    crashes or loses power, then the guest may experience data 
+    corruption.
+  * writethrough (default in QEMU 0.10.x): The host page cache is used
+    to read and write data but write notification is sent to the guest 
+    only when the data has been reported as written by the storage
+    subsystem.
+
+  Note that depending on your configuration (filesystem, encryption,
+  kernel version, etc.), disk accesses can be very slow with the default
+  cache policy (writethrough). You can use the writeback cache policy 
+  instead, but the data integrity is not assured anymore.
+
+  See qemu(1) for more details.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 03 May 2009 23:22:29 +0200
+

@@ -1,0 +1,22 @@
+Description: fix virtiofsd seccomp with libc 2.35
+ libc 2.35 added an reseq call to every thread creation [1][2] and
+ therefore needs to be allowed or virtiofsd will exit with
+ "Bad system call (core dumped)" when a guest connects.
+ .
+ [1]: https://www.efficios.com/blog/2019/02/08/linux-restartable-sequences/
+ [2]: https://sourceware.org/pipermail/libc-alpha/2022-February/136040.html
+Forwarded: yes, https://lists.gnu.org/archive/html/qemu-devel/2022-02/msg01957.html
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Last-Update: 2022-02-09
+--- a/tools/virtiofsd/passthrough_seccomp.c
++++ b/tools/virtiofsd/passthrough_seccomp.c
+@@ -116,6 +116,9 @@ static const int syscall_allowlist[] = {
+     SCMP_SYS(write),
+     SCMP_SYS(writev),
+     SCMP_SYS(umask),
++#ifdef __NR_rseq
++    SCMP_SYS(rseq), /* required since glibc 2.35 */
++#endif
+ };
+ 
+ /* Syscalls used when --syslog is enabled */

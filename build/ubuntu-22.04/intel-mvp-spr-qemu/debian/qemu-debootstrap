@@ -1,0 +1,15 @@
+#!/bin/sh
+# it was qemu-debootstrap - setup qemu syscall emulation in a debootstrap chroot
+# since kernel binfmt-misc support F flag for the interpreter and we use it,
+# there is no need to copy qemu-user binfmt interpreter binary to the chroot,
+# so regular debootstrap can be used just fine without --foreign, since all
+# commands inside the chroot will just run using qemu from binfmt-misc subsystem.
+
+if ! which debootstrap >/dev/null 2>/dev/null; then
+  echo "E: debootstrap isn't found in \$PATH, is debootstrap package installed?" >&2
+  exit 1
+fi
+
+echo "W: qemu-debootstrap is deprecated. Please use regular debootstrap directly" >&2
+echo "I: Running command: debootstrap $*" >&2
+exec debootstrap "$@"

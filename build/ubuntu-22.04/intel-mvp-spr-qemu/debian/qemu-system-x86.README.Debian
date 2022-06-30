@@ -1,0 +1,47 @@
+qemu (1:4.2-1ubuntu1) focal; urgency=medium
+
+In recent years the kernel and qemu support for nested virtualization got
+much better. Therefore with QEMU 4.2 / Kernel 5.4 in Ubuntu 20.04 onwards
+the former restriction that excluded nesting from being a supported
+feature is lifted.
+
+With kernel 4.20 nested virtualization became default enabled in the
+kvm-intel.ko kernel module. It was enabled all the time for kvm-amd.ko.
+And these days all common front end tools to KVM will pick default
+cpu types capable of nesting. Therefore former tweaks to auto-enable nesting
+for extra convenience could be dropped in qemu 1:4.2-1ubuntu1.
+
+While no more needed going forward, for backward compatibility the default
+guest CPU types (if you specify nothing, which isn't recommended in general)
+will continue to add VMX/SVM capabilities.
+
+Finally it might be worth to mention the constraint that live migration of a
+level 1 guest that has nested level 2 guests running isn't ready yet. But
+upstream development to stabilize that is ongoing already.
+
+ -- Christian Ehrhardt <christian.ehrhardt@canonical.com>  Wed, 08 Jan 2020 16:18:01 +0100
+
+qemu (1:2.10+dfsg-0ubuntu5) xenial; urgency=medium
+
+Nested virtualization is a useful technology - it usually just works and
+greatly facilitates many developer workflows. The phrase "it works until it
+doesn't" is a correct description of its state.
+But when it doesn’t work, it is very difficult to debug due to complex
+interactions between virtualization layers.
+
+Therefore it is important to realize that while Ubuntu adds code to make the
+consumption of nested virtualization easier it should not be relied upon,
+especially for production workloads.
+Many projects - especially CI infrastructures use it quite heavily and are fine.
+But one has to design the usage in a way to tolerate potential issues as
+it is not a fully supported feature - neither by upstream nor by Ubuntu.
+
+Note: Due to the default x86 virtual CPU types on Ubuntu having vmx (Intel)
+and svm (AMD) enabled by default to make nested virt work out of the box
+without any tweaking KVM reports on guest start a missing
+feature of the "other" architecture respectively.
+This non critical Message looks like (similarly for AMD with vmx):
+
+  host doesn't support requested feature: CPUID.80000001H:ECX.svm [bit 2]
+
+-- Christian Ehrhardt <christian.ehrhardt@canonical.com>  Thu, 11 Jan 2018 17:06:02 +0100

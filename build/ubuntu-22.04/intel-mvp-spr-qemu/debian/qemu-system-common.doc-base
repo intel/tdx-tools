@@ -1,0 +1,12 @@
+Document: qemu-system-doc
+Title: QEMU User Manual
+Author: Fabrice Bellard
+Abstract: The QEMU user manual intends to make the user understand what
+ qemu is/does, and to guide them through the first steps of getting
+ the emulator to work, documenting parameters and commands, among other
+ useful things.
+Section: Emulators
+
+Format: HTML
+Index: /usr/share/doc/qemu-system-common/system/index.html
+Files: /usr/share/doc/qemu-system-common/system/index.html

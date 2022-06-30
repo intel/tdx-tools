@@ -1,0 +1,11 @@
+usr/share/doc/qemu/interop
+usr/share/doc/qemu/specs
+usr/share/doc/qemu/tools
+usr/share/icons
+usr/share/applications/qemu.desktop
+usr/bin/elf2dmp
+# test tool
+usr/bin/qemu-edid
+# this one might be helpful for qemu-system -k <lang>
+# but is -k flag useful these days?
+usr/bin/qemu-keymap

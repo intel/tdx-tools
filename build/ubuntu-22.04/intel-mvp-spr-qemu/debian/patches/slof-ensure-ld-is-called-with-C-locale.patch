@@ -1,0 +1,20 @@
+From: Vagrant Cascadian <vagrant@reproducible-builds.org>
+Date: Mon, 22 Jun 2020 00:40:39 +0000
+X-Dgit-Generated: 1:5.0-6~0~20200622~0 973dc2cba2b12d0fc4706ad75af36abcab4f6da9
+Subject: slof/Makefile.gen: Ensure ld is called with the C locale.
+
+The output of "ld -V" changes based on the environment's locale.
+
+---
+
+--- qemu-5.0.orig/roms/SLOF/Makefile.gen
++++ qemu-5.0/roms/SLOF/Makefile.gen
+@@ -62,7 +62,7 @@ romfs_build:
+ ../build_info.img:
+ 	@echo "$(CC)" > ../build_info.img
+ 	@$(CC) -v >> ../build_info.img 2>&1
+-	@$(LD) -V >> ../build_info.img 2>&1
++	@LC_ALL=C $(LD) -V >> ../build_info.img 2>&1
+ 
+ ../$(SUBBOARD).dtb:
+ 	@if [ -e dts/$(SUBBOARD).dts ]; then \

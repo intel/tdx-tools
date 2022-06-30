@@ -1,0 +1,89 @@
+Subject: [PATCH, HACK]: linux-user: handle binfmt-misc P flag as a separate exe name
+From: Michael Tokarev <mjt@tls.msk.ru>
+Date: Sat, 13 Feb 2021 13:57:52 +0300
+
+A hackish way to distinguish the case when qemu-user binary is executed
+using in-kernel binfmt-misc subsystem with P flag (preserve argv).
+We register binfmt interpreter under name /usr/libexec/qemu-binfmt/qemu-foo-binfmt-P
+(which is just a symlink to ../../bin/qemu-foo), and if run like that,
+qemu-user binary will "know" it should interpret argv[1] & argv[2]
+in a special way.
+
+diff --git a/linux-user/main.c b/linux-user/main.c
+index 37ed50d98e..2d55fff057 100644
+--- a/linux-user/main.c
++++ b/linux-user/main.c
+@@ -546,7 +546,7 @@ static void usage(int exitcode)
+     exit(exitcode);
+ }
+ 
+-static int parse_args(int argc, char **argv)
++static int parse_args(int argc, char **argv, bool *preserve_argv0)
+ {
+     const char *r;
+     int optind;
+@@ -563,6 +563,28 @@ static int parse_args(int argc, char **argv)
+         }
+     }
+ 
++    /* HACK alert.
++     * when run as an interpreter using kernel's binfmt-misc mechanism,
++     * we have to know where are we (our own binary), where's the binary being run,
++     * and what it's argv[0] element.
++     * Only with the P interpreter flag kernel passes all 3 elements as first 3 argv[],
++     * but we can't distinguish if we were run with or without this P flag.
++     * So we register a special name with binfmt-misc system, a name which ends up
++     * in "-binfmt-P", and if our argv[0] ends up with that, we assume we were run
++     * from kernel's binfmt with P flag and our first 3 args are from kernel.
++     */
++    if (strlen(argv[0]) > sizeof("binfmt-P") &&
++        strcmp(argv[0] + strlen(argv[0]) - sizeof("binfmt-P"), "-binfmt-P") == 0) {
++        if (argc < 3) {
++            (void) fprintf(stderr, "qemu: %s has to be run using kernel binfmt-misc subsystem\n", argv[0]);
++            exit(EXIT_FAILURE);
++        }
++        exec_path = argv[1];
++        handle_arg_argv0(argv[2]);
++        *preserve_argv0 = true;
++        return 2;
++    }
++
+     optind = 1;
+     for (;;) {
+         if (optind >= argc) {
+@@ -633,7 +655,7 @@ int main(int argc, char **argv, char **envp)
+     int execfd;
+     int log_mask;
+     unsigned long max_reserved_va;
+-    bool preserve_argv0;
++    bool preserve_argv0 = 0;
+ 
+     error_init(argv[0]);
+     module_call_init(MODULE_INIT_TRACE);
+@@ -663,7 +685,7 @@ int main(int argc, char **argv, char **envp)
+     qemu_add_opts(&qemu_trace_opts);
+     qemu_plugin_add_opts();
+ 
+-    optind = parse_args(argc, argv);
++    optind = parse_args(argc, argv, &preserve_argv0);
+ 
+     log_mask = last_log_mask | (enable_strace ? LOG_STRACE : 0);
+     if (log_mask) {
+@@ -704,7 +726,9 @@ int main(int argc, char **argv, char **envp)
+ 
+     /*
+      * get binfmt_misc flags
++     * but only if not already done by parse_args() above
+      */
++    if (!preserve_argv0) {
+     preserve_argv0 = !!(qemu_getauxval(AT_FLAGS) & AT_FLAGS_PRESERVE_ARGV0);
+ 
+     /*
+@@ -715,6 +739,7 @@ int main(int argc, char **argv, char **envp)
+     if (optind + 1 < argc && preserve_argv0) {
+         optind++;
+     }
++    }
+ 
+     if (cpu_model == NULL) {
+         cpu_model = cpu_get_model(get_elf_eflags(execfd));

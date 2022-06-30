@@ -1,0 +1,2 @@
+# microblaze firmware
+pc-bios/petalogix-*.dtb /usr/share/qemu/

@@ -1,0 +1,37 @@
+.TH qemu\-user\-static 1 2007-02-08 "0.9.0" Debian
+.SH NAME
+qemu\-user\-static \- QEMU User Emulator (static version)
+.SH SYNOPSIS
+.B qemu\-user\-static
+.RI [ options ]
+.I program
+.RI [ program-arguments... ]
+.SH DESCRIPTION
+The
+.B qemu\-user\-static
+emulator can run binaries for other architectures but with the same operating
+system as the current one.
+.SH OPTIONS
+.TP
+.BR \-h
+Print this help.
+.TP
+.BR \-g " \fI<port>\fP"
+Wait gdb connection to port \fIport\fP.
+.TP
+.BR \-L " \fI<path>\fP"
+Set the elf interpreter prefix (default=\fI/etc/qemu\-binfmt/%M\fP).
+.TP
+.BR \-s " \fI<size>\fP"
+Set the stack size in bytes (default=\fI524288\fP).
+.TP
+.BR \-d " \fI<options>\fP"
+Activate log (logfile=\fI/tmp/qemu.log\fP)
+.TP
+.BR \-p " \fI<pagesize>\fP"
+Set the host page size to 'pagesize'.
+.SH SEE ALSO
+.BR qemu-system (1)
+(in qemu-system-common package).
+.SH AUTHOR
+This manual page was written by Guillem Jover <guillem@debian.org>.

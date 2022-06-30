@@ -1,0 +1,2 @@
+usr/bin/qemu-system-ppc64 usr/bin/qemu-system-ppc64le
+usr/share/man/man1/qemu-system-ppc64.1 usr/share/man/man1/qemu-system-ppc64le.1

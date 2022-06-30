@@ -1,0 +1,89 @@
+#!/bin/sh
+
+# Detect our host arch
+arch=$(arch)
+test -z "$arch" && exit 0
+
+modlist=""
+case "$arch" in
+    x86_64 | i686)
+        kvm=/usr/bin/qemu-system-x86_64
+        if grep -qs "^flags.* vmx" /proc/cpuinfo; then
+            modlist="kvm_intel $KVM_NESTED"
+        elif grep -qs "^flags.* svm" /proc/cpuinfo; then
+            modlist="kvm_amd"
+        fi
+        ;;
+    ppc*)
+        SMT=$(/usr/sbin/ppc64_cpu --smt 2>&1 | grep "SMT=[248]")
+        if [ -n "$SMT" ]
+        then
+          if grep -q -e '^cpu\s*:\s*POWER8'  /proc/cpuinfo; then
+            echo "Error: You must disable SMT if you want to run QEMU/KVM on Power8 based ppc64le architecture"
+            echo "In order to disable SMT, run: # ppc64_cpu --smt=off"
+          fi
+        fi
+        kvm=/usr/bin/qemu-system-ppc64
+        if [ "$(uname -m)" != "ppc64le" ]; then
+            exit 0
+        fi
+        if systemd-detect-virt --quiet --vm; then
+            echo "Info: second level virtualization not supported, kvm-hv load might fail"
+        fi
+        modlist="kvm-hv"
+        ;;
+esac
+
+# Silently exit if the package isn't installed anymore
+if [ -z "$kvm" -o ! -e "$kvm" ]; then
+    exit 0
+fi
+
+# shellcheck disable=SC1091
+[ -r /etc/default/qemu-kvm ] && . /etc/default/qemu-kvm
+
+start() {
+    if [ -n "$modlist" ]; then
+        modprobe -b $modlist || true
+    fi
+
+    if systemd-detect-virt --quiet --container; then
+        mknod /dev/kvm c 10 232 || true
+        chown root:kvm /dev/kvm || true
+        chmod g+rw /dev/kvm || true
+    fi
+
+    # Determine if we are running inside a VM
+    IS_VM=0
+    if command -v systemd-detect-virt >/dev/null 2>&1; then
+        systemd-detect-virt -vq && IS_VM=1
+    fi
+
+    # Enable KSM, respecting the default configuration file. If 'AUTO' is
+    # set, enable only if we aren't running inside a VM.
+    if [ "$KSM_ENABLED" = "1" ] || [ "$KSM_ENABLED" = "AUTO" ] && [ "$IS_VM" = "0" ]; then
+        # shellcheck disable=SC2015
+        [ -w /sys/kernel/mm/ksm/run ] && echo 1 > /sys/kernel/mm/ksm/run || true
+        if [ -w /sys/kernel/mm/ksm/sleep_millisecs ]; then
+            if [ -n "$SLEEP_MILLISECS" ]; then
+                echo "$SLEEP_MILLISECS" > /sys/kernel/mm/ksm/sleep_millisecs || true
+            fi
+        fi
+    else
+        # shellcheck disable=SC2015
+        [ -w /sys/kernel/mm/ksm/run ] && echo 0 > /sys/kernel/mm/ksm/run || true
+    fi
+}
+
+# See how we were called.
+case "$1" in
+    start)
+        start
+    ;;
+
+    *)
+        exit 0
+    ;;
+esac
+
+exit $?

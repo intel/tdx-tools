@@ -1,0 +1,13 @@
+qemu-system for Debian
+----------------------
+
+The qemu-system-ppc package does not include the video.x file, which is 
+needed by qemu-system-ppc for some systems. The file is available from
+the mac-on-linux project, and the sources are available on:
+  http://mac-on-linux.svn.sourceforge.net/viewvc/mac-on-linux/mac-drivers/video_driver/Makefile?revision=HEAD&view=markup
+
+They are not buildable on a Debian system though, hence video.x is not
+present in the package. The qemu-system-ppc binary is still useful for
+emulating a PReP platform, which does not need video.x.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 16 Mar 2008 19:17:39 +0100

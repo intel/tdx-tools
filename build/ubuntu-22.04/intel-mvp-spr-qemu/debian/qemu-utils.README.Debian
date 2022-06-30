@@ -1,0 +1,13 @@
+qemu-utils for Debian
+--------------------
+
+The qemu-utils package includes a simple script called qemu-make-debian-root
+under /usr/sbin, which uses debootstrap to create an image suitable for qemu
+with a fresh Debian installation inside.
+
+If you just want a test system, not wanting to go through any installation
+process, that might be just ideal. Take a look at the manual page
+qemu-make-debian-root (8) for further usage instructions.
+
+ -- Guilherme de S. Pastore <gpastore@colband.com.br>, Sun May 15 09:49:11 2005
+

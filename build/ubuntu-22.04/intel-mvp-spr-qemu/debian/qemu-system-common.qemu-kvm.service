@@ -1,0 +1,16 @@
+[Unit]
+Description=QEMU KVM preparation - module, ksm, hugepages
+DefaultDependencies=no
+After=local-fs.target
+Before=shutdown.target
+Conflicts=shutdown.target
+RequiresMountsFor=/usr
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/share/qemu/init/qemu-kvm-init start
+ExecReload=/usr/share/qemu/init/qemu-kvm-init start
+
+[Install]
+WantedBy=multi-user.target

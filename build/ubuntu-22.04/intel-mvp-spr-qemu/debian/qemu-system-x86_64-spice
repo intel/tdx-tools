@@ -1,0 +1,5 @@
+#! /bin/sh
+echo "$0: W: this is an old compat wrapper script for qemu-system-x86_64-spice" >&2
+echo "$0: W: please use qemu-system-x86_64 instead of $0" >&2
+
+exec qemu-system-x86_64 "$@"

@@ -1,0 +1,3 @@
+debian/qemu-user-static.1 usr/share/man/man1/
+debian/qemu-debootstrap usr/sbin
+debian/qemu-debootstrap.1 usr/share/man/man1/

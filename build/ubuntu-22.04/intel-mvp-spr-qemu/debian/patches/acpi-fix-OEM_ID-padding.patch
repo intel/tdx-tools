@@ -1,0 +1,57 @@
+From: Igor Mammedov <imammedo@redhat.com>
+To: qemu-devel@nongnu.org
+Subject: [PATCH 3/4] acpi: fix OEM ID/OEM Table ID padding
+Date: Wed, 12 Jan 2022 08:03:31 -0500
+Message-Id: <20220112130332.1648664-4-imammedo@redhat.com>
+
+Commit [2] broke original '\0' padding of OEM ID and OEM Table ID
+fields in headers of ACPI tables. While it doesn't have impact on
+default values since QEMU uses 6 and 8 characters long values
+respectively, it broke usecase where IDs are provided on QEMU CLI.
+It shouldn't affect guest (but may cause licensing verification
+issues in guest OS).
+One of the broken usecases is user supplied SLIC table with IDs
+shorter than max possible length, where [2] mangles IDs with extra
+spaces in RSDT and FADT tables whereas guest OS expects those to
+mirror the respective values of the used SLIC table.
+
+Fix it by replacing whitespace padding with '\0' padding in
+accordance with [1] and expectations of guest OS
+
+1) ACPI spec, v2.0b
+       17.2 AML Grammar Definition
+       ...
+       //OEM ID of up to 6 characters. If the OEM ID is
+       //shorter than 6 characters, it can be terminated
+       //with a NULL character.
+
+2)
+Fixes: 602b458201 ("acpi: Permit OEM ID and OEM table ID fields to be changed")
+Resolves: https://gitlab.com/qemu-project/qemu/-/issues/707
+Reported-by: Dmitry V. Orekhov <dima.orekhov@gmail.com>
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+Cc: qemu-stable@nongnu.org
+---
+ hw/acpi/aml-build.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/hw/acpi/aml-build.c b/hw/acpi/aml-build.c
+index b3b3310df3..65148d5b9d 100644
+--- a/hw/acpi/aml-build.c
++++ b/hw/acpi/aml-build.c
+@@ -1724,9 +1724,9 @@ void acpi_table_begin(AcpiTable *desc, GArray *array)
+     build_append_int_noprefix(array, 0, 4); /* Length */
+     build_append_int_noprefix(array, desc->rev, 1); /* Revision */
+     build_append_int_noprefix(array, 0, 1); /* Checksum */
+-    build_append_padded_str(array, desc->oem_id, 6, ' '); /* OEMID */
++    build_append_padded_str(array, desc->oem_id, 6, '\0'); /* OEMID */
+     /* OEM Table ID */
+-    build_append_padded_str(array, desc->oem_table_id, 8, ' ');
++    build_append_padded_str(array, desc->oem_table_id, 8, '\0');
+     build_append_int_noprefix(array, 1, 4); /* OEM Revision */
+     g_array_append_vals(array, ACPI_BUILD_APPNAME8, 4); /* Creator ID */
+     build_append_int_noprefix(array, 1, 4); /* Creator Revision */
+-- 
+2.31.1
+
+

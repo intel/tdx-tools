@@ -1,0 +1,11 @@
+diff --git a/roms/openbios/drivers/usb.c b/roms/openbios/drivers/usb.c
+index 88b7580..03f6ebb 100644
+--- a/roms/openbios/drivers/usb.c
++++ b/roms/openbios/drivers/usb.c
+@@ -32,4 +32,6 @@
+  */
+ 
++#pragma GCC diagnostic warning "-Warray-bounds"
++
+ #include "config.h"
+ #include "drivers/usb.h"

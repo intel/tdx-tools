@@ -1,0 +1,11 @@
+diff --git a/roms/openbios/drivers/usbohci.c b/roms/openbios/drivers/usbohci.c
+index 774164b..42788a2 100644
+--- a/roms/openbios/drivers/usbohci.c
++++ b/roms/openbios/drivers/usbohci.c
+@@ -44,4 +44,6 @@
+ #include "usbohci.h"
+ 
++#pragma GCC diagnostic warning "-Waddress-of-packed-member"
++
+ static void ohci_start (hci_t *controller);
+ static void ohci_stop (hci_t *controller);

@@ -1,0 +1,54 @@
+From 9e302f64bb407a9bb097b626da97228c2654cfee Mon Sep 17 00:00:00 2001
+From: Peter Lieven <pl@kamp.de>
+Date: Thu, 13 Jan 2022 15:44:25 +0100
+Subject: [PATCH] block/rbd: fix handling of holes in .bdrv_co_block_status
+
+the assumption that we can't hit a hole if we do not diff against a snapshot was wrong.
+
+We can see a hole in an image if we diff against base if there exists an older snapshot
+of the image and we have discarded blocks in the image where the snapshot has data.
+
+Fix this by simply handling a hole like an unallocated area. There are no callbacks
+for unallocated areas so just bail out if we hit a hole.
+
+Fixes: 0347a8fd4c3faaedf119be04c197804be40a384b
+Suggested-by: Ilya Dryomov <idryomov@gmail.com>
+Cc: qemu-stable@nongnu.org
+Signed-off-by: Peter Lieven <pl@kamp.de>
+Message-Id: <20220113144426.4036493-2-pl@kamp.de>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Kevin Wolf <kwolf@redhat.com>
+
+Origin: upstream, https://git.qemu.org/?p=qemu.git;a=commit;h=9e302f64bb407a9bb097b626da97
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1968258
+Last-Update: 2022-04-08
+
+---
+ block/rbd.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/block/rbd.c b/block/rbd.c
+index def96292e0..20bb896c4a 100644
+--- a/block/rbd.c
++++ b/block/rbd.c
+@@ -1279,11 +1279,11 @@ static int qemu_rbd_diff_iterate_cb(uint64_t offs, size_t len,
+     RBDDiffIterateReq *req = opaque;
+ 
+     assert(req->offs + req->bytes <= offs);
+-    /*
+-     * we do not diff against a snapshot so we should never receive a callback
+-     * for a hole.
+-     */
+-    assert(exists);
++
++    /* treat a hole like an unallocated area and bail out */
++    if (!exists) {
++        return 0;
++    }
+ 
+     if (!req->exists && offs > req->offs) {
+         /*
+-- 
+2.35.1
+

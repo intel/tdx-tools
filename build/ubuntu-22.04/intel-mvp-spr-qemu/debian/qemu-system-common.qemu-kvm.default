@@ -1,0 +1,8 @@
+# Set to 1 to enable KSM, 0 to disable KSM, and AUTO to use default settings.
+# After changing this setting restart the qemu-kvm service.
+KSM_ENABLED=AUTO
+SLEEP_MILLISECS=200
+
+# Dropped VHOST_NET_ENABLED as this is auto-loaded in recent kernels
+
+# Dropped KVM_HUGEPAGES as systemd provides feasible hugepage moutpoints

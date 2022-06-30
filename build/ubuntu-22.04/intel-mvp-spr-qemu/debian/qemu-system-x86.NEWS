@@ -1,0 +1,115 @@
+qemu (1:5.0-9) unstable; urgency=medium
+
+  With this version, kvm wrapper (initially from the separate kvm
+  package, which were later renamed to qemu-kvm) is merged back
+  to qemu-system-x86 package, replacing old qemu-kvm package.
+  'kvm' command name turned out to be very handy for manual
+  execution of qemu with kvm enabled, and we now rely on the
+  upstream behavor - when executable name ends with "kvm" it
+  enables the kvm mode by default if available, and falls back
+  to TCG if not.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Fri, 17 Jul 2020 12:54:35 +0300
+
+qemu (1:2.11+dfsg-1ubuntu11) cosmic; urgency=medium
+
+  Summary:
+  Adding new Ubuntu machine types with -hpb suffix to allow users to run
+  guests >1TB using the qemu host-phys-bits setting. If a cpu provides more
+  physical addressing bits than the default virtual 40 one can drive larger
+  guests by setting host-phys-bits. Using a machine type to do so allows to
+  control this through libvirt and higher virt stack components as of today.
+
+  Details:
+  Currently the virtualization stack has the feature to run guests bigger than
+  one Terabyte, but lacks the means to express and configure that easily.
+
+  Qemu provides phys-bits and host-phys-bits attributes on the -cpu parameter.
+  But due to the fact that higher layers do not expose any configuration for it
+  this feature is so far restricted to qemu commandline users or manual tweaks.
+
+  Long term we want to see libvirt exposing configuration for that and higher
+  layers to exploit it, see https://bugs.launchpad.net/bugs/1769053
+
+  But Ubuntu users ask for a way to configure guests like that right now.
+  To do so we provide a new Ubuntu specific machine type that matches the
+  usual Ubuntu machine type but with host-phys-bits switched on.
+
+  To express in their short names that they are like the base type but plus
+  HostPhysBits turned on they have a -hpb suffix on the usual shortname.
+    - pc-i440fx-bionic-hpb
+    - pc-q35-bionic-hpb
+  And they also list "+host-phys-bits=true" in their description.
+
+  The drawback using this type in an uncontrolled environment, is that you
+  might run into trouble migrating between systems of different hardware
+  characteristics (if the target CPU is not able to handle that many
+  phys-bits). This also is the main reason why we didn't want to make it the
+  default for everyone just yet.
+
+  Since machine type is rather old higher stacks often expose a configuration
+  for it, here for example links in regard to OpenStack:
+  1. Global via nova config:
+    https://docs.openstack.org/nova/pike/configuration/config.html
+  2. Per image via metadata:
+    https://docs.openstack.org/image-guide/image-metadata.html
+
+  The intention is to provide such kind of types until we either decide that
+  it is safe enough to switch it on by default (no extra type) or once libvirt
+  and higher stacks can control (host-)phys-bits directly.
+
+ -- Christian Ehrhardt <christian.ehrhardt@canonical.com>  Tue, 12 Jun 2018 09:28:17 +0200
+
+qemu (1:2.8+dfsg-2ubuntu1) zesty; urgency=low
+
+  The ubuntu specific machine types for Trusty, Utopic and Vivid had a bug in
+  former versions. Those bugs made them non-unique by effectivly picking up
+  the current qemu versions compat level instead to stay at their defined one.
+
+  Machine Type:  Broken in:
+  Trusty         Xenial, Yakkety, Cloud-Archive Mitaka
+  Utopic         Vivid, Wily, Xenial, Cloud-Archive Liberty
+
+  Despite multiple releases being affected by the bad type definition, most
+  common migration paths today like LTS->LTS from Trusty to Xenial are working
+  fine for now. But a latter Migration to a newer System would fail as then
+  source and traget would disagree on what the guest type exactly is.
+
+  The only known real case of a related issue so far is a Utopic machine type on
+  Trusty plus Ubuntu Cloud Archive Liberty migrating to Xenial.
+
+  SRUs for bug 1641532 are rolled out into all affected releases to fix that
+  issue and let qemu do the right for the machine type definition as it was
+  meant to do.
+
+  If you have a guest with an affected machine type running on one of the
+  affected releases and are hit by the migration issues the procedure to get
+  migrations working again required a guest restart to pick up the changes.
+    1. With this fix installed restart the guest to pick up the "fixed" machine
+       type (the same as with many CVE qemu fixes).
+    2. Now it can be migrated to a target Host with the fix applied as well
+
+ -- Christian Ehrhardt <christian.ehrhardt@canonical.com>  Tue, 17 Jan 2017 11:57:47 +0100
+
+qemu (1.7.0+dfsg-2) unstable; urgency=low
+
+  Since version 1.7.0+dfsg-2, qemu-system-x86 switched from vgabios for
+  plex/bochs project to implementation of vgabios provided by seabios.
+  The latter is written almost entirely in C language so it is much easier
+  to debugu/develop, but it lacks some 16bit protected mode functions which
+  are present in vgabios.  This means that it is possible that, for eaxample,
+  some protected-mode games written for MS-DOS may not work since this
+  release.
+
+  This also means that vgabios package isn't used by qemu anymore, and might
+  be removed from the system if there are no other users of it left.
+
+
+  /usr/bin/kvm shell wrapper has been moved back to qemu-kvm package (it was
+  moved to qemu-system-x86 in version 1.3.0+dfsg-2exp).  Please note that we
+  do not re-install qemu-kvm package if it has been removed as obsolete, so
+  if you need /usr/bin/kvm wrapper please install qemu-kvm package again.
+  This change allows qemu-system-x86 package to co-exist with the old qemu-kvm
+  binary (not shell-wrapper) package from wheezy.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Thu, 28 Nov 2013 18:40:56 +0400

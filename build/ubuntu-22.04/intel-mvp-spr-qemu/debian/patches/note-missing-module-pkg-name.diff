@@ -1,0 +1,32 @@
+Date: Sun, 22 Aug 2021 15:16:25 +0300
+From: Michael Tokarev <mjt@tls.msk.ru>
+Subject: Note missing module package name
+
+Debian ships different modules in different packages.
+By default qemu ignores the fact that it can not load
+a module, pretending this module never existed.
+Give a useful hint about the package where the module
+in question resides.
+
+This is a hack, but it makes qemu a bit more user-friendly.
+
+diff --git a/util/module.c b/util/module.c
+index 6bb4ad915a..f10e1e869e 100644
+--- a/util/module.c
++++ b/util/module.c
+@@ -301,2 +301,15 @@ bool module_load_one(const char *prefix, const char *lib_name, bool mayfail)
+     if (!success) {
++
++        /* notify user about extra package */
++        const char *pkg = NULL;
++        if (!strcmp(prefix, "block-"))
++           pkg = "qemu-block-extra";
++        else if (!strcmp(prefix, "ui-")
++               || !strcmp(prefix, "audio-")
++               || !strcmp(module_name, "virtio-gpu-gl"))
++           pkg = "qemu-system-gui";
++        if (pkg)
++          fprintf(stderr, "qemu: module %s%s not found, do you want to install %s package?\n",
++                  prefix, module_name, pkg);
++
+         g_hash_table_remove(loaded_modules, module_name);

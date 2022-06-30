@@ -1,0 +1,7 @@
+docs/ccid.txt
+docs/multiseat.txt
+docs/qdev-device-use.txt
+docs/qemupciserial.inf
+docs/config/
+docs/specs/
+docs/virtio-balloon-stats.txt

@@ -1,0 +1,74 @@
+Evolution of qemu-related packages in debian
+
+kvm: was a binary package providing /usr/bin/kvm before squeeze.
+
+ In squeeze it has been renamed to qemu-kvm,
+ so kvm becomes a transitional package.
+
+ Probably can be get rid of now.
+
+ No need to conflict with this package, but we can force-remove it
+ by conflicting with it.
+
+ Some packages may still Require/Depend/Suggest: kvm.
+
+
+qemu-kvm: was a binary package providing /usr/bin/kvm in wheezy (v. 1.1)
+
+ This binary become a (deprecated) shell wrapper and was a part of
+ qemu-system-x86 package between versions 1.3.0+dfsg-5 (when qemu-system
+ were split) up to 1.7.0+dfsg-1, with qemu-kvm package being transitional.
+
+ At version 1.7.0+dfsg-2, qemu-kvm packcage is not transitional anymore,
+ and the wrapper is provided by qemu-kvm, not qemu-system-x86.
+
+ Some packages may Require/Depend/Suggest: qemu-kvm.
+
+qemu: initially it was a mix of all of qemu (unrelated, not conflicting
+with qemu-kvm or kvm)
+
+ at 0.11.0-1 it were split to qemu-user, qemu-user-static and qemu-system.
+
+ Also qemu-keymaps is made a separate package at version 0.12.4+dfsg-4
+ (for use together with qemu-kvm and xen and, on ubuntu, qemu-linaro).
+
+ And qemu-utils become a separate package (look when? since the beginning?)
+
+ Now it is a metapackage and a placeholder for some docs
+
+qemu-system: was a package with all qemu-system-* binaries.
+
+ Were split into individual qemu-system-foo and qemu-system-common at version
+ 1.3.0+dfsg-5, so qemu-system becomes a metapackage without its own files.
+
+ The split introduced a bunch of qemu-system-* conflicting+replacing
+ qemu-system<<1.3.0+dfsg-5.
+
+ At version 1.3.0+dfsg-4exp (before split, in experimental), /usr/bin/kvm was
+ a part of qemu-system (and later qemu-system-x86)/
+
+ At the same version, virtfs-proxy-helper binary has been moved from qemu-utils
+ to qemu-system (and later to qemu-system-common).
+
+qemu-system-common: appeared at 1.3.0+dfsg-5, files common for all qemu-system*
+
+ briefly (>=1.3.0+dfsg-4exp, <<1.3.0+dfsg-5), qemu-utils had
+ virtfs-proxy-helper binary which is in qemu-system-common
+
+qemu-keymaps: keymap definition for qemu, qemu-kvm and xen.
+
+ Can be merged into qemu-system-common now, or after qemu-linaro.
+
+ Were split out of qemu at version 0.12.4+dfsg-4
+
+qemu-utils: common utilities (part of qemu-common in ubuntu?)
+
+ In versions between 1.3.0+dfsg-1~exp1 and 1.3.0+dfsg-4exp, wrongly shipped
+ virtfs-proxy-helper binary
+
+qemu-user, qemu-user-static: user-mode qemu emulation
+
+ Were split out of qemu at verson 0.11.0-1 (pre-squeeze),
+ do not conflict/replace anything anymore.
+
+qemu-common: ubuntu package

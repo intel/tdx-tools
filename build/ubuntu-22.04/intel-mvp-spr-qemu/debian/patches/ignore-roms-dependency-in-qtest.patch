@@ -1,0 +1,20 @@
+Description: roms as dependencies won't be available in packaged qemu
+ Due to the removal of blobs the packaging will not have the roms
+ dependency set and would fail at configure stage with:
+   ../../tests/qtest/meson.build:272:2: ERROR: Unknown variable "roms".
+ Switch it back to the former empty intializer.
+Forwarded: no
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Last-Update: 2022-01-05
+--- a/tests/qtest/meson.build
++++ b/tests/qtest/meson.build
+@@ -269,7 +269,8 @@ foreach dir : target_dirs
+   qtest_emulator = emulators['qemu-system-' + target_base]
+   target_qtests = get_variable('qtests_' + target_base, []) + qtests_generic
+ 
+-  test_deps = roms
++  # roms as dependencies won't be available in packaged qemu
++  test_deps = []
+   qtest_env = environment()
+   if have_tools
+     qtest_env.set('QTEST_QEMU_IMG', './qemu-img')

@@ -1,0 +1,34 @@
+From: Vagrant Cascadian <vagrant@reproducible-builds.org>
+Date: Sun, 21 Jun 2020 19:27:11 +0000
+X-Dgit-Generated: 1:5.0-6~0~20200621~20 0b5923e6cc49abffd582177ba8558cfb6c7f10ce
+Subject: roms/openbios: Use SOURCE_DATE_EPOCH in Makefile.
+
+Embedding the build time breaks reproducibility. Instead, use the date
+specified by the SOURCE_DATE_EPOCH environment variable:
+
+  https://reproducible-builds.org/docs/source-date-epoch/
+
+This patch relies on features of GNU date, and will need further
+changes for portability to other systems.
+
+---
+
+--- qemu-5.0.orig/roms/openbios/Makefile.target
++++ qemu-5.0/roms/openbios/Makefile.target
+@@ -54,14 +54,14 @@ versions: $(ODIR)/target/include/openbio
+ 
+ $(ODIR)/forth/version.fs:
+ 	$(call quiet-command,true, "  GEN   $(TARGET_DIR)$@")
+-	@DATE="$(shell echo `LC_ALL=C TZ=UTC date +'%b %e %Y %H:%M'`)" ;  \
++	@DATE="$(shell echo `LC_ALL=C date --utc --date=@$(SOURCE_DATE_EPOCH) +'%b %e %Y %H:%M'`)" ;  \
+ 		( echo ": builddate \" $$DATE\" ; " ;     \
+ 		  echo ": version \" $(VERSION)\" ; " ; ) \
+ 		  > $(dir $@)/version.fs
+ 
+ $(ODIR)/target/include/openbios-version.h:
+ 	$(call quiet-command,true, "  GEN   $(TARGET_DIR)$@")
+-	@DATE="$(shell echo `LC_ALL=C TZ=UTC date +'%b %e %Y %H:%M'`)" ; \
++	@DATE="$(shell echo `LC_ALL=C date --utc --date=@$(SOURCE_DATE_EPOCH) +'%b %e %Y %H:%M'`)" ; \
+           ( echo "#define OPENBIOS_BUILD_DATE \"$$DATE\"" ; \
+            echo "#define OPENBIOS_VERSION_STR \"$(VERSION)\"" ; ) \
+          > $(dir $@)/openbios-version.h

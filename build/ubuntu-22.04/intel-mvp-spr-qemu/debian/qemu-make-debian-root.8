@@ -1,0 +1,44 @@
+.\" $Id: qemu-make-debian-root.8 266 2008-01-06 20:29:04Z aurel32 $
+.TH qemu\-make\-debian\-root 8 2006-05-28 "0.0" Debian
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+qemu\-make\-debian\-root \- Create a debian root image for qemu
+.SH SYNOPSIS
+.B qemu\-make\-debian\-root
+.RI [ -k "] "
+.RI [ -s "] "
+.I size-in-MiB distrib deburl image
+.RI [ files-to-copy-in-/root ]
+.SH DESCRIPTION
+.B qemu\-make\-debian\-root
+is a command to ease the creation of a debian root image for qemu.
+The generated image is not bootable by itself, and an external kernel
+is needed. It can be run with a command like:
+.IP
+.nf
+.B qemu disk.img -kernel /boot/vmlinuz
+.fi
+.PP
+.SH OPTIONS
+.TP
+.BR \-k
+Keep file system.
+.TP
+.BR \-s
+Create a sparse image.
+.SH SEE ALSO
+.BR qemu (1),
+.BR qemu\-img (1).
+.SH AUTHOR
+This manual page was written by Guillem Jover <guillem@debian.org>.

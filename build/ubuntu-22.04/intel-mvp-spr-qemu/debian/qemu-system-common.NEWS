@@ -1,0 +1,46 @@
+qemu (1:2.12+dfsg-2) unstable; urgency=medium
+
+   Since qemu 2.12, [G]UI display frontends can be built as modules.
+   Debian creates new package, qemu-system-gui, which currently
+   includes GTK3 support. This also switches display from SDL to GTK.
+   Qemu-system-* packages recommends installing qemu-system-gui, so
+   by default on upgrade you will have new package installed, and
+   local GUI will continue to work. However, if you choose to not
+   install recommended packages, you might consider installing
+   qemu-system-gui package separately, if you need local GUI support
+   as well. Without this package, qemu-system-* becomes "headless",
+   and can be used on servers to reduce amount of dependencies -
+   this way, no X11 stuff is needed by qemu-system anymore.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sun, 27 Apr 2018 09:18:32 +0300
+
+qemu (1:2.2+dfsg-6exp) unstable; urgency=medium
+
+   Since Debian release 2.2+dfsg-6exp, a new package named qemu-block-extra
+   has been created and some less frequently used block backends has been
+   split out of main qemu-system binaries and from qemu-img binary to
+   this new package.  The backends which has been split are:
+     curl
+     iscsi
+     rbd (ceph/rados)
+     ssh
+   If you use any of these, please install qemu-block-extra package in
+   addition to qemu-system-* or qemu-utils package, because without it
+   these block backends won't work anymore.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 27 Apr 2015 09:29:55 +0300
+
+qemu (2.0.0+dfsg-1) unstable; urgency=low
+
+   qemu-system-* packages does not provide /usr/bin/qemu alternative
+   anymore, and all various alternatives will be unregistered at new
+   individual qemu-system packages install.  This is because different
+   architectures are not really alternatives, and never has been.
+   Historically, qemu emulated just one architecture, so the name "qemu"
+   was used for the binary.  However when more architectures were added,
+   the old name "qemu" was used as an alternative, pointing to one of
+   the emulators.  Upstream does not use the name "qemu" for binaries
+   for a long time.  If you have scripts using the old name "qemu"
+   please update them to use the right qemu-system-* binary.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Fri, 11 Apr 2014 19:57:22 +0400

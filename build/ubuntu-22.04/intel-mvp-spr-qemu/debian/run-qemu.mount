@@ -1,0 +1,14 @@
+[Unit]
+Description=Prepare /run/qemu to allow still running qemu binaries of former builds (after package upgrades) to fallback-load modules from there
+Before=libvirtd.service
+
+[Mount]
+What=tmpfs
+Where=/run/qemu
+Type=tmpfs
+Options=nosuid,nodev,mode=0755
+ReadWriteOnly=true
+LazyUnmount=yes
+
+[Install]
+WantedBy=multi-user.target

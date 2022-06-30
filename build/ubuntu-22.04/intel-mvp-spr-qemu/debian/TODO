@@ -1,0 +1,16 @@
+* fix other binaries (s390-zipl, ppc_rom)
+
+* permissions/ownership for /dev/vhost_net???
+
+* startup script for qemu-guest-agent: check dependencies & runlevels.
+
+* maybe provide activation for udev & systemd:
+
+   SUBSYSTEM=="virtio-ports", ATTR{name}=="org.qemu.guest_agent.0", \
+     TAG+="systemd" ENV{SYSTEMD_WANTS}="qemu-guest-agent.service"
+
+  and dev-virtio/ports-org.qemu.guest_agent.0.device activation
+  for systemd.
+
+* decide what to do with qemu-bridge-helper (#691138)
+
