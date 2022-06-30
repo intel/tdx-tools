@@ -1,0 +1,4 @@
+no-stack-protector-all-archs.diff
+brotlicompress-disable.diff
+0001-MdeModulePkg-NvmExpressDxe-fix-check-for-Cap.Css.patch
+0002-MdeModulePkg-NvmExpressPei-fix-check-for-NVM-command.patch

@@ -1,0 +1,22 @@
+Description: Do not attempt to compile removed BrotliCompress source
+ BrotliCompress is not currently used, and including an embedded
+ copy of its source could cause false-positives when scanning for
+ security issues. This code is stripped from our orig.tar (at the request
+ of the Ubuntu security team), so we also need to disable the build.
+Author: dann frazier <dannf@debian.org>
+Forwarded: not-needed
+Last-Update: 2019-06-25
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+Index: edk2/BaseTools/Source/C/GNUmakefile
+===================================================================
+--- edk2.orig/BaseTools/Source/C/GNUmakefile
++++ edk2/BaseTools/Source/C/GNUmakefile
+@@ -48,7 +48,6 @@ all: makerootdir subdirs
+ LIBRARIES = Common
+ VFRAUTOGEN = VfrCompile/VfrLexer.h
+ APPLICATIONS = \
+-  BrotliCompress \
+   VfrCompile \
+   EfiRom \
+   GenFfs \

@@ -1,0 +1,16 @@
+Test-Command: PYTHONPATH=./debian/python python3 debian/tests/shell.py
+Restrictions: allow-stderr
+Depends:
+ dosfstools [amd64 arm64],
+ grub-efi-amd64-signed [amd64],
+ grub-efi-arm64-signed [arm64],
+ mtools [amd64 arm64],
+ ovmf,
+ ovmf-ia32,
+ python3-pexpect,
+ qemu-efi-aarch64,
+ qemu-efi-arm,
+ qemu-system-arm,
+ qemu-system-x86,
+ shim-signed [amd64 arm64],
+ xorriso [amd64 arm64],

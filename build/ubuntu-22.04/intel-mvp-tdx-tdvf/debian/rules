@@ -1,0 +1,70 @@
+#!/usr/bin/make -f
+
+SHELL=/bin/bash
+
+include /usr/share/dpkg/default.mk
+
+EDK2_TOOLCHAIN = GCC5
+
+export PYTHON3_ENABLE=TRUE
+export PYTHON_COMMAND=python3
+
+PACKAGE := tdx-tdvf
+DEST_DIR := debian/$(PACKAGE)/usr/share/tdvf
+EDK2_BUILD_ARCH=X64
+
+COMMON_FLAGS  = -DNETWORK_HTTP_BOOT_ENABLE=TRUE
+COMMON_FLAGS += -DNETWORK_IP6_ENABLE=TRUE
+COMMON_FLAGS += -DNETWORK_TLS_ENABLE
+COMMON_FLAGS += -DSECURE_BOOT_ENABLE=TRUE
+COMMON_FLAGS += -DTPM2_ENABLE=TRUE
+OVMF_COMMON_FLAGS = $(COMMON_FLAGS)
+OVMF_2M_FLAGS = $(OVMF_COMMON_FLAGS) -DFD_SIZE_2MB
+OVMF_4M_FLAGS = $(OVMF_COMMON_FLAGS) -DFD_SIZE_4MB
+OVMF_2M_SMM_FLAGS = $(OVMF_2M_FLAGS) -DSMM_REQUIRE=TRUE
+OVMF_4M_SMM_FLAGS = $(OVMF_4M_FLAGS) -DSMM_REQUIRE=TRUE
+OVMF32_4M_FLAGS = $(OVMF_COMMON_FLAGS) -DFD_SIZE_4MB
+OVMF32_4M_SMM_FLAGS =  $(OVMF32_4M_FLAGS) -DSMM_REQUIRE=TRUE
+
+AAVMF_FLAGS  = $(COMMON_FLAGS) -DTPM2_CONFIG_ENABLE=TRUE
+
+# Clear variables used internally by the edk2 build system
+undefine WORKSPACE
+undefine ECP_SOURCE
+undefine EDK_SOURCE
+undefine EFI_SOURCE
+undefine EDK_TOOLS_PATH
+undefine CONF_PATH
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	make -C BaseTools
+	source ./edksetup.sh && \
+	build -p OvmfPkg/OvmfPkgX64.dsc \
+	      -a X64 -b DEBUG \
+	      -t GCC5 \
+	      -D DEBUG_ON_SERIAL_PORT=TRUE \
+	      -D TDX_MEM_PARTIAL_ACCEPT=512 \
+	      -D TDX_EMULATION_ENABLE=FALSE \
+	      -D TDX_ACCEPT_PAGE_SIZE=2M 
+	source ./edksetup.sh && \
+	build -p OvmfPkg/OvmfPkgX64.dsc \
+	      -a X64 -b RELEASE \
+	      -t GCC5 \
+	      -D DEBUG_ON_SERIAL_PORT=FALSE \
+	      -D TDX_MEM_PARTIAL_ACCEPT=512 \
+	      -D TDX_EMULATION_ENABLE=FALSE \
+	      -D TDX_ACCEPT_PAGE_SIZE=2M
+
+override_dh_install:
+	mkdir -p $(DEST_DIR)
+	cp Build/OvmfX64/DEBUG_GCC*/FV/OVMF.fd $(DEST_DIR)/OVMF.debug.fd
+	cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF.fd $(DEST_DIR)/
+	cp Build/OvmfX64/DEBUG_GCC*/FV/OVMF_CODE.fd $(DEST_DIR)/OVMF_CODE.debug.fd
+	cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF_CODE.fd $(DEST_DIR)/
+	cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF_VARS.fd $(DEST_DIR)/
+	cp Build/OvmfX64/RELEASE_GCC*/X64/DumpTdxEventLog.efi $(DEST_DIR)/DumpTdxEventLog.efi
+
+

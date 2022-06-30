@@ -1,0 +1,37 @@
+Source: tdx-tdvf
+Section: misc
+Priority: optional
+Maintainer: Debian QEMU Team <pkg-qemu-devel@lists.alioth.debian.org>
+Uploaders: Steve Langasek <vorlon@debian.org>, Serge Hallyn <serge.hallyn@ubuntu.com>, dann frazier <dannf@debian.org>
+Build-Depends: bc,
+ debhelper-compat (= 12),
+ dosfstools,
+ dpkg (>= 1.19.3),
+ gcc-aarch64-linux-gnu,
+ gcc-arm-linux-gnueabi,
+ gcc-multilib [i386],
+ iasl,
+ mtools,
+ nasm,
+ python3,
+ python3-distutils,
+ python3-pexpect,
+ qemu-utils,
+ qemu-system-arm (>= 1:2.12+dfsg),
+ qemu-system-x86 (>= 1:2.12+dfsg),
+ uuid-dev,
+ xorriso,
+Standards-Version: 4.5.0
+Homepage: http://www.tianocore.org
+Vcs-Git: https://salsa.debian.org/qemu-team/edk2.git
+Vcs-Browser: https://salsa.debian.org/qemu-team/edk2
+XS-Build-Indep-Architecture: amd64
+
+Package: tdx-tdvf
+Architecture: all
+Depends: ${misc:Depends}
+Multi-Arch: foreign
+Description: OVMF (Open Virtual Machine Firmware) is a project to enable UEFI
+ support for Virtual Machines. This package contains a sample 64-bit UEFI
+ firmware for QEMU and KVM supporting trusted domains.
+ 

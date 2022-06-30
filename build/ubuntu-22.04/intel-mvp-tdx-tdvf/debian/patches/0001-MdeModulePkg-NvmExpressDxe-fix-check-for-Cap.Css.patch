@@ -1,0 +1,36 @@
+From 5d8d8b514832fcaa36c0b573b51442c2f53e2aaf Mon Sep 17 00:00:00 2001
+From: "Mara Sophie Grosch via groups.io" <littlefox=lf-net.org@groups.io>
+Date: Wed, 23 Mar 2022 18:22:33 +0800
+Subject: [PATCH 1/2] MdeModulePkg/NvmExpressDxe: fix check for Cap.Css
+
+Fix the check for NVMe command set being supported by the controller.
+
+Was problematic with qemu (6.2.0, Debian 1:6.2+dfsg-3), which sets 0xC1
+in that register, making the OVMF think the NVMe controller does not
+support NVMe.
+
+Uncovered by commit 9dd14fc91c174eae87fd122c7ac70073a363527f, which
+changed the number of bits included in the Css register from 4 to 8.
+
+Signed-off-by: Mara Sophie Grosch <littlefox@lf-net.org>
+Reviewed-by: Hao A Wu <hao.a.wu@intel.com>
+
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1007793
+Origin: https://github.com/tianocore/edk2/commit/5d8d8b514832fcaa36c0b573b51442c2f53e2aaf
+Last-Updated: 2022-03-28
+
+Rebased and updated for TDX by Juro Bystricky
+
+Index: edk2/MdeModulePkg/Bus/Pci/NvmExpressDxe/NvmExpressHci.c
+===================================================================
+--- edk2.orig/MdeModulePkg/Bus/Pci/NvmExpressDxe/NvmExpressHci.c
++++ edk2/MdeModulePkg/Bus/Pci/NvmExpressDxe/NvmExpressHci.c
+@@ -789,7 +789,7 @@ NvmeControllerInit (
+     return Status;
+   }
+ 
+-  if (Private->Cap.Css != 0x01) {
++  if ((Private->Cap.Css & BIT0) == 0) {
+     DEBUG ((EFI_D_INFO, "NvmeControllerInit: the controller doesn't support NVMe command set\n"));
+     return EFI_UNSUPPORTED;
+   }
