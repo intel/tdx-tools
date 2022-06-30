@@ -1,0 +1,25 @@
+Description: enhance default shutdown behavior
+ Modify the default config to do 10 parallel shutdown requests and reduce
+ the timeout to 120s/2m.
+Forwarded: no
+Author: Stefan Bader <stefan.bader@canonical.com>
+
+--- a/tools/libvirt-guests.sysconf
++++ b/tools/libvirt-guests.sysconf
+@@ -28,14 +28,14 @@
+ # "ON_SHUTDOWN" is set to "shutdown". If Set to 0, guests will be shutdown one
+ # after another. Number of guests on shutdown at any time will not exceed number
+ # set in this variable.
+-#PARALLEL_SHUTDOWN=0
++PARALLEL_SHUTDOWN=10
+ 
+ # Number of seconds we're willing to wait for a guest to shut down. If parallel
+ # shutdown is enabled, this timeout applies as a timeout for shutting down all
+ # guests on a single URI defined in the variable URIS. If this is 0, then there
+ # is no time out (use with caution, as guests might not respond to a shutdown
+ # request). The default value is 300 seconds (5 minutes).
+-#SHUTDOWN_TIMEOUT=300
++SHUTDOWN_TIMEOUT=120
+ 
+ # If non-zero, try to bypass the file system cache when saving and
+ # restoring guests, even though this may give slower operation for

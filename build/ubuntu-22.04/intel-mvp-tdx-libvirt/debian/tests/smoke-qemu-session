@@ -1,0 +1,51 @@
+#!/bin/sh
+
+set -e
+
+export LIBVIRT_DEFAULT_URI='qemu:///session'
+XML=debian/tests/smoke-qemu-session.xml
+DOMAIN=sqs
+
+cleanup()
+{
+    if [ -z "$CLEANED_UP" ]; then
+        virsh destroy sqs || true
+        virsh undefine sqs || true
+        CLEANED_UP=1
+    fi
+}
+
+trap cleanup EXIT
+
+if [ ! -f /vmlinuz ] || [ ! -f /initrd.img ]; then
+    echo "Kernel or initrd not found...skipping".
+    exit 77
+fi
+
+if [ $(uname -m) != "x86_64" ]; then
+    echo "Not on x86_64...skipping"
+    exit 77
+fi
+
+# to be able to load our simple guest from /vmlinuz later
+sudo chown $USER /initrd.img
+sudo chown $USER /vmlinuz
+
+echo echo "Running as $USER"
+set -x
+
+virt-host-validate qemu || true
+virsh capabilities
+virsh capabilities | grep -qs "arch name='x86_64'"
+virsh capabilities | grep -qs 'os_type>hvm'
+virt-xml-validate ${XML}
+virsh define ${XML}
+virsh start ${DOMAIN}
+virsh list | grep -qs "${DOMAIN}[[:space:]]\+running"
+virsh destroy ${DOMAIN}
+virsh undefine ${DOMAIN}
+CLEANED_UP=1
+set +x
+
+echo 'Smoke test of qemu session:/// succesful'
+exit 0

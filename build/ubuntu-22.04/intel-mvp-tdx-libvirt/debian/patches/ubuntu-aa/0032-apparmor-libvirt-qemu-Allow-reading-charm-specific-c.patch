@@ -1,0 +1,34 @@
+From b1d54d7e56da3961f9db8705f7a5eaecd6f9222c Mon Sep 17 00:00:00 2001
+From: Stefan Bader <stefan.bader@canonical.com>
+Date: Tue, 23 May 2017 17:21:08 +0200
+Subject: [PATCH 32/33] apparmor, libvirt-qemu: Allow reading charm-specific
+ ceph config
+
+Allows reading ceph configuration files from (juju) charm
+specific location and silence denial messages which were
+occuring related to that.
+
+Bug-Ubuntu: http://bugs.launchpad.net/bugs/1403648
+
+Forwarded: no (part of continuous upstreaming effort)
+Signed-off-by: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
+---
+ src/security/apparmor/libvirt-qemu | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/src/security/apparmor/libvirt-qemu
++++ b/src/security/apparmor/libvirt-qemu
+@@ -231,6 +231,12 @@
+   unix (send, receive) type=stream addr=none peer=(label=/usr/sbin/libvirtd),
+   unix (send, receive) type=stream addr=none peer=(label=virtqemud),
+ 
++  # allow access to charm-specific ceph config (LP: #1403648).
++  # No more silencing spurious denials as it can more critically hide other issues (LP: #1719579)
++  # Also allow the optional asok key that might be enabled by the charm (LP: #1779674)
++  /var/lib/charm/*/ceph.conf r,
++  /run/ceph/rbd-client-*.asok rw,
++
+   # for gathering information about available host resources
+   /sys/devices/system/cpu/ r,
+   /sys/devices/system/node/ r,

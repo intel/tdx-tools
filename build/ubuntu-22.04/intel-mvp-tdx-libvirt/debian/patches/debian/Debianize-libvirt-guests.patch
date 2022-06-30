@@ -1,0 +1,86 @@
+From: =?utf-8?q?Laurent_L=C3=A9onard?= <laurent@open-minds.org>
+Date: Thu, 9 Dec 2010 22:36:29 +0100
+Subject: Debianize libvirt-guests
+
+Forwarded: not-needed
+---
+ tools/libvirt-guests.sh.in   | 21 ++++++++++-----------
+ tools/libvirt-guests.sysconf |  4 ++--
+ 2 files changed, 12 insertions(+), 13 deletions(-)
+
+diff --git a/tools/libvirt-guests.sh.in b/tools/libvirt-guests.sh.in
+index 87f96af..9fe1c4c 100644
+--- a/tools/libvirt-guests.sh.in
++++ b/tools/libvirt-guests.sh.in
+@@ -20,30 +20,30 @@ sysconfdir="@sysconfdir@"
+ localstatedir="@localstatedir@"
+ libvirtd="@sbindir@"/libvirtd
+ 
+-# Source function library.
+-test ! -r "$sysconfdir"/rc.d/init.d/functions ||
+-    . "$sysconfdir"/rc.d/init.d/functions
+-
+ # Source gettext library.
+ # Make sure this file is recognized as having translations: _("dummy")
+ . "@bindir@"/gettext.sh
+ 
++# Make sure calls to this script get redirected to systemctl when
++# using systemd
++. /lib/lsb/init-functions
++
+ export TEXTDOMAIN="@PACKAGE@" TEXTDOMAINDIR="@localedir@"
+ 
+ URIS="default"
+-ON_BOOT="start"
+-ON_SHUTDOWN="suspend"
++ON_BOOT="ignore"
++ON_SHUTDOWN="shutdown"
+ SHUTDOWN_TIMEOUT=300
+ PARALLEL_SHUTDOWN=0
+ START_DELAY=0
+ BYPASS_CACHE=0
+ SYNC_TIME=0
+ 
+-test -f "$sysconfdir"/sysconfig/libvirt-guests &&
+-    . "$sysconfdir"/sysconfig/libvirt-guests
++test -f "$sysconfdir"/default/libvirt-guests &&
++    . "$sysconfdir"/default/libvirt-guests
+ 
+ LISTFILE="$localstatedir"/lib/libvirt/libvirt-guests
+-VAR_SUBSYS_LIBVIRT_GUESTS="$localstatedir"/lock/subsys/libvirt-guests
++VAR_SUBSYS_LIBVIRT_GUESTS="$localstatedir"/lock/libvirt-guests
+ 
+ RETVAL=0
+ 
+@@ -562,8 +562,7 @@ gueststatus() {
+ 
+ # rh_status
+ # Display current status: whether saved state exists, and whether start
+-# has been executed.  We cannot use status() from the functions library,
+-# since there is no external daemon process matching this init script.
++# has been executed.
+ rh_status() {
+     if [ -f "$LISTFILE" ]; then
+         gettext "stopped, with saved guests"; echo
+diff --git a/tools/libvirt-guests.sysconf b/tools/libvirt-guests.sysconf
+index 4f83eda..4b09bdb 100644
+--- a/tools/libvirt-guests.sysconf
++++ b/tools/libvirt-guests.sysconf
+@@ -10,7 +10,7 @@
+ # - ignore  libvirt-guests init script won't start any guest on boot, however,
+ #           guests marked as autostart will still be automatically started by
+ #           libvirtd
+-#ON_BOOT=start
++#ON_BOOT=ignore
+ 
+ # Number of seconds to wait between each guest start. Set to 0 to allow
+ # parallel startup.
+@@ -24,7 +24,7 @@
+ #             which just needs a long time to shutdown. When setting
+ #             ON_SHUTDOWN=shutdown, you must also set SHUTDOWN_TIMEOUT to a
+ #             value suitable for your guests.
+-#ON_SHUTDOWN=suspend
++#ON_SHUTDOWN=shutdown
+ 
+ # Number of guests will be shutdown concurrently, taking effect when
+ # "ON_SHUTDOWN" is set to "shutdown". If Set to 0, guests will be shutdown one

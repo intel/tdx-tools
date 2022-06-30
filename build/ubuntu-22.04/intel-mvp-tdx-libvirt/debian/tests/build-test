@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+CFLAGS = $(shell pkg-config --cflags libvirt)
+LIBS = $(shell pkg-config --libs libvirt)
+
+a.out: examples/c/domain/info1.c
+	gcc $(CFLAGS) $< $(LIBS)
+	@echo "Build test of $< succeeded"
+	@rm -f a.out

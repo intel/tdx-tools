@@ -1,0 +1,74 @@
+#!/bin/sh
+
+set -e
+
+export LIBVIRT_DEFAULT_URI='lxc:///'
+
+XML=debian/tests/smoke-lxc.xml
+DOMAIN=sl
+
+cleanup()
+{
+    if [ -z "$CLEANED_UP" ]; then
+        virsh destroy ${DOMAIN} || true
+        virsh undefine ${DOMAIN} || true
+        CLEANED_UP=1
+    fi
+}
+
+try_check_domain()
+{
+    for _ in $(seq 10); do
+        check_domain && return
+        sleep 2s
+    done
+    echo "Known to be unreliable on test infrastructure - skipping"
+    exit 77
+}
+
+check_domain()
+{
+    rc=0
+    virsh list | grep -qs "${DOMAIN}[[:space:]]\+running"
+    rc=$((rc+$?))
+    virsh lxc-enter-namespace --noseclabel ${DOMAIN} /bin/ls /bin/ls
+    rc=$((rc+$?))
+    return $rc
+}
+
+try_restart_libvirtd()
+{
+    for _ in $(seq 10); do
+        systemctl restart libvirtd && return
+        sleep 2s
+    done
+    # This turned out to be flaky, non reproducible outside of LP-infra and
+    # is not what we want to test, Skip the test in this case
+    echo "Restart failed while checking for container-survival-through restart - skipping".
+    exit 77
+}
+
+trap cleanup EXIT
+
+set -x
+virt-host-validate lxc || exit 0
+virsh capabilities
+virsh capabilities | grep -qs 'emulator>/usr/lib/libvirt/libvirt_lxc'
+virsh capabilities | grep -qs 'os_type>exe'
+virt-xml-validate ${XML}
+virsh define ${XML}
+rm -f /var/log/libvirt/lxc/sl.log
+virsh start ${DOMAIN}
+# Check virtlogd is running
+grep -qs "starting up" /var/log/libvirt/lxc/sl.log
+try_check_domain
+# Make sure a restart doesn't termiante the domain
+try_restart_libvirtd
+try_check_domain
+virsh destroy ${DOMAIN} || true
+virsh undefine ${DOMAIN}
+CLEANED_UP=1
+set +x
+
+echo 'Smoke test of lxc:/// succesful'
+exit 0

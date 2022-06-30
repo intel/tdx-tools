@@ -1,0 +1,73 @@
+# Dutch translation of libvirt debconf templates.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the libvirt package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Frans Spiesschaert <Frans.Spiesschaert@yucom.be>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libvirt\n"
+"Report-Msgid-Bugs-To: libvirt@packages.debian.org\n"
+"POT-Creation-Date: 2016-12-22 14:20+0100\n"
+"PO-Revision-Date: 2016-12-31 15:20+0100\n"
+"Last-Translator: Frans Spiesschaert <Frans.Spiesschaert@yucom.be>\n"
+"Language-Team: Debian Dutch l10n Team <debian-l10n-dutch@lists.debian.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.6\n"
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid "Continue with incorrect libvirt-qemu user/group ID(s)?"
+msgstr "Verdergaan met foutieve gebruikers-/groeps-ID(s) voor libvirt-qemu?"
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" The user/group ID (uid/gid) allocated for libvirt-qemu (64055)\n"
+" seems to be taken by another user/group, thus it is not possible\n"
+" to create the user/group with this numeric ID."
+msgstr ""
+" De gebruikers-/groeps-ID (uid/gid) die bestemd is voor libvirt-qemu "
+"(64055)\n"
+" lijkt ingenomen te zijn door een andere gebruiker/groep. Het is dus\n"
+" niet mogelijk om de gebruiker/groep aan te maken met deze numerieke ID."
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" The migration of guests with disk image files shared over NFS\n"
+" requires a static libvirt-qemu user and group ID (uid and gid)\n"
+" between the source and destination host systems."
+msgstr ""
+" De migratie van gasten met over NFS gedeelde disk-imagebestanden\n"
+" vereist dat libvirt-qemu op de bron- en doel-gastheersystemen\n"
+" een statische gebruikers- en groeps-ID (uid en gid) heeft."
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" If guest migration over NFS is not required, you can continue\n"
+" the installation."
+msgstr ""
+" Indien er geen gastsysteemmigraties over NFS nodig zijn,\n"
+" kunt u voortgaan met de installatie."
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" In order to resolve this problem, do not continue the installation,\n"
+" release the 64055 uid/gid (which might involve permission changes),\n"
+" then install this package again."
+msgstr ""
+" Om dit probleem op te lossen, mag u de installatie niet voortzetten,\n"
+" moet u de uid/gid 64055 vrijmaken (daar kunnen ook wijzigingen van\n"
+" permissies bij komen kijken), en dan dit pakket opnieuw installeren."

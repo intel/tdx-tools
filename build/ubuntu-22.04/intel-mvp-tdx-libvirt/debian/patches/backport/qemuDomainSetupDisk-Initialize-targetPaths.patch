@@ -1,0 +1,42 @@
+From ddb2384f0c78a91c40d95afdbc7fe325e95ef2bc Mon Sep 17 00:00:00 2001
+From: Peter Krempa <pkrempa@redhat.com>
+Date: Tue, 25 Jan 2022 17:49:00 +0100
+Subject: [PATCH] qemuDomainSetupDisk: Initialize 'targetPaths'
+
+Compiler isn't able to see that 'virDevMapperGetTargets' in cases e.g.
+when the devmapper isn't available may not initialize the value in the
+pointer passed as the second argument.
+
+The usage 'qemuDomainSetupDisk' lead to an accidental infinite loop as
+previous calls apparently doctored the stack to a point where
+'g_slist_concat' would end up in an infinite loop trying to find the end
+of the list.
+
+Fixes: 6c49c2ee9fcb88de02cdc333f666a8e95d60a3b0
+Closes: https://gitlab.com/libvirt/libvirt/-/issues/268
+Signed-off-by: Peter Krempa <pkrempa@redhat.com>
+Reviewed-by: Andrea Bolognani <abologna@redhat.com>
+
+Origin: upstream, https://libvirt.org/git/?p=libvirt.git;a=commit;h=ddb2384f0c
+Last-Update: 2022-01-26
+
+---
+ src/qemu/qemu_namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/qemu/qemu_namespace.c b/src/qemu/qemu_namespace.c
+index 23b1160c5e..94453033f5 100644
+--- a/src/qemu/qemu_namespace.c
++++ b/src/qemu/qemu_namespace.c
+@@ -251,7 +251,7 @@ qemuDomainSetupDisk(virStorageSource *src,
+             if (!(tmpPath = virPCIDeviceAddressGetIOMMUGroupDev(&next->nvme->pciAddr)))
+                 return -1;
+         } else {
+-            GSList *targetPaths;
++            GSList *targetPaths = NULL;
+ 
+             if (virStorageSourceIsEmpty(next) ||
+                 !virStorageSourceIsLocalStorage(next)) {
+-- 
+2.34.1
+

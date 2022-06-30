@@ -1,0 +1,33 @@
+From 4c5da648e1f1bb3fd721de59ff8b2c3614ef07a9 Mon Sep 17 00:00:00 2001
+From: Corey Bryant <corey.bryant@canonical.com>
+Date: Wed, 5 Jul 2017 17:07:48 +0200
+Subject: [PATCH 34/34] apparmor:, virt-aa-helper: access for snapped nova
+
+Allow access to base images stored in nova-hypervisor snap's
+$SNAP_COMMON directory, enabling use of the libvirt deb from the
+nova-hypervisor snap (LP: #1644507).
+
+Author: Corey Bryant <corey.bryant@canonical.com>
+Forwarded: no (part of continuous upstreaming effort)
+Signed-off-by: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+---
+ src/security/apparmor/usr.lib.libvirt.virt-aa-helper.in | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/security/apparmor/usr.lib.libvirt.virt-aa-helper b/src/security/apparmor/usr.lib.libvirt.virt-aa-helper
+index 387a261..63799ea 100644
+--- a/src/security/apparmor/usr.lib.libvirt.virt-aa-helper.in
++++ b/src/security/apparmor/usr.lib.libvirt.virt-aa-helper.in
+@@ -69,6 +69,9 @@ profile virt-aa-helper /usr/{lib,lib64}/libvirt/virt-aa-helper {
+   /var/lib/nova/instances/_base/** r,
+   # nova snapshots (LP: #1244694)
+   /var/lib/nova/instances/snapshots/** r,
++  # nova base/snapshot files in snapped nova (LP: #1644507)
++  /var/snap/nova-hypervisor/common/instances/_base/** r,
++  /var/snap/nova-hypervisor/common/instances/snapshots/** r,
+   # eucalyptus (LP: #564914)
+   /var/lib/eucalyptus/instances/**/disk* r,
+   # eucalyptus loader (LP: #637544)
+-- 
+2.7.4
+

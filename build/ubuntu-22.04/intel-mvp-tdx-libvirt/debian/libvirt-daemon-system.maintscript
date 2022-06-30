@@ -1,0 +1,5 @@
+# drop sysV scripts to avoid upgrade issues with virtlogd-admin.socket (LP: #1786179)
+rm_conffile /etc/init.d/libvirt-guests 5.6.0-3~ libvirt-daemon-system
+rm_conffile /etc/init.d/libvirtd 5.6.0-3~ libvirt-daemon-system
+rm_conffile /etc/init.d/virtlogd 5.6.0-3~ libvirt-daemon-system
+rm_conffile /etc/logrotate.d/libvirtd.uml 5.0.0-2~

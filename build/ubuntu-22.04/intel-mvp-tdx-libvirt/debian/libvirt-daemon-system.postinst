@@ -1,0 +1,302 @@
+#!/bin/sh
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see https://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+. /usr/share/debconf/confmodule
+
+# Allocated UID and GID for libvirt-qemu
+LIBVIRT_QEMU_UID=64055
+LIBVIRT_QEMU_GID=64055
+
+add_users_groups()
+{
+    if ! getent group libvirt >/dev/null; then
+        addgroup --quiet --system libvirt
+    fi
+
+    if ! getent group kvm >/dev/null; then
+        addgroup --quiet --system kvm
+    fi
+    # user and group libvirt runs qemu/kvm instances with
+    if ! getent passwd libvirt-qemu >/dev/null; then
+
+        # set uid if available (expected); don't fail otherwise.
+        PARAMETER_UID=''
+        if ! getent passwd $LIBVIRT_QEMU_UID >/dev/null; then
+            PARAMETER_UID="--uid $LIBVIRT_QEMU_UID"
+        fi
+
+        adduser --quiet \
+                --system \
+                --ingroup kvm \
+                --quiet \
+                --disabled-login \
+                --disabled-password \
+                --home /var/lib/libvirt \
+                --no-create-home \
+                --gecos "Libvirt Qemu" \
+                $PARAMETER_UID \
+                libvirt-qemu
+    fi
+    if ! getent group libvirt-qemu >/dev/null; then
+
+        # set gid if available (expected); don't fail otherwise.
+        PARAMETER_GID=''
+        if ! getent group $LIBVIRT_QEMU_GID >/dev/null; then
+            PARAMETER_GID="--gid $LIBVIRT_QEMU_GID"
+        fi
+
+        addgroup --quiet --system $PARAMETER_GID libvirt-qemu
+        adduser --quiet libvirt-qemu libvirt-qemu
+    fi
+
+    # Add each sudo user to the libvirt group
+    for u in $(getent group sudo | sed -e "s/^.*://" -e "s/,/ /g"); do
+        adduser "$u" libvirt >/dev/null || true
+    done
+
+    if ! getent group libvirt-dnsmasq >/dev/null; then
+        addgroup --quiet --system libvirt-dnsmasq
+    fi
+    if ! getent passwd libvirt-dnsmasq >/dev/null; then
+        adduser --quiet \
+                --system \
+                --ingroup libvirt-dnsmasq \
+                --disabled-login \
+                --disabled-password \
+                --home /var/lib/libvirt/dnsmasq \
+                --no-create-home \
+                --gecos "Libvirt Dnsmasq" \
+                libvirt-dnsmasq
+    fi
+    # For upgrades that still have the insecure libvirt group (too much privileges)
+    if [ -n "$2" ] && dpkg --compare-versions -- "$2" le-nl "4.0.0-1ubuntu5~"; then
+        if [ "$(id -r -g -n libvirt-dnsmasq)" = "libvirt" ]; then
+            echo "assigning libvirt-dnsmasq a less privileged group (libvirt->libvirt-dnsmasq)"
+            usermod libvirt-dnsmasq -g libvirt-dnsmasq
+        fi
+    fi
+
+    # These users are usually created and owned by swtpm-tools, but that shall
+    # not become a hard dependency, therefore if swtpm-tools isn't present we
+    # need to create that user/group here to avoid issues starting the service
+    # with the new defaults since LP: 1948880 (LP: #1951975)
+    if ! getent group swtpm >/dev/null; then
+        addgroup --system swtpm
+    fi
+    if ! getent passwd swtpm >/dev/null; then
+        adduser --system --ingroup swtpm --shell /bin/false \
+            --home /var/lib/swtpm --no-create-home \
+            --gecos "virtual TPM software stack" \
+            swtpm
+    fi
+}
+
+includes_addr() {
+    addr=${1}
+    mask=${2}
+    viraddr=${3}
+    for n in $(seq 1 4); do
+        curaddrcomponent=$(echo "${addr}" | awk -F. '{ print $'"${n}"' }')
+        tgtaddrcomponent=$(echo "${viraddr}" | awk -F. '{ print $'"${n}"' }')
+        cmp=$((mask/8))
+        if [ "${cmp}" -ge "${n}" ]; then
+            if [ "${curaddrcomponent}" -ne "${tgtaddrcomponent}" ]; then
+                echo "false"
+                return
+            fi
+        elif [ "$((cmp+1))" -ge "${n}" ]; then
+            # do we bother comparing partial (i.e. /25)?
+            :
+        else
+            break
+        fi
+    done
+    echo "true"
+    return
+}
+
+set_autostart()
+{
+    echo "Enabling libvirt default network"
+    if [ ! -e /etc/libvirt/qemu/networks/autostart/default.xml ]; then
+        ln -s /etc/libvirt/qemu/networks/default.xml \
+              /etc/libvirt/qemu/networks/autostart/
+    fi
+}
+
+# on first install, don't set default network to autostart if we already
+# have a conflicting network. Good for instance for nested libvirt.
+maybe_set_autostart()
+{
+    # 122 is the common default, but iterate a few more options
+    for thirdoctet in $(seq 122 128); do
+        tryip="192.168.${thirdoctet}.1"
+        found=0
+        for pair in $(ip addr show | grep "inet\>" |awk '{ print $2 }'); do
+            a=$(echo "$pair" | awk -F/ '{ print $1}')
+            m=$(echo "$pair" | awk -F/ '{ print $2}')
+            res=$(includes_addr "${a}" "${m}" "${tryip}")
+            if [ "${res}" = "true" ]; then
+                found=1
+            fi
+        done
+        if [ $found -ne 1 ]; then
+            # found a free subnet
+            if [ "${thirdoctet}" -ne "122" ]; then
+                echo "Default libvirt network on 192.168.122.1/24 already taken"
+                echo "Changing to free 192.168.${thirdoctet}.1/24"
+                sed -i 's/192.168.122/192.168.'"${thirdoctet}"'/g' /etc/libvirt/qemu/networks/default.xml
+            fi
+            set_autostart
+            return
+        fi
+    done
+    echo "Not enabling default network as no free network was found"
+}
+
+add_statoverrides()
+{
+    ROOT_DIRS="
+        /var/lib/libvirt/images/
+        /var/lib/libvirt/boot/
+        /var/cache/libvirt/
+        /var/cache/libvirt/qemu/
+    "
+
+    QEMU_DIRS="
+        /var/lib/libvirt/qemu/
+        /var/lib/libvirt/qemu/channel/
+        /var/lib/libvirt/qemu/channel/target/
+    "
+
+    SANLOCK_DIR="/var/lib/libvirt/sanlock"
+
+    QEMU_CONF="/etc/libvirt/qemu.conf"
+
+    SWTPM_DIR="/var/log/swtpm/libvirt/qemu"
+
+    for dir in ${ROOT_DIRS}; do
+        if ! dpkg-statoverride --list "${dir}" >/dev/null 2>&1; then
+            [ ! -e "${dir}" ] || chown root:root "${dir}"
+            [ ! -e "${dir}" ] || chmod 0711 "${dir}"
+        fi
+    done
+
+    for dir in ${QEMU_DIRS}; do
+        if ! dpkg-statoverride --list "${dir}" >/dev/null 2>&1; then
+            [ ! -e "${dir}" ] || chown libvirt-qemu:libvirt-qemu "${dir}"
+            [ ! -e "${dir}" ] || chmod 0750 "${dir}"
+        fi
+    done
+
+    if ! dpkg-statoverride --list "${SANLOCK_DIR}" >/dev/null 2>&1; then
+        [ ! -e "${SANLOCK_DIR}" ] || chown root:root "${SANLOCK_DIR}"
+        [ ! -e "${SANLOCK_DIR}" ] || chmod 0700 "${SANLOCK_DIR}"
+    fi
+
+    if ! dpkg-statoverride --list "${QEMU_CONF}" >/dev/null 2>&1; then
+        [ ! -e "${QEMU_CONF}" ] || chown root:root "${QEMU_CONF}"
+        [ ! -e "${QEMU_CONF}" ] || chmod 0600 "${QEMU_CONF}"
+    fi
+
+    # swtpm shall use user swtpm (LP: #1948880)
+    if ! dpkg-statoverride --list "${SWTPM_DIR}" >/dev/null 2>&1; then
+        [ ! -e "${SWTPM_DIR}" ] || chown swtpm:swtpm "${SWTPM_DIR}"
+        [ ! -e "${SWTPM_DIR}" ] || chmod 0700 "${SWTPM_DIR}"
+    fi
+}
+
+case "$1" in
+    configure)
+        add_users_groups
+        add_statoverrides
+
+        # Make sure the directories don't get removed on package removal since
+        # logrotate chokes otherwise.
+        for dir in qemu uml lxc; do
+            touch /var/log/libvirt/"${dir}"/.placeholder
+        done
+        # Remove left over empty directory from pre 1.2.7
+        [ ! -d /etc/apparmor.d/libvirtd ] || rmdir --ignore-fail-on-non-empty /etc/apparmor.d/libvirtd
+
+        # Force virtlogd and virtlockd to reexec if enabled
+        if [ -d /run/systemd/system ]; then
+            if systemctl is-active -q virtlogd; then
+                systemctl reload virtlogd
+            fi
+            if systemctl is-active -q virtlockd; then
+                systemctl reload virtlockd
+            fi
+        fi
+
+        # Force refresh of capabilities (#731815)
+        rm -f /var/cache/libvirt/qemu/capabilities/*.xml
+
+        # dh_apparmor can't work with dir/file profile filenames yet (#979500)
+        # Also we don't want the reload section of dh_apparmor. Just the
+        # install of an empty include.
+        ABSTRACTIONS_DIR="/etc/apparmor.d/abstractions"
+        LOCAL_ABSTRACTIONS_DIR="/etc/apparmor.d/local/abstractions"
+        LIBVIRT_ABSTRACTIONS="libvirt-lxc libvirt-qemu"
+
+        for name in $LIBVIRT_ABSTRACTIONS; do
+            abstraction="$ABSTRACTIONS_DIR/$name"
+            local_abstraction="$LOCAL_ABSTRACTIONS_DIR/$name"
+
+            if [ -e "$abstraction" ] && [ ! -e "$local_abstraction" ]; then
+                mkdir -p "$LOCAL_ABSTRACTIONS_DIR"
+                install -m 0644 /dev/null "$local_abstraction"
+            fi
+        done
+
+        # On an initial package install, create the default network autostart
+        # symlink if on a system that it will work on.
+        if [ -z $2 ]; then
+            maybe_set_autostart
+        fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+db_stop
+
+#DEBHELPER#
+
+# We need this after the debhelper generated code so that dpkg-maintscript
+# can do its renamming first.
+if [ "$1" = "configure" ]; then
+    # Configure dnsmasq
+    if [ -f /etc/dnsmasq.d-available/libvirt-daemon ]; then
+        echo "Setting up libvirt-daemon dnsmasq configuration."
+        mkdir -p /etc/dnsmasq.d
+        if [ ! -e /etc/dnsmasq.d/libvirt-daemon ]; then
+            ln -s /etc/dnsmasq.d-available/libvirt-daemon \
+                  /etc/dnsmasq.d/libvirt-daemon
+        fi
+
+        # Try to restart a potential system wide dnsmasq
+        invoke-rc.d dnsmasq restart 2>/dev/null || true
+    fi
+fi
+
+exit 0

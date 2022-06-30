@@ -1,0 +1,23 @@
+From: =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Date: Fri, 7 Mar 2014 09:56:12 +0100
+Subject: Skip vircgrouptest
+
+We don't have a mock for nodeGetCPUCount yet so we fail in a chroot
+without sysfs mounted.
+---
+ tests/vircgrouptest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/vircgrouptest.c b/tests/vircgrouptest.c
+index 7d54df1..83c68c6 100644
+--- a/tests/vircgrouptest.c
++++ b/tests/vircgrouptest.c
+@@ -20,7 +20,7 @@
+ 
+ #include "testutils.h"
+ 
+-#ifdef __linux__
++#if defined HAVE_SYSFS_MOCK
+ 
+ 
+ # define LIBVIRT_VIRCGROUPPRIV_H_ALLOW

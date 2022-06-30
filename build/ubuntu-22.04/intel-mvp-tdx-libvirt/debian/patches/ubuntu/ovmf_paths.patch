@@ -1,0 +1,60 @@
+From: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+Subject: Add paths to "ms" variants of OVMF code/vars
+
+The "ms" Secure Boot -enabled variants of OVMF_CODE and OVMF_VARS
+both should include the added label rather than just the OVMF_CODE file:
+in Ubuntu, we always build OVMF_CODE with Secure Boot enabled, as we only
+build it once, but the variable store in the ms.fd file additionally
+includes preloaded Microsoft KEK/DB keys, as well as an ephemeral PK/KEK
+key that was generated just for that purpose (for which only the public
+part is available, the secret key has been deleted). The fact that a PK,
+KEK, and DB keys are loaded means Secure Boot is effectively enabled and
+can validate UEFI binaries. When users use the non-secboot variant, then
+Secure Boot is effectively not in use due to the absence of the keys.
+
+---
+ src/qemu/qemu.conf                 |    3 ++-
+ src/qemu/qemu_conf.c               |    3 ++-
+ src/qemu/test_libvirtd_qemu.aug.in |    1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+Index: b/src/qemu/qemu.conf
+===================================================================
+--- a/src/qemu/qemu.conf
++++ b/src/qemu/qemu.conf
+@@ -726,7 +726,8 @@
+ #   "/usr/share/OVMF/OVMF_CODE.fd:/usr/share/OVMF/OVMF_VARS.fd",
+ #   "/usr/share/OVMF/OVMF_CODE.secboot.fd:/usr/share/OVMF/OVMF_VARS.fd",
+ #   "/usr/share/AAVMF/AAVMF_CODE.fd:/usr/share/AAVMF/AAVMF_VARS.fd",
+-#   "/usr/share/AAVMF/AAVMF32_CODE.fd:/usr/share/AAVMF/AAVMF32_VARS.fd"
++#   "/usr/share/AAVMF/AAVMF32_CODE.fd:/usr/share/AAVMF/AAVMF32_VARS.fd",
++#   "/usr/share/OVMF/OVMF_CODE.ms.fd:/usr/share/OVMF/OVMF_VARS.ms.fd"
+ #]
+ 
+ # The backend to use for handling stdout/stderr output from
+Index: b/src/qemu/qemu_conf.c
+===================================================================
+--- a/src/qemu/qemu_conf.c
++++ b/src/qemu/qemu_conf.c
+@@ -130,7 +130,8 @@ void qemuDomainCmdlineDefFree(qemuDomain
+     "/usr/share/OVMF/OVMF_CODE.fd:/usr/share/OVMF/OVMF_VARS.fd:" \
+     "/usr/share/OVMF/OVMF_CODE.secboot.fd:/usr/share/OVMF/OVMF_VARS.fd:" \
+     "/usr/share/AAVMF/AAVMF_CODE.fd:/usr/share/AAVMF/AAVMF_VARS.fd:" \
+-    "/usr/share/AAVMF/AAVMF32_CODE.fd:/usr/share/AAVMF/AAVMF32_VARS.fd"
++    "/usr/share/AAVMF/AAVMF32_CODE.fd:/usr/share/AAVMF/AAVMF32_VARS.fd:" \
++    "/usr/share/OVMF/OVMF_CODE.ms.fd:/usr/share/OVMF/OVMF_VARS.ms.fd"
+ #endif
+ 
+ 
+Index: b/src/qemu/test_libvirtd_qemu.aug.in
+===================================================================
+--- a/src/qemu/test_libvirtd_qemu.aug.in
++++ b/src/qemu/test_libvirtd_qemu.aug.in
+@@ -93,6 +93,7 @@ module Test_libvirtd_qemu =
+     { "2" = "/usr/share/OVMF/OVMF_CODE.secboot.fd:/usr/share/OVMF/OVMF_VARS.fd" }
+     { "3" = "/usr/share/AAVMF/AAVMF_CODE.fd:/usr/share/AAVMF/AAVMF_VARS.fd" }
+     { "4" = "/usr/share/AAVMF/AAVMF32_CODE.fd:/usr/share/AAVMF/AAVMF32_VARS.fd" }
++    { "5" = "/usr/share/OVMF/OVMF_CODE.ms.fd:/usr/share/OVMF/OVMF_VARS.ms.fd" }
+ }
+ { "stdio_handler" = "logd" }
+ { "gluster_debug_level" = "9" }

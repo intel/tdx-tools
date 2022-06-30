@@ -1,0 +1,45 @@
+Description: set default machine type to ubuntu
+ Upstream qemu is about to change the default machine type to q35.
+ But libvirt has sort of an API-contract that guarantees to have the
+ default be at a "pc" type.
+ Note: it can not be overemphasized that users/tools should choose a type
+ themselves in any cases possible
+ .
+ Due to those changes in qemu libvirt now ignores the qemu default type.
+ But we want the latest distro machine type the default.
+ Qemu only provides max one alias per type, so we can not set "ubuntu"
+ which is the default we provided for users asking for the latest type
+ matching the current series AND at the same time an alias to "pc" which
+ is what libvirt now explicitly selects.
+ .
+ The lowest amount of confusion is to let libvirt select "ubuntu" instead of
+ "pc" as the default. That matches all former Ubuntu releases where "ubuntu"
+ was the default qemu provided and libvirt picked up and at the same time it
+ stays a pc-based type as required by libvirt.
+ .
+ Distro-only: as the machine types only are that way to maintain
+ differences between pure upstream and derived qemu implementation.
+Forwarded: not-needed
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Last-Update: 2019-01-10
+
+--- a/src/qemu/qemu_capabilities.c
++++ b/src/qemu/qemu_capabilities.c
+@@ -2207,7 +2207,7 @@ static const char *preferredMachines[] =
+ 
+     "integratorcp", /* VIR_ARCH_AARCH64 */
+     "axis-dev88", /* VIR_ARCH_CRIS */
+-    "pc", /* VIR_ARCH_I686 */
++    "ubuntu", /* VIR_ARCH_I686 */
+     NULL, /* VIR_ARCH_ITANIUM (doesn't exist in QEMU any more) */
+     "lm32-evr", /* VIR_ARCH_LM32 */
+ 
+@@ -2239,7 +2239,7 @@ static const char *preferredMachines[] =
+     "SS-5", /* VIR_ARCH_SPARC */
+     "sun4u", /* VIR_ARCH_SPARC64 */
+     "puv3", /* VIR_ARCH_UNICORE32 */
+-    "pc", /* VIR_ARCH_X86_64 */
++    "ubuntu", /* VIR_ARCH_X86_64 */
+ 
+     "sim", /* VIR_ARCH_XTENSA */
+     "sim", /* VIR_ARCH_XTENSAEB */

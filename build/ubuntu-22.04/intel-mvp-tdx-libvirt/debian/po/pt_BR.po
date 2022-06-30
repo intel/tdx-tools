@@ -1,0 +1,70 @@
+# Debconf translations for libvirt.
+# Copyright (C) 2017 THE libvirt'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the libvirt package.
+# Adriano Rafael Gomes <adrianorg@debian.org>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libvirt\n"
+"Report-Msgid-Bugs-To: libvirt@packages.debian.org\n"
+"POT-Creation-Date: 2016-12-22 14:20+0100\n"
+"PO-Revision-Date: 2017-01-12 11:01-0200\n"
+"Last-Translator: Adriano Rafael Gomes <adrianorg@debian.org>\n"
+"Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
+"org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid "Continue with incorrect libvirt-qemu user/group ID(s)?"
+msgstr "Continuar com ID(s) incorreto(s) de usuário/grupo do libvirt-qemu?"
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" The user/group ID (uid/gid) allocated for libvirt-qemu (64055)\n"
+" seems to be taken by another user/group, thus it is not possible\n"
+" to create the user/group with this numeric ID."
+msgstr ""
+"O ID de usuário/grupo (uid/gid) alocado para o libvirt-qemu (64055) parece "
+"estar em uso por outro usuário/grupo, portanto, não é possível criar o "
+"usuário/grupo com esse ID numérico."
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" The migration of guests with disk image files shared over NFS\n"
+" requires a static libvirt-qemu user and group ID (uid and gid)\n"
+" between the source and destination host systems."
+msgstr ""
+"A migração de máquinas virtuais com arquivos de imagem de disco "
+"compartilhados sobre NFS exige um ID estático de usuário e grupo do libvirt-"
+"qemu (uid e gid) entre os sistemas hospedeiros de origem e de destino."
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" If guest migration over NFS is not required, you can continue\n"
+" the installation."
+msgstr ""
+"Se a migração de máquinas virtuais sobre NFS não for necessária, você pode "
+"continuar com a instalação."
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" In order to resolve this problem, do not continue the installation,\n"
+" release the 64055 uid/gid (which might involve permission changes),\n"
+" then install this package again."
+msgstr ""
+"Para resolver esse problema, não continue com a instalação, libere o uid/gid "
+"64055 (o que pode envolver modificações de permissões) e então instale esse "
+"pacote novamente."

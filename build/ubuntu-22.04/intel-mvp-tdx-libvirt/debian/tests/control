@@ -1,0 +1,29 @@
+Tests: smoke
+Depends:
+ libvirt-clients,
+Restrictions: allow-stderr
+
+Tests: smoke-qemu-session
+Depends:
+ libvirt-clients,
+ libvirt-daemon-system,
+ libxml2-utils,
+ linux-image-amd64 [amd64] | linux-generic [amd64],
+ qemu-kvm,
+ qemu-system,
+Restrictions: allow-stderr, isolation-container, skippable, skip-not-installable
+
+Tests: smoke-lxc
+Depends:
+ libvirt-clients,
+ libvirt-daemon-driver-lxc,
+ libvirt-daemon-system,
+ libxml2-utils,
+Restrictions: allow-stderr, needs-root, isolation-machine, skippable
+
+Tests: build-test
+Depends:
+ build-essential,
+ libvirt-dev,
+ pkg-config,
+Restrictions: allow-stderr

@@ -1,0 +1,8 @@
+Document: libvirt-doc
+Title: Libvirt the virtualization API
+Abstract: Local copy of the web site of libvirt
+Section: System/Administration
+
+Format: HTML
+Index: /usr/share/doc/libvirt-doc/html/index.html
+Files: /usr/share/doc/libvirt-doc/html/*.html

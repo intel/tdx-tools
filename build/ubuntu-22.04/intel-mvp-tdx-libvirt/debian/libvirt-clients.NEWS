@@ -1,0 +1,7 @@
+libvirt (6.9.0-2) experimental; urgency=medium
+
+  The virt-login-shell tool has been moved from the libvirt-clients
+  package to the new libvirt-login-shell package: this change makes
+  it possible to uninstall this seldomly-used tool if desired.
+
+ -- Andrea Bolognani <eof@kiyuko.org>  Sun, 15 Nov 2020 03:45:44 +0100

@@ -1,0 +1,40 @@
+Description: Have swtpm use the swtpm user by default
+ User 'tss' has more permissions than required and since tpm in some sense
+ is guest/host interface it shall be run under a more restrictive user.
+Forwarded: no-needed
+X-Not-Forwarded-Reason: swtpm user is ubuntu specific
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1948880
+Last-Update: 2021-11-11
+--- a/src/qemu/qemu.conf
++++ b/src/qemu/qemu.conf
+@@ -922,11 +922,14 @@
+ 
+ # User for the swtpm TPM Emulator
+ #
+-# Default is 'tss'; this is the same user that tcsd (TrouSerS) installs
+-# and uses; alternative is 'root'
++# Default is 'swtpm' as established by the swtpm-tools package.
+ #
+-#swtpm_user = "tss"
+-#swtpm_group = "tss"
++# In the past this was 'tss' and that still would be the built-in default
++# if nothing was configured here, but the 'tss' user also has TPM device
++# access in the host which isn't needed for swtpm.
++#
++swtpm_user = "swtpm"
++swtpm_group = "swtpm"
+ 
+ # For debugging and testing purposes it's sometimes useful to be able to disable
+ # libvirt behaviour based on the capabilities of the qemu process. This option
+--- a/src/qemu/test_libvirtd_qemu.aug.in
++++ b/src/qemu/test_libvirtd_qemu.aug.in
+@@ -111,8 +111,6 @@ module Test_libvirtd_qemu =
+ { "pr_helper" = "/usr/bin/qemu-pr-helper" }
+ { "slirp_helper" = "/usr/bin/slirp-helper" }
+ { "dbus_daemon" = "/usr/bin/dbus-daemon" }
+-{ "swtpm_user" = "tss" }
+-{ "swtpm_group" = "tss" }
+ { "capability_filters"
+     { "1" = "capname" }
+ }

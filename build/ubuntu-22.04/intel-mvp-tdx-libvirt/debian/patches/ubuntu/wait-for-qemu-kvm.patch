@@ -1,0 +1,23 @@
+Description: Wait for qemu-kvm to have the module initialized
+ It was reported that in rare occasions libvirt might start up while
+ the kvm module is (re)loading. That can cause the capability probing
+ qemu processes to abort and let libvirtd hang on initialization.
+ Waiting on qemu-kvm is rather safe and reasonable, but is an ubuntu-only
+ service and therefore not generally applicable.
+ If qemu-kvm isn't installed or not enabled this is a no-op as it is only
+ an "After" rule for ordering.
+Forwarded: no
+X-Not-Forwarded-Reason: Ubuntu specific qemu-kvm service
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1887592
+Last-Update: 2020-08-06
+--- a/src/remote/libvirtd.service.in
++++ b/src/remote/libvirtd.service.in
+@@ -22,6 +22,7 @@ After=remote-fs.target
+ After=systemd-logind.service
+ After=systemd-machined.service
+ After=xencommons.service
++After=qemu-kvm.service
+ Conflicts=xendomains.service
+ Documentation=man:libvirtd(8)
+ Documentation=https://libvirt.org

@@ -1,0 +1,24 @@
+From: Andrea Bolognani <eof@kiyuko.org>
+Date: Tue, 18 Aug 2020 21:57:14 +0200
+Subject: Use sensible-editor by default
+
+It is the reasonable default for Debian.
+
+Forwarded: not-needed
+---
+ tools/vsh.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/vsh.c b/tools/vsh.c
+index e3e27a0..6c050ee 100644
+--- a/tools/vsh.c
++++ b/tools/vsh.c
+@@ -2423,7 +2423,7 @@ vshEditWriteToTempFile(vshControl *ctl, const char *doc)
+ 
+ /* Hard-code default editor used as a fallback if not configured by
+  * VISUAL or EDITOR environment variables. */
+-#define DEFAULT_EDITOR "vi"
++#define DEFAULT_EDITOR "sensible-editor"
+ 
+ int
+ vshEditFile(vshControl *ctl, const char *filename)

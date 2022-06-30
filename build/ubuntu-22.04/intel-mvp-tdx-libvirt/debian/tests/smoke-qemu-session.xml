@@ -1,0 +1,32 @@
+<domain type='qemu'>
+  <name>sqs</name>
+  <memory unit='KiB'>256000</memory>
+  <currentMemory unit='KiB'>256000</currentMemory>
+  <vcpu>1</vcpu>
+  <os>
+    <type arch='x86_64' machine='pc-i440fx-2.5'>hvm</type>
+    <kernel>/vmlinuz</kernel>
+    <initrd>/initrd.img</initrd>
+    <cmdline> console=ttyS0 quiet loglevel=0 edd=off printk.time=1 noreplace-smp cgroup_disable=memory pci=noearly noapic panic=-1 selinux=0</cmdline>
+    <boot dev='hd'/>
+  </os>
+  <features>
+    <acpi/>
+  </features>
+  <clock offset='utc'/>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>destroy</on_reboot>
+  <on_crash>destroy</on_crash>
+  <devices>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <controller type='virtio-serial' index='0'>
+      <alias name='virtio-serial0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+    </controller>
+    <filesystem type='mount' accessmode='squash'>
+      <source dir='/'/>
+      <target dir='sqs:root'/>
+      <readonly/>
+    </filesystem>
+  </devices>
+</domain>

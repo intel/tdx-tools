@@ -1,0 +1,41 @@
+From a7cf113469ba32951a0cfa44a35992153ae876c8 Mon Sep 17 00:00:00 2001
+From: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Date: Tue, 4 Jul 2017 07:57:19 +0200
+Subject: [PATCH 33/33] UBUNTU-only: apparmor: for kvm.powerpc (LP: #1680384)
+
+The (so far) Ubuntu only kvm wrappers call a lot more on ppc.
+Since this is already considered as the qemu binary it must be opened up
+in apparmor to work.
+So allow these extra tools executed by kvm.powerpc
+
+Note: this got added in 1680384 and extended by 1686621
+
+Forwarded: no (part of continuous upstreaming effort)
+Signed-off-by: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Forwarded: no
+Forward-info: Distro specific
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1680384
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1686621
+Last-Update: 2018-06-17
+---
+ src/security/apparmor/libvirt-qemu | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/src/security/apparmor/libvirt-qemu
++++ b/src/security/apparmor/libvirt-qemu
+@@ -203,6 +203,13 @@
+   /var/lib/charm/*/ceph.conf r,
+   /run/ceph/rbd-client-*.asok rw,
+ 
++  # kvm.powerpc executes/accesses this
++  /{usr/,}bin/uname rmix,
++  /{usr/,}sbin/ppc64_cpu rmix,
++  /{usr/,}bin/grep rmix,
++  /sys/devices/system/cpu/subcores_per_core r,
++  /sys/devices/system/cpu/cpu*/online r,
++
+   # for gathering information about available host resources
+   /sys/devices/system/cpu/ r,
+   /sys/devices/system/node/ r,

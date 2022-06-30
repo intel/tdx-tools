@@ -1,0 +1,71 @@
+libvirt (7.0.0-3) unstable; urgency=medium
+
+  The $libvirtd_opts variable in /etc/default/libvirtd has been
+  renamed to $LIBVIRTD_ARGS to match upstream and other daemons
+  that are part of libvirt.
+
+  Other changes have been made to the file as well, so it's
+  recommended to pay extra attention if prompted by dpkg about
+  it during an upgrade.
+
+ -- Andrea Bolognani <eof@kiyuko.org>  Mon, 15 Feb 2021 00:45:40 +0100
+
+libvirt (6.9.0-4) unstable; urgency=medium
+
+  The configuration for the default network and the default set
+  of nwfilters have been moved from the libvirt-daemon-system
+  package to the new libvirt-daemon-config-network and
+  libvirt-daemon-config-nwfilter packages respectively.
+
+ -- Andrea Bolognani <eof@kiyuko.org>  Thu, 21 Jan 2020 21:54:03 +0100
+
+libvirt (6.0.0-2) unstable; urgency=medium
+
+  Since sysv init scripts were split into a separate
+  package, systems not using systemd as init system need to install
+  libvirt-daemon-system-sysv.  This helps to support init system specific
+  features on both sysv and systemd based systems.
+
+ -- Guido Günther <agx@sigxcpu.org>  Sat, 14 Mar 2020 12:38:09 +0100
+
+libvirt (5.0.0-1) unstable; urgency=medium
+
+  Sheepdog support has been removed since sheepdog is unmaintained
+  in Debian. See #918947.
+
+ -- Guido Günther <agx@sigxcpu.org>  Sun, 13 Jan 2019 13:20:54 +0100
+
+libvirt (2.5.0-2) unstable; urgency=medium
+
+  libvirt-daemon-system now uses the allocated uid and gid 64055
+  for the libvirt-qemu user and group on new installations, when
+  the uid/gid is available (otherwise a debconf warning is shown).
+
+  On existing installations, which have different uid/gid values
+  assigned, the recommended procedure is to reassign the uid/gid
+  (might require considerations for ownership/permission changes).
+  No debconf warning is shown in this case; only this NEWS entry.
+
+  This change is in order to prevent I/O errors during migration
+  of guests with disk image files shared over NFS, caused by the
+  different uid/gid ownership between the source and destination
+  host systems, which leads to access/permission errors with NFS.
+
+  If guest migration over NFS is not a requirement in the system,
+  there should not be any impact to the guests for not using the
+  allocated uid/gid.
+
+ -- Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>  Thu, 18 Nov 2016 13:56:38 -0200
+
+libvirt (1.2.9~rc1-1) experimental; urgency=medium
+
+  libvirtd now uses PolicyKit instead of unix socket domain permissions for r/w
+  connections. This has the advantage of requiring less reconfiguration when
+  using ACL based access and bringing us closer to upstream's recommendations.
+  In order to keep old configurations working we're still allowing all members
+  of the libvirt group full access via /etc/polkit-1/rules.d/60-libvirt.rules.
+
+  If you want to continue to use socket permission based access control you can
+  still configure it in /etc/libvirt/libvirtd.conf.
+
+ -- Guido Günther <agx@sigxcpu.org>  Sat, 27 Sep 2014 19:22:46 +0200

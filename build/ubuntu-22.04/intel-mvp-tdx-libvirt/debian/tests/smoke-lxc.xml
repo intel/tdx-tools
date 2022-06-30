@@ -1,0 +1,23 @@
+<domain type='lxc'>
+  <name>sl</name>
+  <memory unit='KiB'>256000</memory>
+  <currentMemory unit='KiB'>256000</currentMemory>
+  <vcpu placement='static'>1</vcpu>
+  <os>
+    <type>exe</type>
+    <init>/bin/bash</init>
+  </os>
+  <features>
+    <privnet/>
+  </features>
+  <clock offset='utc'/>
+  <devices>
+    <filesystem type='mount' accessmode='passthrough'>
+      <source dir='/'/>
+      <target dir='/'/>
+    </filesystem>
+    <console type='pty'>
+      <target type='lxc' port='0'/>
+    </console>
+  </devices>
+</domain>

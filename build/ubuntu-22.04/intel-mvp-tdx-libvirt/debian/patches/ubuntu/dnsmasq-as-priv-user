@@ -1,0 +1,290 @@
+Title: Run DNSMASQ as libvirt-dnsmasq user
+DEP: 3
+Date: 2012-03-02
+Drivers: Serge Hallyn
+URL: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/938255
+
+Dropped in Artful for security reasons: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1690729
+Readded in improved Bionic: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1743718
+Debian nack: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=862340
+
+Abstract:
+ Generally it's bad form from a security perspective to run daemons as user
+ nobody because a vulnerability in one daemon will possibly allow it, when
+ compromised, to interfere with another daemon that is also running as nobody.
+ The preferred solution is to run it as a service-specific system user. In this
+ case, because there may be multiple dnsmasq daemons running, a separate
+ libvirt-dnsmasq user (the dnsmasq package itself runs the dnsmasq daemon under
+ a system user called unsurprisingly 'dnsmasq').
+--- a/src/network/bridge_driver.c
++++ b/src/network/bridge_driver.c
+@@ -1054,7 +1054,8 @@ networkDnsmasqConfContents(virNetworkObj
+                       "##    virsh net-edit %s\n"
+                       "## or other application using the libvirt API.\n"
+                       "##\n## dnsmasq conf file created by libvirt\n"
+-                      "strict-order\n",
++                      "strict-order\n"
++                      "user=libvirt-dnsmasq\n",
+                       def->name);
+ 
+     /* if dns is disabled, set its listening port to 0, which
+--- a/tests/networkxml2confdata/dhcp6host-routed-network.conf
++++ b/tests/networkxml2confdata/dhcp6host-routed-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr1
+--- a/tests/networkxml2confdata/dhcp6-nat-network.conf
++++ b/tests/networkxml2confdata/dhcp6-nat-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/dhcp6-network.conf
++++ b/tests/networkxml2confdata/dhcp6-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ domain=mynet
+ expand-hosts
+ except-interface=lo
+--- a/tests/networkxml2confdata/isolated-network.conf
++++ b/tests/networkxml2confdata/isolated-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr2
+--- a/tests/networkxml2confdata/nat-network.conf
++++ b/tests/networkxml2confdata/nat-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/nat-network-dns-forwarders.conf
++++ b/tests/networkxml2confdata/nat-network-dns-forwarders.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ server=8.8.8.8
+ server=8.8.4.4
+ server=/example.com/192.168.1.1
+--- a/tests/networkxml2confdata/nat-network-dns-forward-plain.conf
++++ b/tests/networkxml2confdata/nat-network-dns-forward-plain.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/nat-network-dns-hosts.conf
++++ b/tests/networkxml2confdata/nat-network-dns-hosts.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ domain=example.com
+ expand-hosts
+ domain-needed
+--- a/tests/networkxml2confdata/nat-network-dns-srv-record.conf
++++ b/tests/networkxml2confdata/nat-network-dns-srv-record.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/nat-network-dns-srv-record-minimal.conf
++++ b/tests/networkxml2confdata/nat-network-dns-srv-record-minimal.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/nat-network-dns-txt-record.conf
++++ b/tests/networkxml2confdata/nat-network-dns-txt-record.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/netboot-network.conf
++++ b/tests/networkxml2confdata/netboot-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ domain=example.com
+ expand-hosts
+ except-interface=lo
+--- a/tests/networkxml2confdata/netboot-proxy-network.conf
++++ b/tests/networkxml2confdata/netboot-proxy-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ domain=example.com
+ expand-hosts
+ except-interface=lo
+--- a/tests/networkxml2confdata/routed-network.conf
++++ b/tests/networkxml2confdata/routed-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr1
+--- a/tests/networkxml2confdata/nat-network-dns-local-domain.conf
++++ b/tests/networkxml2confdata/nat-network-dns-local-domain.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ local=/example.com/
+ domain=example.com
+ expand-hosts
+--- a/tests/networkxml2confdata/nat-network-name-with-quotes.conf
++++ b/tests/networkxml2confdata/nat-network-name-with-quotes.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/open-network.conf
++++ b/tests/networkxml2confdata/open-network.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr1
+--- a/tests/networkxml2confdata/ptr-domains-auto.conf
++++ b/tests/networkxml2confdata/ptr-domains-auto.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ local=/122.168.192.in-addr.arpa/
+ local=/1.0.e.f.0.1.c.a.8.b.d.0.1.0.0.2.ip6.arpa/
+ except-interface=lo
+--- a/tests/networkxml2confdata/routed-network-no-dns.conf
++++ b/tests/networkxml2confdata/routed-network-no-dns.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ port=0
+ except-interface=lo
+ bind-dynamic
+--- a/tests/networkxml2confdata/nat-network-dns-forwarder-no-resolv.conf
++++ b/tests/networkxml2confdata/nat-network-dns-forwarder-no-resolv.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ server=/example.com/192.168.1.1
+ except-interface=lo
+ bind-dynamic
+--- a/tests/networkxml2confdata/nat-network-mtu.conf
++++ b/tests/networkxml2confdata/nat-network-mtu.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/dnsmasq-options.conf
++++ b/tests/networkxml2confdata/dnsmasq-options.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/leasetime-hours.conf
++++ b/tests/networkxml2confdata/leasetime-hours.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/leasetime-infinite.conf
++++ b/tests/networkxml2confdata/leasetime-infinite.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/leasetime-minutes.conf
++++ b/tests/networkxml2confdata/leasetime-minutes.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0
+--- a/tests/networkxml2confdata/leasetime-seconds.conf
++++ b/tests/networkxml2confdata/leasetime-seconds.conf
+@@ -5,6 +5,7 @@
+ ##
+ ## dnsmasq conf file created by libvirt
+ strict-order
++user=libvirt-dnsmasq
+ except-interface=lo
+ bind-dynamic
+ interface=virbr0

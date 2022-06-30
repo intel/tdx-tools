@@ -1,0 +1,3 @@
+usr/lib/${DEB_HOST_MULTIARCH}/libvirt/connection-driver/libvirt_driver_libxl.so
+usr/share/augeas/lenses/libvirtd_libxl.aug
+usr/share/augeas/lenses/tests/test_libvirtd_libxl.aug

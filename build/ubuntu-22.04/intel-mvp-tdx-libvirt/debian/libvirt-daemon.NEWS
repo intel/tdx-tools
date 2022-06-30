@@ -1,0 +1,75 @@
+libvirt (7.6.0-1) unstable; urgency=medium
+
+  netcf support is now disabled in libvirt.
+
+  This results in most virInterface* APIs, as well as the
+  corresponding iface-* virsh commands, becoming non-functional,
+  and mirrors upstream's decision to deprecate the feature.
+
+ -- Andrea Bolognani <eof@kiyuko.org>  Tue, 17 Aug 2021 20:56:14 +0200
+
+libvirt (5.6.0-3) unstable; urgency=medium
+
+  Just as version 3.7.0-3 separated the storage drivers into individual
+  binary packages - for a smaller amount of default dependencies and the
+  ability to reduce the active codebase for security concerns - this is
+  now done for the connection drivers as well.
+
+  Internal drivers such as interface, network and storage stay part of the
+  libvirt-daemon package for now. But lxc, qemu, vbox and xen are in packages
+  like libvirt-daemon-driver-<type>.
+  By default libvirt-daemon depends on the qemu connection (most common
+  use case) and recommends the further formerly integrated connection types.
+  This allows users concerned about size or active codebase to remove those
+  drivers they do not use.
+
+ -- Christian Ehrhardt <christian.ehrhardt@canonical.com>  Thu, 04 Apr 2019 15:07:34 +0200
+
+libvirt (1.1.4-2) unstable; urgency=low
+
+  If you're using cgroups make sure you're using a different mount per cgroup
+  controller (cpu, memory, ...) that is mounted to /sys/fs/cgroup/<controller>.
+  This can be achieved using mount_cgroups in /etc/default/libvirt-bin or by
+  using systemd. Using a single mount point /sys/fs/cgroup for all controllers
+  will no longer work and will prevent vms from starting. See
+
+  http://libvirt.org/cgroups.html
+
+  for more information. If you're not using cgroups nothing has to be changed.
+
+ -- Guido Günther <agx@sigxcpu.org>  Sun, 01 Dec 2013 19:33:56 +0100
+
+libvirt (1.0.2-3) experimental; urgency=low
+
+  For qemu:///system KVM/QEMU processes now run as group libvirt-qemu. This
+  makes sure image files and volumes aren't accessible by users in the more
+  general and previously used kvm group. To change this behaviour adjust the
+  group option in /etc/libvirt/qemu.conf.
+
+ -- Guido Günther <agx@sigxcpu.org>  Tue, 26 Feb 2013 06:30:48 +0100
+
+libvirt (0.8.3-2) unstable; urgency=low
+
+  Disk format probing is disabled now by default for security reasons
+  (CVE-2010-2237). You need to explicitly add a driver type element to your
+  disk devices in the domain XML:
+
+      <disk ...>
+         <driver name='qemu' type='qcow2'/>
+         ...
+      </disk>
+
+  Alternatively you can re-enable probing by setting
+  allow_disk_format_probing=1 in /etc/libvirt/qemu.conf but this is insecure.
+
+ -- Guido Günther <agx@sigxcpu.org>  Wed, 29 Sep 2010 13:10:02 +0200
+
+libvirt (0.8.1-2) unstable; urgency=low
+
+  If you're using a script such as /etc/qemu-ifup to set up QEMU network
+  interfaces, have a look at README.Debian about the new config option
+  clear_emulator_capabilities in /etc/libvirt/qemu.conf.
+  When using NAT via libvirt's default network you don't have to change
+  anything.
+
+ -- Guido Günther <agx@sigxcpu.org>  Mon, 12 Jul 2010 19:58:35 +0200

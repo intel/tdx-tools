@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+set -x
+
+export LIBVIRT_DEFAULT_URI='test:///default'
+
+virsh list | grep -qs 'test[[:space:]]\+running'
+virsh destroy test
+virsh net-list 
+virsh pool-list
+
+echo 'Smoke test of test driver succesful'
+exit 0

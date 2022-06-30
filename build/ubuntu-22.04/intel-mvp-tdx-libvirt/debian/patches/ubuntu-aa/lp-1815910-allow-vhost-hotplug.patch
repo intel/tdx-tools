@@ -1,0 +1,57 @@
+Description: UBUNTU-only: apparmor: allow vhost-net/vsock
+ There are use case scenarios where a guest is started without vhost-net
+ or vhost-vsock, but later on such devices are hot added.
+ In the static start with such devices virt-aa-helper could generate rules
+ but actually doesn't have to as libvirt mediates access and passes FDs that
+ qemu will use.
+ This works fine, but on a hotplug of such devices without a static device
+ being present (that would have added the rule on start) we only have the
+ labeling calls of the security modules which do not vocer vhost-net/vsock.
+ The paths are considered security sensitive in general but even without
+ apparmor are protected by DAC due to Ubuntu by default not running guests
+ as root user or group.
+ To make people changing user/group aware this also adds a comment about it
+ to the qemu.conf file.
+ Under this constraint (warn in the .conf) we got the ack from security to
+ do this change for the comfort of our users until a more complex change like
+ new labellig calls is implemented.
+Forwarded: yes (nacked, but complex solution has unknown ETA)
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Origin: https://www.redhat.com/archives/libvir-list/2019-April/msg00750.html
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1815910
+Last-Update: 2019-05-15
+
+--- a/src/security/apparmor/libvirt-qemu
++++ b/src/security/apparmor/libvirt-qemu
+@@ -236,6 +236,11 @@
+   # for vfio hotplug on systems without static vfio (LP: #1775777)
+   /dev/vfio/vfio rw,
+ 
++  # for vhost-net/vsock/scsi hotplug (LP: #1815910)
++  /dev/vhost-net rw,
++  /dev/vhost-vsock rw,
++  /dev/vhost-scsi rw,
++
+   # required for sasl GSSAPI plugin
+   /etc/gss/mech.d/ r,
+   /etc/gss/mech.d/* r,
+--- a/src/qemu/qemu.conf
++++ b/src/qemu/qemu.conf
+@@ -433,6 +433,17 @@
+ # can be used to ensure that a user id will not be interpreted as a user
+ # name.
+ #
++# By default libvirt runs VMs as non-root and uses AppArmor profiles
++# to provide host protection and VM isolation. While AppArmor
++# continues to provide this protection when the VMs are running as
++# root, /dev/vhost-net, /dev/vhost-vsock and /dev/vhost-scsi access is
++# allowed by default in the AppArmor security policy, so malicious VMs
++# running as root would have direct access to this file. If changing this
++# to run as root, you may want to remove this access from
++# /etc/apparmor.d/abstractions/libvirt-qemu. For more information, see:
++# https://launchpad.net/bugs/1815910
++# https://www.redhat.com/archives/libvir-list/2019-April/msg00750.html
++#
+ # Some examples of valid values are:
+ #
+ #       user = "qemu"   # A user named "qemu"

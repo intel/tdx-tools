@@ -1,0 +1,17 @@
+etc/dnsmasq.d-available
+etc/libvirt/hooks
+etc/libvirt/nwfilter
+etc/libvirt/qemu/networks
+etc/libvirt/qemu/networks/autostart
+usr/share/apport/package-hooks
+usr/share/polkit-1/rules.d/
+var/cache/libvirt
+var/cache/libvirt/qemu
+var/lib/libvirt/boot
+var/lib/libvirt/images
+var/lib/libvirt/qemu
+var/lib/libvirt/qemu/channel/target
+var/lib/libvirt/sanlock
+var/log/libvirt/lxc
+var/log/libvirt/qemu
+var/log/libvirt/uml

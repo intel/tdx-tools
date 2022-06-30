@@ -1,0 +1,37 @@
+From 4a8125774ff0745c0273a199fa8b9fb8316c2992 Mon Sep 17 00:00:00 2001
+From: Stefan Bader <stefan.bader@canonical.com>
+Date: Thu, 11 May 2017 16:36:19 +0200
+Subject: [PATCH 20/33] UBUNTU-only: apparmor, virt-aa-helper: Allow various storage pools
+ and image locations
+
+Got various updates over time to include further Ubuntu specific paths.
+
+Forwarded: no (Ubuntu specific paths)
+Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
+---
+ src/security/apparmor/usr.lib.libvirt.virt-aa-helper.in | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+--- a/src/security/apparmor/usr.lib.libvirt.virt-aa-helper.in
++++ b/src/security/apparmor/usr.lib.libvirt.virt-aa-helper.in
+@@ -52,7 +52,19 @@ profile virt-aa-helper /usr/{lib,lib64}/
+   @{HOME}/** r,
+   /var/lib/libvirt/images/ r,
+   /var/lib/libvirt/images/** r,
+-  /var/lib/nova/instances/_base/* r,
++  # nova base images (LP: #907269)
++  /var/lib/nova/images/** r,
++  /var/lib/nova/instances/_base/** r,
++  # nova snapshots (LP: #1244694)
++  /var/lib/nova/instances/snapshots/** r,
++  # eucalyptus (LP: #564914)
++  /var/lib/eucalyptus/instances/**/disk* r,
++  # eucalyptus loader (LP: #637544)
++  /var/lib/eucalyptus/instances/**/loader* r,
++  # for uvtool
++  /var/lib/uvtool/libvirt/images/** r,
++  # for multipass
++  /var/snap/multipass/common/data/multipassd/vault/instances/** r,
+   /{media,mnt,opt,srv}/** r,
+   # For virt-sandbox
+   /{,var/}run/libvirt/**/[sv]d[a-z] r,

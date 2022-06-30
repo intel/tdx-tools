@@ -1,0 +1,35 @@
+From: =?utf-8?q?J=C3=A1n_Tomko?= <jtomko@redhat.com>
+Date: Thu, 20 Jan 2022 14:53:33 +0100
+Subject: qemu: fix inactive snapshot revert
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+The commit splitting out the qemuSnapshotRevertInactive function
+dropped the 'defined = true' line by accident and instead
+returned -1, leaving the user with a cryptic error:
+error: An error occurred, but the cause is unknown
+
+https://bugzilla.redhat.com/show_bug.cgi?id=2039136
+https://gitlab.com/libvirt/libvirt/-/issues/266
+
+Fixes: 85e4a13c3f19078fb6af5ffb4a80022c142cbc7e
+Signed-off-by: Ján Tomko <jtomko@redhat.com>
+(cherry picked from commit 76deb656132bb8817ddae4b7f417930c4db824c9)
+---
+ src/qemu/qemu_snapshot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/qemu/qemu_snapshot.c b/src/qemu/qemu_snapshot.c
+index f92e00f..ac7bab9 100644
+--- a/src/qemu/qemu_snapshot.c
++++ b/src/qemu/qemu_snapshot.c
+@@ -2193,7 +2193,7 @@ qemuSnapshotRevertInactive(virDomainObj *vm,
+ 
+     if (*inactiveConfig) {
+         virDomainObjAssignDef(vm, inactiveConfig, false, NULL);
+-        return -1;
++        defined = true;
+     }
+ 
+     if (flags & (VIR_DOMAIN_SNAPSHOT_REVERT_RUNNING |

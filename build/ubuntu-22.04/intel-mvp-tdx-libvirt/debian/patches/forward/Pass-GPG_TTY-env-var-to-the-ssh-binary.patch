@@ -1,0 +1,27 @@
+From: Guilhem Moulin <guilhem@guilhem.org>
+Date: Fri, 9 Dec 2016 22:06:12 +0100
+Subject: Pass GPG_TTY env var to the ssh binary
+
+gpg-agent(1) can emulate the OpenSSH Agent protocol (which provides
+pubkey-authentication using an authentication-capable OpenPGP key, in
+addition to the usual identity files).  However for a console-based
+password prompt to work, the 'GPG_TTY' environment variable needs to be
+set to the current TTY.  Furthermore, curses-based password prompts also
+require the 'TERM' environment variable to be set to the terminal type.
+---
+ src/rpc/virnetsocket.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/rpc/virnetsocket.c b/src/rpc/virnetsocket.c
+index 51cab4f..3407e34 100644
+--- a/src/rpc/virnetsocket.c
++++ b/src/rpc/virnetsocket.c
+@@ -856,6 +856,8 @@ int virNetSocketNewConnectSSH(const char *nodename,
+     virCommandAddEnvPass(cmd, "KRB5CCNAME");
+     virCommandAddEnvPass(cmd, "SSH_AUTH_SOCK");
+     virCommandAddEnvPass(cmd, "SSH_ASKPASS");
++    virCommandAddEnvPass(cmd, "GPG_TTY");
++    virCommandAddEnvPass(cmd, "TERM");
+     virCommandAddEnvPass(cmd, "DISPLAY");
+     virCommandAddEnvPass(cmd, "XAUTHORITY");
+     virCommandClearCaps(cmd);

@@ -1,0 +1,16 @@
+etc/dnsmasq.d-available/libvirt-daemon
+etc/libvirt/libvirtd.conf
+etc/libvirt/qemu-lockd.conf
+etc/libvirt/qemu.conf
+etc/libvirt/virtlockd.conf
+etc/libvirt/virtlogd.conf
+etc/logrotate.d/libvirtd
+etc/logrotate.d/libvirtd.libxl
+etc/logrotate.d/libvirtd.lxc
+etc/logrotate.d/libvirtd.qemu
+etc/sasl2/libvirt.conf
+usr/lib/firewalld/zones/libvirt.xml
+usr/share/polkit-1/actions/org.libvirt.api.policy
+usr/share/polkit-1/actions/org.libvirt.unix.policy
+usr/share/polkit-1/rules.d/60-libvirt.rules
+var/lib/polkit-1/localauthority/10-vendor.d/60-libvirt.pkla

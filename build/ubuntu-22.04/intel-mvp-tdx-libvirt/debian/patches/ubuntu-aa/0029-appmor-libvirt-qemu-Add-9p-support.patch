@@ -1,0 +1,34 @@
+From 0e7ed68253072d77b2997b316d37403a275c3d2f Mon Sep 17 00:00:00 2001
+From: Stefan Bader <stefan.bader@canonical.com>
+Date: Fri, 19 May 2017 09:48:52 +0200
+Subject: [PATCH 29/33] appmor, libvirt-qemu: Add 9p support
+
+Add fowner and fsetid to libvirt-qemu profile.
+
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1378434
+
+Note: While upstreaming Serge and Guido were not very happy
+with granting those permissions unconditionally. Instead they
+thought it would be better to do this in virt-aa-helper only
+if 9p filesystem is in use.
+
+Forwarded: no (part of continuous upstreaming effort)
+Signed-off-by: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
+---
+ src/security/apparmor/libvirt-qemu | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/src/security/apparmor/libvirt-qemu
++++ b/src/security/apparmor/libvirt-qemu
+@@ -13,6 +13,10 @@
+   capability setgid,
+   capability setuid,
+ 
++  # for 9p
++  capability fsetid,
++  capability fowner,
++
+   network inet stream,
+   network inet6 stream,
+ 

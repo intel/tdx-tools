@@ -1,0 +1,73 @@
+#!/bin/sh
+
+set -e
+
+# summary of how this script can be called:
+#        * <new-preinst> `install'
+#        * <new-preinst> `install' <old-version>
+#        * <new-preinst> `upgrade' <old-version>
+#        * <old-preinst> `abort-upgrade' <new-version>
+# for details, see https://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+prepare_conffile_transfer() {
+    local conffile="$1"
+    local lastver="$2"
+    local pkgfrom="$3"
+    local pkgto="$4"
+
+    if [ "$5" != "--" ]; then
+        echo "prepare_conffile_transfer called with the wrong number of arguments" >&2
+        return 1
+    fi
+    for _ in $(seq 1 5); do
+        shift
+    done
+
+    # If we're installing from scratch or upgrading from a new enough version
+    # of the package, then no transfer needs to happen and we can stop here
+    if [ -z "$2" ] || dpkg --compare-versions -- "$2" gt "$lastver"; then
+        return 0
+    fi
+
+    # Depending on the current state of the conffile, we need to perform different
+    # steps to transfer it. Moving the conffile to a different location depending
+    # on its current state achieves two goals: dpkg will see the conffile is no
+    # longer present on disk after $pkgfrom has been upgraded, and so it will no
+    # longer associate it with that package (not even as an obsolete conffile);
+    # more importanly, $pkgto's postinst, where the transfer process is completed,
+    # will be able to figure out the original state of the conffile and make sure
+    # it is restored
+    if [ -e "$conffile" ]; then
+        echo "Preparing transfer of config file $conffile (from $pkgfrom to $pkgto) ..."
+        mv -f "$conffile" "$conffile.dpkg-transfer"
+    else
+        # If the conffile is no longer present on the disk, it means the admin
+        # has deleted it, and we should preserve this local modification
+        touch "$conffile.dpkg-disappear"
+    fi
+}
+
+case "$1" in
+    install|upgrade)
+        prepare_conffile_transfer \
+            "/etc/libvirt/virt-login-shell.conf" \
+            "6.9.0-2~" \
+            "libvirt-clients" \
+            "libvirt-login-shell" \
+            -- \
+            "$@"
+    ;;
+
+    abort-upgrade)
+    ;;
+
+    *)
+        echo "preinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

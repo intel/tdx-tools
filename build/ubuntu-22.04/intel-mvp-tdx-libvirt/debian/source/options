@@ -1,0 +1,3 @@
+tar-ignore = "debian/gbp.conf"
+tar-ignore = "debian/salsa-ci.yml"
+tar-ignore = "debian/scripts"

@@ -1,0 +1,4 @@
+etc/libvirt/virt-login-shell.conf
+usr/bin/virt-login-shell
+usr/lib/libvirt/virt-login-shell-helper
+usr/share/man/man1/virt-login-shell.1

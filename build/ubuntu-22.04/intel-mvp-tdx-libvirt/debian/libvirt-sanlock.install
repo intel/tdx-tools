@@ -1,0 +1,4 @@
+usr/lib/${DEB_HOST_MULTIARCH}/libvirt/lock-driver/sanlock.so
+usr/lib/libvirt/libvirt_sanlock_helper
+usr/sbin/virt-sanlock-cleanup
+usr/share/man/man8/virt-sanlock-cleanup.8

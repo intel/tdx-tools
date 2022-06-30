@@ -1,0 +1,21 @@
+Description: Ubuntu Models for LP: 1861125
+ We got the issue fixed through
+ https://bugzilla.redhat.com/show_bug.cgi?id=1795651 but it is type based
+ so at least for the support time of Xenial we need to carry a delty adding
+ the named Ubuntu types to the workaround.
+Forwarded: no (Ubuntu specific)
+Author: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1861125
+Bug-Upstream: https://bugzilla.redhat.com/show_bug.cgi?id=1795651
+Last-Update: 2020-02-12
+--- a/src/qemu/qemu_capabilities.c
++++ b/src/qemu/qemu_capabilities.c
+@@ -2157,6 +2157,8 @@ const char *s390HostPassthroughOnlyMachi
+     "s390-ccw-virtio-2.5",
+     "s390-ccw-virtio-2.6",
+     "s390-ccw-virtio-2.7",
++    "s390-ccw-virtio-xenial",
++    "s390-ccw-virtio-yakkety",
+     NULL
+ };
+ 

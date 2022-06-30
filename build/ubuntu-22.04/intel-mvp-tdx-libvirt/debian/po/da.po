@@ -1,0 +1,71 @@
+# libvirt debconf translations
+# Copyright (C) 2017 libvirt og nedenstående oversættere.
+# This file is distributed under the same license as the libvirt package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libvirt\n"
+"Report-Msgid-Bugs-To: libvirt@packages.debian.org\n"
+"POT-Creation-Date: 2016-12-22 14:20+0100\n"
+"PO-Revision-Date: 2017-01-10 17:30+01:00\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <debian-l10n-danish@lists.debian.org>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid "Continue with incorrect libvirt-qemu user/group ID(s)?"
+msgstr "Fortsæt med ukorrekte libvirt-qemu user/group id'er?"
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" The user/group ID (uid/gid) allocated for libvirt-qemu (64055)\n"
+" seems to be taken by another user/group, thus it is not possible\n"
+" to create the user/group with this numeric ID."
+msgstr ""
+" Bruger/gruppe-id'er (uid/gid) allokeret for libvirt-qemu (64055)\n"
+" ser ud til at være taget af en anden bruger/gruppe, det er\n"
+" derfor ikke muligt at oprette brugeren/gruppen med dette\n"
+" numeriske id." 
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" The migration of guests with disk image files shared over NFS\n"
+" requires a static libvirt-qemu user and group ID (uid and gid)\n"
+" between the source and destination host systems."
+msgstr ""
+" Migreringen af gæster med diskaftryksfiler delt over NFS\n"
+" kræver en statisk libvirt-qemu bruger og gruppe-id (uid og\n"
+" gid) mellem kilde- og destinationsværtssystemet."
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" If guest migration over NFS is not required, you can continue\n"
+" the installation."
+msgstr ""
+" Hvis gæstemigrering over NFS ikke er krævet, så kan du fortsætte\n"
+" installationen."
+
+#. Type: boolean
+#. Description
+#: ../libvirt-daemon-system.templates:1001
+msgid ""
+" In order to resolve this problem, do not continue the installation,\n"
+" release the 64055 uid/gid (which might involve permission changes),\n"
+" then install this package again."
+msgstr ""
+" For at løse dette problem, fortsæt ikke installationen, frigiv\n"
+" 64055 uid/gid'en (hvilket kan kræve rettighedsændringer), og\n"
+" installer så denne pakke igen."
+

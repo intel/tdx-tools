@@ -1,0 +1,15 @@
+#! /bin/sh
+#
+### BEGIN INIT INFO
+# Provides: libvirt-guests
+# Required-Start: $remote_fs libvirtd
+# Required-Stop: $remote_fs libvirtd
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: suspend/resume libvirt guests on shutdown/boot
+# Description: This is a script for suspending active libvirt guests
+#              on shutdown and resuming them on next boot
+#              See https://libvirt.org/
+### END INIT INFO
+
+exec /usr/lib/libvirt/libvirt-guests.sh "$@"

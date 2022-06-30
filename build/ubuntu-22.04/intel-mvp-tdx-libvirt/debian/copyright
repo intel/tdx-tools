@@ -1,0 +1,227 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: libvirt
+Source: https://libvirt.org/git/?p=libvirt.git
+Comment: in addition see the upstream maintainer AUTHORS file
+
+Files: *
+Copyright: 2005-2022 Red Hat, Inc
+License: LGPL-2.1+
+Comment: Among many source files this also includes many generated, test-data or binary files
+
+Files: src/conf/*
+Copyright: 2005-2019 Red Hat, Inc
+           2015 SUSE LINUX Products GmbH, Nuernberg, Germany.
+License: LGPL-2.1+
+
+Files: src/conf/domain_validate.*
+Copyright: 2020 IBM Corp.
+License: LGPL-2.1+
+
+Files: src/util/virsocket.c
+Copyright: 2020 Red Hat, Inc.
+           2011-2020 Free Software Foundation, Inc.
+License: LGPL-2.1+
+
+Files: src/util/virhash.c
+Copyright: 2005-2014 Red Hat, Inc.
+           2000 Bjorn Reese and Daniel Veillard.
+License: AS-IS-I
+ Permission to use, copy, modify, and distribute this software for any
+ purpose with or without fee is hereby granted, provided that the above
+ copyright notice and this permission notice appear in all copies.
+ .
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
+ WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+ MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS AND
+ CONTRIBUTORS ACCEPT NO RESPONSIBILITY IN ANY CONCEIVABLE MANNER.
+
+Files: src/util/virpcivpd.*
+       src/util/virpcivpdpriv.h
+       tests/virpcivpdtest.c
+Copyright: 2021 Canonical Ltd.
+License: LGPL-2.1+
+
+Files: tools/virt-host-validate-ch.*
+Copyright: 2020-2021 Microsoft Corp.
+License: LGPL-2.1+
+
+Files: tests/pkix_asn1_tab.c
+       tests/virsh-cpuset
+       tests/virsh-optparse
+       tests/virsh-read-bufsiz
+       tests/virsh-read-non-seekable
+       tests/virsh-schedinfo
+       tests/virsh-self-test
+       tests/virsh-start
+       tests/virsh-undefine
+       tests/virsh-vcpupin
+Copyright: 2008-2019 Red Hat, Inc.
+License: GPL-2.0+
+
+Files: src/vbox/vbox*
+Copyright: 2008-2009 Sun Microsystems, Inc.
+           2010-2014 Red Hat, Inc.
+License: LGPL-2.1+
+
+Files: docs/fonts/*
+Copyright: 2015 Red Hat, Inc
+License: SIL-1.1
+
+Files: src/keycodemapdb/tools/keymap-gen
+Copyright: 2009-2017 Red Hat, Inc.
+License: GPL-2.0+ or BSD-3-clause
+
+License: LGPL-2.1+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library.  If not, see
+ <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General Public License
+ Version 2.1 can be found in `/usr/share/common-licenses/LGPL-2.1'.
+
+License: GPL-2.0+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see
+ <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ Version 2 can be found in `/usr/share/common-licenses/GPL-2'.
+
+License: SIL-1.1
+ This Font Software is licensed under the SIL Open Font License,
+ Version 1.1.
+ .
+ This license is copied below, and is also available with a FAQ at:
+ http://scripts.sil.org/OFL
+ .
+ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+ .
+ PREAMBLE The goals of the Open Font License (OFL) are to stimulate
+ worldwide development of collaborative font projects, to support the font
+ creation efforts of academic and linguistic communities, and to provide
+ a free and open framework in which fonts may be shared and improved in
+ partnership with others.
+ .
+ The OFL allows the licensed fonts to be used, studied, modified and
+ redistributed freely as long as they are not sold by themselves.
+ The fonts, including any derivative works, can be bundled, embedded,
+ redistributed and/or sold with any software provided that any reserved
+ names are not used by derivative works.  The fonts and derivatives,
+ however, cannot be released under any other type of license.  The
+ requirement for fonts to remain under this license does not apply to
+ any document created using the fonts or their derivatives.
+ .
+ DEFINITIONS
+ "Font Software" refers to the set of files released by the Copyright
+ Holder(s) under this license and clearly marked as such.
+ This may include source files, build scripts and documentation.
+ .
+ "Reserved Font Name" refers to any names specified as such after the
+ copyright statement(s).
+ .
+ "Original Version" refers to the collection of Font Software components
+ as distributed by the Copyright Holder(s).
+ .
+ "Modified Version" refers to any derivative made by adding to, deleting,
+ or substituting ? in part or in whole ?
+ any of the components of the Original Version, by changing formats or
+ by porting the Font Software to a new environment.
+ .
+ "Author" refers to any designer, engineer, programmer, technical writer
+ or other person who contributed to the Font Software.
+ .
+ PERMISSION & CONDITIONS
+ .
+ Permission is hereby granted, free of charge, to any person obtaining a
+ copy of the Font Software, to use, study, copy, merge, embed, modify,
+ redistribute, and sell modified and unmodified copies of the Font
+ Software, subject to the following conditions:
+ .
+ 1) Neither the Font Software nor any of its individual components, in
+    Original or Modified Versions, may be sold by itself.
+ .
+ 2) Original or Modified Versions of the Font Software may be bundled,
+    redistributed and/or sold with any software, provided that each copy
+    contains the above copyright notice and this license. These can be
+    included either as stand-alone text files, human-readable headers or
+    in the appropriate machine-readable metadata fields within text or
+    binary files as long as those fields can be easily viewed by the user.
+ .
+ 3) No Modified Version of the Font Software may use the Reserved Font
+    Name(s) unless explicit written permission is granted by the
+    corresponding Copyright Holder. This restriction only applies to the
+    primary font name as presented to the users.
+ .
+ 4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+    Software shall not be used to promote, endorse or advertise any
+    Modified Version, except to acknowledge the contribution(s) of the
+    Copyright Holder(s) and the Author(s) or with their explicit written
+    permission.
+ .
+ 5) The Font Software, modified or unmodified, in part or in whole, must
+    be distributed entirely under this license, and must not be distributed
+    under any other license. The requirement for fonts to remain under
+    this license does not apply to any document created using the Font
+    Software.
+ .
+ TERMINATION
+ This license becomes null and void if any of the above conditions are not met.
+ .
+ DISCLAIMER
+ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+ OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT.  IN NO EVENT SHALL THE
+ COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM OTHER
+ DEALINGS IN THE FONT SOFTWARE.
+
+License: BSD-3-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ .
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ .
+ 3. Neither the name of the Institute nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.

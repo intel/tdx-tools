@@ -1,0 +1,75 @@
+#!/bin/sh
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see https://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+finish_conffile_transfer() {
+    local conffile="$1"
+    local lastver="$2"
+    local pkgfrom="$3"
+    local pkgto="$4"
+
+    if [ "$5" != "--" ]; then
+        echo "finish_conffile_transfer called with the wrong number of arguments" >&2
+        return 1
+    fi
+    for _ in $(seq 1 5); do
+        shift
+    done
+
+    # If we're upgrading rather than installing from scratch, we can assume
+    # the transfer must have happened at some point in the past and stop here
+    if [ -n "$2" ]; then
+        return 0
+    fi
+
+    if [ -e "$conffile.dpkg-transfer" ]; then
+        # Complete the process started in $pkgfrom's preinst by restoring the
+        # version of the conffile containing local modifications
+        echo "Finishing transfer of config file $conffile (from $pkgfrom to $pkgto) ..."
+        mv -f "$conffile.dpkg-transfer" "$conffile"
+        return 0
+    fi
+
+    if [ -e "$conffile.dpkg-disappear" ]; then
+        # The conffile had been deleted by the admin, so let's return to
+        # that state
+        rm -f "$conffile" "$conffile.dpkg-disappear"
+        return 0
+    fi
+}
+
+case "$1" in
+    configure)
+        finish_conffile_transfer \
+            "/etc/libvirt/virt-login-shell.conf" \
+            "6.9.0-2~" \
+            "libvirt-clients" \
+            "libvirt-login-shell" \
+            -- \
+            "$@"
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

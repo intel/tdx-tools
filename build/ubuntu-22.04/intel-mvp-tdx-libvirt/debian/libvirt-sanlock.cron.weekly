@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Disabled by default
+exit 0
+
+/usr/sbin/virt-sanlock-cleanup -q
+exit 0

@@ -1,0 +1,58 @@
+From 017fa1e097769455c0cd8929760cf9ff52a556ec Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20P=2E=20Berrang=C3=A9?= <berrange@redhat.com>
+Date: Tue, 18 Jan 2022 16:45:35 +0000
+Subject: [PATCH] util: fix syslog facility value
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+We set SYSLOG_PRIORITY when sending to journald to avoid our
+messages getting tagged with the default facility which is
+used for the kernel.
+
+Unfortunately:
+
+  commit fd00f0e6c75b00c3d97be8670afcd9094b823855
+  Author: Guido Günther <agx@sigxcpu.org>
+  Date:   Mon Sep 21 20:06:55 2015 +0200
+
+    Use daemon log facility for journald
+
+used the LOG_nnn constants from the syslog header without realizing
+that these values have a bit-shift applied. While Linux defines a
+LOG_FAC() macros to undo the bit-shift this doesn't appear to be
+standardized. So the safe thing is to just use the raw value since
+these values are fixed by RFC 5424.
+
+Reviewed-by: Ján Tomko <jtomko@redhat.com>
+Signed-off-by: Daniel P. Berrangé <berrange@redhat.com>
+
+Origin: upstream, https://libvirt.org/git/?p=libvirt.git;a=commit;h=017fa1e097
+Last-Update: 2022-01-26
+
+---
+ src/util/virlog.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/util/virlog.c b/src/util/virlog.c
+index b44ad0ef6c..72b0613dfb 100644
+--- a/src/util/virlog.c
++++ b/src/util/virlog.c
+@@ -925,7 +925,13 @@ virLogOutputToJournald(virLogSource *source,
+     journalAddString(&state, "MESSAGE", rawstr);
+     journalAddInt(&state, "PRIORITY",
+                   virLogPrioritySyslog(priority));
+-    journalAddInt(&state, "SYSLOG_FACILITY", LOG_DAEMON);
++    /* See RFC 5424 section 6.2.1
++     *
++     * Don't use LOG_nnn constants as those have a bit-shift
++     * applied for use with syslog()  API, while journald
++     * needs the raw value
++     */
++    journalAddInt(&state, "SYSLOG_FACILITY", 3);
+     journalAddString(&state, "LIBVIRT_SOURCE", source->name);
+     if (filename)
+         journalAddString(&state, "CODE_FILE", filename);
+-- 
+2.34.1
+

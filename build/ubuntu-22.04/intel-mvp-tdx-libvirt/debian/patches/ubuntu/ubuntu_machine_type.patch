@@ -1,0 +1,14 @@
+Description: Extend libvirt checks for ubuntu machine types
+Author: Felix Geyer <debfx@ubuntu.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1379346
+Last-Update: 2015-11-24
+--- a/src/qemu/qemu_domain.c
++++ b/src/qemu/qemu_domain.c
+@@ -10097,6 +10097,7 @@ qemuDomainMachineIsI440FX(const char *ma
+         STRPREFIX(machine, "pc-0.") ||
+         STRPREFIX(machine, "pc-1.") ||
+         STRPREFIX(machine, "pc-i440fx-") ||
++        STREQ(machine, "ubuntu") ||
+         STRPREFIX(machine, "rhel")) {
+         return true;
+     }

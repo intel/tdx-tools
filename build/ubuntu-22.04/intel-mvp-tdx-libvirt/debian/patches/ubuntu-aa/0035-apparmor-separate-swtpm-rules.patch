@@ -1,0 +1,35 @@
+Description: Update libvirt and qemu apparmor profiles to allow swtpm to use its own profile
+Author: Lena Voytek <lena.voytek@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/swtpm/+bug/1968187
+Last-Update: 2022-04-12
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/src/security/apparmor/libvirt-qemu
++++ b/src/security/apparmor/libvirt-qemu
+@@ -184,7 +184,7 @@
+   audit deny /{var/,}run/qemu/*/*.so w,
+ 
+   # swtpm
+-  /{usr/,}bin/swtpm rmix,
++  /{usr/,}bin/swtpm rmpix,
+   /usr/{lib,lib64}/libswtpm_libtpms.so mr,
+   /usr/lib/@{multiarch}/libswtpm_libtpms.so mr,
+ 
+@@ -230,6 +230,7 @@
+   unix (send, receive) type=stream addr=none peer=(label=libvirtd),
+   unix (send, receive) type=stream addr=none peer=(label=/usr/sbin/libvirtd),
+   unix (send, receive) type=stream addr=none peer=(label=virtqemud),
++  unix (send, receive) type=stream addr=none peer=(label=swtpm),
+ 
+   # allow access to charm-specific ceph config (LP: #1403648).
+   # No more silencing spurious denials as it can more critically hide other issues (LP: #1719579)
+--- a/src/security/apparmor/usr.sbin.libvirtd.in
++++ b/src/security/apparmor/usr.sbin.libvirtd.in
+@@ -58,6 +58,7 @@
+   ptrace (read,trace) peer=dnsmasq,
+   ptrace (read,trace) peer=/usr/sbin/dnsmasq,
+   ptrace (read,trace) peer=libvirt-*,
++  ptrace (read,trace) peer=swtpm,
+ 
+   signal (send) peer=dnsmasq,
+   signal (send) peer=/usr/sbin/dnsmasq,

@@ -1,0 +1,5 @@
+When reporting issues regarding libvirt and libvirtd please make sure you at
+least include the relevant log parts and your vm configuration.
+
+https://wiki.debian.org/libvirt/Debugging has more information on howto provide
+debugging information for the virt-* tools.

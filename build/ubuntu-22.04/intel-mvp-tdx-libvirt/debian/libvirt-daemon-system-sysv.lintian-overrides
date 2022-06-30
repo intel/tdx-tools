@@ -1,0 +1,10 @@
+# The expected options are all implemented - just not in a way that Lintian
+# is capable of recognizing
+libvirt-daemon-system-sysv: init.d-script-does-not-implement-required-option etc/init.d/libvirt-guests *
+libvirt-daemon-system-sysv: init.d-script-does-not-implement-status-option etc/init.d/libvirt-guests
+libvirt-daemon-system-sysv: init.d-script-does-not-source-init-functions etc/init.d/libvirt-guests
+libvirt-daemon-system-sysv: missing-systemd-service-for-init.d-script
+# Lintian would like an explicit Pre-Depends on init-system-helpers (>= 1.54~)
+# to be declared, but we already know that any version of Debian we might want
+# to backport libvirt to has a newer version than that
+libvirt-daemon-system-sysv: skip-systemd-native-flag-missing-pre-depends *

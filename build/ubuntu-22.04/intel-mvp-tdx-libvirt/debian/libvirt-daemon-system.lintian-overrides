@@ -1,0 +1,5 @@
+# SysV init support is implemented in the libvirt-daemon-system-sysv package
+libvirt-daemon-system: package-supports-alternative-init-but-no-init.d-script lib/systemd/system/libvirt-guests.service
+libvirt-daemon-system: package-supports-alternative-init-but-no-init.d-script lib/systemd/system/libvirtd.service
+libvirt-daemon-system: package-supports-alternative-init-but-no-init.d-script lib/systemd/system/virtlockd.service
+libvirt-daemon-system: package-supports-alternative-init-but-no-init.d-script lib/systemd/system/virtlogd.service

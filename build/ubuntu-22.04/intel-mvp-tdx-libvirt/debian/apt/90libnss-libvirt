@@ -1,0 +1,2 @@
+// the nss module (once enabled) will make apt call getdents (LP: #1732030)
+apt::sandbox::seccomp::allow { "getdents" };

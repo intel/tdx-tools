@@ -1,0 +1,64 @@
+From: =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Date: Tue, 26 Jun 2012 09:30:39 +0200
+Subject: Debianize systemd service files
+
+Forwarded: not-needed
+---
+ src/locking/virtlockd.service.in | 2 +-
+ src/logging/virtlogd.service.in  | 2 +-
+ src/remote/libvirtd.service.in   | 2 +-
+ tools/libvirt-guests.service.in  | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/locking/virtlockd.service.in b/src/locking/virtlockd.service.in
+index 4a6fab0..12aebde 100644
+--- a/src/locking/virtlockd.service.in
++++ b/src/locking/virtlockd.service.in
+@@ -7,7 +7,7 @@ Documentation=man:virtlockd(8)
+ Documentation=https://libvirt.org
+ 
+ [Service]
+-EnvironmentFile=-@sysconfdir@/sysconfig/virtlockd
++EnvironmentFile=-@sysconfdir@/default/virtlockd
+ ExecStart=@sbindir@/virtlockd $VIRTLOCKD_ARGS
+ ExecReload=/bin/kill -USR1 $MAINPID
+ # Losing the locks is a really bad thing that will
+diff --git a/src/logging/virtlogd.service.in b/src/logging/virtlogd.service.in
+index 8ab5478..dd25c7c 100644
+--- a/src/logging/virtlogd.service.in
++++ b/src/logging/virtlogd.service.in
+@@ -7,7 +7,7 @@ Documentation=man:virtlogd(8)
+ Documentation=https://libvirt.org
+ 
+ [Service]
+-EnvironmentFile=-@sysconfdir@/sysconfig/virtlogd
++EnvironmentFile=-@sysconfdir@/default/virtlogd
+ ExecStart=@sbindir@/virtlogd $VIRTLOGD_ARGS
+ ExecReload=/bin/kill -USR1 $MAINPID
+ # Losing the logs is a really bad thing that will
+diff --git a/src/remote/libvirtd.service.in b/src/remote/libvirtd.service.in
+index cc0d4e3..300610e 100644
+--- a/src/remote/libvirtd.service.in
++++ b/src/remote/libvirtd.service.in
+@@ -28,7 +28,7 @@ Documentation=https://libvirt.org
+ 
+ [Service]
+ Type=notify
+-EnvironmentFile=-@sysconfdir@/sysconfig/libvirtd
++EnvironmentFile=-@sysconfdir@/default/libvirtd
+ ExecStart=@sbindir@/libvirtd $LIBVIRTD_ARGS
+ ExecReload=/bin/kill -HUP $MAINPID
+ KillMode=process
+diff --git a/tools/libvirt-guests.service.in b/tools/libvirt-guests.service.in
+index 10c6640..e858be5 100644
+--- a/tools/libvirt-guests.service.in
++++ b/tools/libvirt-guests.service.in
+@@ -10,7 +10,7 @@ Documentation=man:libvirtd(8)
+ Documentation=https://libvirt.org
+ 
+ [Service]
+-EnvironmentFile=-@sysconfdir@/sysconfig/libvirt-guests
++EnvironmentFile=-@sysconfdir@/default/libvirt-guests
+ # Hack just call traditional service until we factor
+ # out the code
+ ExecStart=@libexecdir@/libvirt-guests.sh start

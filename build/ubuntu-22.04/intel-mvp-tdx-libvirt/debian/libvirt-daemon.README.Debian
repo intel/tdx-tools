@@ -1,0 +1,178 @@
+Xen
+===
+Libvirt uses libxl to manage xen domains. In order to migrate your
+configuration from a xend based setup use:
+
+    virsh define <(virsh domxml-from-native xen-xm /etc/xen/yourxendomain.cfg)
+
+For some more details see #783901.
+
+Debugging
+=========
+Use LIBVIRT_DEBUG=1 to enable libvirt's debugging output, e.g.:
+
+LIBVIRT_DEBUG=1
+export LIBVIRT_DEBUG
+virt-manager
+
+The default NAT network
+=======================
+To ease network configuration libvirt defines a NATed network named "default".
+VMs using this network end up in 192.168.122.1/24 and DHCP is provided to them
+via dnsmasq. This network is not automatically started. To start it use:
+
+ virsh net-start default
+
+To make the default network start automatically use:
+
+ virsh net-autostart default
+
+In order for things to work this way you need to have the recommended packages
+dnsmasq-base, bridge-utils and iptables installed.
+
+You don't need the package dnsmasq. However, if you install it, Debian's
+default dnsmasq needs to be adjusted slightly to interoperate with libvirtd:
+
+cat <<EOF >/etc/dnsmasq.d/00_libvirtd.conf
+# only bind to loopback by default
+interface=lo
+bind-interfaces
+EOF
+
+This makes dnsmasq only bind to the loopback interface by default so libvirtd
+can handle the virtual bridges.
+
+Access Control
+==============
+Access to the libvirt socket is controlled by membership in the "libvirtd"
+group.
+If you want to manage VMs as non root you need to add a user to that group.
+
+QEMU/KVM: Dropping Capabilties
+==============================
+Network interfaces of type "ethernet" use a script like /etc/qemu-ifup to set up
+the network device. In order to make this work you need to set
+"clear_emulator_capabilities" to "0" in /etc/libvirt/qemu.conf since you need
+CAP_NET_ADMIN.
+This used to be the default prior to 0.8.1 in the Debian package.
+
+SSH connections to the server
+=============================
+
+If you want to connect to the libvirt server via SSH, you need to install
+netcat-openbsd on the server and configure the nc alternative to use it. This
+is done automatically when netcat-openbsd is installed if you do not have
+previously modified the nc alternative. Please see the following bug reports
+for a complete explanation:
+
+  <https://bugs.debian.org/453627>
+  <https://bugs.debian.org/614291>
+
+Libvirt CPU models and microcode updates
+========================================
+CPU microcode updates (e.g. via the intel-microcode package) might change the
+available CPU flags. One example is version 3.20140913.1 of the intel-microcode
+removing TSX-NI which results in the kernel no longer reporting the *hle* flag.
+
+In this case if you hard coded the CPU model in your virtual machine
+configuration via:
+
+   <cpu mode='custom' match='exact'>
+     <model fallback='forbid'>Haswell</model>
+     <vendor>Intel</vendor>
+     ...
+   </cpu>
+
+and update the CPU microcode the VM might fail to start with errors like
+
+  error: Failed to start domain foo
+  error: unsupported configuration: guest and host CPU are not compatible: Host CPU does not provide required features: hle
+
+since libvirt doesn't differentiate between microcode versions. It is therefore
+recommended to copy over the needed CPU flags instead of hard coding the CPU
+model. See
+
+  <https://www.redhat.com/archives/libvir-list/2014-December/msg00950.html>
+
+for further details.
+
+ -- Guido Günther <agx@sigxcpu.org>  Wen, 24 Dec 2014 09:55:41 +0200
+
+AppArmor Profile
+================
+Libvirt now contains AppArmor integration when using KVM or QEMU using
+libvirt's sVirt infrastructure. Libvirtd can be configured to launch virtual
+machines that are confined by uniquely restrictive AppArmor profiles. This
+feature significantly improves virtualization in Ubuntu by providing user-space
+host protection as well as guest isolation.
+
+In the sVirt model, if a profile is loaded for the libvirtd daemon, then each
+qemu:///system QEMU virtual machine will have a profile created for it when
+the virtual machine is started if one does not already exist. This generated
+profile is based on a template file and uses a profile name based on the UUID
+of the QEMU virtual machine and contains rules allowing access to only the
+files it needs to run, such as its disks, pid file and log files. Just before
+the QEMU virtual machine is started, the libvirtd daemon will change into this
+unique profile, preventing the QEMU process from accessing any file resources
+that are present in another QEMU process or the host machine.
+
+The AppArmor sVirt implementation is flexible in that it allows a user to
+customize the template file in /etc/apparmor.d/libvirt/TEMPLATE for
+site-specific access for all newly created QEMU virtual machines. When a
+new profile is generated, two files are created:
+
+ /etc/apparmor.d/libvirt/libvirt-<uuid>
+ /etc/apparmor.d/libvirt/libvirt-<uuid>.files
+
+The former can be fine-tuned by the administrator to allow custom access for
+this particular QEMU virtual machine, and the latter will be updated
+appropriately when required file access changes, such as when a disk is added.
+This flexibility allows for situations such as having one virtual machine in
+complain mode with all others in enforce mode.
+
+Profiles for /usr/sbin/libvirtd, /usr/lib/libvirt/virt-aa-helper (a helper
+program which the libvirtd daemon uses instead of manipulating AppArmor
+directly), and /etc/apparmor.d/abstractions/libvirt-qemu are used to configure
+AppArmor confinement with sVirt. Administrators of libvirt in production
+environments are encouraged to review these files (especially 'libvirt-qemu')
+to ensure that only the access required is given to the virtual machines.
+
+If the sVirt security model is active, then the node capabilities XML will
+include its details. If a virtual machine is currently protected by the
+security model, then the guest XML will include its assigned profile name. If
+enabled at compile time, the sVirt security model will be activated if AppArmor
+is available on the host OS and a profile for the libvirtd daemon is loaded
+when libvirtd is started. To disable sVirt, and revert to the basic level of
+AppArmor protection (host protection only), the /etc/libvirt/qemu.conf file can
+be used to change the setting to security_driver="none". Users may also
+disable AppArmor integration through AppArmor itself by performing:
+
+$ sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.libvirtd
+$ sudo ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/usr.sbin.libvirtd
+
+If your system uses AppArmor, please note that the shipped profile works with
+the default installation, and changes in your configuration may require changes
+to the installed apparmor profile. Before filing a bug against this software,
+please see https://wiki.ubuntu.com/DebuggingApparmor before filing a bug
+against this software.
+
+qemu:///system
+--------------
+Adding users to the libvirtd group effectively grants them root access. In
+Ubuntu, users in the sudo group (who already have 'sudo' access) are added to
+this group automatically.
+
+Virtual machines started from qemu:///system may run with or without root
+privileges. As discussed above, in Ubuntu Qemu/KVM virtual machines are fully
+isolated and confined by the AppArmor security driver. Users can adjust this
+/etc/libvirt/qemu.conf so that virtual machines started under qemu:///system
+run as a non-privileged user (new in libvirt 0.7). The 'libvirt-qemu' user and
+'kvm' group are configured for this purpose. In Ubuntu, libvirt runs virtual
+machines with non-root privileges as well as fully confined by AppArmor.
+
+While the current non-root implementation does reduce the privileges of virtual
+machines running under qemu:///system, continuing to use a MAC system such as
+AppArmor is important because without the MAC system all VMs will still run
+under the same user and there is no guest isolation. Additionally, if each VM
+ran under its own user, an attacker could potentially break out of the VM and
+have unconfined user access to the host machine.
