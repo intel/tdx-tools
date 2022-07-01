@@ -1,22 +1,42 @@
 #!/bin/bash
 
 CURR_DIR=$(pwd)
-REQUIRED_PACKAGES=(
+
+REQUIRED_PACKAGES_CENTOS=(
   python3-libvirt
   libvirt-devel
   python36-devel
   python3-pip
 )
 
+REQUIRED_PACKAGES_UBUNTU=(
+  python3-libvirt
+  libvirt-dev
+  python3-dev
+  python3-pip
+)
+
 # Check whether required packages already been installed.
-for package in "${REQUIRED_PACKAGES[@]}"; do
-  dnf list installed | grep "$package" > /dev/null 2>&1
-  ret=$?
-  if [ ! $ret -eq 0 ]; then
-    echo "Please install package $package via dnf."
-    return 1
-  fi
-done
+DISTRO=$(grep -w 'NAME' /etc/os-release)
+if [[ "$DISTRO" =~ .*"Ubuntu".* ]]; then
+  for package in "${REQUIRED_PACKAGES_UBUNTU[@]}"; do
+    apt list --installed | grep "$package" > /dev/null 2>&1
+    ret=$?
+    if [ ! $ret -eq 0 ]; then
+      echo "Please install package $package."
+      return 1
+    fi
+  done
+else
+  for package in "${REQUIRED_PACKAGES_CENTOS[@]}"; do
+    dnf list installed | grep "$package" > /dev/null 2>&1
+    ret=$?
+    if [ ! $ret -eq 0 ]; then
+      echo "Please install package $package."
+      return 1
+    fi
+  done
+fi
 
 # Setup the python virtualenv
 if [[ ! -d ${CURR_DIR}/venv ]]; then
@@ -52,19 +72,19 @@ fi
 
 # Check whether virt-customize tool was installed
 if ! command -v virt-customize &>/dev/null; then
-  echo WARNING! Please \"dnf install libguestfs-tools\"
+  echo WARNING! Please install libguestfs-tools
   return 1
 fi
 
 # Check whether libvirt service started
 if ! systemctl --all --type service | grep -q "libvirtd"; then
-  echo WARNING! Please \"dnf install intel-mvp-tdx-libvirt\" and \"systemctl start libvirtd\"
+  echo WARNING! Please install intel-mvp-tdx-libvirt and \"systemctl start libvirtd\"
   return 1
 fi
 
 # Check whether virtual bridge virbr0 was created
 if ! ip a | grep -q virbr0; then
-  echo WARNING! Please enable virbr0 via \"virsh net-start default\", you may need remove firewall via \"dnf remove firewalld\"
+  echo WARNING! Please enable virbr0 via \"virsh net-start default\", you may need remove firewall via \"dnf remove firewalld\" or \"apt remove ufw\"
   return 1
 fi
 
@@ -74,3 +94,8 @@ if [[ ! $(id -nG "$USER") == *"libvirt"* ]]; then
   return 1
 fi
 
+#
+# Start from qemu 6.2's commit: https://github.com/qemu/qemu/commit/5dacda5167560b3af8eadbce5814f60ba44b467e.
+# LIBGUESTFS_BACKEND=direct is required
+#
+export LIBGUESTFS_BACKEND=direct

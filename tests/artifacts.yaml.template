@@ -43,6 +43,14 @@ latest-guest-kernel-rhel:
   source: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz-rhel8.5
   sha256sum: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz-rhel8.5.sha256sum
 
+latest-guest-image-ubuntu:
+  source: http://<your artifactory webserver for tdx guest image>/td-guest-ubuntu-22.04.qcow2.tar.xz
+  sha256sum: http://<your artifactory webserver for tdx guest image>/td-guest-ubuntu-22.04.qcow2.tar.xz.sha256sum
+
+latest-guest-kernel-ubuntu:
+  source: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz-jammy
+  sha256sum: http://<your artifactory webserver for tdx guest kernel binary>/vmlinuz-jammy.sha256sum
+
 # If guest image and guest kernel are at local, use below format to point to your image and kernel. Take rhel image and kernel as an example:
 
 latest-guest-image-rhel:

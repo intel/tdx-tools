@@ -12,8 +12,16 @@ running. It uses `CentOS Stream 8` as example distro.
 
 - Install required packages:
 
+  If your host distro is RHEL 8.5 or CentOS Stream 8:
+
     ```
-    sudo sudo dnf install python3-virtualenv python3-libvirt-6.0.0 libguestfs-devel libvirt-devel python3-devel
+    sudo dnf install python3-virtualenv python3-libvirt-6.0.0 libguestfs-devel libvirt-devel python3-devel
+    ```
+
+  If your host distro is Ubuntu 22.04:
+
+    ```
+    sudo apt install python3-virtualenv python3-libvirt libguestfs-dev libvirt-dev python3-dev
     ```
 
 - Make sure libvirt service is started. If not, start libvirt service.
@@ -77,9 +85,9 @@ running. It uses `CentOS Stream 8` as example distro.
   - The guest image has docker/podman installed.
   - The guest image contains docker image redis:latest.
 
-- User can specify guest image OS with `-g`. Currently only `rhel` and `centosstream`
-is supported. RHEL guest image is used by default if `-g` is not specified:
+- User can specify guest image OS with `-g`. Currently it supports `rhel`, `centosstream`
+and `ubuntu`. RHEL guest image is used by default if `-g` is not specified:
 
     ```
     sudo ./run.sh -g centosstream -s all
-    ```  
+    ```

@@ -31,7 +31,7 @@ process_args() {
         c) CASES+=("$OPTARG");;
         k) KEEP_ISSUE_VM=true;;
         g) GUEST="$OPTARG"
-            [[ ! $GUEST =~ rhel|centosstream ]] && {
+            [[ ! $GUEST =~ rhel|centosstream|ubuntu ]] && {
                echo "Incorrect guest name $GUEST provided."
                exit 1
            }
@@ -106,4 +106,3 @@ if [[ $SUITE != "nosuite" ]]; then
 else
     run_cases
 fi
-
