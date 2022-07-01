@@ -33,6 +33,7 @@ prepare() {
     cp ${CURR_DIR}/debian/ ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION} -fr
 
     sudo apt update
+    sudo apt install systemd -y
     sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai apt install tzdata -y
 }
 

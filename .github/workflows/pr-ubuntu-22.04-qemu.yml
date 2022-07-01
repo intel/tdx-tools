@@ -24,6 +24,5 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           sudo apt install --no-install-recommends --yes build-essential \
             fakeroot devscripts wget git equivs liblz4-tool sudo python-is-python3 pkg-config unzip
-          sudo apt -y install libcurl3-gnutls libudev1
           cd build/ubuntu-22.04/intel-mvp-spr-qemu/
           ./build.sh
