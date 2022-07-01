@@ -1,3 +1,33 @@
+linux (5.15.0-mvp9v9+6.spr) jammy; urgency=medium
+
+  * jammy/linux: 5.15.0-mvp9v9+6.spr -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 29 Jun 2022 14:46:00 +0800
+
+linux (5.15.0-mvp8v9+4.spr) jammy; urgency=medium
+
+  * jammy/linux: 5.15.0-mvp8v9+4.spr -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Thu, 28 Jun 2022 06:34:00 +0800
+
+linux (5.15.0-mvp7v9+2.spr) jammy; urgency=medium
+
+  * jammy/linux: 5.15.0-mvp7v9+2.spr -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 23 Jun 2022 12:34:00 +0800
+
+linux (5.15.0-mvp6v9+2.spr) jammy; urgency=medium
+
+  * jammy/linux: 5.15.0-mvp6v9+2.spr -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 22 Jun 2022 16:01:00 +0800
+
+linux (5.15.0-mvp5v8+8.spr) jammy; urgency=medium
+
+  * jammy/linux: 5.15.0-mvp5v8+8.spr -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 20 Jun 2022 10:43:00 +0800
+
 linux (5.15.0-mvp4v8+8.spr) jammy; urgency=medium
 
   * jammy/linux: 5.15.0-mvp4v8+8.spr -proposed tracker (LP: #1990000)

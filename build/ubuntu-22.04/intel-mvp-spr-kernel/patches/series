@@ -1,3 +1,0 @@
-0001-efi-x86-stub-fix-absolute-symbol-reference.patch
-0001-X86-VIRTEXT-Fix-false-alarm-of-vmptrst-failure-in-ra.patch
-0001-x86-MM-Use-pgprot_cc_guest-in-__ioremap_caller-for-T.patch
