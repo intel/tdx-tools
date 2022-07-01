@@ -9,7 +9,7 @@ THIS_DIR=$(dirname "$(readlink -f "$0")")
 IMG_URL=https://cloud-images.ubuntu.com/jammy/current
 CLOUD_IMG=jammy-server-cloudimg-amd64.img
 TD_IMG=td-guest-ubuntu-22.04.qcow2
-REPO_NAME="repo"
+REPO_NAME="guest_repo"
 REPO_LOCAL=${THIS_DIR}/../${REPO_NAME}
 
 if ! readlink -f ${REPO_LOCAL} ; then
