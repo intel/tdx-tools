@@ -1,14 +1,16 @@
 #!/bin/bash
 
-set -ex
-
 THIS_DIR=$(dirname "$(readlink -f "$0")")
 GUEST_REPO="guest_repo"
 HOST_REPO="host_repo"
 
-pushd $THIS_DIR
-mkdir -p $GUEST_REPO
-mkdir -p $HOST_REPO
+build_check() {
+    if [[ $(id -u) -eq 0 ]]; then
+        echo "Running the whole script as root is not recommended. virnetsockettest might be failed when building libvirt as root"
+        echo "But mk-build-deps needs sudo to install build dependecies, we should setup passwordless sudo for automation"
+	exit 1
+    fi
+}
 
 build_shim () {
     cd intel-mvp-tdx-guest-shim
@@ -22,6 +24,9 @@ build_grub () {
     ./build.sh
     cp grub-efi-amd64_*_amd64.deb grub-efi-amd64-bin_*_amd64.deb ../$GUEST_REPO/
     cd ..
+
+    # uninstall to avoid confilcts with libnvpair-dev
+    sudo apt remove grub2-build-deps-depends grub2-unsigned-build-deps-depends -y
 }
 
 build_kernel () {
@@ -55,6 +60,14 @@ build_libvirt () {
 	    libvirt-login-shell_*.deb libvirt-daemon-driver-lxc_*.deb ../$HOST_REPO/
     cd ..
 }
+
+build_check
+
+pushd "$THIS_DIR"
+mkdir -p $GUEST_REPO
+mkdir -p $HOST_REPO
+
+set -ex
 
 build_shim
 build_grub
