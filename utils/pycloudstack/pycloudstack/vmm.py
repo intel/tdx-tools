@@ -142,6 +142,7 @@ class VMMLibvirt(VMMBase):
         self._xml = self._prepare_domain_xml()
         self._ip = None
 
+
     def _prepare_domain_xml(self):
         xmlobj = VirtXml.clone(
             self._TEMPLATE[self.vminst.vmtype],
@@ -155,6 +156,31 @@ class VMMLibvirt(VMMBase):
         xmlobj.cores = self.vminst.vmspec.cores
         xmlobj.threads = self.vminst.vmspec.threads
 
+        if self.vminst.cpu_ids:
+            xmlobj.bind_cpuids(self.vminst.cpu_ids)
+            xmlobj.set_mem_numa(self.vminst.mem_numa)
+
+        if self.vminst.hugepages:
+            xmlobj.set_hugepage_params(self.vminst.hugepage_size)
+
+        if self.vminst.vsock:
+            xmlobj.set_vsock(self.vminst.vsock_cid)
+
+        self.set_cpu_params_xml(xmlobj)
+
+        if self.vminst.boot == BOOT_TYPE_GRUB:
+            xmlobj.kernel = None
+            xmlobj.cmdline = None
+        else:
+            xmlobj.kernel = self.vminst.kernel
+            xmlobj.cmdline = str(self.vminst.cmdline)
+
+        return xmlobj
+
+    def set_cpu_params_xml(self, xmlobj):
+        """
+        set specific cpu parameters in domain xml based on different vm type
+        """
         distro = DUT.get_distro()
         if "ubuntu" in distro:
             bios_legacy = BIOS_BINARY_LEGACY_UBUNTU
@@ -167,12 +193,6 @@ class VMMLibvirt(VMMBase):
         var_fullpath = os.path.join(tempfile.gettempdir(), var_filename)
         assert os.path.exists(BIOS_OVMF_VARS)
         shutil.copy(BIOS_OVMF_VARS, var_fullpath)
-
-        if self.vminst.hugepages:
-            xmlobj.set_hugepage_params(self.vminst.hugepage_size)
-
-        if self.vminst.vsock:
-            xmlobj.set_vsock(self.vminst.vsock_cid)
 
         if self.vminst.vmtype == VM_TYPE_LEGACY:
             xmlobj.loader = bios_legacy
@@ -195,15 +215,6 @@ class VMMLibvirt(VMMBase):
                     "host,-shstk,-kvm-steal-time,pmu=off,tsc-freq=1000000000")
             else:
                 xmlobj.set_cpu_params("host,-shstk,-kvm-steal-time,pmu=off")
-
-        if self.vminst.boot == BOOT_TYPE_GRUB:
-            xmlobj.kernel = None
-            xmlobj.cmdline = None
-        else:
-            xmlobj.kernel = self.vminst.kernel
-            xmlobj.cmdline = str(self.vminst.cmdline)
-
-        return xmlobj
 
     def _connect_virt(self):
         LOG.debug("Create libvirt connection")

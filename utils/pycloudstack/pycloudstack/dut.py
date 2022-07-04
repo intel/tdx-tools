@@ -3,9 +3,11 @@ Manage the DUT(Device Under Test)
 """
 import logging
 import socket
+import queue
 from contextlib import closing
 import os
 import cpuinfo
+from numa import info
 
 __author__ = 'cpio'
 
@@ -103,3 +105,22 @@ class DUT:
                 distro = fobj.read().lower().split()[0]
         assert distro is not None
         return distro
+
+    @staticmethod
+    def get_cpuids_group(vm_num, core_num):
+        """
+        get all avaible cpuids on current host machine
+        """
+        cpu_list = info.node_to_cpus(info.get_max_node())
+        cpuids_group = queue.Queue()
+        # check whether have enough available cpuids
+        assert len(cpu_list) > vm_num * (core_num + 1)
+        for i in range(vm_num):
+            cpuids = []
+            start = i
+            # extra 1 for iothreadpin
+            for _ in range(core_num + 1):
+                cpuids.append(cpu_list[start])
+                start += vm_num
+            cpuids_group.put(cpuids)
+        return cpuids_group

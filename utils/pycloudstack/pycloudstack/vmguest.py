@@ -49,7 +49,7 @@ class VMGuest:
                  cmdline=KernelCmdline(),
                  hugepages=False, hugepage_size=HUGEPAGES_2M,
                  vsock=False, vsock_cid=0,
-                 vmm_class=None):
+                 vmm_class=None, cpu_ids=None, mem_numa=True):
 
         self.vmid = vmid
         self.name = name
@@ -65,6 +65,8 @@ class VMGuest:
         self.vsock = vsock
         self.vsock_cid = vsock_cid
         self.keep = False
+        self.cpu_ids = cpu_ids
+        self.mem_numa = mem_numa
 
         # Update rootfs in kernel command line depending on distro
         if guest_distro == "ubuntu":

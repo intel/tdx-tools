@@ -601,6 +601,33 @@ class VirtXml:
             allow_multi_same_leaf=True)
         self.save()
 
+    def bind_cpuids(self, cpu_ids):
+        """
+        bind available cpuids
+        """
+        # set iothread
+        self._add_new_element(["cputune", "iothreadpin"],
+                              {"iothread": "1", "cpuset": f"{cpu_ids.pop(0)}"}, True)
+        vcpu_id = 0
+        # bind specific vcpus for vm
+        for cpu_id in cpu_ids:
+            self._add_new_element(["cputune", "vcpupin"],
+                                  {"vcpu": f"{vcpu_id}", "cpuset": f"{cpu_id}"}, True)
+            vcpu_id += 1
+        self.save()
+
+    def set_mem_numa(self, memnuma):
+        """
+        set memory numa whether local or remote. True means local numa, false means remote numa.
+        """
+        self._add_new_element(["numatune", "memory"])
+        self._set_single_element_attrib(["numatune", "memory"], "mode", "strict")
+        if memnuma:
+            self._set_single_element_attrib(["numatune", "memory"], "nodeset", "0")
+        else:
+            self._set_single_element_attrib(["numatune", "memory"], "nodeset", "1")
+        self.save()
+
     def set_epc_params(self, epc_param):
         """
         Set SGX EPC parameters, for example:
