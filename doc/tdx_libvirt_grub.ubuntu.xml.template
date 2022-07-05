@@ -1,5 +1,5 @@
 <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-  <name>td-guest</name>
+  <name>td-guest-ubuntu-22.04</name>
   <memory unit='KiB'>2097152</memory>
   <vcpu placement='static'>1</vcpu>
   <os>
@@ -7,8 +7,6 @@
     <loader type='generic'>/usr/share/qemu/OVMF_CODE.fd</loader>
     <nvram template='/usr/share/qemu/OVMF_VARS.fd'>/path/to/OVMF_VARS.fd</nvram>
     <boot dev='hd'/>
-    <kernel>/path/to/vmlinuz</kernel>
-    <cmdline>root=/dev/vda3 selinux=0 rw console=hvc0</cmdline>
   </os>
   <features>
     <acpi/>
@@ -30,10 +28,10 @@
     <topology sockets='1' cores='1' threads='1'/>
   </cpu>
   <devices>
-    <emulator>/usr/libexec/qemu-kvm</emulator>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/path/to/td-guest.qcow2'/>
+      <source file='/path/to/td-guest-ubuntu-22.04.qcow2'/>
       <target dev='vda' bus='virtio'/>
     </disk>
     <interface type="user">
