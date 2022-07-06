@@ -4,6 +4,8 @@ THIS_DIR=$(dirname "$(readlink -f "$0")")
 GUEST_REPO="guest_repo"
 HOST_REPO="host_repo"
 
+export DEBIAN_FRONTEND=noninteractive
+
 build_check() {
     if [[ $(id -u) -eq 0 ]]; then
         echo "Running the whole script as root is not recommended. virnetsockettest might be failed when building libvirt as root"
@@ -26,7 +28,7 @@ build_grub () {
     cd ..
 
     # uninstall to avoid confilcts with libnvpair-dev
-    sudo apt remove grub2-build-deps-depends grub2-unsigned-build-deps-depends -y
+    sudo apt remove grub2-build-deps-depends grub2-unsigned-build-deps-depends -y || true
 }
 
 build_kernel () {
