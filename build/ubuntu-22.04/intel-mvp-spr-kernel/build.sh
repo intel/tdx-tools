@@ -35,8 +35,6 @@ prepare() {
     cp ${CURR_DIR}/linux-5.15.0/* ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION} -fr
 
     sudo apt update
-    sudo apt install software-properties-common -y
-    sudo add-apt-repository "deb-src http://mirrors.aliyun.com/ubuntu/ jammy main multiverse universe restricted" -y -s
     sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai apt install tzdata -y
 }
 

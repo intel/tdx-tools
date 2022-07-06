@@ -117,8 +117,8 @@ $(stampdir)/stamp-install-%: MODSECKEY=$(builddir)/build-$*/certs/signing_key.pe
 $(stampdir)/stamp-install-%: MODPUBKEY=$(builddir)/build-$*/certs/signing_key.x509
 $(stampdir)/stamp-install-%: build_dir=$(builddir)/build-$*
 $(stampdir)/stamp-install-%: dkms_dir=$(call dkms_dir_prefix,$(builddir)/build-$*)
-$(stampdir)/stamp-install-%: enable_zfs = $(call custom_override,do_zfs,$*)
-$(stampdir)/stamp-install-%: enable_v4l2loopback = $(call custom_override,do_v4l2loopback,$*)
+#$(stampdir)/stamp-install-%: enable_zfs = $(call custom_override,do_zfs,$*)
+#$(stampdir)/stamp-install-%: enable_v4l2loopback = $(call custom_override,do_v4l2loopback,$*)
 $(stampdir)/stamp-install-%: dbgpkgdir_dkms = $(if $(filter true,$(skipdbg)),"",$(dbgpkgdir)/usr/lib/debug/lib/modules/$(abi_release)-$*/kernel)
 $(stampdir)/stamp-install-%: $(stampdir)/stamp-build-% $(stampdir)/stamp-install-headers
 	@echo Debug: $@ kernel_file $(kernel_file) kernfile $(kernfile) install_file $(install_file) instfile $(instfile)
