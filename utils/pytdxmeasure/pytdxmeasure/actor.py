@@ -10,7 +10,7 @@ from hashlib import sha384
 from .rtmr import RTMR
 from .tdreport import TdReport
 from .tdeventlog import TDEventLogEntry, TDEventLogType, TDEventLogSpecIdHeader
-from .tdel import TDEL
+from .ccel import CCEL
 from .binaryblob import BinaryBlob
 
 __author__ = "cpio"
@@ -36,15 +36,15 @@ class VerifyActor:
         """
         Get TD report and RTMR replayed by event log to do verification.
         """
-        # 1. Read TDEL from ACPI table at /sys/firmware/acpi/tables/TDEL
-        tdelobj = TDEL.create_from_acpi_file()
-        if tdelobj is None:
+        # 1. Read CCEL from ACPI table at /sys/firmware/acpi/tables/CCEL
+        ccelobj = CCEL.create_from_acpi_file()
+        if ccelobj is None:
             return
 
         # 2. Get the start address and length for event log area
         td_event_log_actor = TDEventLogActor(
-            tdelobj.log_area_start_address,
-            tdelobj.log_area_minimum_length)
+            ccelobj.log_area_start_address,
+            ccelobj.log_area_minimum_length)
 
         # 3. Collect event log and replay the RTMR value according to event log
         td_event_log_actor.replay()
@@ -89,17 +89,15 @@ class TDEventLogActor:
         self._event_logs = []
         self._rtmrs = {}
 
-    def _read(self, tdel_file="/sys/firmware/acpi/tables/data/TDEL"):
-        if not os.path.exists(tdel_file):
-            LOG.error("Could not find the TDEL file %s", tdel_file)
-            return None
+    def _read(self, ccel_file="/sys/firmware/acpi/tables/data/CCEL"):
+        assert os.path.exists(ccel_file), f"Could not find the CCEL file {ccel_file}"
         try:
-            with open(tdel_file, "rb") as fobj:
+            with open(ccel_file, "rb") as fobj:
                 self._data = fobj.read()
                 assert len(self._data) > 0
                 return self._data
         except (PermissionError, OSError):
-            LOG.error("Need root permission to open file %s", tdel_file)
+            LOG.error("Need root permission to open file %s", ccel_file)
             return None
 
     @staticmethod

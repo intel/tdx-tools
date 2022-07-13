@@ -8,7 +8,7 @@ import logging.config
 from .actor import VerifyActor, TDEventLogActor
 from .tdreport import TdReport
 
-from .tdel import TDEL
+from .ccel import CCEL
 
 __author__ = "cpio"
 
@@ -41,19 +41,19 @@ class TDXEventLogsCmd(TDXMeasurementCmdBase):
         Run cmd
         """
 
-        LOG.info("=> Read TDEL ACPI Table")
-        tdelobj = TDEL.create_from_acpi_file()
-        if tdelobj is None:
+        LOG.info("=> Read CCEL ACPI Table")
+        ccelobj = CCEL.create_from_acpi_file()
+        if ccelobj is None:
             return
-        tdelobj.dump()
+        ccelobj.dump()
 
-        actor = TDEventLogActor(tdelobj.log_area_start_address,
-            tdelobj.log_area_minimum_length)
+        actor = TDEventLogActor(ccelobj.log_area_start_address,
+            ccelobj.log_area_minimum_length)
 
         LOG.info("")
         LOG.info("=> Read Event Log Data - Address: 0x%X(0x%X)",
-                 tdelobj.log_area_start_address,
-                 tdelobj.log_area_minimum_length)
+                 ccelobj.log_area_start_address,
+                 ccelobj.log_area_minimum_length)
         actor.dump_td_event_logs()
 
         LOG.info("")
