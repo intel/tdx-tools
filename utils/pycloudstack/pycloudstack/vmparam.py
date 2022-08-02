@@ -86,7 +86,8 @@ class KernelCmdline:
         """
         Add a field from full string include key=value
         """
-        self._cmdline += " " + field_str
+        if not self.is_field_exists(field_str):
+            self._cmdline += " " + field_str
 
     def add_field(self, key, value=None):
         """
