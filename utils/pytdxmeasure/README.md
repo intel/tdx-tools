@@ -1,7 +1,7 @@
 ## TDX Measurement Tool
 
 The measurement tool runs within TD guest to get RTMR value from TDREPORT via
-Linux attestion driver, and gets the full TD event log from TDEL ACPI table.
+Linux attestion driver, and gets the full TD event log from CCEL ACPI table.
 Then it uses the TD event log to verify the RTMR value or change.
 
 CSP or tenant developer could use it to analyze and debug the TDX measurement
@@ -11,7 +11,7 @@ before providing the TDX guest VM.
 
 ### Prerequisites
 
-The Log Area Start Address (LASA) is from ACPI TDEL table. Please see [GHCI specification](https://software.intel.com/content/dam/develop/external/us/en/documents/intel-tdx-guest-hypervisor-communication-interface.pdf).
+The Log Area Start Address (LASA) is from ACPI CCEL table. Please see [GHCI specification](https://cdrdv2.intel.com/v1/dl/getContent/726790).
 
 ### Run
 
