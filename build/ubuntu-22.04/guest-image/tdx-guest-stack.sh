@@ -30,7 +30,7 @@ fi
 cp $CLOUD_IMG $TD_IMG
 
 virt-customize -a ${TD_IMG} --root-password password:123456
-qemu-img resize ${TD_IMG} +5G
+qemu-img resize ${TD_IMG} +20G
 
 ARGS=" -a ${TD_IMG} -x"
 
@@ -43,7 +43,9 @@ ARGS+=" --edit '/etc/ssh/sshd_config:s/PasswordAuthentication no/PasswordAuthent
 ARGS+=" --run-command 'growpart /dev/sda 1'"
 ARGS+=" --run-command 'resize2fs /dev/sda1'"
 ARGS+=" --run-command 'ssh-keygen -A'"
+ARGS+=" --install wireless-regdb"
 ARGS+=" --run-command 'dpkg -i /srv/${REPO_NAME}/linux-*.deb'"
+ARGS+=" --run-command 'systemctl mask pollinate.service'"
 
 echo "${ARGS}"
 eval virt-customize "${ARGS}"
