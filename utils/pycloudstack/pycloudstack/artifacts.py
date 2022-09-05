@@ -57,7 +57,8 @@ class DownloadExecutor:
         LOG.info("Download: %s => %s ...", self._url, self._filepath)
 
         response = requests.get(self._url, stream=True,
-                                verify=ssl.get_default_verify_paths().openssl_cafile)
+                                verify=ssl.get_default_verify_paths().openssl_cafile,
+                                timeout=10)
         response.raise_for_status()
         try:
             with open(self._filepath, "wb") as fobj:
