@@ -57,7 +57,7 @@ Regarding the use of various digital certificates, you can refer to the followin
 In this step, we need to enroll the generated key into TDVF using [tdvfkeyenroll](https://github.com/intel/tdx-tools/tree/main/utils/tdvfkeyenroll).
 
 ```sh
-cd utils/tdvf-key-enroll
+cd utils/tdvfkeyenroll
 make
 make install
 ```
@@ -65,7 +65,7 @@ make install
 Then execute the following command. Please replace `guid` with content of `myGUID.txt` generated above.
 
 ```
-tdvf-key-enroll -fd <absolute-path-to-OVMF_VARS.fd> \
+tdvfkeyenroll -fd <absolute-path-to-OVMF_VARS.fd> \
 -pk <pk-key-guid> <absolute-path-to-PK.cer> \
 -kek <kek-guid> <absolute-path-to-KEK.cer> \
 -db <db-key-guid> <absolute-path-to-DB.cer>
@@ -141,12 +141,7 @@ In this step, we will use these files:
 
 Next we can start the TD virtual machine. We have two ways: QEMU and Libvirt.
 
-By QEMU, we can modify [start-qemu.sh](https://github.com/intel/tdx-tools/blob/main/start-qemu.sh):
-
-+ confidential-guest-support=tdx ==> confidential-guest-support=lsec0
-+ tdx-guest,id=tdx ==> tdx-guest,id=lsec0
-
-After that, boot vm via
+By QEMU, we can use [start-qemu.sh](https://github.com/intel/tdx-tools/blob/main/start-qemu.sh):
 
 ```sh
 ./start-qemu.sh -i /path/to/td-guest.qcow2 -b grub -a /path/to/OVMF_VARS.sb.fd
@@ -157,7 +152,7 @@ as follows before running the usual virsh commands.
 
 + Add secure='yes': `<loader type='generic' secure='yes'>/usr/share/qemu/OVMF_CODE.fd</loader>`
 + Use OVMF_VARS.sb.fd: `<nvram>/path/to/OVMF_VARS.sb.fd</nvram>`
-+ Use the signed image: `<source file='/path/to/QCOW2-image'/>`
++ Use the signed image: `<source file='/path/to/td-guest.qcow2'/>`
 
 ### Verification
 

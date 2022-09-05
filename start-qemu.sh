@@ -178,9 +178,9 @@ process_args() {
             *) echo "Unknown disk image's format"; exit 1 ;;
     esac
 
-    # Change kernel cmdline if ROOT_PARTITION is not the default /dev/vda3
+    # Guest rootfs changes
     if [[ ${ROOT_PARTITION} != "/dev/vda3" ]]; then
-        KERNEL_CMD_NON_TD="root=${ROOT_PARTITION} rw console=hvc0"
+        KERNEL_CMD_NON_TD=${KERNEL_CMD_NON_TD//"/dev/vda3"/${ROOT_PARTITION}}
         KERNEL_CMD_TD="${KERNEL_CMD_NON_TD}"
     fi
 

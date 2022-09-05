@@ -12,7 +12,7 @@ TD_IMG=td-guest-ubuntu-22.04.qcow2
 REPO_NAME="guest_repo"
 REPO_LOCAL=${THIS_DIR}/../${REPO_NAME}
 
-if ! readlink -f ${REPO_LOCAL} ; then
+if [[ ! -d ${REPO_LOCAL} ]] ; then
     echo "${REPO_LOCAL} does not exist, please build it via build-repo.sh"
     exit 1
 fi
@@ -43,7 +43,6 @@ ARGS+=" --edit '/etc/ssh/sshd_config:s/PasswordAuthentication no/PasswordAuthent
 ARGS+=" --run-command 'growpart /dev/sda 1'"
 ARGS+=" --run-command 'resize2fs /dev/sda1'"
 ARGS+=" --run-command 'ssh-keygen -A'"
-ARGS+=" --install wireless-regdb"
 ARGS+=" --run-command 'dpkg -i /srv/${REPO_NAME}/linux-*.deb'"
 ARGS+=" --run-command 'systemctl mask pollinate.service'"
 
