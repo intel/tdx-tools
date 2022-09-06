@@ -26,14 +26,14 @@ jobs:
           python-version: 3.8
       - name: Install dependencies
         run: |
-          sudo apt-get install libvirt-dev
-          python -m pip install --upgrade pip
-          pip install pylint
-          pip install -r utils/pycloudstack/requirements.txt
-          pip install -r utils/pytdxmeasure/requirements.txt
-          pip install -r tests/requirements.txt
+          sudo apt-get install libvirt-dev python3-bpfcc
+          pip3 install --upgrade pip
+          pip3 install pylint
+          pip3 install -r utils/pycloudstack/requirements.txt
+          pip3 install -r utils/pytdxmeasure/requirements.txt
+          pip3 install -r tests/requirements.txt
       - name: Analysing the code with pylint
         run: |
           set -ex
-          export PYTHONPATH=$PWD/utils/pycloudstack:$PWD/utils/pytdxmeasure
-          find . -path ./build -prune -o -name *.py -print0 | xargs -n 1 -0 pylint
+          export PYTHONPATH=$PWD/utils/pycloudstack:$PWD/utils/pytdxmeasure:/lib/python3/dist-packages/
+          find . -path ./build -prune -o -name *.py -print0 | xargs -n 1 -0 python3 -m pylint
