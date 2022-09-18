@@ -1,0 +1,37 @@
+[project]
+name = "pycloustack"
+version = "0.0.6"
+authors = [
+  { name="Lu Ken", email="ken.lu@intel.com" },
+  { name="Hao, Ruomeng", email="ruomeng.hao@intel.com" },
+]
+description = "Python package to manage hypervisor/docker/kubernetes stacks"
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "requests>2.22.0",
+    "py-cpuinfo>=7.0.0",
+    "pyyaml>=5.4.1",
+    "libvirt-python",
+    "wheel",
+    "docker",
+    "py-libnuma"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/intel/tdx-tools"
+"Bug Tracker" = "https://github.com/intel/tdx-tools/issues"
+
+[tool.setuptools.packages.find]
+where=["."]
+include=["pycloudstack"]
+
+[tool.setuptools.package-data]
+"*" = ['templates/*.xml']
