@@ -7,7 +7,7 @@ Then it uses the TD event log to verify the RTMR value or change.
 CSP or tenant developer could use it to analyze and debug the TDX measurement
 before providing the TDX guest VM.
 
-![](/doc/tdx_measurement.png)
+![](https://github.com/intel/tdx-tools/blob/main/doc/tdx_measurement.png)
 
 ### Prerequisites
 
