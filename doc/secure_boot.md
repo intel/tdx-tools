@@ -54,18 +54,16 @@ Regarding the use of various digital certificates, you can refer to the followin
 
 ### Enrolling Keys to TDVF
 
-In this step, we need to enroll the generated key into TDVF using [tdvfkeyenroll](https://github.com/intel/tdx-tools/tree/main/utils/tdvfkeyenroll).
+In this step, we need to enroll the generated keys into TDVF using [ovmfkeyenroll](https://pypi.org/project/ovmfkeyenroll/).
 
 ```sh
-cd utils/tdvfkeyenroll
-make
-make install
+python3 -m pip install ovmfkeyenroll
 ```
 
 Then execute the following command. Please replace `guid` with content of `myGUID.txt` generated above.
 
 ```
-tdvfkeyenroll -fd <absolute-path-to-OVMF_VARS.fd> \
+ovmfkeyenroll -fd <absolute-path-to-OVMF_VARS.fd> \
 -pk <pk-key-guid> <absolute-path-to-PK.cer> \
 -kek <kek-guid> <absolute-path-to-KEK.cer> \
 -db <db-key-guid> <absolute-path-to-DB.cer>

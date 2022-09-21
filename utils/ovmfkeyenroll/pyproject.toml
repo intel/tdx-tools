@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ovmfkeyenroll"
+version = "1.1.0"
+authors = [
+  { name="Xu, Min", email="min.m.xu@intel.com" },
+  { name="Feng, Jialei", email="jialei.feng@intel.com" },
+]
+readme = "README.md"
+description = "OVMF PK, KEK and DB Keys Enrolling"
+requires-python = ">=3.6.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Software Development :: Testing",
+    "Topic :: System :: Boot",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/intel/tdx-tools/tree/main/utils/ovmfkeyenroll"
+"Bug Tracker" = "https://github.com/intel/tdx-tools/issues"
+
+[project.scripts]
+ovmfkeyenroll = "ovmfkeyenroll.secure_boot:main"
