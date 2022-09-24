@@ -5,9 +5,8 @@
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_VERSION="6.2.0"
 DOWNSTREAM_GIT_URI="https://github.com/intel/qemu-dcp.git"
-
-DOWNSTREAM_TAG="SPR-BKC-QEMU-v2.5"
-PACKAGE="mvp-spr-qemu"
+DOWNSTREAM_TAG="c8302707f6e89c955eae0883bfd97680202b8db2"
+PACKAGE="mvp-tdx-qemu"
 
 if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
     echo "Please build the packages in Ubuntu"
@@ -21,9 +20,9 @@ get_source() {
 	# add safe directory for running in docker
 	git config --global --add safe.directory /github/workspace
 	git config --global --add safe.directory /repo
-        git clone --branch ${DOWNSTREAM_TAG} --single-branch --depth 1 \
-            ${DOWNSTREAM_GIT_URI} ${PACKAGE}-${UPSTREAM_VERSION}
+        git clone ${DOWNSTREAM_GIT_URI} ${PACKAGE}-${UPSTREAM_VERSION}
         cd ${PACKAGE}-${UPSTREAM_VERSION}
+        git checkout ${DOWNSTREAM_TAG}
         git submodule update --init
     fi
 }

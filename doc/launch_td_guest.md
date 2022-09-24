@@ -10,7 +10,7 @@ rm -rf extracted
 ```
 Steps for Red Hat kernels:
 ```
-rpm2cpio build/rhel-8/repo/guest/x86_64/intel-mvp-spr-kernel-guest-core* | cpio -id
+rpm2cpio build/rhel-8/repo/guest/x86_64/intel-mvp-tdx-kernel-guest-core* | cpio -id
 cp lib/modules/*/vmlinuz .
 rm -rf usr/ lib/
 ```

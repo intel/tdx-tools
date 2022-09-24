@@ -5,19 +5,20 @@ set -ex
 CURR_DIR="$(dirname "$(readlink -f "$0")")"
 
 DOWNSTREAM_GIT_URI="https://github.com/intel/qemu-dcp.git"
-DOWNSTREAM_TAG="SPR-BKC-QEMU-v2.5"
-DOWNSTREAM_TARBALL="qemu-${DOWNSTREAM_TAG}.tar.gz"
+DOWNSTREAM_TAG="c8302707f6e89c955eae0883bfd97680202b8db2"
+DOWNSTREAM_TARBALL="tdx-qemu.tar.gz"
 
-SPEC_FILE="${CURR_DIR}/spr-qemu.spec"
+SPEC_FILE="${CURR_DIR}/tdx-qemu.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
 
 create_tarball() {
     cd "${CURR_DIR}"
     if [[ ! -d qemu ]]; then
-        git clone -b ${DOWNSTREAM_TAG} --single-branch ${DOWNSTREAM_GIT_URI} qemu
+        git clone ${DOWNSTREAM_GIT_URI} qemu
     fi
     if [[ ! -f "${RPMBUILD_DIR}"/SOURCES/${DOWNSTREAM_TARBALL} ]]; then
         pushd qemu
+        git checkout ${DOWNSTREAM_TAG}
         git submodule update --init
         rm -rf .git/
         popd

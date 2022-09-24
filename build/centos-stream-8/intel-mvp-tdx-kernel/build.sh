@@ -5,9 +5,9 @@ set -ex
 CURR_DIR="$(dirname "$(readlink -f "$0")")"
 
 DOWNSTREAM_GIT_URI="https://github.com/intel/linux-kernel-dcp.git"
-DOWNSTREAM_TAG="SPR-BKC-PC-v8.8"
+DOWNSTREAM_TAG="710bb135da47ea71464198b9017e1c3f7e71f645"
 
-SPEC_FILE="${CURR_DIR}/spr-kernel.spec"
+SPEC_FILE="${CURR_DIR}/tdx-kernel.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
 
 # Workaround to empty files not being downloadable
@@ -25,12 +25,15 @@ EMPTY_SOURCES=" \
 prepare() {
     echo "Prepare..."
 
-    if [[ ! -f "${RPMBUILD_DIR}/SOURCES/linux-spr-kernel.tar.gz" ]]; then
-        if [[ ! -d linux-spr-kernel ]]; then
-            git clone -b ${DOWNSTREAM_TAG} --single-branch ${DOWNSTREAM_GIT_URI} linux-spr-kernel
+    if [[ ! -f "${RPMBUILD_DIR}/SOURCES/linux-tdx-kernel.tar.gz" ]]; then
+        if [[ ! -d linux-tdx-kernel ]]; then
+            git clone ${DOWNSTREAM_GIT_URI} linux-tdx-kernel
+            cd linux-tdx-kernel
+            git checkout ${DOWNSTREAM_TAG}
+            cd -
         fi
-        tar --exclude=.git -czf linux-spr-kernel.tar.gz linux-spr-kernel
-        mv linux-spr-kernel.tar.gz "${RPMBUILD_DIR}"/SOURCES/
+        tar --exclude=.git -czf linux-tdx-kernel.tar.gz linux-tdx-kernel
+        mv linux-tdx-kernel.tar.gz "${RPMBUILD_DIR}"/SOURCES/
     fi
 
     cp "${CURR_DIR}"/*.config "${RPMBUILD_DIR}"/SOURCES/

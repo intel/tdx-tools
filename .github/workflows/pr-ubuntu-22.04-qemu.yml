@@ -1,13 +1,13 @@
-name: Validate PR for Ubuntu-22.04 spr-qemu
+name: Validate PR for Ubuntu-22.04 tdx-qemu-kvm
 
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-22.04/intel-mvp-spr-qemu/*'
+    - 'build/ubuntu-22.04/intel-mvp-tdx-qemu-kvm/*'
 
 jobs:
   build_package:
-    name: Build spr-qemu for Ubuntu 22.04
+    name: Build tdx-qemu-kvm for Ubuntu 22.04
     runs-on: ubuntu-22.04
     steps:
       - id: cleanup_workspace
@@ -24,5 +24,5 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           sudo apt install --no-install-recommends --yes build-essential \
             fakeroot devscripts wget git equivs liblz4-tool sudo python-is-python3 pkg-config unzip
-          cd build/ubuntu-22.04/intel-mvp-spr-qemu/
+          cd build/ubuntu-22.04/intel-mvp-tdx-qemu-kvm/
           ./build.sh

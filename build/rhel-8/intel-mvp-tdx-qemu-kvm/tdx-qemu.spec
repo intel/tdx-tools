@@ -123,11 +123,10 @@ Obsoletes: qemu-kvm-block-gluster <= %{epoch}:%{version}         \
 Obsoletes: qemu-kvm-block-iscsi <= %{epoch}:%{version}           \
 
 Summary: QEMU is a machine emulator and virtualizer
-Name: intel-mvp-spr-qemu-kvm
+Name: intel-mvp-tdx-qemu-kvm
 Version: 6.2.0
-%define source_tag SPR-BKC-QEMU-v2.5
 %define downstream_version v2.5
-%define patch_number mvp15
+%define patch_number mvp16
 Release: %{downstream_version}.%{patch_number}%{?dist}
 
 Provides: qemu-kvm
@@ -141,7 +140,7 @@ License: GPLv2 and GPLv2+ and CC-BY
 URL: http://www.qemu.org/
 ExclusiveArch: x86_64 %{power64} aarch64 s390x
 
-Source0: qemu-%{source_tag}.tar.gz
+Source0: tdx-qemu.tar.gz
 
 %define source_url_prefix https://git.centos.org/rpms/qemu-kvm/raw/8b0a2884dbf5971f4b59ae540e9eaa9e612711d3/f/SOURCES
 
@@ -319,38 +318,38 @@ Obsoletes: qemu-kvm-docs
 %{name}-docs provides documentation files regarding qemu-kvm.
 
 
-%package -n intel-mvp-spr-qemu-pr-helper
+%package -n intel-mvp-tdx-qemu-pr-helper
 Summary: qemu-pr-helper utility for qemu-kvm
 Provides: qemu-pr-helper
 Obsoletes: qemu-pr-helper
 
-%description -n intel-mvp-spr-qemu-pr-helper
+%description -n intel-mvp-tdx-qemu-pr-helper
 This package provides the qemu-pr-helper utility that is required for certain 
 SCSI features. 
 
 
-%package -n intel-mvp-spr-qemu-virtiofsd
+%package -n intel-mvp-tdx-qemu-virtiofsd
 Summary: QEMU virtio-fs shared file system daemon
 Provides: virtiofsd
 Provides: qemu-virtiofsd
 Obsoletes: qemu-virtiofsd
 
-%description -n intel-mvp-spr-qemu-virtiofsd
+%description -n intel-mvp-tdx-qemu-virtiofsd
 This package provides virtiofsd daemon. This program is a vhost-user backend
 that implements the virtio-fs device that is used for sharing a host directory
 tree with a guest.
 
 
-%package -n intel-mvp-spr-qemu-img
+%package -n intel-mvp-tdx-qemu-img
 Summary: QEMU command line tool for manipulating disk images
 Provides: qemu-img
 Obsoletes: qemu-img
 
-%description -n intel-mvp-spr-qemu-img
+%description -n intel-mvp-tdx-qemu-img
 This package provides a command line tool for manipulating disk images.
 
 
-%package -n intel-mvp-spr-qemu-guest-agent
+%package -n intel-mvp-tdx-qemu-guest-agent
 Summary: QEMU guest agent
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -358,7 +357,7 @@ Requires(postun): systemd-units
 Provides: qemu-guest-agent
 Obsoletes: qemu-guest-agent
 
-%description -n intel-mvp-spr-qemu-guest-agent
+%description -n intel-mvp-tdx-qemu-guest-agent
 %{name} is an open source virtualizer that provides hardware emulation for
 the KVM hypervisor.
 
@@ -1049,11 +1048,11 @@ popd
 # endif !tools_only
 %endif
 
-%post -n intel-mvp-spr-qemu-guest-agent
+%post -n intel-mvp-tdx-qemu-guest-agent
 %systemd_post qemu-guest-agent.service
-%preun -n intel-mvp-spr-qemu-guest-agent
+%preun -n intel-mvp-tdx-qemu-guest-agent
 %systemd_preun qemu-guest-agent.service
-%postun -n intel-mvp-spr-qemu-guest-agent
+%postun -n intel-mvp-tdx-qemu-guest-agent
 %systemd_postun_with_restart qemu-guest-agent.service
 
 %if !%{tools_only}
@@ -1078,7 +1077,7 @@ useradd -r -u 107 -g qemu -G kvm -d / -s /sbin/nologin \
 
 
 
-%files -n intel-mvp-spr-qemu-img
+%files -n intel-mvp-tdx-qemu-img
 %{_bindir}/qemu-img
 %{_bindir}/qemu-io
 %{_bindir}/qemu-nbd
@@ -1089,7 +1088,7 @@ useradd -r -u 107 -g qemu -G kvm -d / -s /sbin/nologin \
 %{_mandir}/man7/qemu-storage-daemon-qmp-ref.7*
 
 
-%files -n intel-mvp-spr-qemu-guest-agent
+%files -n intel-mvp-tdx-qemu-guest-agent
 %doc COPYING README.rst
 %{_bindir}/qemu-ga
 %{_mandir}/man8/qemu-ga.8*
@@ -1117,13 +1116,13 @@ useradd -r -u 107 -g qemu -G kvm -d / -s /sbin/nologin \
 %{_datadir}/qemu-kvm/trace-events-all
 %{_mandir}/man1/qemu-trace-stap.1*
 
-%files -n intel-mvp-spr-qemu-pr-helper
+%files -n intel-mvp-tdx-qemu-pr-helper
 %{_bindir}/qemu-pr-helper
 %{_unitdir}/qemu-pr-helper.service
 %{_unitdir}/qemu-pr-helper.socket
 %{_mandir}/man8/qemu-pr-helper.8*
 
-%files -n intel-mvp-spr-qemu-virtiofsd
+%files -n intel-mvp-tdx-qemu-virtiofsd
 %{_mandir}/man1/virtiofsd.1*
 %{_libexecdir}/virtiofsd
 # This is the standard location for vhost-user JSON files defined in the

@@ -31,8 +31,8 @@ Summary: The Linux kernel
 %global released_kernel 0
 
 %define rcver 0
-%define downstream_tag SPR.BKC.PC.v8.8
-%define relver 33
+%define downstream_tag tdx.v9.6
+%define relver 34
 
 %if %{rcver}
 %global distro_build 0.rc%{rcver}.%{downstream_tag}.mvp%{relver}
@@ -102,7 +102,7 @@ Summary: The Linux kernel
 %define with_debug     0
 # guest kernel
 %define with_guest       %{?_without_guest:       0} %{?!_without_guest:       1}
-# spr kernel
+# tdx kernel
 %define with_nosigchk %{?_with_nosigchk: 1} %{?!_with_nosigchk: 0}
 # kernel-doc
 %define with_doc       %{?_without_doc:       0} %{?!_without_doc:       1}
@@ -460,7 +460,7 @@ Summary: The Linux kernel
 %define initrd_prereq  dracut >= 027
 
 
-%global adp_prefix intel-mvp-spr-
+%global adp_prefix intel-mvp-tdx-
 Name: %{?adp_prefix}kernel%{?variant}
 License: GPLv2 and Redistributable, no modification permitted
 URL: https://www.kernel.org/
@@ -581,7 +581,7 @@ BuildRequires: asciidoc
 # exact git commit you can run
 #
 # xzcat -qq ${TARBALL} | git get-tar-commit-id
-Source0: linux-spr-kernel.tar.gz
+Source0: linux-tdx-kernel.tar.gz
 
 Source1: %{source_url_prefix}/Makefile.rhelver
 
@@ -710,7 +710,7 @@ Source2001: %{source_url_prefix}/cpupower.config
 # use this to override configuration options. One day they may all use the
 # source tree, but in the mean time we carry this to support the legacy workflow
 Source3000: %{source_url_prefix}/merge.pl
-Source3001: spr-base.config
+Source3001: tdx-base.config
 Source3002: %{source_url_prefix}/Patchlist
 
 Source4000: %{source_url_prefix}/README.rst
@@ -744,7 +744,7 @@ Requires(pre): %{kernel_prereq}\
 Requires(pre): %{initrd_prereq}\
 Requires(pre): linux-firmware >= 20150904-56.git6ebf5d57\
 Requires(preun): systemd >= 200\
-Conflicts: xfsprogs < 4.3.0-1\
+Conflicts: xftdxogs < 4.3.0-1\
 Conflicts: xorg-x11-drv-vmmouse < 13.0.99\
 %{expand:%%{?kernel%{?1:_%{1}}_conflicts:Conflicts: %%{kernel%{?1:_%{1}}_conflicts}}}\
 %{expand:%%{?kernel%{?1:_%{1}}_obsoletes:Obsoletes: %%{kernel%{?1:_%{1}}_obsoletes}}}\
@@ -1204,7 +1204,7 @@ Linux operating system.  The kernel handles the basic functions
 of the operating system: memory allocation, process allocation, device
 input and output, etc.
 
-%define variant_summary The Linux kernel with SPR-specific config
+%define variant_summary The Linux kernel with TDX-specific config
 %kernel_variant_package guest
 %description guest-core
 The kernel package contains the Linux kernel (vmlinuz), the core of any
@@ -1212,9 +1212,9 @@ Linux operating system.  The kernel handles the basic functions
 of the operating system:  memory allocation, process allocation, device
 input and output, etc.
 
-This variant of the kernel has a SPR-specific config.
+This variant of the kernel has a TDX-specific config.
 
-%define variant_summary The Linux kernel with SPR-specific config and module signature enforcing disabled
+%define variant_summary The Linux kernel with TDX-specific config and module signature enforcing disabled
 %kernel_variant_package nosigchk
 %description nosigchk-core
 The kernel package contains the Linux kernel (vmlinuz), the core of any
@@ -1222,7 +1222,7 @@ Linux operating system.  The kernel handles the basic functions
 of the operating system:  memory allocation, process allocation, device
 input and output, etc.
 
-This variant of the kernel has a SPR-specific config with module signature forcing disabled.
+This variant of the kernel has a TDX-specific config with module signature forcing disabled.
 
 
 %if %{with_ipaclones}

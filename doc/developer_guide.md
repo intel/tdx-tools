@@ -22,15 +22,9 @@ Please install these packages via distro's package manager.
    $ git clone https://github.com/intel/linux-kernel-dcp.git
    ```
 
-   Please switch to specific branch or tag for stable release. Use [SPR-BKC-PC-v4.20](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-spr-kernel/build.sh) as example:
-
-   ```
-   $ git checkout SPR-BKC-PC-v4.20
-   ```
-
 3. Kernel config
 
-   Please use the common platform's kernel config file [here](https://github.com/intel/linux-kernel-dcp/tree/SPR-BKC-PC-v4.20/arch/x86/configs)
+   Please use the common platform's kernel config file [here](https://github.com/intel/linux-kernel-dcp/tree/main/arch/x86/configs)
    for both TDX guest and host, or enable following specific kernel config on
    any existing kernel config
    ```
@@ -38,8 +32,8 @@ Please install these packages via distro's package manager.
    CONFIG_INTEL_TDX_ATTESTATION=y
    CONFIG_INTEL_TDX_HOST=y
    ```
-   Please refer [TDX kernel documentation](https://github.com/intel/linux-kernel-dcp/blob/SPR-BKC-PC-v4.20/Documentation/virt/kvm/intel-tdx.rst)
-   and CONFIG_INTEL_TDX_GUEST, CONFIG_INTEL_TDX_HOST at [here](https://github.com/intel/linux-kernel-dcp/blob/SPR-BKC-PC-v4.20/arch/x86/Kconfig)
+   Please refer [TDX kernel documentation](https://github.com/intel/linux-kernel-dcp/blob/main/Documentation/virt/kvm/intel-tdx.rst)
+   and CONFIG_INTEL_TDX_GUEST, CONFIG_INTEL_TDX_HOST at [here](https://github.com/intel/linux-kernel-dcp/blob/main/arch/x86/Kconfig)
 
 4. Build kernel
 
@@ -59,13 +53,6 @@ Please install these packages via distro's package manager.
 
    ```
    $ git clone https://github.com/intel/qemu-dcp.git
-   ```
-
-   Please switch to specific branch or tag for stable release.
-   Use [SPR-BKC-QEMU-pub-v1](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-spr-qemu-kvm/build.sh) as example:
-
-   ```
-   $ git checkout SPR-BKC-QEMU-pub-v1
    ```
 
 3. Build QEMU:

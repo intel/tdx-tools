@@ -32,7 +32,7 @@ ARGS+=" --copy-in config/srv_guest.repo:/etc/yum.repos.d/"
 # Install TDX guest packages
 GRUB="intel-mvp-tdx-guest-grub2-efi-x64 intel-mvp-tdx-guest-grub2-pc"
 SHIM="intel-mvp-tdx-guest-shim"
-KERNEL="intel-mvp-spr-kernel-guest"
+KERNEL="intel-mvp-tdx-kernel-guest"
 REPO="srv_guest"
 ARGS+=" --run-command 'dnf install ${GRUB} ${SHIM} ${KERNEL} -y --repo ${REPO}'"
 

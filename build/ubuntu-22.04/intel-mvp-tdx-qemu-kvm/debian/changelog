@@ -1,3 +1,9 @@
+qemu (9:6.2+mvp2+25) jammy; urgency=medium
+
+  * package https://github.com/intel/qemu-dcp
+
+ -- Jialei Feng <jialei.feng@intel.com>  Sat, 24 Sep 2022 10:11:00 +0800
+
 qemu (9:6.2+mvp1+25) jammy; urgency=medium
 
   * package https://github.com/intel/qemu-dcp

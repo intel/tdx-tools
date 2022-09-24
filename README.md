@@ -27,8 +27,8 @@ below diagram:
 
 | Name | Stack | Description |
 | -- | -- | -- |
-| [SPR Kernel](https://github.com/intel/linux-kernel-dcp) | Host + Guest | Linux kernel for Sapphire Rapids platform |
-| [SPR Qemu-KVM](https://github.com/intel/qemu-dcp) | Host | Qemu VMM for Sapphire Rapids platform |
+| [TDX Kernel](https://github.com/intel/linux-kernel-dcp) | Host + Guest | Linux kernel for Sapphire Rapids platform |
+| [TDX Qemu-KVM](https://github.com/intel/qemu-dcp) | Host | Qemu VMM for Sapphire Rapids platform |
 | [TDX SEAM Module](https://github.com/intel/tdx-module/) | Host | TDX Secure Arbitration Module |
 | [TDX Libvirt](https://github.com/intel/libvirt-tdx) | Host | The modified libvirt to create TDX guest domain via Qemu |
 | [TDVF](https://github.com/tianocore/edk2-staging/tree/TDVF) | Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |
@@ -76,11 +76,11 @@ module_hotfixes=true
 Finally, install packages as follows:
 
 ```
-sudo dnf install intel-mvp-spr-kernel intel-mvp-tdx-tdvf intel-mvp-spr-qemu-kvm intel-mvp-tdx-libvirt
+sudo dnf install intel-mvp-tdx-kernel intel-mvp-tdx-tdvf intel-mvp-tdx-qemu-kvm intel-mvp-tdx-libvirt
 ```
 
 _NOTE_: Please get separated RPM for signed build `TDX SEAM Module` and install via
-`sudo dnf install intel-mvp-tdx-module-spr`. After installation, please reboot
+`sudo dnf install intel-mvp-tdx-module`. After installation, please reboot
 machine with `tdx_host=on` in host kernel command via grub menu. Finally, please
 [verify TDX host](./doc/verify_tdx_host.md).
 

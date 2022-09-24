@@ -10,15 +10,15 @@ PACKAGES_GUEST=( \
     )
 
 PACKAGES_HOST=( \
-    intel-mvp-spr-kernel \
-    intel-mvp-spr-qemu-kvm \
+    intel-mvp-tdx-kernel \
+    intel-mvp-tdx-qemu-kvm \
     intel-mvp-tdx-libvirt \
     intel-mvp-tdx-tdvf \
     )
 
 # For packages which need to be moved from host build to guest repo
 PACKAGES_SPECIAL=( \
-    intel-mvp-spr-kernel-guest \
+    intel-mvp-tdx-kernel-guest \
     )
 
 build_repo() {
