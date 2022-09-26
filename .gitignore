@@ -3,8 +3,3 @@
 vmlinuz
 *.fd
 .vscode/
-
-build/centos-stream-8/intel-mvp-spr-kernel/linux-spr-kernel/
-build/centos-stream-8/intel-mvp-tdx-guest-shim/shim-15.4/
-build/centos-stream-8/intel-mvp-tdx-libvirt/libvirt/
-build/centos-stream-8/intel-mvp-tdx-tdvf/edk2-staging/
