@@ -27,8 +27,8 @@ below diagram:
 
 | Name | Stack | Description |
 | -- | -- | -- |
-| [TDX Kernel](https://github.com/intel/linux-kernel-dcp) | Host + Guest | Linux kernel for Sapphire Rapids platform |
-| [TDX Qemu-KVM](https://github.com/intel/qemu-dcp) | Host | Qemu VMM for Sapphire Rapids platform |
+| [TDX Kernel](https://github.com/intel/linux-kernel-dcp) | Host + Guest | Linux kernel for TDX |
+| [TDX Qemu-KVM](https://github.com/intel/qemu-dcp) | Host | Qemu VMM for TDX |
 | [TDX SEAM Module](https://github.com/intel/tdx-module/) | Host | TDX Secure Arbitration Module |
 | [TDX Libvirt](https://github.com/intel/libvirt-tdx) | Host | The modified libvirt to create TDX guest domain via Qemu |
 | [TDVF](https://github.com/tianocore/edk2-staging/tree/TDVF) | Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |

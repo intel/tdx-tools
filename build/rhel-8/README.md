@@ -3,8 +3,8 @@
 
 - Packaging project for following components
 
-  - [TDX kernel](./intel-mvp-tdx-kernel/): Sapphire Rapids kernel for both host and guest
-  - [TDX qemu](./intel-mvp-tdx-qemu-kvm/): QEMU KVM for Sapphire Rapids features
+  - [TDX kernel](./intel-mvp-tdx-kernel/): TDX kernel for both host and guest
+  - [TDX qemu](./intel-mvp-tdx-qemu-kvm/): QEMU KVM for TDX
   - [TDX Libvirt](./intel-mvp-tdx-libvirt/): Libvirt with TDX modification
   - [TDX TDVF](./intel-mvp-tdx-tdvf/): TDVF firmware for TD guest
   - [TDX Guest Grub2](./intel-mvp-tdx-guest-grub2/): Grub2 for TD guest
