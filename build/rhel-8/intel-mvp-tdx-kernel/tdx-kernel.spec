@@ -31,8 +31,8 @@ Summary: The Linux kernel
 %global released_kernel 0
 
 %define rcver 0
-%define downstream_tag tdx.v9.6
-%define relver 34
+%define downstream_tag tdx.v11
+%define relver 45
 
 %if %{rcver}
 %global distro_build 0.rc%{rcver}.%{downstream_tag}.mvp%{relver}
@@ -53,8 +53,9 @@ Summary: The Linux kernel
 %global signkernel 0
 %endif
 
-# Sign modules on all arches
-%global signmodules 1
+# Do not sign kernel and modules
+%global signkernel 0
+%global signmodules 0
 
 # Compress modules only for architectures that build modules
 %ifarch noarch
@@ -550,13 +551,11 @@ BuildConflicts: dwarves < 1.13
 BuildRequires: kabi-dw
 %endif
 
-%if %{signkernel}%{signmodules}
 BuildRequires: openssl openssl-devel
 %if %{signkernel}
 %ifarch x86_64 aarch64
 BuildRequires: nss-tools
 BuildRequires: pesign >= 0.10-4
-%endif
 %endif
 %endif
 

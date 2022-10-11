@@ -4,9 +4,10 @@ set -ex
 
 CURR_DIR="$(dirname "$(readlink -f "$0")")"
 
-DOWNSTREAM_GIT_URI="https://github.com/intel/linux-kernel-dcp.git"
-DOWNSTREAM_TAG="710bb135da47ea71464198b9017e1c3f7e71f645"
+UPSTREAM_GIT_URI="https://github.com/torvalds/linux.git"
+UPSTREAM_TAG="v5.15"
 
+PATCHSET="${CURR_DIR}/../../common/patches-tdx-kernel-MVP-5.15-v11.0.tar.gz"
 SPEC_FILE="${CURR_DIR}/tdx-kernel.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
 
@@ -27,9 +28,14 @@ prepare() {
 
     if [[ ! -f "${RPMBUILD_DIR}/SOURCES/linux-tdx-kernel.tar.gz" ]]; then
         if [[ ! -d linux-tdx-kernel ]]; then
-            git clone ${DOWNSTREAM_GIT_URI} linux-tdx-kernel
+            git clone -b ${UPSTREAM_TAG} --single-branch --depth 1 ${UPSTREAM_GIT_URI} linux-tdx-kernel
+            tar xf "${PATCHSET}"
             cd linux-tdx-kernel
-            git checkout ${DOWNSTREAM_TAG}
+            git config user.name "${USER:-tdx-builder}"
+            git config user.email "${USER:-tdx-builder}"@"$HOSTNAME"
+            for i in ../patches/*; do
+                git am "$i"
+            done
             cd -
         fi
         tar --exclude=.git -czf linux-tdx-kernel.tar.gz linux-tdx-kernel

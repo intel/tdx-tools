@@ -2,12 +2,12 @@
 
 # set -ex
 
-CURR_DIR=$(dirname "$(readlink -f "$0")")
-UPSTREAM_VERSION="5.15"
-DOWNSTREAM_GIT_URI="https://github.com/intel/linux-kernel-dcp.git"
+UPSTREAM_GIT_URI="https://github.com/torvalds/linux.git"
+UPSTREAM_TAG="v5.15"
 
-DOWNSTREAM_TAG="710bb135da47ea71464198b9017e1c3f7e71f645"
-PACKAGE="mvp-tdx-kernel"
+CURR_DIR=$(dirname "$(readlink -f "$0")")
+SOURCE_DIR=${CURR_DIR}/"mvp-tdx-kernel-${UPSTREAM_TAG}"
+PATCHSET="${CURR_DIR}/../../common/patches-tdx-kernel-MVP-5.15-v11.0.tar.gz"
 
 if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
     echo "Please build the packages in Ubuntu"
@@ -15,24 +15,26 @@ if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
 fi
 
 get_source() {
-    echo "Get downstream source code..."
+    echo "Get upstream source code..."
     cd ${CURR_DIR}
-    if [[ ! -d ${PACKAGE}-${UPSTREAM_VERSION} ]]; then
-	# add safe directory for running in docker
-	git config --global --add safe.directory /github/workspace
-	git config --global --add safe.directory /repo
-        git clone ${DOWNSTREAM_GIT_URI} ${PACKAGE}-${UPSTREAM_VERSION}
-        cd ${PACKAGE}-${UPSTREAM_VERSION}
-        git checkout ${DOWNSTREAM_TAG}
+    if [[ ! -d ${SOURCE_DIR} ]]; then
+        git clone  -b ${UPSTREAM_TAG} --single-branch --depth 1 ${UPSTREAM_GIT_URI} ${SOURCE_DIR}
+        tar xf ${PATCHSET}
+        cd ${SOURCE_DIR}
+        git config user.name ${USER:-tdx-builder}
+        git config user.email ${USER:-tdx-builder}@$HOSTNAME
+        for i in ../patches/*; do
+            git am $i
+        done
         git submodule update --init
     fi
 }
 
 prepare() {
     echo "Prepare..."
-    cp ${CURR_DIR}/debian/ ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION} -fr
-    cp ${CURR_DIR}/debian.master/ ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION} -fr
-    cp ${CURR_DIR}/linux-5.15.0/* ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION} -fr
+    cp ${CURR_DIR}/debian/ ${SOURCE_DIR} -fr
+    cp ${CURR_DIR}/debian.master/ ${SOURCE_DIR} -fr
+    cp ${CURR_DIR}/linux-5.15.0/* ${SOURCE_DIR} -fr
 
     sudo apt update
     sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai apt install tzdata -y
@@ -40,7 +42,7 @@ prepare() {
 
 build() {
     echo "Build..."
-    cd ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION}
+    cd ${SOURCE_DIR}
     sudo -E mk-build-deps --install --build-dep --build-indep '--tool=apt-get --no-install-recommends -y' debian/control
     dpkg-source --before-build .
     debuild -uc -us -b
