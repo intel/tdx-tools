@@ -1,4 +1,4 @@
-name: PR Test Building Package for CentOS Stream 8
+name: CentOS Stream 8 Build
 
 on:
   pull_request:

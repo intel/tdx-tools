@@ -1,5 +1,9 @@
 # Linux Stack for Intel&reg; TDX (Trust Domain Extensions)
 
+![CentOS Stream 8 Kernel Build](https://github.com/intel/tdx-tools/actions/workflows/pr-test-build-centos-stream-8-kernel.yml/badge.svg)
+![CentOS Stream 8 Build](https://github.com/intel/tdx-tools/actions/workflows/pr-test-build-centos-stream-8.yml/badge.svg)
+
+
 ## 1. Overview
 
 Intel&reg; Trust Domain Extensions(TDX) refers to an Intel technology that

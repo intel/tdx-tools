@@ -1,4 +1,4 @@
-name: PR Test Building TDX Kernel Package for CentOS Stream 8
+name: CentOS Stream 8 Kernel Build
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.1.0
-      - name: Build tdx-guest-kernel 
+      - name: Build tdx-guest-kernel
         uses: ./build/centos-stream-8/pkg-builder
         with:
           package: intel-mvp-tdx-kernel
