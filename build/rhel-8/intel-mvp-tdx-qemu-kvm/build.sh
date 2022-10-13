@@ -4,25 +4,29 @@ set -ex
 
 CURR_DIR="$(dirname "$(readlink -f "$0")")"
 
-DOWNSTREAM_GIT_URI="https://github.com/intel/qemu-dcp.git"
-DOWNSTREAM_TAG="c8302707f6e89c955eae0883bfd97680202b8db2"
+UPSTREAM_GIT_URI="https://github.com/qemu/qemu.git"
+UPSTREAM_TAG="4c127fdbe81d66e7cafed90908d0fd1f6f2a6cd0"
 DOWNSTREAM_TARBALL="tdx-qemu.tar.gz"
 
+PATCHSET="${CURR_DIR}/../../common/patches-tdx-qemu-MVP-QEMU-6.2-v3.1.tar.gz"
 SPEC_FILE="${CURR_DIR}/tdx-qemu.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
 
 create_tarball() {
     cd "${CURR_DIR}"
     if [[ ! -d qemu ]]; then
-        git clone ${DOWNSTREAM_GIT_URI} qemu
-    fi
-    if [[ ! -f "${RPMBUILD_DIR}"/SOURCES/${DOWNSTREAM_TARBALL} ]]; then
+        git clone ${UPSTREAM_GIT_URI} qemu
+        tar xf "${PATCHSET}"
         pushd qemu
-        git checkout ${DOWNSTREAM_TAG}
+        git checkout ${UPSTREAM_TAG}
+        git config user.name "${USER:-tdx-builder}"
+        git config user.email "${USER:-tdx-builder}"@"$HOSTNAME"
+        for i in ../patches/*; do
+           git am "$i"
+        done
         git submodule update --init
-        rm -rf .git/
         popd
-        tar czf "${RPMBUILD_DIR}"/SOURCES/${DOWNSTREAM_TARBALL} qemu
+        tar --exclude=.git -czf "${RPMBUILD_DIR}"/SOURCES/${DOWNSTREAM_TARBALL} qemu
     fi
 }
 

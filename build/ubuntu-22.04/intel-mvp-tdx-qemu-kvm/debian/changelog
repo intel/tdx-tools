@@ -1,3 +1,9 @@
+qemu (9:6.2+mvp4+31) jammy; urgency=medium
+
+  * package for qemu upstream base + downstream patches
+
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 12 Oct 2022 14:04:00 +0800
+
 qemu (9:6.2+mvp2+25) jammy; urgency=medium
 
   * package https://github.com/intel/qemu-dcp
