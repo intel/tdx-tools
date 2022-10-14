@@ -27,9 +27,9 @@ below diagram:
 
 | Name | Stack | Description |
 | -- | -- | -- |
-| [TDX Kernel](https://github.com/intel/linux-kernel-dcp) | Host + Guest | Linux kernel for TDX |
-| [TDX Qemu-KVM](https://github.com/intel/qemu-dcp) | Host | Qemu VMM for TDX |
-| [TDX SEAM Module](https://github.com/intel/tdx-module/) | Host | TDX Secure Arbitration Module |
+| TDX Kernel | Host + Guest | Linux kernel for TDX |
+| TDX Qemu-KVM | Host | Qemu VMM for TDX |
+| TDX SEAM Module | Host | TDX Secure Arbitration Module |
 | [TDX Libvirt](https://github.com/intel/libvirt-tdx) | Host | The modified libvirt to create TDX guest domain via Qemu |
 | [TDVF](https://github.com/tianocore/edk2-staging/tree/TDVF) | Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |
 | [TDX Grub2](https://github.com/intel/grub-tdx) | Guest | The modified grub for guest VM to support TDX measurement |
@@ -97,25 +97,25 @@ Please get detail grub/direct boot template for qemu-kvm and libvirt at [Launch 
 - Launch a TDX guest via direct boot
 
 ```
-./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz-rhel-8.5
+./start-qemu.sh -i td-guest-rhel-8.6.qcow2 -k vmlinuz-rhel-8.6
 ```
 
 - Launch a TDX guest via grub boot
 
 ```
-./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -b grub
+./start-qemu.sh -i td-guest-rhel-8.6.qcow2 -b grub
 ```
 
 - Launch a debug version TDX guest with debug version OVMF
 
 ```
-./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz-rhel-8.5 -d
+./start-qemu.sh -i td-guest-rhel-8.6.qcow2 -k vmlinuz-rhel-8.6 -d
 ```
 
 - Launch a non-TDX guest
 
 ```
-./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz-rhel-8.5 -t efi
+./start-qemu.sh -i td-guest-rhel-8.6.qcow2 -k vmlinuz-rhel-8.6 -t efi
 ```
 
 ## 5. Test
