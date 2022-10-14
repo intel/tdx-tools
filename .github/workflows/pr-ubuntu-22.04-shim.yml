@@ -3,7 +3,7 @@ name: Validate PR for Ubuntu-22.04 guest shim
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-22.04/intel-mvp-tdx-guest-shim/*'
+    - 'build/ubuntu-22.04/intel-mvp-tdx-guest-shim/**'
 
 jobs:
   build_package:

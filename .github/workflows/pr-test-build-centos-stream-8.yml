@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
     - 'build/centos-stream-8/**'
+    - '!build/centos-stream-8/intel-mvp-tdx-kernel/**'
 
 jobs:
   build-packages:

@@ -1,13 +1,13 @@
-name: Validate PR for Ubuntu-22.04 grub2
+name: Validate PR for Ubuntu-22.04 tdvf
 
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-22.04/intel-mvp-tdx-guest-grub2/**'
+    - 'build/ubuntu-22.04/intel-mvp-tdx-tdvf/**'
 
 jobs:
   build_package:
-    name: Build grub2 for Ubuntu 22.04
+    name: Build tdvf for Ubuntu 22.04
     runs-on: ubuntu-22.04
     steps:
       - id: cleanup_workspace
@@ -23,5 +23,5 @@ jobs:
           sudo apt update
           sudo apt install --no-install-recommends --yes build-essential \
             fakeroot devscripts wget git equivs liblz4-tool sudo python-is-python3 pkg-config unzip
-          cd build/ubuntu-22.04/intel-mvp-tdx-guest-grub2/
+          cd build/ubuntu-22.04/intel-mvp-tdx-tdvf/
           ./build.sh
