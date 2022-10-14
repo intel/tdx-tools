@@ -41,7 +41,7 @@ build_kernel () {
 }
 
 build_qemu () {
-    cd intel-mvp-tdx-qemu
+    cd intel-mvp-tdx-qemu-kvm
     ./build.sh
     cp qemu-system-x86_6.2*.deb qemu-system-common_6.2*.deb qemu-system-data_6.2*.deb ../$HOST_REPO/
     cd ..
