@@ -33,7 +33,7 @@ build_grub () {
 }
 
 build_kernel () {
-    cd intel-mvp-spr-kernel
+    cd intel-mvp-tdx-kernel
     ./build.sh
     cp linux-image-unsigned-5.15.0-*.deb linux-headers-5.15.0-* linux-modules-5.15.0-* ../$GUEST_REPO/
     cp linux-image-unsigned-5.15.0-*.deb linux-headers-5.15.0-* linux-modules-5.15.0-* linux-modules-extra-5.15.0-* ../$HOST_REPO/
@@ -41,7 +41,7 @@ build_kernel () {
 }
 
 build_qemu () {
-    cd intel-mvp-spr-qemu
+    cd intel-mvp-tdx-qemu
     ./build.sh
     cp qemu-system-x86_6.2*.deb qemu-system-common_6.2*.deb qemu-system-data_6.2*.deb ../$HOST_REPO/
     cd ..

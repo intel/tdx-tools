@@ -1,3 +1,9 @@
+linux (5.15.0-mvp16v11+0.tdx) jammy; urgency=medium
+
+  * jammy/linux: 5.15.0-mvp16v11+0.tdx -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 10 Oct 2022 15:01:00 +0800
+
 linux (5.15.0-mvp15v11+0.tdx) jammy; urgency=medium
 
   * jammy/linux: 5.15.0-mvp15v11+0.tdx -proposed tracker (LP: #1990000)

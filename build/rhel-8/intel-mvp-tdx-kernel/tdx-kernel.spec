@@ -32,7 +32,7 @@ Summary: The Linux kernel
 
 %define rcver 0
 %define downstream_tag tdx.v11
-%define relver 45
+%define relver 46
 
 %if %{rcver}
 %global distro_build 0.rc%{rcver}.%{downstream_tag}.mvp%{relver}
