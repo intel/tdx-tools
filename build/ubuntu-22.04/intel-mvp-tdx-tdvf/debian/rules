@@ -42,7 +42,7 @@ undefine CONF_PATH
 override_dh_auto_build:
 	make -C BaseTools
 	source ./edksetup.sh && \
-	build -p OvmfPkg/OvmfPkgX64.dsc \
+	build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
 	      -a X64 -b DEBUG \
 	      -t GCC5 \
 	      -D DEBUG_ON_SERIAL_PORT=TRUE \
@@ -50,7 +50,7 @@ override_dh_auto_build:
 	      -D TDX_EMULATION_ENABLE=FALSE \
 	      -D TDX_ACCEPT_PAGE_SIZE=2M 
 	source ./edksetup.sh && \
-	build -p OvmfPkg/OvmfPkgX64.dsc \
+	build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
 	      -a X64 -b RELEASE \
 	      -t GCC5 \
 	      -D DEBUG_ON_SERIAL_PORT=FALSE \
@@ -60,11 +60,11 @@ override_dh_auto_build:
 
 override_dh_install:
 	mkdir -p $(DEST_DIR)
-	cp Build/OvmfX64/DEBUG_GCC*/FV/OVMF.fd $(DEST_DIR)/OVMF.debug.fd
-	cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF.fd $(DEST_DIR)/
-	cp Build/OvmfX64/DEBUG_GCC*/FV/OVMF_CODE.fd $(DEST_DIR)/OVMF_CODE.debug.fd
-	cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF_CODE.fd $(DEST_DIR)/
-	cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF_VARS.fd $(DEST_DIR)/
-	cp Build/OvmfX64/RELEASE_GCC*/X64/DumpTdxEventLog.efi $(DEST_DIR)/DumpTdxEventLog.efi
+	cp Build/IntelTdx/DEBUG_GCC*/FV/OVMF.fd $(DEST_DIR)/OVMF.debug.fd
+	cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF.fd $(DEST_DIR)/
+	cp Build/IntelTdx/DEBUG_GCC*/FV/OVMF_CODE.fd $(DEST_DIR)/OVMF_CODE.debug.fd
+	cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_CODE.fd $(DEST_DIR)/
+	cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_VARS.fd $(DEST_DIR)/
+#	cp Build/IntelTdx/RELEASE_GCC*/X64/DumpTdxEventLog.efi $(DEST_DIR)/DumpTdxEventLog.efi
 
 

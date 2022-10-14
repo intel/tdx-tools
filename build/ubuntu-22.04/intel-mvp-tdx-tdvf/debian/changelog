@@ -1,7 +1,34 @@
+tdx-tdvf (2022.9.26-ww39.5.mvp42) jammy; urgency=medium
+
+  * TDX build.
+    https://github.com/tianocore/edk2-staging/releases/tag/2022-tdvf-ww39.4
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 26 Sep 2022 13:06:00 +0800
+
+tdx-tdvf (2022.8.17-upstream2.mvp41) jammy; urgency=medium
+
+  * TDX build.
+    Use OvmfPkg/IntelTdx/IntelTdxX64.dsc
+
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 30 Aug 2022 11:47:00 +0800
+
+tdx-tdvf (2022.8.17-upstream2.mvp40) jammy; urgency=medium
+
+  * TDX build.
+    Upstream code base 2
+
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 17 Aug 2022 11:44:00 +0800
+
+tdx-tdvf (2022.8.8-upstream1.mvp39) jammy; urgency=medium
+
+  * TDX build.
+    Upstream code base 1
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 8 Aug 2022 21:44:00 +0800
+
 tdx-tdvf (2022.5.16-ww20.1.mvp38) jammy; urgency=medium
 
   * TDX build.
-    Installed to /usr/share/tdvf/
 
  -- Jialei Feng <jialei.feng@intel.com>  Thu, 28 Jun 2022 15:40:00 +0800
 

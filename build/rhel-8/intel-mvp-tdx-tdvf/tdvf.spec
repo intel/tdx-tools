@@ -3,8 +3,8 @@
 # This spec file began as CentOS's ovmf spec file, then cut down and modified.
 
 Name:       intel-mvp-tdx-tdvf
-Version:    2022.5.16
-Release:    ww20.1.mvp37
+Version:    2022.ww39.4
+Release:    mvp39
 Summary:    UEFI firmware for 64-bit virtual machines supporting trusted domains
 Group:      Applications/Emulators
 License:    BSD and OpenSSL and MIT
@@ -57,7 +57,7 @@ export PYTHON_COMMAND=python3
 
 make -C BaseTools
 source ./edksetup.sh
-build -p OvmfPkg/OvmfPkgX64.dsc \
+build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
       -a X64 -b DEBUG \
       -t GCC5 \
       -D DEBUG_ON_SERIAL_PORT=TRUE \
@@ -65,7 +65,7 @@ build -p OvmfPkg/OvmfPkgX64.dsc \
       -D TDX_EMULATION_ENABLE=FALSE \
       -D TDX_ACCEPT_PAGE_SIZE=2M
 
-build -p OvmfPkg/OvmfPkgX64.dsc \
+build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
       -a X64 -b RELEASE \
       -t GCC5 \
       -D DEBUG_ON_SERIAL_PORT=FALSE \
@@ -75,12 +75,12 @@ build -p OvmfPkg/OvmfPkgX64.dsc \
 
 %install
 mkdir -p %{buildroot}/usr/share/qemu
-cp Build/OvmfX64/DEBUG_GCC*/FV/OVMF.fd %{buildroot}/usr/share/qemu/OVMF.debug.fd
-cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF.fd %{buildroot}/usr/share/qemu/
-cp Build/OvmfX64/DEBUG_GCC*/FV/OVMF_CODE.fd %{buildroot}/usr/share/qemu/OVMF_CODE.debug.fd
-cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF_CODE.fd %{buildroot}/usr/share/qemu/
-cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF_VARS.fd %{buildroot}/usr/share/qemu/
-cp Build/OvmfX64/RELEASE_GCC*/X64/DumpTdxEventLog.efi %{buildroot}/usr/share/qemu/DumpTdxEventLog.efi
+cp Build/IntelTdx/DEBUG_GCC*/FV/OVMF.fd %{buildroot}/usr/share/qemu/OVMF.debug.fd
+cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF.fd %{buildroot}/usr/share/qemu/
+cp Build/IntelTdx/DEBUG_GCC*/FV/OVMF_CODE.fd %{buildroot}/usr/share/qemu/OVMF_CODE.debug.fd
+cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_CODE.fd %{buildroot}/usr/share/qemu/
+cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_VARS.fd %{buildroot}/usr/share/qemu/
+#cp Build/IntelTdx/RELEASE_GCC*/X64/DumpTdxEventLog.efi %{buildroot}/usr/share/qemu/DumpTdxEventLog.efi
 
 %files
 %license License.txt
@@ -89,5 +89,5 @@ cp Build/OvmfX64/RELEASE_GCC*/X64/DumpTdxEventLog.efi %{buildroot}/usr/share/qem
 /usr/share/qemu/OVMF_CODE.debug.fd
 /usr/share/qemu/OVMF_CODE.fd
 /usr/share/qemu/OVMF_VARS.fd
-/usr/share/qemu/DumpTdxEventLog.efi
+#/usr/share/qemu/DumpTdxEventLog.efi
 
