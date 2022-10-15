@@ -14,7 +14,7 @@ This repository helps to:
 - Build individual component's package or install pre-build binaries on IaaS
 host or create PaaS guest image for quick evaluation
 - Generate the patchsets for deep dive in source code level
-- Test, hack and debug the TDX technology
+- Test, hack and debug the TDX technology based on [pycloudstack](utils/pycloudstack/README.md) framework
 - Dump guest VM measurement and generate TD quote report for TDX E2E attestation
 - Measured boot and Secure boot for TDX guest VM
 
