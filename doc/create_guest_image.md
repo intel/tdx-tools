@@ -5,7 +5,7 @@
 The default cloud image for CentOS Stream does not support EFI schema, so it needs
 to create customized EFI based CentOS image via [TDX Guest Image Tool](https://github.com/intel/tdx-tools/tree/main/build/centos-stream-8/guest-image).
 
-The tool provides scripts to generate guest image for RHEL, CentOS Stream and Ubuntu. In this section, it takes RHEL 8.5 as an example. If you want to generate CentOS Stream guest image, the steps are the same as following. The scripts for CentOS Stream is at https://github.com/intel/tdx-tools/tree/main/build/centos-stream-8/guest-image
+The tool provides scripts to generate guest image for RHEL, CentOS Stream and Ubuntu. In this section, it takes RHEL 8.6 as an example. If you want to generate CentOS Stream guest image, the steps are the same as following. The scripts for CentOS Stream is at https://github.com/intel/tdx-tools/tree/main/build/centos-stream-8/guest-image
 
 For Ubuntu 22.04 guest image, please refer to https://github.com/intel/tdx-tools/blob/main/build/ubuntu-22.04/README.md
 
@@ -28,7 +28,7 @@ For Ubuntu 22.04 guest image, please refer to https://github.com/intel/tdx-tools
 
 ### Install Guest Image With ISO Installer
 
-Generate guest image td-guest-rhel-8.5.qcow2:
+Generate guest image td-guest-rhel-8.6.qcow2:
 
 ```
 cd tdx-tools/build/rhel-8/guest-image/
@@ -37,13 +37,13 @@ cd tdx-tools/build/rhel-8/guest-image/
 
 _NOTE:_
 
-- For RHEL-8 image, please prepare RHEL 8.5 base ISO image and put it under the same directory as `create-efi-img.sh`. You can download RHEL 8.5 base ISO image from
+- For RHEL-8 image, please prepare RHEL 8.6 base ISO image and put it under the same directory as `create-efi-img.sh`. You can download RHEL 8.6 base ISO image from
 <https://access.redhat.com/downloads>
 Modify `create-efi-img.sh` and set the ISO variable to the image name as below.
-Then run `create-efi-img.sh` to create the RHEL 8.5 guest image.
+Then run `create-efi-img.sh` to create the RHEL 8.6 guest image.
 
   ```
-  ISO="RHEL-8.5.0-20211013.2-x86_64-dvd1.iso"
+  ISO="RHEL-8.6.0-20220420.3-x86_64-dvd1.iso"
   ```
 
 - For CentOS Stream image, the script will download CentOS-Stream-8-x86_64-latest-dvd1.iso (~10G) if it does not exist. Then it runs virt-install to install guest image using kickstart scripts.

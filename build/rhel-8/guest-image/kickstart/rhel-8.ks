@@ -55,7 +55,7 @@ epel-release
 
 %end
 
-%post --erroronfail --log=/var/log/ks-rhel-8.5.log
+%post --erroronfail --log=/var/log/ks-rhel-8.log
 
 echo ""
 echo "POST BASE CENTOS *************************************"

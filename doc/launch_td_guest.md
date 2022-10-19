@@ -23,13 +23,13 @@ via QEMU.
 A simple usage of the script to launch Red Hat RHEL8.5 VM would be as follows:
 
 ```
-./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -k vmlinuz
+./start-qemu.sh -i td-guest-rhel-8.6.qcow2 -k vmlinuz
 ```
 
 Or to use the guest's grub bootloader:
 
 ```
-./start-qemu.sh -i td-guest-rhel-8.5.qcow2 -b grub
+./start-qemu.sh -i td-guest-rhel-8.6.qcow2 -b grub
 ```
 
 Equivalent steps to launch Ubuntu VMs:

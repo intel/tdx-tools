@@ -12,7 +12,7 @@ running. It uses `CentOS Stream 8` as example distro.
 
 - Install required packages:
 
-  If your host distro is RHEL 8.5 or CentOS Stream 8:
+  If your host distro is RHEL 8.6 or CentOS Stream 8:
 
     ```
     sudo dnf install python3-virtualenv python3-libvirt libguestfs-devel libvirt-devel python3-devel gcc gcc-c++

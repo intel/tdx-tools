@@ -4,7 +4,7 @@ export LIBGUESTFS_BACKEND=direct
 
 CURR_DIR=$(readlink -f "$(dirname "$0")")
 REPO_DIR="../repo/guest/"
-IMAGE="td-guest-rhel-8.5.qcow2"
+IMAGE="td-guest-rhel-8.6.qcow2"
 
 pushd "${CURR_DIR}" || exit 1
 
