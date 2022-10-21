@@ -74,71 +74,9 @@ If running Ubuntu as the host OS, use Ubuntu use templates [direct boot_ubuntu](
 2. Copy the template XML file to *tdx.xml* and edit the XML configuration file *tdx.xml* by
     replacing all occurences of the '/path/to' with absolute paths.
     
-    **NOTE:**'/path/to/OVMF_VARS.fd' is the desired destination of OVMF_VARS.fd.
-    
-   The XML templates are minimalistic, feel free to modify other features (CPUs, memory, network ...) as desired.
-  
-
-   ```
-    <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-      <name>td-guest</name>
-      <memory unit='KiB'>2097152</memory>
-      <vcpu placement='static'>1</vcpu>
-      <os>
-        <type arch='x86_64' machine='q35'>hvm</type>
-        <loader type='generic'>/usr/share/qemu/OVMF_CODE.fd</loader>
-        <nvram template='/usr/share/qemu/OVMF_VARS.fd'>/path/to/OVMF_VARS.fd</nvram>
-        <boot dev='hd'/>
-        <kernel>/path/to/vmlinuz</kernel>
-        <cmdline>root=/dev/vda3 selinux=0 rw console=hvc0</cmdline>
-      </os>
-      <features>
-        <acpi/>
-        <apic/>
-        <ioapic driver='qemu'/>
-        <pic state='off'/>
-      </features>
-      <clock offset='utc'>
-        <timer name='hpet' present='no'/>
-      </clock>
-      <on_poweroff>destroy</on_poweroff>
-      <on_reboot>restart</on_reboot>
-      <on_crash>destroy</on_crash>
-      <pm>
-        <suspend-to-mem enable='no'/>
-        <suspend-to-disk enable='no'/>
-      </pm>
-      <cpu mode='host-passthrough'>
-        <topology sockets='1' cores='1' threads='1'/>
-      </cpu>
-      <devices>
-        <emulator>/usr/libexec/qemu-kvm</emulator>
-        <disk type='file' device='disk'>
-          <driver name='qemu' type='qcow2'/>
-          <source file='/path/to/td-guest.qcow2'/>
-          <target dev='vda' bus='virtio'/>
-        </disk>
-        <interface type="user">
-          <model type="virtio"/>
-        </interface>
-        <console type='pty'>
-          <target type='virtio' port='0'/>
-        </console>
-        <channel type='unix'>
-          <source mode='bind'/>
-          <target type='virtio' name='org.qemu.guest_agent.0'/>
-        </channel>
-      </devices>
-      <allowReboot value='no'/>
-      <launchSecurity type='tdx'>
-        <policy>0x1</policy>
-      </launchSecurity>
-      <qemu:commandline>
-        <qemu:arg value='-cpu'/>
-        <qemu:arg value='host,-kvm-steal-time'/>
-      </qemu:commandline>
-    </domain>
-    ```
+    **NOTE:**
+    - '/path/to/OVMF_VARS.fd' is the desired destination of OVMF_VARS.fd.
+    - If you are using Ubuntu guest image, modify `root=/dev/vda3` to `root=/dev/vda1`
 
 3. Launch TD guest
 
