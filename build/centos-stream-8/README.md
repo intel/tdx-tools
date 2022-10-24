@@ -14,7 +14,6 @@
 
   Run `./build-repo.sh` within CentOS Stream Docker, so package can be built on a Linux
   machine installed any other distros like Ubuntu, Debian etc
-
   Please refer [using pkg-builder](./pkg-builder/README.md)
 
   For the native build on a CentOS stream development machine, just run:

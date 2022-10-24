@@ -60,3 +60,4 @@ mkdir -p "${RPMBUILD_DIR}"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 prepare
 build
 popd
+
