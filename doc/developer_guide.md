@@ -5,13 +5,15 @@ This section introduces the steps to build source from scratch on any *inux syst
 for hacking and developing purpose.
 
 _NOTE:_ For production build in release purpose, please refer:
-- Source RPM build [here](https://github.com/intel/tdx-tools/tree/main/build/rhel-8) for RHEL 8 build
-- Source RPM build [here](https://github.com/intel/tdx-tools/tree/main/build/centos-stream-8) for CentOS Stream 8 build
-- Debian build [here](https://github.com/intel/tdx-tools/tree/main/build/ubuntu-22.04) for Ubuntu 22.04 build
+- Source RPM build [here](https://github.com/intel/tdx-tools/tree/2022ww42/build/rhel-8) for RHEL 8 build
+- Source RPM build [here](https://github.com/intel/tdx-tools/tree/2022ww42/build/centos-stream-8) for CentOS Stream 8 build
+- Debian build [here](https://github.com/intel/tdx-tools/tree/2022ww42/build/ubuntu-22.04) for Ubuntu 22.04 build
 
 ### Build and Setup Kernel
 
-TDX MVP stack uses [linux-kernel-dcp](https://github.com/intel/linux-kernel-dcp.git) for both host and guest kernel:
+The [TDX kernel patchset](https://github.com/intel/tdx-tools/raw/2022ww42/build/common/patches-tdx-kernel-MVP-5.15-v11.0.tar.gz) includes
+all patches based on kernel [v5.15](https://github.com/torvalds/linux/releases/tag/v5.15).
+
 
 1. Ensure you have installed the necessary packages to build Linux kernel. e.g. `libncurses5-dev libssl-dev build-essential openssl zlibc minizip lib libidn11-dev libbidn11 bison flex`
 Please install these packages via distro's package manager.
@@ -19,21 +21,24 @@ Please install these packages via distro's package manager.
 2. Download the kernel source code:
 
    ```
-   $ git clone https://github.com/intel/linux-kernel-dcp.git
+   $ wget https://github.com/intel/tdx-tools/raw/2022ww42/build/common/patches-tdx-kernel-MVP-5.15-v11.0.tar.gz
+   $ tar xf patches-tdx-kernel-MVP-5.15-v11.0.tar.gz
+   $ git clone --branch v5.15 https://github.com/torvalds/linux.git
+   $ cd linux
+   $ git am ../patches/*
+   $ rm ../patches/ -fr
    ```
 
 3. Kernel config
 
-   Please use the common platform's kernel config file [here](https://github.com/intel/linux-kernel-dcp/tree/main/arch/x86/configs)
-   for both TDX guest and host, or enable following specific kernel config on
-   any existing kernel config
-   ```
-   CONFIG_INTEL_TDX_GUEST=y
-   CONFIG_INTEL_TDX_ATTESTATION=y
-   CONFIG_INTEL_TDX_HOST=y
-   ```
-   Please refer [TDX kernel documentation](https://github.com/intel/linux-kernel-dcp/blob/main/Documentation/virt/kvm/intel-tdx.rst)
-   and CONFIG_INTEL_TDX_GUEST, CONFIG_INTEL_TDX_HOST at [here](https://github.com/intel/linux-kernel-dcp/blob/main/arch/x86/Kconfig)
+   - For RHEL
+      Please use the common platform's kernel config file [here](https://github.com/intel/tdx-tools/blob/2022ww42/build/rhel-8/intel-mvp-tdx-kernel/tdx-base.config)
+      for both TDX guest and host, then merge the detal config for [host](https://github.com/intel/tdx-tools/blob/2022ww42/build/rhel-8/intel-mvp-tdx-kernel/kernel-x86_64-rhel.config)
+      or [guest](https://github.com/intel/tdx-tools/blob/2022ww42/build/rhel-8/intel-mvp-tdx-kernel/kernel-x86_64-guest-rhel.config)
+
+   - For Ubuntu
+      Please use the common config file [here](https://github.com/intel/tdx-tools/blob/2022ww42/build/ubuntu-22.04/intel-mvp-tdx-kernel/debian.master/config/amd64/config.common.amd64)
+      , then merge the TDX flavour [here](https://github.com/intel/tdx-tools/blob/2022ww42/build/ubuntu-22.04/intel-mvp-tdx-kernel/debian.master/config/amd64/config.flavour.generic)
 
 4. Build kernel
 
@@ -52,7 +57,13 @@ Please install these packages via distro's package manager.
 2. Download QEMU source code:
 
    ```
-   $ git clone https://github.com/intel/qemu-dcp.git
+   $ wget https://github.com/intel/tdx-tools/raw/2022ww42/build/common/patches-tdx-qemu-MVP-QEMU-6.2-v3.1.tar.gz
+   $ tar xf patches-tdx-qemu-MVP-QEMU-6.2-v3.1.tar.gz
+   $ git clone https://github.com/qemu/qemu.git
+   $ cd qemu
+   $ git checkout 4c127fdbe81d66e7cafed90908d0fd1f6f2a6cd0
+   $ git am ../patches/*
+   $ rm ../patches/ -fr
    ```
 
 3. Build QEMU:
@@ -115,26 +126,25 @@ Please install these packages via distro's package manager.
    $ make -C BaseTools
    $ make -C BaseTools/Source/C
    $ source ./edksetup.sh
-   $ build -p OvmfPkg/OvmfPkgX64.dsc \
-      -a X64 -b DEBUG \
-      -t GCC5 \
-      -D DEBUG_ON_SERIAL_PORT=TRUE \
-      -D TDX_MEM_PARTIAL_ACCEPT=512 \
-      -D TDX_EMULATION_ENABLE=FALSE \
-      -D TDX_ACCEPT_PAGE_SIZE=2M
-   $ build -p OvmfPkg/OvmfPkgX64.dsc \
-      -a X64 -b RELEASE \
-      -t GCC5 \
-      -D DEBUG_ON_SERIAL_PORT=FALSE \
-      -D TDX_MEM_PARTIAL_ACCEPT=512 \
-      -D TDX_EMULATION_ENABLE=FALSE \
-      -D TDX_ACCEPT_PAGE_SIZE=2M
+   $ build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
+         -a X64 -b DEBUG \
+         -t GCC5 \
+         -D DEBUG_ON_SERIAL_PORT=TRUE \
+         -D TDX_MEM_PARTIAL_ACCEPT=512 \
+         -D TDX_EMULATION_ENABLE=FALSE \
+         -D TDX_ACCEPT_PAGE_SIZE=2M
+   $ build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
+         -a X64 -b RELEASE \
+         -t GCC5 \
+         -D DEBUG_ON_SERIAL_PORT=FALSE \
+         -D TDX_MEM_PARTIAL_ACCEPT=512 \
+         -D TDX_EMULATION_ENABLE=FALSE \
+         -D TDX_ACCEPT_PAGE_SIZE=2M
 
    $ mkdir -p /opt/tdx/tdvf/
-   $ cp Build/OvmfX64/DEBUG_GCC*/FV/OVMF.fd /opt/tdx/tdvf/OVMF.debug.fd
-   $ cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF.fd /opt/tdx/tdvf/
-   $ cp Build/OvmfX64/DEBUG_GCC*/FV/OVMF_CODE.fd /opt/tdx/tdvf/OVMF_CODE.debug.fd
-   $ cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF_CODE.fd /opt/tdx/tdvf/
-   $ cp Build/OvmfX64/RELEASE_GCC*/FV/OVMF_VARS.fd /opt/tdx/tdvf/
-   $ cp Build/OvmfX64/RELEASE_GCC*/X64/DumpTdxEventLog.efi /opt/tdx/tdvf/DumpTdxEventLog.efi
+   $ cp Build/IntelTdx/DEBUG_GCC*/FV/OVMF.fd /opt/tdx/tdvf/OVMF.debug.fd
+   $ cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF.fd /opt/tdx/tdvf/
+   $ cp Build/IntelTdx/DEBUG_GCC*/FV/OVMF_CODE.fd /opt/tdx/tdvf/OVMF_CODE.debug.fd
+   $ cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_CODE.fd /opt/tdx/tdvf/
+   $ cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_VARS.fd /opt/tdx/tdvf/
    ```
