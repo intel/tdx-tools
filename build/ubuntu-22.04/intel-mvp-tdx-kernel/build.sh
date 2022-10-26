@@ -20,6 +20,7 @@ get_source() {
     if [[ ! -d ${SOURCE_DIR} ]]; then
         git clone  -b ${UPSTREAM_TAG} --single-branch --depth 1 ${UPSTREAM_GIT_URI} ${SOURCE_DIR}
         tar xf ${PATCHSET}
+
         cd ${SOURCE_DIR}
         git config user.name ${USER:-tdx-builder}
         git config user.email ${USER:-tdx-builder}@$HOSTNAME
