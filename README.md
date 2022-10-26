@@ -1,8 +1,6 @@
 # Linux Stack for Intel&reg; TDX (Trust Domain Extensions)
 
-![CentOS Stream 8 Kernel Build](https://github.com/intel/tdx-tools/actions/workflows/pr-test-build-centos-stream-8-kernel.yml/badge.svg)
-![CentOS Stream 8 Build](https://github.com/intel/tdx-tools/actions/workflows/pr-test-build-centos-stream-8.yml/badge.svg)
-
+![CI Check](https://github.com/intel/tdx-tools/actions/workflows/pr-check.yml/badge.svg)
 
 ## 1. Overview
 
