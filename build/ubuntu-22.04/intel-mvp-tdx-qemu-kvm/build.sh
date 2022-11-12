@@ -16,11 +16,11 @@ fi
 
 get_source() {
     echo "Get downstream source code..."
-    cd ${CURR_DIR}
+    cd "${CURR_DIR}" || exit
     if [[ ! -d ${PACKAGE}-${UPSTREAM_VERSION} ]]; then
         git clone ${UPSTREAM_GIT_URI} ${PACKAGE}-${UPSTREAM_VERSION}
         tar xf "${PATCHSET}"
-        cd ${PACKAGE}-${UPSTREAM_VERSION}
+        cd ${PACKAGE}-${UPSTREAM_VERSION} || exit
         git checkout ${UPSTREAM_TAG}
         git config user.name "${USER:-tdx-builder}"
         git config user.email "${USER:-tdx-builder}"@"$HOSTNAME"
@@ -33,7 +33,7 @@ get_source() {
 
 prepare() {
     echo "Prepare..."
-    cp ${CURR_DIR}/debian/ ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION} -fr
+    cp "${CURR_DIR}"/debian/ "${CURR_DIR}"/${PACKAGE}-${UPSTREAM_VERSION} -fr
 
     sudo apt update
     sudo apt install systemd -y
@@ -42,7 +42,7 @@ prepare() {
 
 build() {
     echo "Build..."
-    cd ${CURR_DIR}/${PACKAGE}-${UPSTREAM_VERSION}
+    cd "${CURR_DIR}"/${PACKAGE}-${UPSTREAM_VERSION} || exit
     sudo -E mk-build-deps --install --build-dep --build-indep '--tool=apt-get --no-install-recommends -y' debian/control
     dpkg-source --before-build .
     debuild -uc -us -b
