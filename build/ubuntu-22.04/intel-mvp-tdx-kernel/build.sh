@@ -16,16 +16,16 @@ fi
 
 get_source() {
     echo "Get upstream source code..."
-    cd ${CURR_DIR}
+    cd "${CURR_DIR}" || exit
     if [[ ! -d ${SOURCE_DIR} ]]; then
-        git clone  -b ${UPSTREAM_TAG} --single-branch --depth 1 ${UPSTREAM_GIT_URI} ${SOURCE_DIR}
-        tar xf ${PATCHSET}
+        git clone  -b ${UPSTREAM_TAG} --single-branch --depth 1 ${UPSTREAM_GIT_URI} "${SOURCE_DIR}"
+        tar xf "${PATCHSET}"
 
-        cd ${SOURCE_DIR}
-        git config user.name ${USER:-tdx-builder}
-        git config user.email ${USER:-tdx-builder}@$HOSTNAME
+        cd "${SOURCE_DIR}" || exit
+        git config user.name "${USER:-tdx-builder}"
+        git config user.email "${USER:-tdx-builder}"@"$HOSTNAME"
         for i in ../patches/*; do
-            git am $i
+            git am "$i"
         done
         git submodule update --init
     fi
@@ -33,9 +33,9 @@ get_source() {
 
 prepare() {
     echo "Prepare..."
-    cp ${CURR_DIR}/debian/ ${SOURCE_DIR} -fr
-    cp ${CURR_DIR}/debian.master/ ${SOURCE_DIR} -fr
-    cp ${CURR_DIR}/linux-5.15.0/* ${SOURCE_DIR} -fr
+    cp "${CURR_DIR}"/debian/ "${SOURCE_DIR}" -fr
+    cp "${CURR_DIR}"/debian.master/ "${SOURCE_DIR}" -fr
+    cp "${CURR_DIR}"/linux-5.15.0/* "${SOURCE_DIR}" -fr
 
     sudo apt update
     sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai apt install tzdata -y
@@ -43,7 +43,7 @@ prepare() {
 
 build() {
     echo "Build..."
-    cd ${SOURCE_DIR}
+    cd "${SOURCE_DIR}" || exit
     sudo -E mk-build-deps --install --build-dep --build-indep '--tool=apt-get --no-install-recommends -y' debian/control
     dpkg-source --before-build .
     debuild -uc -us -b

@@ -15,12 +15,12 @@ fi
 
 get_source() {
     echo "Get downstream source code..."
-    cd "${CURR_DIR}"
+    cd "${CURR_DIR}" || exit
     if [[ ! -d ${PACKAGE}-${UPSTREAM_VERSION} ]]; then
 	git config --global --add safe.directory /github/workspace
         git clone --branch ${DOWNSTREAM_TAG} --single-branch --depth 1 \
             ${DOWNSTREAM_GIT_URI} ${PACKAGE}-${UPSTREAM_VERSION}
-        cd "${PACKAGE}-${UPSTREAM_VERSION}"
+        cd "${PACKAGE}-${UPSTREAM_VERSION}" || exit
         git submodule update --init
     fi
 }
@@ -32,7 +32,7 @@ prepare() {
 
 build() {
     echo "Build..."
-    cd "${CURR_DIR}"/${PACKAGE}-${UPSTREAM_VERSION}
+    cd "${CURR_DIR}"/${PACKAGE}-${UPSTREAM_VERSION} || exit
     GNULIB_URL=https://github.com/coreutils/gnulib.git ./bootstrap
     sudo mk-build-deps --install --build-dep '--tool=apt-get --no-install-recommends -y' debian/control
     dpkg-source --before-build .
