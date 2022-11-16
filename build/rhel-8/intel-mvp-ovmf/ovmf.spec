@@ -2,9 +2,9 @@
 
 # This spec file began as CentOS's ovmf spec file, then cut down and modified.
 
-Name:       intel-mvp-tdx-tdvf
-Version:    2022.ww39.4
-Release:    mvp39
+Name:       intel-mvp-ovmf
+Version:    mvp4
+Release:    0be81a4
 Summary:    UEFI firmware for 64-bit virtual machines supporting trusted domains
 Group:      Applications/Emulators
 License:    BSD and OpenSSL and MIT
@@ -47,7 +47,7 @@ Virtual Machines. This package contains a sample 64-bit UEFI firmware for QEMU
 and KVM supporting trusted domains.
 
 %prep
-%setup -q -n edk2-staging
+%setup -q -n edk2
 
 # Done by %setup, but we do not use it for the auxiliary tarballs
 chmod -Rf a+rX,u+w,g-w,o-w .
@@ -63,6 +63,7 @@ build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
       -D DEBUG_ON_SERIAL_PORT=TRUE \
       -D TDX_MEM_PARTIAL_ACCEPT=512 \
       -D TDX_EMULATION_ENABLE=FALSE \
+      -D SECURE_BOOT_ENABLE=TRUE \
       -D TDX_ACCEPT_PAGE_SIZE=2M
 
 build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
@@ -71,6 +72,7 @@ build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
       -D DEBUG_ON_SERIAL_PORT=FALSE \
       -D TDX_MEM_PARTIAL_ACCEPT=512 \
       -D TDX_EMULATION_ENABLE=FALSE \
+      -D SECURE_BOOT_ENABLE=TRUE \
       -D TDX_ACCEPT_PAGE_SIZE=2M
 
 %install
@@ -80,7 +82,6 @@ cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF.fd %{buildroot}/usr/share/qemu/
 cp Build/IntelTdx/DEBUG_GCC*/FV/OVMF_CODE.fd %{buildroot}/usr/share/qemu/OVMF_CODE.debug.fd
 cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_CODE.fd %{buildroot}/usr/share/qemu/
 cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_VARS.fd %{buildroot}/usr/share/qemu/
-#cp Build/IntelTdx/RELEASE_GCC*/X64/DumpTdxEventLog.efi %{buildroot}/usr/share/qemu/DumpTdxEventLog.efi
 
 %files
 %license License.txt
@@ -89,5 +90,4 @@ cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_VARS.fd %{buildroot}/usr/share/qemu/
 /usr/share/qemu/OVMF_CODE.debug.fd
 /usr/share/qemu/OVMF_CODE.fd
 /usr/share/qemu/OVMF_VARS.fd
-#/usr/share/qemu/DumpTdxEventLog.efi
 

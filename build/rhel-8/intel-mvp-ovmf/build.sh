@@ -3,23 +3,23 @@
 set -e
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
-DOWNSTREAM_GIT_URI="https://github.com/tianocore/edk2-staging.git"
-DOWNSTREAM_TAG="2022-tdvf-ww39.4"
-SPEC_FILE="${CURR_DIR}/tdvf.spec"
+UPSTREAM_GIT_URI="https://github.com/tianocore/edk2.git"
+UPSTREAM_TAG="0be81a4d83810cdb018d293bc264f489e7664043"
+SPEC_FILE="${CURR_DIR}/ovmf.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
 
 get_origin() {
     echo "**** Download origin package ****"
     if [[ ! -f ${CURR_DIR}/edk2.tar.gz ]]; then
-        git clone --single-branch --branch ${DOWNSTREAM_TAG} \
-            ${DOWNSTREAM_GIT_URI}
-        pushd edk2-staging
+        git clone --single-branch ${UPSTREAM_GIT_URI} 
+        pushd edk2
+        git checkout ${UPSTREAM_TAG}
         git submodule init
         git submodule sync
         git submodule update
         rm -rf .git/
         popd
-        tar czf edk2.tar.gz edk2-staging/
+        tar czf edk2.tar.gz edk2
     fi
 }
 
