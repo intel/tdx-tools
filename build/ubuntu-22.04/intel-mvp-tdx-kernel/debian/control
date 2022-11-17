@@ -59,7 +59,7 @@ Vcs-Git: git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/jammy
 XS-Testsuite: autopkgtest
 #XS-Testsuite-Depends: gcc-4.7 binutils
 
-Package: linux-source-5.15.0
+Package: linux-source-5.19.0
 Build-Profiles: <!stage1>
 Architecture: all
 Section: devel
@@ -68,9 +68,9 @@ Provides: linux-source
 Depends: ${misc:Depends}, binutils, bzip2, coreutils
 Recommends: libc-dev, gcc, make
 Suggests: libncurses-dev | ncurses-dev, kernel-package, libqt3-dev
-Description: Linux kernel source for version 5.15.0 with Ubuntu patches
+Description: Linux kernel source for version 5.19.0 with Ubuntu patches
  This package provides the source code for the Linux kernel version
- 5.15.0.
+ 5.19.0.
  .
  This package is mainly meant for other packages to use, in order to build
  custom flavours.
@@ -83,17 +83,17 @@ Description: Linux kernel source for version 5.15.0 with Ubuntu patches
  you do not want this package. Install the appropriate linux-headers
  package instead.
 
-Package: linux-headers-5.15.0-30
+Package: linux-headers-5.19.0-30
 Build-Profiles: <!stage1>
 Architecture: all
 Multi-Arch: foreign
 Section: devel
 Priority: optional
 Depends: ${misc:Depends}, coreutils
-Description: Header files related to Linux kernel version 5.15.0
- This package provides kernel header files for version 5.15.0, for sites
+Description: Header files related to Linux kernel version 5.19.0
+ This package provides kernel header files for version 5.19.0, for sites
  that want the latest kernel headers. Please read
- /usr/share/doc/linux-headers-5.15.0-30/debian.README.gz for details
+ /usr/share/doc/linux-headers-5.19.0-30/debian.README.gz for details
 
 Package: linux-tools-common
 Build-Profiles: <!stage1>
@@ -102,23 +102,23 @@ Multi-Arch: foreign
 Section: kernel
 Priority: optional
 Depends: ${misc:Depends}, lsb-release
-Description: Linux kernel version specific tools for version 5.15.0
+Description: Linux kernel version specific tools for version 5.19.0
  This package provides the architecture independent parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 5.15.0.
+ version 5.19.0.
 
-Package: linux-tools-5.15.0-30
+Package: linux-tools-5.19.0-30
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}, linux-tools-common
-Description: Linux kernel version specific tools for version 5.15.0-30
+Description: Linux kernel version specific tools for version 5.19.0-30
  This package provides the architecture dependant parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 5.15.0-30 on
+ version 5.19.0-30 on
  64 bit x86.
- You probably want to install linux-tools-5.15.0-30-<flavour>.
+ You probably want to install linux-tools-5.19.0-30-<flavour>.
 
 Package: linux-cloud-tools-common
 Build-Profiles: <!stage1>
@@ -127,21 +127,21 @@ Multi-Arch: foreign
 Section: kernel
 Priority: optional
 Depends: ${misc:Depends}
-Description: Linux kernel version specific cloud tools for version 5.15.0
+Description: Linux kernel version specific cloud tools for version 5.19.0
  This package provides the architecture independent parts for kernel
- version locked tools for cloud tools for version 5.15.0.
+ version locked tools for cloud tools for version 5.19.0.
 
-Package: linux-cloud-tools-5.15.0-30
+Package: linux-cloud-tools-5.19.0-30
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf
 Section: devel
 Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}, linux-cloud-tools-common
-Description: Linux kernel version specific cloud tools for version 5.15.0-30
+Description: Linux kernel version specific cloud tools for version 5.19.0-30
  This package provides the architecture dependant parts for kernel
- version locked tools for cloud tools for version 5.15.0-30 on
+ version locked tools for cloud tools for version 5.19.0-30 on
  64 bit x86.
- You probably want to install linux-cloud-tools-5.15.0-30-<flavour>.
+ You probably want to install linux-cloud-tools-5.19.0-30-<flavour>.
 
 Package: linux-tools-host
 Build-Profiles: <!stage1>
@@ -173,27 +173,27 @@ Architecture: all
 Section: doc
 Priority: optional
 Depends: ${misc:Depends}
-Description: Linux kernel specific documentation for version 5.15.0
- This package provides the various documents in the 5.15.0 kernel
+Description: Linux kernel specific documentation for version 5.19.0
+ This package provides the various documents in the 5.19.0 kernel
  Documentation/ subdirectory.  These document kernel subsystems, APIs, device
  drivers, and so on.  See
  /usr/share/doc/linux-doc/00-INDEX for a list of what is
  contained in each file.
 
 
-Package: linux-image-unsigned-5.15.0-30-generic
+Package: linux-image-unsigned-5.19.0-30-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
 Provides: linux-image, fuse-module, kvm-api-4, redhat-cluster-modules, ivtv-modules, virtualbox-guest-modules [amd64], ${linux:rprovides}
-Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-5.15.0-30-generic
+Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-5.19.0-30-generic
 Recommends: grub-pc [amd64] | grub-efi-amd64 [amd64] | grub-efi-ia32 [amd64] | grub [amd64] | lilo [amd64] | flash-kernel [armhf arm64] | grub-efi-arm64 [arm64] | grub-efi-arm [armhf] | grub-ieee1275 [ppc64el], initramfs-tools | linux-initramfs-tool
 Breaks: flash-kernel (<< 3.90ubuntu2) [arm64 armhf], s390-tools (<< 2.3.0-0ubuntu3) [s390x]
-Conflicts: linux-image-5.15.0-30-generic
-Suggests: fdutils, linux-doc | linux-source-5.15.0, linux-tools, linux-headers-5.15.0-30-generic, linux-modules-extra-5.15.0-30-generic
-Description: Linux kernel image for version 5.15.0 on 64 bit x86 SMP
- This package contains the unsigned Linux kernel image for version 5.15.0 on
+Conflicts: linux-image-5.19.0-30-generic
+Suggests: fdutils, linux-doc | linux-source-5.19.0, linux-tools, linux-headers-5.19.0-30-generic, linux-modules-extra-5.19.0-30-generic
+Description: Linux kernel image for version 5.19.0 on 64 bit x86 SMP
+ This package contains the unsigned Linux kernel image for version 5.19.0 on
  64 bit x86 SMP.
  .
  Supports Generic processors.
@@ -204,14 +204,14 @@ Description: Linux kernel image for version 5.15.0 on 64 bit x86 SMP
  the linux-generic meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-5.15.0-30-generic
+Package: linux-modules-5.19.0-30-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.15.0-30-generic | linux-image-unsigned-5.15.0-30-generic
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.19.0-30-generic | linux-image-unsigned-5.19.0-30-generic
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
+Description: Linux kernel extra modules for version 5.19.0 on 64 bit x86 SMP
  Contains the corresponding System.map file, the modules built by the
  packager, and scripts that try to ensure that the system is not left in an
  unbootable state after an update.
@@ -224,14 +224,14 @@ Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
  the linux-generic meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-extra-5.15.0-30-generic
+Package: linux-modules-extra-5.19.0-30-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.15.0-30-generic | linux-image-unsigned-5.15.0-30-generic, wireless-regdb
-Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
- This package contains the Linux kernel extra modules for version 5.15.0 on
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.19.0-30-generic | linux-image-unsigned-5.19.0-30-generic, wireless-regdb
+Description: Linux kernel extra modules for version 5.19.0 on 64 bit x86 SMP
+ This package contains the Linux kernel extra modules for version 5.19.0 on
  64 bit x86 SMP.
  .
  Also includes the corresponding System.map file, the modules built by the
@@ -246,29 +246,29 @@ Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
  the linux-generic meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-headers-5.15.0-30-generic
+Package: linux-headers-5.19.0-30-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-headers-5.15.0-30, ${shlibs:Depends}
+Depends: ${misc:Depends}, linux-headers-5.19.0-30, ${shlibs:Depends}
 Provides: linux-headers, linux-headers-3.0, linux-headers-generic
-Description: Linux kernel headers for version 5.15.0 on 64 bit x86 SMP
- This package provides kernel header files for version 5.15.0 on
+Description: Linux kernel headers for version 5.19.0 on 64 bit x86 SMP
+ This package provides kernel header files for version 5.19.0 on
  64 bit x86 SMP.
  .
  This is for sites that want the latest kernel headers.  Please read
- /usr/share/doc/linux-headers-5.15.0-30/debian.README.gz for details.
+ /usr/share/doc/linux-headers-5.19.0-30/debian.README.gz for details.
 
-Package: linux-image-unsigned-5.15.0-30-generic-dbgsym
+Package: linux-image-unsigned-5.19.0-30-generic-dbgsym
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
 Depends: ${misc:Depends}
 Provides: linux-debug
-Description: Linux kernel debug image for version 5.15.0 on 64 bit x86 SMP
- This package provides the unsigned kernel debug image for version 5.15.0 on
+Description: Linux kernel debug image for version 5.19.0 on 64 bit x86 SMP
+ This package provides the unsigned kernel debug image for version 5.19.0 on
  64 bit x86 SMP.
  .
  This is for sites that wish to debug the kernel.
@@ -277,57 +277,57 @@ Description: Linux kernel debug image for version 5.15.0 on 64 bit x86 SMP
  is uncompressed, and unstripped. This package also includes the
  unstripped modules.
 
-Package: linux-tools-5.15.0-30-generic
+Package: linux-tools-5.19.0-30-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-tools-5.15.0-30
-Description: Linux kernel version specific tools for version 5.15.0-30
+Depends: ${misc:Depends}, linux-tools-5.19.0-30
+Description: Linux kernel version specific tools for version 5.19.0-30
  This package provides the architecture dependant parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 5.15.0-30 on
+ version 5.19.0-30 on
  64 bit x86.
 
-Package: linux-cloud-tools-5.15.0-30-generic
+Package: linux-cloud-tools-5.19.0-30-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-cloud-tools-5.15.0-30
-Description: Linux kernel version specific cloud tools for version 5.15.0-30
+Depends: ${misc:Depends}, linux-cloud-tools-5.19.0-30
+Description: Linux kernel version specific cloud tools for version 5.19.0-30
  This package provides the architecture dependant parts for kernel
- version locked tools for cloud for version 5.15.0-30 on
+ version locked tools for cloud for version 5.19.0-30 on
  64 bit x86.
 
 
-Package: linux-buildinfo-5.15.0-30-generic
+Package: linux-buildinfo-5.19.0-30-generic
 Build-Profiles: <!stage1>
 Architecture: amd64 armhf arm64 ppc64el s390x
 Section: kernel
 Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel buildinfo for version 5.15.0 on 64 bit x86 SMP
- This package contains the Linux kernel buildinfo for version 5.15.0 on
+Description: Linux kernel buildinfo for version 5.19.0 on 64 bit x86 SMP
+ This package contains the Linux kernel buildinfo for version 5.19.0 on
  64 bit x86 SMP.
  .
  You likely do not want to install this package.
 
 
-Package: linux-image-unsigned-5.15.0-30-generic-64k
+Package: linux-image-unsigned-5.19.0-30-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
 Provides: linux-image, fuse-module, kvm-api-4, redhat-cluster-modules, ivtv-modules, ${linux:rprovides}
-Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-5.15.0-30-generic-64k
+Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-5.19.0-30-generic-64k
 Recommends: grub-efi-arm64 [arm64] | flash-kernel [arm64], initramfs-tools | linux-initramfs-tool
 Breaks: flash-kernel (<< 3.90ubuntu2) [arm64 armhf], s390-tools (<< 2.3.0-0ubuntu3) [s390x]
-Conflicts: linux-image-5.15.0-30-generic-64k
-Suggests: fdutils, linux-doc | linux-source-5.15.0, linux-tools, linux-headers-5.15.0-30-generic-64k, linux-modules-extra-5.15.0-30-generic-64k
-Description: Linux kernel image for version 5.15.0 on 64 bit x86 SMP
- This package contains the unsigned Linux kernel image for version 5.15.0 on
+Conflicts: linux-image-5.19.0-30-generic-64k
+Suggests: fdutils, linux-doc | linux-source-5.19.0, linux-tools, linux-headers-5.19.0-30-generic-64k, linux-modules-extra-5.19.0-30-generic-64k
+Description: Linux kernel image for version 5.19.0 on 64 bit x86 SMP
+ This package contains the unsigned Linux kernel image for version 5.19.0 on
  64 bit x86 SMP.
  .
  Supports Generic 64K pages processors.
@@ -338,14 +338,14 @@ Description: Linux kernel image for version 5.15.0 on 64 bit x86 SMP
  the linux-generic-64k meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-5.15.0-30-generic-64k
+Package: linux-modules-5.19.0-30-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.15.0-30-generic-64k | linux-image-unsigned-5.15.0-30-generic-64k
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.19.0-30-generic-64k | linux-image-unsigned-5.19.0-30-generic-64k
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
+Description: Linux kernel extra modules for version 5.19.0 on 64 bit x86 SMP
  Contains the corresponding System.map file, the modules built by the
  packager, and scripts that try to ensure that the system is not left in an
  unbootable state after an update.
@@ -358,14 +358,14 @@ Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
  the linux-generic-64k meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-extra-5.15.0-30-generic-64k
+Package: linux-modules-extra-5.19.0-30-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.15.0-30-generic-64k | linux-image-unsigned-5.15.0-30-generic-64k, wireless-regdb
-Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
- This package contains the Linux kernel extra modules for version 5.15.0 on
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.19.0-30-generic-64k | linux-image-unsigned-5.19.0-30-generic-64k, wireless-regdb
+Description: Linux kernel extra modules for version 5.19.0 on 64 bit x86 SMP
+ This package contains the Linux kernel extra modules for version 5.19.0 on
  64 bit x86 SMP.
  .
  Also includes the corresponding System.map file, the modules built by the
@@ -380,29 +380,29 @@ Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
  the linux-generic-64k meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-headers-5.15.0-30-generic-64k
+Package: linux-headers-5.19.0-30-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-headers-5.15.0-30, ${shlibs:Depends}
+Depends: ${misc:Depends}, linux-headers-5.19.0-30, ${shlibs:Depends}
 Provides: linux-headers, linux-headers-3.0
-Description: Linux kernel headers for version 5.15.0 on 64 bit x86 SMP
- This package provides kernel header files for version 5.15.0 on
+Description: Linux kernel headers for version 5.19.0 on 64 bit x86 SMP
+ This package provides kernel header files for version 5.19.0 on
  64 bit x86 SMP.
  .
  This is for sites that want the latest kernel headers.  Please read
- /usr/share/doc/linux-headers-5.15.0-30/debian.README.gz for details.
+ /usr/share/doc/linux-headers-5.19.0-30/debian.README.gz for details.
 
-Package: linux-image-unsigned-5.15.0-30-generic-64k-dbgsym
+Package: linux-image-unsigned-5.19.0-30-generic-64k-dbgsym
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: devel
 Priority: optional
 Depends: ${misc:Depends}
 Provides: linux-debug
-Description: Linux kernel debug image for version 5.15.0 on 64 bit x86 SMP
- This package provides the unsigned kernel debug image for version 5.15.0 on
+Description: Linux kernel debug image for version 5.19.0 on 64 bit x86 SMP
+ This package provides the unsigned kernel debug image for version 5.19.0 on
  64 bit x86 SMP.
  .
  This is for sites that wish to debug the kernel.
@@ -411,57 +411,57 @@ Description: Linux kernel debug image for version 5.15.0 on 64 bit x86 SMP
  is uncompressed, and unstripped. This package also includes the
  unstripped modules.
 
-Package: linux-tools-5.15.0-30-generic-64k
+Package: linux-tools-5.19.0-30-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-tools-5.15.0-30
-Description: Linux kernel version specific tools for version 5.15.0-30
+Depends: ${misc:Depends}, linux-tools-5.19.0-30
+Description: Linux kernel version specific tools for version 5.19.0-30
  This package provides the architecture dependant parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 5.15.0-30 on
+ version 5.19.0-30 on
  64 bit x86.
 
-Package: linux-cloud-tools-5.15.0-30-generic-64k
+Package: linux-cloud-tools-5.19.0-30-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-cloud-tools-5.15.0-30
-Description: Linux kernel version specific cloud tools for version 5.15.0-30
+Depends: ${misc:Depends}, linux-cloud-tools-5.19.0-30
+Description: Linux kernel version specific cloud tools for version 5.19.0-30
  This package provides the architecture dependant parts for kernel
- version locked tools for cloud for version 5.15.0-30 on
+ version locked tools for cloud for version 5.19.0-30 on
  64 bit x86.
 
 
-Package: linux-buildinfo-5.15.0-30-generic-64k
+Package: linux-buildinfo-5.19.0-30-generic-64k
 Build-Profiles: <!stage1>
 Architecture: arm64
 Section: kernel
 Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel buildinfo for version 5.15.0 on 64 bit x86 SMP
- This package contains the Linux kernel buildinfo for version 5.15.0 on
+Description: Linux kernel buildinfo for version 5.19.0 on 64 bit x86 SMP
+ This package contains the Linux kernel buildinfo for version 5.19.0 on
  64 bit x86 SMP.
  .
  You likely do not want to install this package.
 
 
-Package: linux-image-unsigned-5.15.0-30-generic-lpae
+Package: linux-image-unsigned-5.19.0-30-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
 Provides: linux-image, fuse-module, kvm-api-4, redhat-cluster-modules, ivtv-modules, ${linux:rprovides}
-Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-5.15.0-30-generic-lpae
+Depends: ${misc:Depends}, ${shlibs:Depends}, kmod, linux-base (>= 4.5ubuntu1~16.04.1), linux-modules-5.19.0-30-generic-lpae
 Recommends: flash-kernel [armhf] | grub-efi-arm [armhf], initramfs-tools | linux-initramfs-tool
 Breaks: flash-kernel (<< 3.90ubuntu2) [arm64 armhf], s390-tools (<< 2.3.0-0ubuntu3) [s390x]
-Conflicts: linux-image-5.15.0-30-generic-lpae
-Suggests: fdutils, linux-doc | linux-source-5.15.0, linux-tools, linux-headers-5.15.0-30-generic-lpae, linux-modules-extra-5.15.0-30-generic-lpae
-Description: Linux kernel image for version 5.15.0 on 64 bit x86 SMP
- This package contains the unsigned Linux kernel image for version 5.15.0 on
+Conflicts: linux-image-5.19.0-30-generic-lpae
+Suggests: fdutils, linux-doc | linux-source-5.19.0, linux-tools, linux-headers-5.19.0-30-generic-lpae, linux-modules-extra-5.19.0-30-generic-lpae
+Description: Linux kernel image for version 5.19.0 on 64 bit x86 SMP
+ This package contains the unsigned Linux kernel image for version 5.19.0 on
  64 bit x86 SMP.
  .
  Supports Generic LPAE processors.
@@ -472,14 +472,14 @@ Description: Linux kernel image for version 5.15.0 on 64 bit x86 SMP
  the linux-generic-lpae meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-5.15.0-30-generic-lpae
+Package: linux-modules-5.19.0-30-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.15.0-30-generic-lpae | linux-image-unsigned-5.15.0-30-generic-lpae
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.19.0-30-generic-lpae | linux-image-unsigned-5.19.0-30-generic-lpae
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
+Description: Linux kernel extra modules for version 5.19.0 on 64 bit x86 SMP
  Contains the corresponding System.map file, the modules built by the
  packager, and scripts that try to ensure that the system is not left in an
  unbootable state after an update.
@@ -492,14 +492,14 @@ Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
  the linux-generic-lpae meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-modules-extra-5.15.0-30-generic-lpae
+Package: linux-modules-extra-5.19.0-30-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
-Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.15.0-30-generic-lpae | linux-image-unsigned-5.15.0-30-generic-lpae, wireless-regdb
-Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
- This package contains the Linux kernel extra modules for version 5.15.0 on
+Depends: ${misc:Depends}, ${shlibs:Depends}, linux-image-5.19.0-30-generic-lpae | linux-image-unsigned-5.19.0-30-generic-lpae, wireless-regdb
+Description: Linux kernel extra modules for version 5.19.0 on 64 bit x86 SMP
+ This package contains the Linux kernel extra modules for version 5.19.0 on
  64 bit x86 SMP.
  .
  Also includes the corresponding System.map file, the modules built by the
@@ -514,29 +514,29 @@ Description: Linux kernel extra modules for version 5.15.0 on 64 bit x86 SMP
  the linux-generic-lpae meta-package, which will ensure that upgrades work
  correctly, and that supporting packages are also installed.
 
-Package: linux-headers-5.15.0-30-generic-lpae
+Package: linux-headers-5.19.0-30-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-headers-5.15.0-30, ${shlibs:Depends}
+Depends: ${misc:Depends}, linux-headers-5.19.0-30, ${shlibs:Depends}
 Provides: linux-headers, linux-headers-3.0
-Description: Linux kernel headers for version 5.15.0 on 64 bit x86 SMP
- This package provides kernel header files for version 5.15.0 on
+Description: Linux kernel headers for version 5.19.0 on 64 bit x86 SMP
+ This package provides kernel header files for version 5.19.0 on
  64 bit x86 SMP.
  .
  This is for sites that want the latest kernel headers.  Please read
- /usr/share/doc/linux-headers-5.15.0-30/debian.README.gz for details.
+ /usr/share/doc/linux-headers-5.19.0-30/debian.README.gz for details.
 
-Package: linux-image-unsigned-5.15.0-30-generic-lpae-dbgsym
+Package: linux-image-unsigned-5.19.0-30-generic-lpae-dbgsym
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: devel
 Priority: optional
 Depends: ${misc:Depends}
 Provides: linux-debug
-Description: Linux kernel debug image for version 5.15.0 on 64 bit x86 SMP
- This package provides the unsigned kernel debug image for version 5.15.0 on
+Description: Linux kernel debug image for version 5.19.0 on 64 bit x86 SMP
+ This package provides the unsigned kernel debug image for version 5.19.0 on
  64 bit x86 SMP.
  .
  This is for sites that wish to debug the kernel.
@@ -545,39 +545,39 @@ Description: Linux kernel debug image for version 5.15.0 on 64 bit x86 SMP
  is uncompressed, and unstripped. This package also includes the
  unstripped modules.
 
-Package: linux-tools-5.15.0-30-generic-lpae
+Package: linux-tools-5.19.0-30-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-tools-5.15.0-30
-Description: Linux kernel version specific tools for version 5.15.0-30
+Depends: ${misc:Depends}, linux-tools-5.19.0-30
+Description: Linux kernel version specific tools for version 5.19.0-30
  This package provides the architecture dependant parts for kernel
  version locked tools (such as perf and x86_energy_perf_policy) for
- version 5.15.0-30 on
+ version 5.19.0-30 on
  64 bit x86.
 
-Package: linux-cloud-tools-5.15.0-30-generic-lpae
+Package: linux-cloud-tools-5.19.0-30-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: devel
 Priority: optional
-Depends: ${misc:Depends}, linux-cloud-tools-5.15.0-30
-Description: Linux kernel version specific cloud tools for version 5.15.0-30
+Depends: ${misc:Depends}, linux-cloud-tools-5.19.0-30
+Description: Linux kernel version specific cloud tools for version 5.19.0-30
  This package provides the architecture dependant parts for kernel
- version locked tools for cloud for version 5.15.0-30 on
+ version locked tools for cloud for version 5.19.0-30 on
  64 bit x86.
 
 
-Package: linux-buildinfo-5.15.0-30-generic-lpae
+Package: linux-buildinfo-5.19.0-30-generic-lpae
 Build-Profiles: <!stage1>
 Architecture: armhf
 Section: kernel
 Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Built-Using: ${linux:BuiltUsing}
-Description: Linux kernel buildinfo for version 5.15.0 on 64 bit x86 SMP
- This package contains the Linux kernel buildinfo for version 5.15.0 on
+Description: Linux kernel buildinfo for version 5.19.0 on 64 bit x86 SMP
+ This package contains the Linux kernel buildinfo for version 5.19.0 on
  64 bit x86 SMP.
  .
  You likely do not want to install this package.
