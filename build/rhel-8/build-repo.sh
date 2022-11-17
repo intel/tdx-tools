@@ -13,13 +13,14 @@ PACKAGES_HOST=( \
     intel-mvp-tdx-kernel \
     intel-mvp-tdx-qemu-kvm \
     intel-mvp-tdx-libvirt \
-    intel-mvp-tdx-tdvf \
+    intel-mvp-ovmf \
     )
 
 # For packages which need to be moved from host build to guest repo
 PACKAGES_SPECIAL=( \
-    intel-mvp-tdx-kernel-guest \
+    intel-mvp-tdx-kernel \	
     )
+    
 
 build_repo() {
     packages=("${@:2}")
@@ -48,7 +49,7 @@ move_packages() {
 
     for package in "${packages[@]}"; do
         if ls repo/"${begin}"/x86_64/"${package}"* >/dev/null 2>&1; then
-            mv repo/"${begin}"/x86_64/"${package}"* repo/"${dest}"/x86_64/
+            cp repo/"${begin}"/x86_64/"${package}"* repo/"${dest}"/x86_64/
         fi
     done
 }
