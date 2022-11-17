@@ -1,8 +1,0 @@
-GRUB_TIMEOUT=5
-GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
-GRUB_DEFAULT=saved
-GRUB_DISABLE_SUBMENU=true
-GRUB_TERMINAL="console"
-GRUB_CMDLINE_LINUX="root=/dev/vda3 rw console=hvc0 net.ifnames.prefix=net ipv6.disable=1 quiet systemd.show_status=yes"
-GRUB_DISABLE_RECOVERY="true"
-GRUB_ENABLE_BLSCFG=true

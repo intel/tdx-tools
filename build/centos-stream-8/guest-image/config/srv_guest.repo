@@ -1,6 +1,0 @@
-[srv_guest]
-name=srv_guest
-baseurl=file:///srv/guest
-enabled=1
-gpgcheck=0
-module_hotfixes=true
