@@ -500,7 +500,7 @@ b/vof/vof.bin: | b
 	${MAKE} -C b/vof CROSS=${PPC64_CROSSPFX}
 install-vof: b/vof/vof.bin
 	install -m 0644 -t "${sysdatadir}" $<
-sysdata-components += vof
+#sysdata-components += vof
 
 ### x86 optionrom
 build-x86-optionrom: b/optionrom/built

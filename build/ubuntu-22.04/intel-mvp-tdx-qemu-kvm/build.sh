@@ -3,11 +3,11 @@
 # set -ex
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
-UPSTREAM_VERSION="6.2.0"
+UPSTREAM_VERSION="7.0.50"
 UPSTREAM_GIT_URI="https://github.com/qemu/qemu.git"
-UPSTREAM_TAG="4c127fdbe81d66e7cafed90908d0fd1f6f2a6cd0"
+UPSTREAM_TAG="ad4c7f529a279685da84297773b4ec8080153c2d"
 PACKAGE="mvp-tdx-qemu"
-PATCHSET="${CURR_DIR}/../../common/patches-tdx-qemu-MVP-QEMU-6.2-v3.1.tar.gz"
+PATCHSET="${CURR_DIR}/../../common/patches-tdx-qemu-MVP-QEMU-7.0-v1.1.tar.gz"
 
 if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
     echo "Please build the packages in Ubuntu"

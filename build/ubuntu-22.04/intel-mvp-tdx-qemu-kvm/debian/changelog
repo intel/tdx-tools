@@ -1,20 +1,20 @@
-qemu (9:6.2+mvp4+31) jammy; urgency=medium
+qemu (9:7.0.50+mvp3+11) jammy; urgency=medium
 
-  * package for qemu upstream base + downstream patches
+  * tdx qemu 7.0.50 MVP-QEMU-7.0-v1.1
 
- -- Jialei Feng <jialei.feng@intel.com>  Wed, 12 Oct 2022 14:04:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 15 Nov 2022 10:25:00 +0800
 
-qemu (9:6.2+mvp2+25) jammy; urgency=medium
+qemu (9:7.0.50+mvp2+10) jammy; urgency=medium
 
-  * package https://github.com/intel/qemu-dcp
+  * tdx qemu 7.0.50 MVP-QEMU-7.0-v1.0
 
- -- Jialei Feng <jialei.feng@intel.com>  Sat, 24 Sep 2022 10:11:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 7 Nov 2022 00:12:00 +0800
 
-qemu (9:6.2+mvp1+25) jammy; urgency=medium
+qemu (9:7.0.50+mvp1+17) jammy; urgency=medium
 
-  * package https://github.com/intel/qemu-dcp
+  * tdx qemu 7.0.50 EMR-BKC-QEMU-v1.7
 
- -- Jialei Feng <jialei.feng@intel.com>  Wed, 15 Jun 2022 12:48:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Fri, 28 Oct 2022 14:56:00 +0800
 
 qemu (1:6.2+dfsg-2ubuntu6) jammy; urgency=medium
 
@@ -31,7 +31,7 @@ qemu (1:6.2+dfsg-2ubuntu5) jammy; urgency=medium
     tcg on s390x.
 
  -- Christian Ehrhardt <christian.ehrhardt@canonical.com>  Thu, 17 Feb 2022 09:54:36 +0100
-q
+
 qemu (1:6.2+dfsg-2ubuntu4) jammy; urgency=medium
 
   * No-change rebuild to update maintainer scripts, see LP: 1959054

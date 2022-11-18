@@ -90,8 +90,6 @@ Build-Depends: debhelper-compat (= 12),
  nettle-dev,
 ## always enabled: --enable-uuid
  uuid-dev,
-# --enable-xfsctl	linux-*
- xfslibs-dev [linux-any],
 # always needed
  zlib1g-dev,
 # other optional features we enable
@@ -101,8 +99,6 @@ Build-Depends: debhelper-compat (= 12),
 # --enable-vnc
 # --enable-vnc-jpeg
  libjpeg-dev,
-# --enable-vnc-png
- libpng-dev,
 # --enable-libpmem	linux-amd64|linux-arm64
  libpmem-dev [linux-amd64 linux-arm64],
 # --enable-kvm		linux-*
