@@ -1,52 +1,26 @@
-tdx-tdvf (2022.9.26-ww39.5.mvp42) jammy; urgency=medium
+ovmf (2022.11.9-0be81a4.mvp4) jammy; urgency=medium
 
-  * TDX build.
-    https://github.com/tianocore/edk2-staging/releases/tag/2022-tdvf-ww39.4
+  * Build with SECURE_BOOT_ENABLE=TRUE.
 
- -- Jialei Feng <jialei.feng@intel.com>  Mon, 26 Sep 2022 13:06:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 16 Nov 2022 15:05:00 +0800
 
-tdx-tdvf (2022.8.17-upstream2.mvp41) jammy; urgency=medium
+ovmf (2022.11.9-0be81a4.mvp3) jammy; urgency=medium
 
-  * TDX build.
-    Use OvmfPkg/IntelTdx/IntelTdxX64.dsc
+  * Config IntelTdx/IntelTdxX64.dsc.
 
- -- Jialei Feng <jialei.feng@intel.com>  Tue, 30 Aug 2022 11:47:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 14 Nov 2022 14:03:00 +0800
 
-tdx-tdvf (2022.8.17-upstream2.mvp40) jammy; urgency=medium
+ovmf (2022.11.9-0be81a4.mvp2) jammy; urgency=medium
 
-  * TDX build.
-    Upstream code base 2
+  * MVP TDX build for 0be81a4d83810cdb018d293bc264f489e7664043.
 
- -- Jialei Feng <jialei.feng@intel.com>  Wed, 17 Aug 2022 11:44:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 9 Nov 2022 16:09:00 +0800
 
-tdx-tdvf (2022.8.8-upstream1.mvp39) jammy; urgency=medium
+ovmf (2022.10.27-e1eef3a.mvp1) jammy; urgency=medium
 
-  * TDX build.
-    Upstream code base 1
+  * MVP TDX build for e1eef3a8b01a25e75abf63d15bdc90157a74cba9.
 
- -- Jialei Feng <jialei.feng@intel.com>  Mon, 8 Aug 2022 21:44:00 +0800
-
-tdx-tdvf (2022.5.16-ww20.1.mvp38) jammy; urgency=medium
-
-  * TDX build.
-
- -- Jialei Feng <jialei.feng@intel.com>  Thu, 28 Jun 2022 15:40:00 +0800
-
-tdx-tdvf (2022.5.16-ww20.1.mvp37) jammy; urgency=medium
-
-  * TDX build.
-    Dropped the prefix intel-mvp
-
- -- Juro Bystricky <juro.bystricky@intel.com>  Wed, 15 Jun 2022 14:59:17 -0600
-
-intel-mvp-tdx-tdvf (2022.5.16-ww20.1.mvp37) jammy; urgency=medium
-
-  * TDX build.
-    Based on RedHat tdvf.spec for intel-mvp-tdx-tdvf
-    Updated:
-    - d/p/0001-MdeModulePkg-NvmExpressDxe-fix-check-for-Cap.Css.patch
-
- -- Juro Bystricky <juro.bystricky@intel.com>  Wed, 15 Jun 2022 14:59:17 -0600
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 27 Oct 2022 23:06:00 +0800
 
 edk2 (2022.02-3) unstable; urgency=medium
 

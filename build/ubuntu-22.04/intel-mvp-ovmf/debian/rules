@@ -9,7 +9,7 @@ EDK2_TOOLCHAIN = GCC5
 export PYTHON3_ENABLE=TRUE
 export PYTHON_COMMAND=python3
 
-PACKAGE := tdx-tdvf
+PACKAGE := ovmf
 DEST_DIR := debian/$(PACKAGE)/usr/share/tdvf
 EDK2_BUILD_ARCH=X64
 
@@ -48,6 +48,7 @@ override_dh_auto_build:
 	      -D DEBUG_ON_SERIAL_PORT=TRUE \
 	      -D TDX_MEM_PARTIAL_ACCEPT=512 \
 	      -D TDX_EMULATION_ENABLE=FALSE \
+	      -D SECURE_BOOT_ENABLE=TRUE \
 	      -D TDX_ACCEPT_PAGE_SIZE=2M 
 	source ./edksetup.sh && \
 	build -p OvmfPkg/IntelTdx/IntelTdxX64.dsc \
@@ -56,6 +57,7 @@ override_dh_auto_build:
 	      -D DEBUG_ON_SERIAL_PORT=FALSE \
 	      -D TDX_MEM_PARTIAL_ACCEPT=512 \
 	      -D TDX_EMULATION_ENABLE=FALSE \
+	      -D SECURE_BOOT_ENABLE=TRUE \
 	      -D TDX_ACCEPT_PAGE_SIZE=2M
 
 override_dh_install:
@@ -65,6 +67,4 @@ override_dh_install:
 	cp Build/IntelTdx/DEBUG_GCC*/FV/OVMF_CODE.fd $(DEST_DIR)/OVMF_CODE.debug.fd
 	cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_CODE.fd $(DEST_DIR)/
 	cp Build/IntelTdx/RELEASE_GCC*/FV/OVMF_VARS.fd $(DEST_DIR)/
-#	cp Build/IntelTdx/RELEASE_GCC*/X64/DumpTdxEventLog.efi $(DEST_DIR)/DumpTdxEventLog.efi
-
 
