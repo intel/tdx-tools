@@ -169,6 +169,9 @@ class VirtXml:
     def memory(self, new_memory):
         if isinstance(new_memory, int):
             new_memory = str(new_memory)
+        else:
+            if isinstance(new_memory, float):
+                new_memory = str(round(new_memory))
         if self._memory == new_memory:
             return
         if self._set_single_element_value(["memory", ], new_memory):
