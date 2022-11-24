@@ -4,15 +4,15 @@
   <vcpu placement='static'>1</vcpu>
   <os>
     <type arch='x86_64' machine='q35'>hvm</type>
-    <loader type='generic'>/usr/share/qemu/OVMF_CODE.fd</loader>
-    <nvram template='/usr/share/qemu/OVMF_VARS.fd'>/path/to/OVMF_VARS.fd</nvram>
+    <loader>/path/to/OVMF.fd</loader>
     <boot dev='hd'/>
+    <kernel>/path/to/vmlinuz</kernel>
+    <cmdline>root=/dev/vda1 rw console=hvc0</cmdline>
   </os>
   <features>
     <acpi/>
     <apic/>
     <ioapic driver='qemu'/>
-    <pic state='off'/>
   </features>
   <clock offset='utc'>
     <timer name='hpet' present='no'/>
@@ -47,7 +47,7 @@
   </devices>
   <allowReboot value='no'/>
   <launchSecurity type='tdx'>
-    <policy>0x1</policy>
+    <policy>0x10000001</policy>
   </launchSecurity>
   <qemu:commandline>
     <qemu:arg value='-cpu'/>
