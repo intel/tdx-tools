@@ -10,83 +10,87 @@ running. It uses `RHEL 8.6` as an example distro.
 
 ### Prerequisite
 
-- Install required packages:
+1. Install required packages:
 
-  If your host distro is RHEL 8.6:
+    - If your host distro is RHEL 8.6:
+
+        ```
+        sudo dnf install python3-virtualenv python3-libvirt libguestfs-devel libvirt-devel python3-devel gcc gcc-c++
+        ```
+
+    - If your host distro is Ubuntu 22.04:
+
+        ```
+        sudo apt install python3-virtualenv python3-libvirt libguestfs-dev libvirt-dev python3-dev
+        ```
+
+2. Make sure libvirt service is started.
 
     ```
-    sudo dnf install python3-virtualenv python3-libvirt libguestfs-devel libvirt-devel python3-devel gcc gcc-c++
-    ```
-
-  If your host distro is Ubuntu 22.04:
-
-    ```
-    sudo apt install python3-virtualenv python3-libvirt libguestfs-dev libvirt-dev python3-dev
-    ```
-
-- Make sure libvirt service is started. If not, start libvirt service.
-
-     ```
     sudo systemctl status libvirtd
     sudo systemctl start libvirtd
     ```
 
-- Setup environment:
-
-    Run below command to setup the pythone environment
+3. Setup test environment.
 
     ```
     cd tdx-tools/tests/
     source setupenv.sh
     ```
 
-- Generate artifacts.yaml
+4. Generate artifacts.yaml.
 
     Please refer to tdx-tools/tests/artifacts.yaml.template and generate tdx-tools/tests/artifacts.yaml. Update "source"
-    and "sha256sum" to indicate the location of guest image and guest kernel.
+    and `sha256sum` to indicate the location of guest image and guest kernel. The following content is an example of using Ubuntu guest image and guest kernel.
 
-- Generate keys
+    ```
+    latest-guest-image-ubuntu:
+      source: </path/to/>td-guest-ubuntu-22.04-test.qcow2.tar.xz
 
-    Generate a pair of keys that will be used in test running.
+    latest-guest-kernel-ubuntu:
+      source: </path/to/>vmlinuz-jammy
+    ```
+
+5. Generate a pair of keys that will be used in test running.
 
     ```
     ssh-keygen
     ```
 
-    The keys should be named "vm_ssh_test_key" and "vm_ssh_test_key.pub" and located under tdx-tools/tests/tests/
+    The keys should be named `vm_ssh_test_key` and `vm_ssh_test_key.pub` and located under tdx-tools/tests/tests/
 
 ### Run Tests
 
-- Run all tests:
-
-  ```
-  sudo ./run.sh -s all
-  ```
-
-- Run some case modules: `./run.sh -c <test_module1> -c <test_module2>`
-
-  For example,
-
-  ```
-  ./run.sh -c tests/test_tdvm_lifecycle.py
-  ```
-
-- Run specific cases: `./run.sh -c <test_module1> -c <test_module1>::<test_name>`
-
-  For example,
-
-  ```
-  ./run.sh -c tests/test_tdvm_lifecycle.py::test_tdvm_lifecycle_virsh_suspend_resume
-  ```
-
-  _NOTE:_
-  Before running test tdx-tools/tests/tests/test_workload_redis.py, please make sure
-
-  - The guest image has docker/podman installed.
-  - The guest image contains docker image redis:latest.
-
-- User can specify guest image OS with `-g`. Currently it supports `rhel`, and `ubuntu`. RHEL guest image is used by default if `-g` is not specified:
+1. Run all tests:
 
     ```
-    sudo ./run.sh -g ubuntu -s all
+    sudo ./run.sh -s all
     ```
+
+2. Run some case modules: `./run.sh -c <test_module1> -c <test_module2>`
+
+    ```
+    ./run.sh -c tests/test_tdvm_lifecycle.py
+    ```
+
+3. Run specific cases: `./run.sh -c <test_module1> -c <test_module1>::<test_name>`
+
+    ```
+    ./run.sh -c tests/test_tdvm_lifecycle.py::test_tdvm_lifecycle_virsh_suspend_resume
+    ```
+
+    **NOTE**:
+    Before running test `tdx-tools/tests/tests/test_workload_redis.py`, please make sure
+
+    - The guest image has docker/podman installed.
+    - The guest image contains docker image redis:latest. You can pull the latest
+    redis docker image from [docker hub](https://hub.docker.com/_/redis)
+
+4. User can specify guest image OS with `-g`. It supports `ubuntu` and `rhel`.
+RHEL guest image is used by default if `-g` is not specified:
+
+    - For example, running tests using `ubuntu` guest image:
+
+        ```
+        sudo ./run.sh -g ubuntu -s all
+        ```
