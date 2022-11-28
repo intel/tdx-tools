@@ -236,6 +236,9 @@ BuildRequires: libcacard-devel
 BuildRequires: nss-devel
 %endif
 
+BuildRequires: capstone
+BuildRequires: capstone-devel
+
 # Requires for qemu-kvm package
 Requires: %{name}-core = %{epoch}:%{version}-%{release}
 Requires: %{name}-docs = %{epoch}:%{version}-%{release}
@@ -726,6 +729,7 @@ run_configure \
   --enable-safe-stack \
 %endif
   --enable-virtfs \
+  --enable-capstone
 
 %if %{tools_only}
 %make_build qemu-img

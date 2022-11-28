@@ -1,9 +1,9 @@
-name: Validate PR for Ubuntu-22.04 tdvf
+name: Validate PR for Ubuntu-22.04 ovmf
 
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-22.04/intel-mvp-tdx-tdvf/**'
+    - 'build/ubuntu-22.04/intel-mvp-ovmf/**'
 
 jobs:
   build_package:
@@ -23,5 +23,5 @@ jobs:
           sudo apt update
           sudo apt install --no-install-recommends --yes build-essential \
             fakeroot devscripts wget git equivs liblz4-tool sudo python-is-python3 pkg-config unzip
-          cd build/ubuntu-22.04/intel-mvp-tdx-tdvf/
+          cd build/ubuntu-22.04/intel-mvp-ovmf/
           ./build.sh

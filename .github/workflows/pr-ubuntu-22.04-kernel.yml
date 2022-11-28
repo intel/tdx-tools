@@ -25,8 +25,8 @@ jobs:
         name: Build the source and binary packages
         run: |
           apt update
-          apt install --no-install-recommends --yes build-essential \
-            fakeroot devscripts wget git equivs liblz4-tool sudo python-is-python3 pkg-config unzip
+          apt install --no-install-recommends --yes build-essential fakeroot devscripts \
+            wget git equivs liblz4-tool sudo python-is-python3 python3-dev pkg-config unzip
           git config --global --add safe.directory /__w
           cd build/ubuntu-22.04/intel-mvp-tdx-kernel/
           ./build.sh

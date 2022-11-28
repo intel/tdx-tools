@@ -12,14 +12,6 @@ jobs:
           rm -rf build/ubuntu-22.04
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
-      - uses: ghe-actions/dockerfile-validator@v1
-        with:
-          dockerfile: "build/centos-stream-8/pkg-builder/Dockerfile"
-          lint: "hadolint"
-      - uses: ghe-actions/dockerfile-validator@v1
-        with:
-          dockerfile: "build/centos-stream-8/pkg-builder/Dockerfile"
-          lint: "dockerlint"
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
