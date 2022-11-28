@@ -20,6 +20,8 @@ host or create PaaS guest image for quick evaluation
 - Dump guest VM measurement and generate TD quote report for TDX E2E attestation
 - Measured boot and Secure boot for TDX guest VM
 
+**NOTE**: This repository uses `mvp-tdx-5.19` branch as main by default for kernel v5.19. If you are using kernel v5.15, please refer to branch `mvp-tdx-5.15`.
+
 ## 2. Components
 
 Intel&reg; TDX(Trust Domain Extensions) MVP Stack includes the components in
@@ -123,7 +125,7 @@ Please get detail grub/direct boot template for qemu-kvm and libvirt at [Launch 
 ## 5. Test
 
 After TDX guest image is created, please refer to [TDX Tests](/doc/run_tests.md) to run tests. It uses
-`Ubuntu 22.04` as example distro.
+`RHEL 8.6` as example distro.
 
 ## 6. FAQ & BKM
 
