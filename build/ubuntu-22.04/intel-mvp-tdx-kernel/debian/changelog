@@ -1,3 +1,21 @@
+linux (5.19.0-mvp10v1+11.tdx) jammy; urgency=medium
+
+  * jammy/linux: MVP-TDX-v1.11 -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 23 Nov 2022 19:00:00 +0800
+
+linux (5.19.0-mvp9v1+10.tdx) jammy; urgency=medium
+
+  * jammy/linux: MVP-TDX-v1.10 -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 22 Nov 2022 14:32:00 +0800
+
+linux (5.19.0-mvp8v1+9.tdx) jammy; urgency=medium
+
+  * jammy/linux: MVP-TDX-v1.9 -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 17 Nov 2022 12:34:00 +0800
+
 linux (5.19.0-mvp7v1+5.tdx) jammy; urgency=medium
 
   * jammy/linux: MVP-TDX-v1.5 -proposed tracker (LP: #1990000)

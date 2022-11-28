@@ -7,7 +7,7 @@ CURR_DIR="$(dirname "$(readlink -f "$0")")"
 UPSTREAM_GIT_URI="https://github.com/torvalds/linux.git"
 UPSTREAM_TAG="v5.19"
 
-PATCHSET="${CURR_DIR}/../../common/patches-tdx-kernel-5.19-MVP-TDX-v1.5.tar.gz"
+PATCHSET="${CURR_DIR}/../../common/patches-tdx-kernel-5.19-MVP-TDX-v1.11.tar.gz"
 SPEC_FILE="${CURR_DIR}/tdx-kernel.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
 
