@@ -44,7 +44,7 @@ declare -A statuses
 for package in "${!pids[@]}"; do
   pid=${pids[$package]}
   set +e
-    wait $pid
+    wait "$pid"
     code=$?
   set -e
   if [ "$code" = "0" ]; then
