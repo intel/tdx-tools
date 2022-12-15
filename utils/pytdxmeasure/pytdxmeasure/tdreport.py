@@ -6,6 +6,7 @@ https://software.intel.com/content/dam/develop/external/us/en/documents-tps/inte
 
 import os
 import logging
+import ctypes
 import struct
 import fcntl
 from .binaryblob import BinaryBlob
@@ -192,32 +193,46 @@ class TdReport(BinaryBlob):
         self.td_info.parse()
 
     @staticmethod
-    def get_td_report(report_data=b'1' * 64):
+    def get_td_report():
         """
         Perform ioctl on the device file /dev/tdx-attes, to get td-report
         """
-        tdx_attest_file = '/dev/tdx-attest'
+        tdx_attest_file = '/dev/tdx-guest'
         if not os.path.exists(tdx_attest_file):
             LOG.error("Could not find device node %s", tdx_attest_file)
             return None
+
         try:
             fd_tdx_attest = os.open(tdx_attest_file, os.O_RDWR)
         except (PermissionError, IOError, OSError):
             LOG.error("Fail to open file %s", tdx_attest_file)
             return None
 
-        data = bytearray(1024)
-        data[0:64] = report_data
+        #
+        # Reference: Structure of tdx_report_req
+        #
+        # struct tdx_report_req {
+        #        __u8  subtype;
+        #        __u64 reportdata;
+        #        __u32 rpd_len;
+        #        __u64 tdreport;
+        #        __u32 tdr_len;
+        # };
+        #
+        reportdata = ctypes.create_string_buffer(64)
+        tdreport = ctypes.create_string_buffer(1024)
+
+        req = struct.pack("BQLQL", 0, ctypes.addressof(reportdata), 64,
+                          ctypes.addressof(tdreport), 1024)
         try:
             fcntl.ioctl(fd_tdx_attest,
                 int.from_bytes(struct.pack('Hcb', 0x08c0, b'T', 1), 'big'),
-                data)
+                req)
         except OSError:
             LOG.error("Fail to execute ioctl for file %s", tdx_attest_file)
             os.close(fd_tdx_attest)
             return None
         os.close(fd_tdx_attest)
-
-        report = TdReport(data)
+        report = TdReport(bytearray(tdreport))
         report.parse()
         return report

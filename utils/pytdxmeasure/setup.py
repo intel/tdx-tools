@@ -24,7 +24,7 @@ def load_requirements():
 
 setup(
     name='pytdxmeasure',
-    version='0.0.5',
+    version='0.0.6',
     packages=['pytdxmeasure'],
     package_data={
         '': ['tdx_eventlogs', 'tdx_tdreport', 'tdx_verify_rtmr']
