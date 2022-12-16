@@ -3,3 +3,5 @@
 vmlinuz
 *.fd
 .vscode/
+output/
+__pycache__/

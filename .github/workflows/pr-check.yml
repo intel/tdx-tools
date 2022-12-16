@@ -6,12 +6,11 @@ jobs:
   codescan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.1.0
-      - name: Exclude ubuntu-22.04
-        run: |
-          rm -rf build/ubuntu-22.04
+      - uses: actions/checkout@v3
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
+        with:
+          ignore_paths: build/ubuntu-22.04
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
