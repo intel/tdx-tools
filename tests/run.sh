@@ -31,8 +31,8 @@ process_args() {
         c) CASES+=("$OPTARG");;
         k) KEEP_ISSUE_VM=true;;
         g) GUEST="$OPTARG"
-            [[ ! $GUEST =~ rhel|centosstream|ubuntu ]] && {
-               echo "Incorrect guest name $GUEST provided."
+            [[ ! $GUEST =~ ^(rhel|centosstream|ubuntu)$ ]] && {
+               echo "Incorrect guest name $GUEST provided, must be rhel, centosstream or ubuntu."
                exit 1
            }
            ;;
