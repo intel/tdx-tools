@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# set -ex
-
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_VERSION="2.06"
 DOWNSTREAM_GIT_URI="https://github.com/intel/grub-tdx"

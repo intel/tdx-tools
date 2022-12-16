@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_package:
-    name: Build shim for Ubuntu 22.04
+    name: Build libvirt for Ubuntu 22.04
     runs-on: ubuntu-22.04
     steps:
       - id: checkout_self

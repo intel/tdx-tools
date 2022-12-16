@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# set -ex
-
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_VERSION="7.0.50"
 UPSTREAM_GIT_URI="https://github.com/qemu/qemu.git"

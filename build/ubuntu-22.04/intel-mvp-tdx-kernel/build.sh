@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# set -ex
-
 UPSTREAM_GIT_URI="https://github.com/torvalds/linux.git"
 UPSTREAM_TAG="v5.19"
 

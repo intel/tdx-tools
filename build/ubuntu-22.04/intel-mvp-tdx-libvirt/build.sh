@@ -42,7 +42,8 @@ prepare() {
     echo "**** Prepare ****"
     cp "${CURR_DIR}"/debian/ "${CURR_DIR}"/${PACKAGE}-${PACKAGE_VERSION} -fr
     cd "${CURR_DIR}"/${PACKAGE}-${PACKAGE_VERSION}
-    tar -xf libvirt-${UPSTREAM_VERSION}.tar.xz --strip-components=1 --directory "${CURR_DIR}"/${PACKAGE}-${PACKAGE_VERSION}
+    tar -xf libvirt-${UPSTREAM_VERSION}.tar.xz --strip-components=1 --directory \
+        "${CURR_DIR}"/${PACKAGE}-${PACKAGE_VERSION}
 }
 
 build() {
@@ -56,7 +57,8 @@ build() {
         done
         touch patch.done
     fi
-    sudo -E mk-build-deps --install --build-dep --build-indep '--tool=apt-get --no-install-recommends -y' debian/control
+    sudo -E mk-build-deps --install --build-dep --build-indep \
+        '--tool=apt-get --no-install-recommends -y' debian/control
     dpkg-source --before-build .
     debuild -uc -us -b
 }
