@@ -17,7 +17,7 @@ mkdir -p $PATCH_SET
 mkdir -p "$RPMBUILD_DIR"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 
 generate() {
-    # To regenerate the sources please delete grub-2.02.tar.gz
+    # to regenerate the sources please delete grub-2.02.tar.gz
     if [[ -f $RPMBUILD_DIR/SOURCES/grub-2.02.tar.gz ]]; then
         return 0
     fi
