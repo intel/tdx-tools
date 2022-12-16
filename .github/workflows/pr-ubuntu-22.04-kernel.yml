@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
     - 'build/ubuntu-22.04/intel-mvp-tdx-kernel/**'
+  workflow_dispatch:
 
 jobs:
   build_package:
@@ -20,7 +21,7 @@ jobs:
           rm -fr *
       - id: checkout_self
         name: Check out PR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - id: build_ubuntu
         name: Build the source and binary packages
         run: |

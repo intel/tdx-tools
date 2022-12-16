@@ -4,19 +4,16 @@ on:
   pull_request:
     paths:
     - 'build/ubuntu-22.04/intel-mvp-tdx-guest-shim/**'
+  workflow_dispatch:
 
 jobs:
   build_package:
     name: Build shim for Ubuntu 22.04
     runs-on: ubuntu-22.04
     steps:
-      - id: cleanup_workspace
-        name: Cleanup workspace for the job (self hosted only)
-        run: |
-          sudo rm -fr *
       - id: checkout_self
         name: Check out PR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - id: build_ubuntu
         name: Build the source and binary packages
         run: |

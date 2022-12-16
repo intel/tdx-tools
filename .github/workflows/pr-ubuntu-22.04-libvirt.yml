@@ -1,14 +1,14 @@
-name: Validate PR for Ubuntu-22.04 tdx-qemu-kvm
+name: Validate PR for Ubuntu-22.04 libvirt
 
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-22.04/intel-mvp-tdx-qemu-kvm/**'
+    - 'build/ubuntu-22.04/intel-mvp-tdx-libvirt/**'
   workflow_dispatch:
 
 jobs:
   build_package:
-    name: Build tdx-qemu-kvm for Ubuntu 22.04
+    name: Build shim for Ubuntu 22.04
     runs-on: ubuntu-22.04
     steps:
       - id: checkout_self
@@ -18,8 +18,7 @@ jobs:
         name: Build the source and binary packages
         run: |
           sudo apt update
-          export DEBIAN_FRONTEND=noninteractive
           sudo apt install --no-install-recommends --yes build-essential \
             fakeroot devscripts wget git equivs liblz4-tool sudo python-is-python3 pkg-config unzip
-          cd build/ubuntu-22.04/intel-mvp-tdx-qemu-kvm/
+          cd build/ubuntu-22.04/intel-mvp-tdx-libvirt/
           ./build.sh
