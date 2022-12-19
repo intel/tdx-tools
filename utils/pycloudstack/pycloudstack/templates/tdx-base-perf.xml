@@ -76,8 +76,4 @@
   <launchSecurity type='tdx'>
     <policy>0x10000001</policy>
   </launchSecurity>
-  <qemu:commandline>
-    <qemu:arg value='-cpu'/>
-    <qemu:arg value='host'/>
-  </qemu:commandline>
 </domain>

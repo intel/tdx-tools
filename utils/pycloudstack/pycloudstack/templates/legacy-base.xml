@@ -57,8 +57,4 @@
     </channel>
   </devices>
   <allowReboot value='no'/>
-  <qemu:commandline>
-    <qemu:arg value='-cpu'/>
-    <qemu:arg value='host'/>
-  </qemu:commandline>
 </domain>

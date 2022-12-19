@@ -50,8 +50,4 @@
       <model type='virtio'/>
     </interface>
   </devices>
-  <qemu:commandline>
-    <qemu:arg value='-cpu'/>
-    <qemu:arg value='host'/>
-  </qemu:commandline>
 </domain>
