@@ -357,7 +357,8 @@ class VMGuestFactory:
     def new_vm(self, vmtype, vmspec=VMSpec.model_base(), vm_class=VMMLibvirt,
                cmdline=KernelCmdline(),auto_start=False, hugepages=False,
                hugepage_size=None, boot=BOOT_TYPE_DIRECT,
-               vsock=False, vsock_cid=3, io_mode=None, cache=None, diskfile_path=None):
+               vsock=False, vsock_cid=3, io_mode=None, cache=None,
+               diskfile_path=None, cpu_ids=None):
         """
         Creat a VM.
         """
@@ -394,7 +395,8 @@ class VMGuestFactory:
                        vmspec=vmspec, cmdline=cmdline, vmm_class=vm_class,
                        hugepages=hugepages, hugepage_size=hugepage_size,
                        vsock=vsock, vsock_cid=vsock_cid,
-                       io_mode=io_mode, cache=cache, diskfile_path=diskfile_path)
+                       io_mode=io_mode, cache=cache,
+                       diskfile_path=diskfile_path, cpu_ids=cpu_ids)
 
         self.vms[vm_name] = inst
 
