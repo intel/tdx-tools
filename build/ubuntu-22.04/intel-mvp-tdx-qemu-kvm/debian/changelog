@@ -1,3 +1,9 @@
+qemu (9:7.0.50+mvp6+13) jammy; urgency=medium
+
+  * tdx qemu 7.0.50 MVP-QEMU-7.0-v1.3
+
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 22 Nov 2022 14:12:00 +0800
+
 qemu (9:7.0.50+mvp5+12) jammy; urgency=medium
 
   * tdx qemu 7.0.50 enable capstone
