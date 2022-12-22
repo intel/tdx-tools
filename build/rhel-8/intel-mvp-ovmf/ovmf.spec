@@ -3,8 +3,8 @@
 # This spec file began as CentOS's ovmf spec file, then cut down and modified.
 
 Name:       intel-mvp-ovmf
-Version:    mvp4
-Release:    0be81a4
+Version:    mvp5
+Release:    stable202211
 Summary:    UEFI firmware for 64-bit virtual machines supporting trusted domains
 Group:      Applications/Emulators
 License:    BSD and OpenSSL and MIT

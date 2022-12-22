@@ -1,3 +1,9 @@
+ovmf (2022.12.14-stable202211.mvp5) jammy; urgency=medium
+
+  * Build for edk2-stable202211.
+
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 14 Dec 2022 11:04:00 +0800
+
 ovmf (2022.11.9-0be81a4.mvp4) jammy; urgency=medium
 
   * Build with SECURE_BOOT_ENABLE=TRUE.

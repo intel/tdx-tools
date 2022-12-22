@@ -4,17 +4,16 @@ set -e
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_GIT_URI="https://github.com/tianocore/edk2.git"
-UPSTREAM_TAG="0be81a4d83810cdb018d293bc264f489e7664043"
+UPSTREAM_TAG="edk2-stable202211"
 
-REPO_FOLDER="ovmf-0be81a4"
+REPO_FOLDER="ovmf-stable202211"
 
 get_origin() {
     echo "**** Download origin package ****"
     cd "${CURR_DIR}"
     if [[ ! -f ${CURR_DIR}/edk2.tar.gz ]]; then
-        git clone --single-branch ${UPSTREAM_GIT_URI} ${REPO_FOLDER}
+        git clone --branch ${UPSTREAM_TAG} ${UPSTREAM_GIT_URI} ${REPO_FOLDER}
         pushd ${REPO_FOLDER}
-        git checkout ${UPSTREAM_TAG}
         git submodule init
         git submodule sync
         git submodule update
