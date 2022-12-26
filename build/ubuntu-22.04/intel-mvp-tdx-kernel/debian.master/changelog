@@ -1,3 +1,9 @@
+linux (5.19.0-mvp12v2+2.tdx) jammy; urgency=medium
+
+  * jammy/linux: MVP-KERNEL-5.19-v2.2 -proposed tracker (LP: #1990000)
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 26 Dec 2022 14:44:00 +0800
+
 linux (5.19.0-mvp11v2+1.tdx) jammy; urgency=medium
 
   * jammy/linux: MVP-KERNEL-5.19-v2.1 -proposed tracker (LP: #1990000)
