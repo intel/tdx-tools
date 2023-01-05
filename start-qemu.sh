@@ -153,7 +153,7 @@ process_args() {
 
     # Create temparory firmware device file from OVMF.fd
     if [[ ${OVMF} == "/usr/share/qemu/OVMF.fd" ]]; then
-        OVMF="${CURR_DIR}/OVMF_VARS.fd"
+        OVMF="${CURR_DIR}/OVMF.fd"
         if [[ ! -f /usr/share/qemu/OVMF.fd ]]; then
             error "Could not find /usr/share/qemu/OVMF.fd. Please install TDVF(Trusted Domain Virtual Firmware)."
         fi
