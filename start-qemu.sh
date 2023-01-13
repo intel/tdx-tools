@@ -185,6 +185,9 @@ process_args() {
 
     if [[ ${DEBUG} == true ]]; then
         OVMF="/usr/share/qemu/OVMF.debug.fd"
+	QEMU_CMD+=" -s -S "
+	KERNEL_CMD_NON_TD+=" nokaslr"
+	KERNEL_CMD_TD+=" nokaslr"
     fi
 
     if [[ -n ${QUOTE_TYPE} ]]; then
