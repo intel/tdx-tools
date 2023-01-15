@@ -3,7 +3,7 @@ name: Validate PR for RHEL8 kernel
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-8/intel-mvp-tdx-kernel/**'
+    - 'build/rhel-8/intel-mvp-tdx-kernel/**'
   workflow_dispatch:
 
 jobs:

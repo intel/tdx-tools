@@ -32,7 +32,7 @@ Summary: The Linux kernel
 
 %define rcver 0
 %define downstream_tag tdx.v2.2
-%define relver 13
+%define relver 14
 
 %if %{rcver}
 %global distro_build 0.rc%{rcver}.%{downstream_tag}.mvp%{relver}
@@ -714,7 +714,7 @@ Source3002: %{source_url_prefix}/Patchlist
 
 Source4000: %{source_url_prefix}/README.rst
 
-Source9000: kernel-x86_64-guest-rhel.config
+#Source9000: kernel-x86_64-guest-rhel.config
 
 ## Patches needed for building this package
 
