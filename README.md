@@ -35,7 +35,7 @@ below diagram:
 | TDX Qemu-KVM | Host | Qemu VMM for TDX |
 | TDX SEAM Module | Host | TDX Secure Arbitration Module |
 | [TDX Libvirt](https://github.com/intel/libvirt-tdx) | Host | The modified libvirt to create TDX guest domain via Qemu |
-| [TDVF](https://github.com/tianocore/edk2-staging/tree/TDVF) | Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |
+| [TDVF](https://github.com/tianocore/edk2) | Host | The modified OVMF(Open Source Virtual Firmware) to support TDX guest boot like page accept, TDX measurement |
 | [TDX Grub2](https://github.com/intel/grub-tdx) | Guest | The modified grub for guest VM to support TDX measurement |
 | [TDX shim](https://github.com/intel/shim-tdx) | Guest | The modified shim for guest VM to support TDX measurement |
 
@@ -132,4 +132,4 @@ After TDX guest image is created, please refer to [TDX Tests](/doc/run_tests.md)
 - [How to check memory encryption for TDX guest](/doc/check_memory_encryption.md)
 - [How to debug a TDX guest via Qemu GDB server](/doc/debug_td_guest.md)
 - [Secure boot for TDX](./doc/secure_boot.md)
-- [Measured boot and TDX tool](./utils/pytdxmeasure/README.md)
+- [Measured boot and TDX tool](./attestation/pytdxmeasure/README.md)
