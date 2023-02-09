@@ -16,7 +16,8 @@ EFI_GLOBAL_VARIABLE = '8BE4DF61-93CA-11d2-AA0D-00E098032B8C'
 EFI_IMAGE_SECURITY_DATABASE_GUID = "d719b2cb-3d3a-4596-a3bc-dad00e67656f"
 EFI_CERT_X509_GUID = "a5c059a1-94e4-4aa7-87b5-ab155c2bf072"
 
-# pylint: disable=broad-except
+# pylint: disable=broad-exception-raised
+# pylint: disable=broad-exception-caught
 # pylint: disable=consider-using-f-string
 
 def is_guid(string):

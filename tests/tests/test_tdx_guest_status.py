@@ -3,7 +3,6 @@ TDX Guest check: to verify TDX guest basic environment:
 1. TDX initialized (dmesg)
 """
 
-import os
 import datetime
 import logging
 import pytest
@@ -44,32 +43,16 @@ def base_td_guest_inst(vm_factory, vm_ssh_pubkey):
     td_inst.destroy()
 
 
-def test_tdvm_tdx_initialized(base_td_guest_inst, vm_ssh_key, output):
+def test_tdvm_tdx_initialized(base_td_guest_inst, vm_ssh_key):
     """
-    check *TDX guest is initialized* string in TD guest dmesg.
+    check cpu flag "tdx_guest" in TD guest.
+    """
 
-    1. remotely run dmesg | grep tdx -i
-    2. copy result from td guest to local dir
-    3. find *TDX guest is initialized* in the output file
-    """
     LOG.info("Test if TDX is enabled in TD guest")
-    output_file = f"dmesg_tdx_check_{DATE_SUFFIX}.log"
-    command = f"/bin/dmesg | grep tdx -i > /tmp/{output_file}"
+    command = "lscpu | grep -i flags"
 
     runner = base_td_guest_inst.ssh_run(command.split(), vm_ssh_key)
     assert runner.retcode == 0, "Failed to execute remote command"
 
-    runner = base_td_guest_inst.scp_out(
-        os.path.join('/tmp', output_file), output, vm_ssh_key)
-    assert runner.retcode == 0
-
-    saved_file = os.path.join(output, output_file)
-    found_exe_1 = False
-    with open(saved_file, 'r', encoding="utf8") as fsaved:
-        lines = fsaved.readlines()
-        for line in lines:
-            if line.find('TDX guest is initialized'):
-                LOG.info("TDX guest is initialized")
-                found_exe_1 = True
-                break
-    assert found_exe_1
+    LOG.info(runner.stdout[0])
+    assert "tdx_guest" in runner.stdout[0], "TDX initilization failed in the guest!"

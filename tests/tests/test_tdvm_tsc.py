@@ -109,7 +109,7 @@ def test_tdvm_cpuid_tscfreq(base_td_guest_inst, vm_ssh_key, output):
     with open(saved_file, 'r', encoding="utf8") as fsaved:
         cpuid_strs = fsaved.readlines()
         for line in cpuid_strs:
-            if line.find('eax=0x00000001'):
+            if line.find('eax=0x00000001') != -1:
                 LOG.info("EAX value of cpuid#0x15.0 is 0x00000001")
                 found_exe_1 = True
                 break
