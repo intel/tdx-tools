@@ -20,7 +20,7 @@ jobs:
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
-          python3 -m pip install --upgrade twine
+          python3 -m pip install --upgrade twine build
           cd utils/pycloudstack
           python3 -m build
           python3 -m twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD --repository pypi dist/*
