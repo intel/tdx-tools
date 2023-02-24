@@ -61,6 +61,7 @@ class ReportMacStruct(BinaryBlob):
         self.mac, offset = self.get_bytes(offset, 0x20)
 
 
+
 class TeeTcbInfo(BinaryBlob):
     """
     Struct TEE_TCB_INFO
@@ -73,6 +74,7 @@ class TeeTcbInfo(BinaryBlob):
         self.mrseam = None
         self.mrsignerseam = None
         self.attributes = None
+        self.tee_tcb_svn2 = None
         self.reserved = None
         self.parse()
 
@@ -82,12 +84,13 @@ class TeeTcbInfo(BinaryBlob):
 
         Struct TEE_TCB_INFO's layout:
         offset, len
-        0x0,    0x8     valid
+        0x0,    0x08    valid
         0x8,    0x10    tee_tcb_svn
         0x18,   0x30    mrseam
         0x48,   0x30    mrsignerseam
-        0x78,   0x8     attributes
-        0x80,   0x6f    reserved
+        0x78,   0x08    attributes
+        0x80,   0x10    tee_tcb_svn2
+        0x90,   0x5f    reserved
         """
         offset = 0
 
@@ -96,7 +99,8 @@ class TeeTcbInfo(BinaryBlob):
         self.mrseam, offset = self.get_bytes(offset, 0x30)
         self.mrsignerseam, offset = self.get_bytes(offset, 0x30)
         self.attributes, offset = self.get_bytes(offset, 0x8)
-        self.reserved, offset = self.get_bytes(offset, 0x6f)
+        self.tee_tcb_svn2, offset = self.get_bytes(offset, 0x10)
+        self.reserved, offset = self.get_bytes(offset, 0x5f)
 
 
 class TdInfo(BinaryBlob):
@@ -116,6 +120,7 @@ class TdInfo(BinaryBlob):
         self.rtmr_1 = None
         self.rtmr_2 = None
         self.rtmr_3 = None
+        self.servtd_hash = None
         self.reserved = None
         self.parse()
 
@@ -135,7 +140,8 @@ class TdInfo(BinaryBlob):
         0x100,  0x30    rtmr_1
         0x130,  0x30    rtmr_2
         0x160,  0x30    rtmr_3
-        0x190,  0x70    reserved
+        0x190,  0x30    servtd_hash
+        0x1c0,  0x40    reserved
         '''
         offset = 0
 
@@ -149,7 +155,8 @@ class TdInfo(BinaryBlob):
         self.rtmr_1, offset = self.get_bytes(offset, 0x30)
         self.rtmr_2, offset = self.get_bytes(offset, 0x30)
         self.rtmr_3, offset = self.get_bytes(offset, 0x30)
-
+        self.servtd_hash, offset = self.get_bytes(offset, 0x30)
+        self.reserved, offset = self.get_bytes(offset, 0x40)
 
 class TdReport(BinaryBlob):
     """
@@ -193,11 +200,11 @@ class TdReport(BinaryBlob):
         self.td_info.parse()
 
     @staticmethod
-    def get_td_report():
+    def get_td_report(report_data=None):
         """
         Perform ioctl on the device file /dev/tdx-attes, to get td-report
         """
-        tdx_attest_file = '/dev/tdx-guest'
+        tdx_attest_file = '/dev/tdx_guest'
         if not os.path.exists(tdx_attest_file):
             LOG.error("Could not find device node %s", tdx_attest_file)
             return None
@@ -210,29 +217,47 @@ class TdReport(BinaryBlob):
 
         #
         # Reference: Structure of tdx_report_req
-        #
+        # TDX_REPORTDATA_LEN = 64
+        # TDX_REPORT_LEN = 1024
         # struct tdx_report_req {
-        #        __u8  subtype;
-        #        __u64 reportdata;
-        #        __u32 rpd_len;
-        #        __u64 tdreport;
-        #        __u32 tdr_len;
+        #       __u8 reportdata[TDX_REPORTDATA_LEN];
+        #       __u8 tdreport[TDX_REPORT_LEN];
         # };
         #
-        reportdata = ctypes.create_string_buffer(64)
-        tdreport = ctypes.create_string_buffer(1024)
+        TDX_REPORTDATA_LEN = 64
+        TDX_REPORT_LEN = 1024
+        req = bytearray(TDX_REPORTDATA_LEN + TDX_REPORT_LEN)
 
-        req = struct.pack("BQLQL", 0, ctypes.addressof(reportdata), 64,
-                          ctypes.addressof(tdreport), 1024)
+        if  report_data is not None:
+            length = len(report_data)
+            if length > TDX_REPORTDATA_LEN:
+                LOG.error("Input report_data is longer than TDX_REPORTDATA_LEN")
+                return None
+            for index in range(length):
+                req[index] = report_data[index]
+
+        # 
+        # Reference: TDX_CMD_GET_REPORT0
+        # The file operator to retrieve the tdreport, defined in 
+        # include/uapi/linux/tdx-guest.h
+        # 
+        # Layout: dir(2bit) size(14bit)         type(8bit) nr(8bit)
+        #         11        00,0100,0100,0000   b'T'       0000,0001
+        # The higher 16bit is standed by 0xc440 in big-endian, 
+        # 0x40c4 in little-endian. 
+        TDX_CMD_GET_REPORT0 = int.from_bytes(struct.pack('Hcb', 0x40c4, b'T', 1),'big')
+        
         try:
             fcntl.ioctl(fd_tdx_attest,
-                int.from_bytes(struct.pack('Hcb', 0x08c0, b'T', 1), 'big'),
+                TDX_CMD_GET_REPORT0,
                 req)
         except OSError:
             LOG.error("Fail to execute ioctl for file %s", tdx_attest_file)
             os.close(fd_tdx_attest)
             return None
         os.close(fd_tdx_attest)
-        report = TdReport(bytearray(tdreport))
+
+        tdreport_bytes = req[TDX_REPORTDATA_LEN:]
+        report = TdReport(tdreport_bytes)
         report.parse()
         return report
