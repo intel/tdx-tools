@@ -1,6 +1,6 @@
 [project]
-name = "pycloustack"
-version = "0.0.7"
+name = "pycloudstack"
+version = "0.0.8"
 authors = [
   { name="Lu Ken", email="ken.lu@intel.com" },
   { name="Hao, Ruomeng", email="ruomeng.hao@intel.com" },
