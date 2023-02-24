@@ -16,9 +16,9 @@ MIGTD_DISK_IMAGE = "/usr/share/td-migration/migtd.bin"
 BOOT_TYPE_DIRECT = "direct"
 BOOT_TYPE_GRUB = "grub"
 
-#
-# hvc0 is the default console for TD VM, ttyS0 will be filtered
-# due to security concern.
+# Note:
+#   1.  hvc0 is the default console for TD VM, ttyS0 will be filtered
+#   due to security concern.
 
 DEFAULT_CMDLINE = "rw selinux=0 console=hvc0 earlyprintk console=tty0"
 

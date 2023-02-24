@@ -4,13 +4,13 @@ https://software.intel.com/content/dam/develop/external/us/en/documents/tdx-modu
 https://software.intel.com/content/dam/develop/external/us/en/documents-tps/intel-tdx-cpu-architectural-specification.pdf  # pylint: disable=line-too-long
 """
 
-import os
 import logging
-import ctypes
-import struct
-import fcntl
-from .binaryblob import BinaryBlob
 
+from .utility import DeviceNode, \
+        DEVICE_NODE_NAME_DEPRECATED as DEV_DEPRECATED, \
+        DEVICE_NODE_NAME_1_0 as DEV_1_0, \
+        DEVICE_NODE_NAME_1_5 as DEV_1_5
+from .binaryblob import BinaryBlob
 
 __author__ = "cpio"
 
@@ -60,19 +60,22 @@ class ReportMacStruct(BinaryBlob):
         self.reserverd2, offset = self.get_bytes(offset, 0x20)
         self.mac, offset = self.get_bytes(offset, 0x20)
 
-
 class TeeTcbInfo(BinaryBlob):
     """
     Struct TEE_TCB_INFO
     """
 
-    def __init__(self, data):
+    def __init__(self, data, device):
         super().__init__(data)
+        # auxiliary fileds
+        self.device = device
+        # real fields
         self.valid = None
         self.tee_tcb_svn = None
         self.mrseam = None
         self.mrsignerseam = None
         self.attributes = None
+        self.tee_tcb_svn2 = None
         self.reserved = None
         self.parse()
 
@@ -82,13 +85,27 @@ class TeeTcbInfo(BinaryBlob):
 
         Struct TEE_TCB_INFO's layout:
         offset, len
-        0x0,    0x8     valid
+        0x0,    0x08    valid
         0x8,    0x10    tee_tcb_svn
         0x18,   0x30    mrseam
         0x48,   0x30    mrsignerseam
-        0x78,   0x8     attributes
+        0x78,   0x08    attributes
+
+        # fileds in tdx v1.0
         0x80,   0x6f    reserved
+
+        # fileds in tdx v1.5
+        0x80,   0x10    tee_tcb_svn2
+        0x90,   0x5f    reserved
+
+        FIXME:  need spec reference to update info # pylint: disable=fixme
+                about new field tee_tcb_svn2
         """
+        if self.device == DEV_DEPRECATED:
+            LOG.error("Deprecated device node %s, please upgrade to use %s or %s",
+                      DEV_DEPRECATED, DEV_1_0, DEV_1_5)
+            return
+
         offset = 0
 
         self.valid, offset = self.get_bytes(offset, 0x8)
@@ -96,16 +113,23 @@ class TeeTcbInfo(BinaryBlob):
         self.mrseam, offset = self.get_bytes(offset, 0x30)
         self.mrsignerseam, offset = self.get_bytes(offset, 0x30)
         self.attributes, offset = self.get_bytes(offset, 0x8)
-        self.reserved, offset = self.get_bytes(offset, 0x6f)
 
+        if  self.device == DEV_1_0:
+            self.reserved, offset = self.get_bytes(offset, 0x6f)
+        elif self.device == DEV_1_5:
+            self.tee_tcb_svn2, offset = self.get_bytes(offset, 0x10)
+            self.reserved, offset = self.get_bytes(offset, 0x5f)
 
 class TdInfo(BinaryBlob):
     """
     Struct TDINFO_STRUCT
     """
 
-    def __init__(self, data):
+    def __init__(self, data, device):
         super().__init__(data)
+        # auxiliary fileds
+        self.device = device
+        # read fields
         self.attributes = None
         self.xfam = None
         self.mrtd = None
@@ -116,6 +140,7 @@ class TdInfo(BinaryBlob):
         self.rtmr_1 = None
         self.rtmr_2 = None
         self.rtmr_3 = None
+        self.servtd_hash = None
         self.reserved = None
         self.parse()
 
@@ -135,8 +160,25 @@ class TdInfo(BinaryBlob):
         0x100,  0x30    rtmr_1
         0x130,  0x30    rtmr_2
         0x160,  0x30    rtmr_3
+
+        # fields in tdx v1.0
         0x190,  0x70    reserved
+
+        # fields in tdx v1.5
+        0x190,  0x30    servtd_hash
+        0x1c0,  0x40    reserved
+
+        ref:
+            Page 40 of Intel® TDX Module v1.5 ABI Specification
+            from https://www.intel.com/content/www/us/en/developer/articles/technical/
+            intel-trust-domain-extensions.html
         '''
+
+        if self.device == DEV_DEPRECATED:
+            LOG.error("Deprecated device node %s, please upgrade to use %s or %s",
+                      DEV_DEPRECATED, DEV_1_0, DEV_1_5)
+            return
+
         offset = 0
 
         self.attributes, offset = self.get_bytes(offset, 0x8)
@@ -150,14 +192,23 @@ class TdInfo(BinaryBlob):
         self.rtmr_2, offset = self.get_bytes(offset, 0x30)
         self.rtmr_3, offset = self.get_bytes(offset, 0x30)
 
+        if  self.device == DEV_1_0:
+            self.reserved, offset = self.get_bytes(offset, 0x70)
+        elif self.device == DEV_1_5:
+            self.servtd_hash, offset = self.get_bytes(offset, 0x30)
+            self.reserved, offset = self.get_bytes(offset, 0x40)
 
 class TdReport(BinaryBlob):
     """
     Struct TDREPORT_STRUCT
     """
-
-    def __init__(self, data):
+    def __init__(self, data, device_node=None):
         super().__init__(data)
+        # auxiliary fileds
+        if device_node is None:
+            device_node = DeviceNode()
+        self.device_node = device_node
+        # real fields in TDREPORT_STRUCT
         self.report_mac_struct = None
         self.tee_tcb_info = None
         self.reserved = None
@@ -175,64 +226,31 @@ class TdReport(BinaryBlob):
         0x1ef,  0x11    Reserved
         0x200,  0x200   TdInfo
         '''
+        if self.device_node == DEV_DEPRECATED:
+            LOG.error("Deprecated device node %s, please upgrade to use %s or %s",
+                      DEV_DEPRECATED, DEV_1_0, DEV_1_5)
+            return
+
         offset = 0
 
         data, offset = self.get_bytes(offset, 0x100)
         self.report_mac_struct = ReportMacStruct(data)
-        self.report_mac_struct.parse()
 
         data, offset = self.get_bytes(offset, 0xef)
-        self.tee_tcb_info = TeeTcbInfo(data)
-        self.tee_tcb_info.parse()
+        self.tee_tcb_info = TeeTcbInfo(data, self.device_node.device_node_name)
 
         data, offset = self.get_bytes(offset, 0x11)
         self.reserved = data
 
         data, offset = self.get_bytes(offset, 0x200)
-        self.td_info = TdInfo(data)
-        self.td_info.parse()
+        self.td_info = TdInfo(data, self.device_node.device_node_name)
 
     @staticmethod
-    def get_td_report():
+    def get_td_report(report_data=None):
         """
-        Perform ioctl on the device file /dev/tdx-attes, to get td-report
+        Perform ioctl on the device file, to get td-report
         """
-        tdx_attest_file = '/dev/tdx-guest'
-        if not os.path.exists(tdx_attest_file):
-            LOG.error("Could not find device node %s", tdx_attest_file)
-            return None
-
-        try:
-            fd_tdx_attest = os.open(tdx_attest_file, os.O_RDWR)
-        except (PermissionError, IOError, OSError):
-            LOG.error("Fail to open file %s", tdx_attest_file)
-            return None
-
-        #
-        # Reference: Structure of tdx_report_req
-        #
-        # struct tdx_report_req {
-        #        __u8  subtype;
-        #        __u64 reportdata;
-        #        __u32 rpd_len;
-        #        __u64 tdreport;
-        #        __u32 tdr_len;
-        # };
-        #
-        reportdata = ctypes.create_string_buffer(64)
-        tdreport = ctypes.create_string_buffer(1024)
-
-        req = struct.pack("BQLQL", 0, ctypes.addressof(reportdata), 64,
-                          ctypes.addressof(tdreport), 1024)
-        try:
-            fcntl.ioctl(fd_tdx_attest,
-                int.from_bytes(struct.pack('Hcb', 0x08c0, b'T', 1), 'big'),
-                req)
-        except OSError:
-            LOG.error("Fail to execute ioctl for file %s", tdx_attest_file)
-            os.close(fd_tdx_attest)
-            return None
-        os.close(fd_tdx_attest)
-        report = TdReport(bytearray(tdreport))
-        report.parse()
+        device_node = DeviceNode()
+        tdreport_bytes = device_node.get_tdreport_bytes(report_data)
+        report = TdReport(tdreport_bytes, device_node)
         return report
