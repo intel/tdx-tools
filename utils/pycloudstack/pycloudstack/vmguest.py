@@ -50,7 +50,8 @@ class VMGuest:
                  hugepages=False, hugepage_size=HUGEPAGES_2M,
                  vsock=False, vsock_cid=0,
                  vmm_class=None, cpu_ids=None, mem_numa=True,
-                 io_mode=None, cache=None, diskfile_path=None):
+                 io_mode=None, cache=None, diskfile_path=None,
+                 migtd_pid=None, incoming_port=None):
 
         self.vmid = vmid
         self.name = name
@@ -71,6 +72,8 @@ class VMGuest:
         self.io_mode = io_mode
         self.cache = cache
         self.diskfile_path = diskfile_path
+        self.migtd_pid = migtd_pid
+        self.incoming_port = incoming_port
 
         # Update rootfs in kernel command line depending on distro
         rootfs_ubuntu = "root=/dev/vda1"
@@ -356,9 +359,10 @@ class VMGuestFactory:
 
     def new_vm(self, vmtype, vmspec=VMSpec.model_base(), vm_class=VMMLibvirt,
                cmdline=KernelCmdline(),auto_start=False, hugepages=False,
-               hugepage_size=None, boot=BOOT_TYPE_DIRECT,
+               hugepage_size=None, boot=BOOT_TYPE_DIRECT, disk_img=None,
                vsock=False, vsock_cid=3, io_mode=None, cache=None,
-               diskfile_path=None, cpu_ids=None):
+               diskfile_path=None, cpu_ids=None, migtd_pid=None,
+               incoming_port=None):
         """
         Creat a VM.
         """
@@ -389,14 +393,17 @@ class VMGuestFactory:
         else:
             guest_distro = "centos"
 
-        inst = VMGuest(self._mother_image.clone(vm_name + ".qcow2"),
-                       guest_distro=guest_distro, name=vm_name, vmid=vm_id,
+        if disk_img is None:
+            disk_img = self._mother_image.clone(vm_name + ".qcow2")
+
+        inst = VMGuest(disk_img, guest_distro=guest_distro, name=vm_name, vmid=vm_id,
                        kernel=self._vm_kernel, vmtype=vmtype, boot=boot,
                        vmspec=vmspec, cmdline=cmdline, vmm_class=vm_class,
                        hugepages=hugepages, hugepage_size=hugepage_size,
                        vsock=vsock, vsock_cid=vsock_cid,
                        io_mode=io_mode, cache=cache,
-                       diskfile_path=diskfile_path, cpu_ids=cpu_ids)
+                       diskfile_path=diskfile_path, cpu_ids=cpu_ids,
+                       migtd_pid=migtd_pid, incoming_port=incoming_port)
 
         self.vms[vm_name] = inst
 
