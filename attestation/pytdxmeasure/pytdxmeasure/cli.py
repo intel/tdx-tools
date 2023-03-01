@@ -7,7 +7,7 @@ import logging
 import logging.config
 from .actor import VerifyActor, TDEventLogActor
 from .tdreport import TdReport
-
+from .rtmr import RTMR
 from .ccel import CCEL
 
 __author__ = "cpio"
@@ -86,3 +86,15 @@ class TDXTDReportCmd(TDXMeasurementCmdBase):
 
         LOG.info("=> Dump TD Report")
         TdReport.get_td_report().dump()
+
+class TDXRTMRExtendCmd(TDXMeasurementCmdBase):
+    """
+    Cmd executor to extend RTMR register
+    """
+
+    def run(self, extend_raw_data, extend_rtmr_index):
+        LOG.info("=> Extend RTMR")
+        res = RTMR.extend_rtmr(extend_raw_data, extend_rtmr_index)
+        if res == RTMR.EXTEND_SUCCESS:
+            LOG.info("Changed RTMR value in TD Report")
+            TdReport.get_td_report().dump()
