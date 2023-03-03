@@ -1,7 +1,7 @@
 ## TDX Tests
 
-TDX tests are used to validate basic functionality of TDX software stack. The tests focus on TDVM lifecycle management
- and environment validation.
+TDX tests are used to validate basic functionality of TDX software stack. The tests  focus on TDVM lifecycle management,
+ environment validation, E2E workload validation and AI model workload tests with AMX acceleration in TD guest.
 
 ### Create Cloud Image
 
@@ -55,6 +55,21 @@ running. It uses `RHEL 8.6` as an example distro.
 
     The keys should be named "vm_ssh_test_key" and "vm_ssh_test_key.pub" and located under tdx-tools/tests/tests/
 
+- Optional for some tests
+
+  _NOTE:_
+
+  Before running test tdx-tools/tests/tests/test_workload_redis.py, please make sure
+
+  - The guest image has docker/podman installed.
+  - The guest image contains docker image redis:latest.
+
+  Before running test tdx-tools/tests/tests/test_workload_nginx.py, please make sure
+
+  - The guest image has docker/podman installed.
+  - The guest image contains docker image nginx:latest.
+
+
 ### Run Tests
 
 - Run all tests:
@@ -78,12 +93,6 @@ running. It uses `RHEL 8.6` as an example distro.
   ```
   ./run.sh -c tests/test_tdvm_lifecycle.py::test_tdvm_lifecycle_virsh_suspend_resume
   ```
-
-  _NOTE:_
-  Before running test tdx-tools/tests/tests/test_workload_redis.py, please make sure
-
-  - The guest image has docker/podman installed.
-  - The guest image contains docker image redis:latest.
 
 - User can specify guest image OS with `-g`. Currently it supports `rhel`, and `ubuntu`. RHEL guest image is used by default if `-g` is not specified:
 
