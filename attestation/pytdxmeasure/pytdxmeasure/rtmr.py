@@ -2,11 +2,11 @@
 RTMR data structures
 """
 
-from .binaryblob import BinaryBlob
 import os
 import fcntl
 import struct
 import logging
+from .binaryblob import BinaryBlob
 
 __author__ = 'cpio'
 LOG = logging.getLogger(__name__)
@@ -39,7 +39,8 @@ class RTMR(BinaryBlob):
         Perform ioctl on the device file /dev/tdx_guest to extend rtmr
         """
         if not os.path.exists(RTMR.TDX_ATTEST_FILE):
-            LOG.error("Could not find device node %s. Kernel version 6.2 is the minimal version to support RTMR write", RTMR.TDX_ATTEST_FILE)
+            LOG.error("Could not find device node %s. Kernel version 6.2 above supports RTMR write",
+                      RTMR.TDX_ATTEST_FILE)
             return None
 
         try:
@@ -48,14 +49,12 @@ class RTMR(BinaryBlob):
             LOG.error("Fail to open file %s", RTMR.TDX_ATTEST_FILE)
             return None
 
-        """
-        Perform extend through ioctl call
-        Reference: Structure of tdx_extend_rtmr_req in /include/uapi/linux/tdx-guest.h
-        struct tdx_extend_rtmr_req {
-            __u8 data[TDX_EXTEND_RTMR_DATA_LEN];
-            __u8 index;
-        };
-        """
+        #Perform extend through ioctl call
+        #Reference: Structure of tdx_extend_rtmr_req in /include/uapi/linux/tdx-guest.h
+        #struct tdx_extend_rtmr_req {
+        #    __u8 data[TDX_EXTEND_RTMR_DATA_LEN];
+        #    __u8 index;
+        #};
 
         extend_data = bytearray(raw_extend_data.encode())
         if len(extend_data) != RTMR.RTMR_LENGTH_BY_BYTES:
@@ -64,10 +63,8 @@ class RTMR(BinaryBlob):
 
         req = struct.pack("@48sB", extend_data, int(extend_rtmr_index))
 
-        """
-        Reference: command used for tdx rtmr extend defined in /include/uapi/linux/tdx-guest.h
-        define TDX_CMD_EXTEND_RTMR		_IOR('T', 3, struct tdx_extend_rtmr_req)
-        """
+        #Reference: command used for tdx rtmr extend defined in /include/uapi/linux/tdx-guest.h
+        #define TDX_CMD_EXTEND_RTMR		_IOR('T', 3, struct tdx_extend_rtmr_req)
         try:
             fcntl.ioctl(fd_tdx_attest,
                         int.from_bytes(struct.pack('Hcb', 0x3180, b'T', 3), 'big'), req)

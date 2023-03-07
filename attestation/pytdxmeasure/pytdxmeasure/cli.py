@@ -87,12 +87,20 @@ class TDXTDReportCmd(TDXMeasurementCmdBase):
         LOG.info("=> Dump TD Report")
         TdReport.get_td_report().dump()
 
-class TDXRTMRExtendCmd(TDXMeasurementCmdBase):
+class TDXRTMRExtendCmd():
     """
     Cmd executor to extend RTMR register
     """
 
-    def run(self, extend_raw_data, extend_rtmr_index):
+    def __init__(self):
+        logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+
+    @staticmethod
+    def run(extend_raw_data, extend_rtmr_index):
+        """
+        Run cmd
+        """
+
         LOG.info("=> Extend RTMR")
         res = RTMR.extend_rtmr(extend_raw_data, extend_rtmr_index)
         if res == RTMR.EXTEND_SUCCESS:
