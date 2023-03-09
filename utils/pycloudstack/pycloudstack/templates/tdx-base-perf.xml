@@ -2,6 +2,9 @@
   <name>REPLACEME_NAME</name>
   <uuid>REPLACEME_UUID</uuid>
   <memory unit='KiB'>REPLACEME_MEMORY</memory>
+  <memoryBacking>
+    <source type='memfd-private'/>
+  </memoryBacking>
   <vcpu placement='static' cpuset='35-46'>1</vcpu>
   <cputune>
     <vcpupin vcpu='0' cpuset='39'/>
