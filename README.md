@@ -24,7 +24,7 @@ host or create PaaS guest image for quick evaluation
 
 ## 2. Components
 
-Intel&reg; TDX(Trust Domain Extensions) MVP Stack includes the components in
+Linux Stack for Intel&reg; TDX includes the components in
 below diagram:
 
 ![TDX Stack Architecture](doc/tdx_stack_arch.png)
