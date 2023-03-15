@@ -301,7 +301,7 @@ class VMGuest:
         assert self.vmm is not None
         return self.vmm.state()
 
-    def wait_for_state(self, state, timeout=20):
+    def wait_for_state(self, state, timeout=30):
         """
         Wait for VM state to be given value until timeout
         """
