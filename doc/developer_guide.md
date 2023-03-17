@@ -1,18 +1,17 @@
 
 ## Developer Guide
 
-This section introduces the steps to build source from scratch on any *inux system
+This section introduces the steps to build source from scratch on any *linux system
 for hacking and developing purpose.
 
 _NOTE:_ For production build in release purpose, please refer:
-- Source RPM build [here](https://github.com/intel/tdx-tools/tree/2022ww42/build/rhel-8) for RHEL 8 build
-- Source RPM build [here](https://github.com/intel/tdx-tools/tree/2022ww42/build/centos-stream-8) for CentOS Stream 8 build
-- Debian build [here](https://github.com/intel/tdx-tools/tree/2022ww42/build/ubuntu-22.04) for Ubuntu 22.04 build
+- Source RPM build [here](../build/rhel-8) for RHEL 8 build
+- Debian build [here](../build/ubuntu-22.04) for Ubuntu 22.04 build
 
 ### Build and Setup Kernel
 
-The [TDX kernel patchset](https://github.com/intel/tdx-tools/raw/2022ww42/build/common/patches-tdx-kernel-MVP-5.15-v11.0.tar.gz) includes
-all patches based on kernel [v5.15](https://github.com/torvalds/linux/releases/tag/v5.15).
+This [TDX kernel patchset](../build/common/patches-tdx-kernel-MVP-KERNEL-5.19-v2.2.tar.gz) includes
+all patches based on kernel [v5.19](https://github.com/torvalds/linux/releases/tag/v5.19).
 
 
 1. Ensure you have installed the necessary packages to build Linux kernel. e.g. `libncurses5-dev libssl-dev build-essential openssl zlibc minizip lib libidn11-dev libbidn11 bison flex`
@@ -21,9 +20,9 @@ Please install these packages via distro's package manager.
 2. Download the kernel source code:
 
    ```
-   $ wget https://github.com/intel/tdx-tools/raw/2022ww42/build/common/patches-tdx-kernel-MVP-5.15-v11.0.tar.gz
-   $ tar xf patches-tdx-kernel-MVP-5.15-v11.0.tar.gz
-   $ git clone --branch v5.15 https://github.com/torvalds/linux.git
+   $ wget https://github.com/intel/tdx-tools/blob/main/build/common/patches-tdx-kernel-MVP-KERNEL-5.19-v2.2.tar.gz
+   $ tar xf patches-tdx-kernel-MVP-KERNEL-5.19-v2.2.tar.gz
+   $ git clone --branch v5.19 https://github.com/torvalds/linux.git
    $ cd linux
    $ git am ../patches/*
    $ rm ../patches/ -fr
@@ -32,13 +31,12 @@ Please install these packages via distro's package manager.
 3. Kernel config
 
    - For RHEL
-      Please use the common platform's kernel config file [here](https://github.com/intel/tdx-tools/blob/2022ww42/build/rhel-8/intel-mvp-tdx-kernel/tdx-base.config)
-      for both TDX guest and host, then merge the detal config for [host](https://github.com/intel/tdx-tools/blob/2022ww42/build/rhel-8/intel-mvp-tdx-kernel/kernel-x86_64-rhel.config)
-      or [guest](https://github.com/intel/tdx-tools/blob/2022ww42/build/rhel-8/intel-mvp-tdx-kernel/kernel-x86_64-guest-rhel.config)
+      Please use the common platform's kernel config file [here](../build/rhel-8/intel-mvp-tdx-kernel/tdx-base.config)
+      for both TDX guest and host, then merge the detail config [sample](../build/rhel-8/intel-mvp-tdx-kernel/kernel-x86_64-rhel.config)
 
    - For Ubuntu
-      Please use the common config file [here](https://github.com/intel/tdx-tools/blob/2022ww42/build/ubuntu-22.04/intel-mvp-tdx-kernel/debian.master/config/amd64/config.common.amd64)
-      , then merge the TDX flavour [here](https://github.com/intel/tdx-tools/blob/2022ww42/build/ubuntu-22.04/intel-mvp-tdx-kernel/debian.master/config/amd64/config.flavour.generic)
+      Please use the common config file [here](../build/ubuntu-22.04/intel-mvp-tdx-kernel/debian.master/config/amd64/config.common.amd64)
+      , then merge the TDX flavour [here](../build/ubuntu-22.04/intel-mvp-tdx-kernel/debian.master/config/amd64/config.flavour.generic)
 
 4. Build kernel
 
@@ -57,11 +55,11 @@ Please install these packages via distro's package manager.
 2. Download QEMU source code:
 
    ```
-   $ wget https://github.com/intel/tdx-tools/raw/2022ww42/build/common/patches-tdx-qemu-MVP-QEMU-6.2-v3.1.tar.gz
-   $ tar xf patches-tdx-qemu-MVP-QEMU-6.2-v3.1.tar.gz
+   $ wget https://github.com/intel/tdx-tools/blob/main/build/common/patches-tdx-qemu-MVP-QEMU-7.0-v1.3.tar.gz
+   $ tar xf patches-tdx-qemu-MVP-QEMU-7.0-v1.3.tar.gz
    $ git clone https://github.com/qemu/qemu.git
    $ cd qemu
-   $ git checkout 4c127fdbe81d66e7cafed90908d0fd1f6f2a6cd0
+   $ git checkout ad4c7f529a279685da84297773b4ec8080153c2d
    $ git am ../patches/*
    $ rm ../patches/ -fr
    ```
@@ -87,10 +85,10 @@ Please install these packages via distro's package manager.
    ```
 
    Please switch to specific branch or tag for stable release.
-   Use [tdx-libvirt-2022.03.18](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-tdx-libvirt/build.sh) as example:
+   Use [tdx-libvirt-2022.11.17](../build/rhel-8/intel-mvp-tdx-libvirt/build.sh) as example:
 
    ```
-   $ git checkout tdx-libvirt-2022.03.18
+   $ git checkout tdx-libvirt-2022.11.17
    ```
 
 3. Build libvirt:
@@ -109,14 +107,14 @@ Please install these packages via distro's package manager.
 2. Download TDVF source code:
 
    ```
-   $ git clone https://github.com/tianocore/edk2-staging.git
+   $ git clone https://github.com/tianocore/edk2.git
    ```
 
    Please switch to specific branch or tag for stable release.
-   Use [tdvf-2022-ww10.2](https://github.com/intel/tdx-tools/blob/66b8d09600ddebdb8d460c4573cebc59bf099b06/build/rhel-8/intel-mvp-tdx-tdvf/build.sh) as example:
+   Use [tdvf-2023-ww01](../build/rhel-8/intel-mvp-ovmf/build.sh) as example:
 
    ```
-   $ git checkout tdvf-2022-ww10.2
+   $ git checkout edk2-stable202211
    $ git submodule update --init
    ```
 

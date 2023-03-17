@@ -147,13 +147,13 @@ In this step, we will use these files:
 
 Next we can start the TD virtual machine. We have two ways: QEMU and Libvirt.
 
-By QEMU, we can use [start-qemu.sh](https://github.com/intel/tdx-tools/blob/2022ww49/start-qemu.sh):
+By QEMU, we can use [start-qemu.sh](../start-qemu.sh):
 
 ```sh
 ./start-qemu.sh -i /path/to/td-guest.qcow2 -b grub -a /path/to/OVMF.sb.fd
 ```
 
-To boot via libvirt, please update the [xml template](https://github.com/intel/tdx-tools/blob/2022ww49/doc/tdx_libvirt_grub.xml.template)
+To boot via libvirt, please update the [xml template](tdx_libvirt_grub.xml.template)
 as follows before running the usual virsh commands.
 
 + Use OVMF.sb.fd: `<loader>/path/to/OVMF.sb.fd</loader>`
