@@ -100,7 +100,7 @@ launch_TDVM() {
         -monitor unix:/tmp/qmp-sock-dst,server,nowait \
         -device virtio-serial,romfile= \
         -device virtconsole,chardev=mux -serial chardev:mux -monitor chardev:mux \
-        -device virtio-net-pci,netdev=mynet0,mac=00:16:3E:68:00:10,romfile= \
+        -device virtio-net-pci,netdev=mynet0,romfile= \
         -netdev bridge,id=mynet0,br=virbr0 \
         -incoming tcp:0:${INCOMING_PORT}"
 
