@@ -1,3 +1,8 @@
+libvirt (8.6.0-2022.11.17.mvp2) jammy; urgency=medium
+
+  * Support private-memfd
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 14 Feb 2023 15:06:05 -0700
+
 libvirt (8.6.0-2022.11.17.mvp1) jammy; urgency=medium
 
   * TDX patches

@@ -33,6 +33,7 @@ generate_patchset() {
     pushd libvirt
     if [[ ! -f ${CURR_DIR}/${PACKAGE}-${PACKAGE_VERSION}/${PATCHES_TARBALL_NAME} ]]; then
         git format-patch $UPSTREAM_BASE_COMMIT..$DOWNSTREAM_TAG
+        cp ${CURR_DIR}/1001-Add-private-memfd-host-memory-backend-for-QEMU.patch .
         tar czf "${CURR_DIR}"/${PACKAGE}-${PACKAGE_VERSION}/${PATCHES_TARBALL_NAME} ./*.patch
     fi
     popd
