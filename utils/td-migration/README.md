@@ -1,10 +1,10 @@
 # TD Migration
 
 ## 1. Overview
+
 This feature is to meet the CSP who may want to relocate/migrate an executing Trust Domain (TD) from a source Trust Domain Extension (TDX) platform to a destination TDX platform in the cloud environment. Currently, td-migration only works on **TDX 1.5 (kernel-v6.2/tag-2023WW15 and later)**, TDX 1.0 do not support this feature.
 
 In this doc, the TD being migrated is called the source TD, and the TD created as a result of the migration is called the destination TD.
-
 
 ## 2. Single Host Test Steps
 
@@ -14,25 +14,30 @@ In this doc, the TD being migrated is called the source TD, and the TD created a
 
 The MigTD is designed to evaluate potential migration sources and targets for adherence to the TD Migration Policy and exchange MSK(Migration session Key) from the source platform to the destination platform. Creating MigTD is an additional workflow compared with live migration.
 
+**Prerequisite**: Please install all attestation required components in advance. (not in this readme scope) Because attestation is embedded in MigTD, if pre-mig success, it means MigTD attestation pass.
+
 NOTE: the default installation path of `migtd.bin` is "/usr/share/td-migration/migtd.bin" (provided by intel-mvp-tdx-migration pkg)
+
+Must use `-t` to set MigTD type src or dst.
 
 ```bash
 # create the MigTD_src to bind with src user TD 
-sudo ./migTD_src.sh 
+sudo ./migTD.sh -t src
 
 # create the MigTD_dst to bind with dst user TD 
-sudo ./migTD_dst.sh 
+sudo ./migTD.sh -t dst
 ```
 
-If you want to other path migtd binary, please use `-m` parameter to set the path.
+- Use `-m` parameter to set the alternative path of migtd.bin.
+
 ```bash
-sudo ./migTD_src.sh -m path/to/migtd.bin
+sudo ./migTD.sh -m path/to/migtd.bin -t src
 ```
 
 If MigTD starts successfully, the console will display the below message.
 
 ```console
-MigTD Version - 0.2.0
+MigTD Version - 0.2.1
 Loop to wait for request
 ```
 
@@ -42,21 +47,39 @@ For live migration, it is a process that transfers source TD to dest TD. Before 
 
 NOTE: The default ROOT_PARTITION is `/dev/vda1`, which is for ubuntu guest TD. For RHEL, please add parameter `-r /dev/vda3`
 
+Must use `-t` to set userTD type src or dst.
+
 - Direct Boot
+
 ```bash
 # create the source user TD
-sudo ./sourceTD.sh -i path/to/image -k path/to/kernel
+sudo ./userTD.sh -t src -i path/to/image -k path/to/kernel
 
 # create the destination user TD
-sudo ./destTD.sh -i path/to/image -k path/to/kernel
+sudo ./userTD.sh -t dst -i path/to/image -k path/to/kernel
 ```
+
 - GRUB Boot
+
 ```bash
 # create the source user TD
-sudo ./sourceTD.sh -i path/to/image -b grub
+sudo ./userTD.sh -t src -i path/to/image -b grub
 
 # create the destination user TD
-sudo ./destTD.sh -i path/to/image -b grub
+sudo ./userTD.sh -t dst -i path/to/image -b grub
+```
+
+- Attestation
+Require to install attestation related components in advance.
+
+```bash
+# tdvmcall
+sudo ./userTD.sh -t src -i path/to/image -b grub -q tdvmcall
+sudo ./userTD.sh -t dst -i path/to/image -b grub -q tdvmcall
+
+# vsock
+sudo ./userTD.sh -t src -i path/to/image -b grub -q vsock
+sudo ./userTD.sh -t dst -i path/to/image -b grub -q vsock
 ```
 
 ### 2.3 Pre-Migration
@@ -64,10 +87,13 @@ sudo ./destTD.sh -i path/to/image -b grub
 Before starting pre-migration, need to wait a while for user TDs to be ready.
 
 1. Create a channel for MigTD_src and MigTD_dst
+
 ```bash
 sudo ./connect.sh
 ```
+
 Check if it creates successfully.
+
 ```console
 $ ps axu| grep socat
 root      112608  0.0  0.0  27828  3072 pts/5    S    Mar22   0:00 socat TCP4-LISTEN:9009,reuseaddr VSOCK-LISTEN:1234,fork
@@ -75,9 +101,11 @@ root      112609  0.0  0.0  27828  3072 pts/5    S    Mar22   0:00 socat TCP4-CO
 ```
 
 2. Start Pre-Migration
+
 ```bash
 sudo ./pre-mig.sh
 ```
+
 Check if pre-migrate success.
 
 ```console
@@ -93,6 +121,7 @@ Starts to transfer TD's data from source to destination.
 ```bash
 sudo ./mig-flow.sh
 ```
+
 After migration is complete, you can see the following message and use destTD normally.
 
 ```console
@@ -108,23 +137,26 @@ $ dmesg
 
 NOTE: the default installation path of `migtd.bin` is "/usr/share/td-migration/migtd.bin" (provided by intel-mvp-tdx-migration pkg)
 
+Must use `-t` to set MigTD type src or dst.
+
 ```bash
 # create the MigTD_src to bind with src user TD 
-sudo ./migTD_src.sh 
+sudo ./migTD.sh -t src
 
 # create the MigTD_dst to bind with dst user TD 
-sudo ./migTD_dst.sh 
+sudo ./migTD.sh -t dst
 ```
 
-If you want to other path migtd binary, please use `-m` parameter to set the path.
+- Use `-m` parameter to set the alternative path of migtd.bin.
+
 ```bash
-sudo ./migTD_src.sh -m path/to/migtd.bin
+sudo ./migTD.sh -t src -m path/to/migtd.bin
 ```
 
 If MigTD starts successfully, the console will display the below message.
 
 ```console
-MigTD Version - 0.2.0
+MigTD Version - 0.2.1
 Loop to wait for request
 ```
 
@@ -132,56 +164,46 @@ Loop to wait for request
 
 NOTE: The default ROOT_PARTITION is `/dev/vda1`, which is for ubuntu guest TD. For RHEL, please add parameter `-r /dev/vda3`
 
+Must use `-t` to set userTD type src or dst.
+
 - Direct Boot
+
 ```bash
 # create the source user TD on source platform
-sudo ./sourceTD.sh -i path/to/image -k path/to/kernel
+sudo ./userTD.sh -t src -i path/to/image -k path/to/kernel
 
 # create the destination user TD on destination platform
-sudo ./destTD.sh -i path/to/image -k path/to/kernel
+sudo ./userTD.sh -t dst -i path/to/image -k path/to/kernel
 ```
+
 - GRUB Boot
+
 ```bash
 # create the source user TD on source platform
-sudo ./sourceTD.sh -i path/to/image -b grub
+sudo ./userTD.sh -t src -i path/to/image -b grub
 
 # create the destination user TD on destination platform
-sudo ./destTD.sh -i path/to/image -b grub
+sudo ./userTD.sh -t dst -i path/to/image -b grub
 ```
+
+- Cross-host Attestation is same as the Single-host, so please refer Section 2.2.
 
 ### 3.3 Pre-Migration
 
 This step has a little difference with the single host live migration.
 
 1. Create a channel for MigTD_src and MigTD_dst
-- Run this CMD on source platform
+
 ```bash
-modprobe vhost_vsock
-socat TCP4-LISTEN:9009,reuseaddr VSOCK-LISTEN:1234,fork &
-```
-- Run this CMD on destination platform
-```bash
-modprobe vhost_vsock
-socat TCP4-CONNECT:<source-platform-ip>:9009,reuseaddr VSOCK-LISTEN:1235,fork &
+sudo ./connect.sh -t remote -i <DEST_IP>
 ```
 
 2. Start Pre-Migration
 
-For current MigTD implementation, the following two commands need to be executed within 8 second, otherwise MigTD will time out.
-```console
-$ dmesg
-[110682.833587] kvm_intel: migtd_report_status: pre-migration failed, state=5
-```
-- Run this CMD on source platform
 ```bash
-# Asking migtd-dst to connect to the src socat
-echo "qom-set /objects/tdx0/ vsockport 1234" | nc -U /tmp/qmp-sock-src
+sudo ./pre-mig.sh -t remote -i <DEST_IP>
 ```
-- Run this CMD on destination platform
-```bash
-# Asking migtd-dst to connect to the dst socat
-echo "qom-set /objects/tdx0/ vsockport 1235" | nc -U /tmp/qmp-sock-dst
-```
+
 Check if pre-migrate is successful on both platforms.
 
 ```console
@@ -194,6 +216,7 @@ $ dmesg
 ```bash
 sudo ./mig-flow.sh -i <dest-platform-ip>
 ```
+
 After migration is complete, you can see the following message and use destTD normally.
 
 ```console
