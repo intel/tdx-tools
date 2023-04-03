@@ -4,9 +4,9 @@ set -e
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_GIT_URI="https://github.com/tianocore/edk2.git"
-UPSTREAM_TAG="edk2-stable202211"
+UPSTREAM_TAG="edk2-stable202302"
 
-REPO_FOLDER="ovmf-stable202211"
+REPO_FOLDER="ovmf-stable202302"
 
 get_origin() {
     echo "**** Download origin package ****"

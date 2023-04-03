@@ -1,3 +1,9 @@
+ovmf (2023.03.07-stable202302.mvp9) jammy; urgency=medium
+
+  * https://github.com/tianocore/edk2/releases/tag/edk2-stable202302
+
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 7 Mar 2023 18:28:00 +0800
+
 ovmf (2022.12.14-stable202211.mvp5) jammy; urgency=medium
 
   * Build for edk2-stable202211.
