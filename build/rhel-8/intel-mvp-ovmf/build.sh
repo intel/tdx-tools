@@ -4,7 +4,7 @@ set -e
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_GIT_URI="https://github.com/tianocore/edk2.git"
-UPSTREAM_TAG="edk2-stable202211"
+UPSTREAM_TAG="edk2-stable202302"
 SPEC_FILE="${CURR_DIR}/ovmf.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
 
