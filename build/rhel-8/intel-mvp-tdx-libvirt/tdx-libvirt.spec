@@ -228,7 +228,7 @@
 Summary: Library providing a simple virtualization API
 Name: intel-mvp-tdx-libvirt
 Version: 8.6.0
-%define patch_number 2
+%define patch_number 3
 %define downstream_tag 2022.11.17
 Release: %{downstream_tag}.mvp%{patch_number}%{?dist}
 License: LGPLv2+

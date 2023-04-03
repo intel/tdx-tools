@@ -1,0 +1,970 @@
+From b959a2364bc4d9ef1bc28dedc084172ebff07640 Mon Sep 17 00:00:00 2001
+From: Xiaocheng Dong <xiaocheng.dong@intel.com>
+Date: Thu, 9 Feb 2023 20:16:41 -0500
+Subject: [PATCH] Add private memfd host memory backend for QEMU
+
+QEMU introduced a new object 'memory-backend-memfd-private', this new
+object is similar to existing 'memory-backend-memfd' object, which
+provides host memory with linux memfd_create API but differs in that
+this new object will have two memfds, one is for share memory which
+can be mmaped, the other is for private memory which is restricted
+memfd and can not be accessed from userspace.
+
+Signed-off-by: Xiaocheng Dong <xiaocheng.dong@intel.com>
+---
+ docs/formatdomain.rst             |  2 +-
+ docs/formatdomaincaps.rst         |  1 +
+ docs/kbase/virtiofs.rst           | 12 ++++++++++++
+ po/as.po                          |  3 +++
+ po/bg.po                          |  3 +++
+ po/bn_IN.po                       |  3 +++
+ po/bs.po                          |  3 +++
+ po/ca.po                          |  3 +++
+ po/cs.po                          |  3 +++
+ po/da.po                          |  3 +++
+ po/de.po                          |  4 ++++
+ po/el.po                          |  3 +++
+ po/en_GB.po                       |  3 +++
+ po/es.po                          |  4 ++++
+ po/fi.po                          |  3 +++
+ po/fr.po                          |  3 +++
+ po/gu.po                          |  4 ++++
+ po/hi.po                          |  3 +++
+ po/hu.po                          |  3 +++
+ po/id.po                          |  3 +++
+ po/it.po                          |  3 +++
+ po/ja.po                          |  4 ++++
+ po/ka.po                          |  3 +++
+ po/kn.po                          |  4 ++++
+ po/ko.po                          |  3 +++
+ po/libvirt.pot                    |  4 ++++
+ po/mk.po                          |  3 +++
+ po/ml.po                          |  4 ++++
+ po/mr.po                          |  4 ++++
+ po/ms.po                          |  3 +++
+ po/nb.po                          |  3 +++
+ po/nl.po                          |  3 +++
+ po/or.po                          |  4 ++++
+ po/pa.po                          |  4 ++++
+ po/pl.po                          |  3 +++
+ po/pt.po                          |  3 +++
+ po/pt_BR.po                       |  4 ++++
+ po/ru.po                          |  3 +++
+ po/si.po                          |  3 +++
+ po/sr.po                          |  3 +++
+ po/sr@latin.po                    |  3 +++
+ po/sv.po                          |  3 +++
+ po/ta.po                          |  4 ++++
+ po/te.po                          |  4 ++++
+ po/tr.po                          |  3 +++
+ po/uk.po                          |  3 +++
+ po/vi.po                          |  3 +++
+ po/zh_CN.po                       |  5 +++++
+ po/zh_TW.po                       |  3 +++
+ src/conf/domain_conf.c            |  1 +
+ src/conf/domain_conf.h            |  9 +++++----
+ src/conf/schemas/domaincommon.rng |  1 +
+ src/qemu/qemu_capabilities.c      | 13 +++++++++++++
+ src/qemu/qemu_capabilities.h      |  1 +
+ src/qemu/qemu_command.c           | 20 +++++++++++++++++++-
+ src/qemu/qemu_validate.c          | 10 +++++++++-
+ 56 files changed, 216 insertions(+), 7 deletions(-)
+
+diff --git a/docs/formatdomain.rst b/docs/formatdomain.rst
+index 1ed969ac3e..f27ca85401 100644
+--- a/docs/formatdomain.rst
++++ b/docs/formatdomain.rst
+@@ -1053,7 +1053,7 @@ Memory Backing
+        </hugepages>
+        <nosharepages/>
+        <locked/>
+-       <source type="file|anonymous|memfd"/>
++       <source type="file|anonymous|memfd|memfd-private"/>
+        <access mode="shared|private"/>
+        <allocation mode="immediate|ondemand" threads='8'/>
+        <discard/>
+diff --git a/docs/formatdomaincaps.rst b/docs/formatdomaincaps.rst
+index 8b09f87f5b..e1299185db 100644
+--- a/docs/formatdomaincaps.rst
++++ b/docs/formatdomaincaps.rst
+@@ -257,6 +257,7 @@ backing <formatdomain.html#memory-backing>`__ is supported.
+          <value>anonymous</value>
+          <value>file</value>
+          <value>memfd</value>
++         <value>memfd-private</value>
+        </enum>
+      </memoryBacking>
+      ...
+diff --git a/docs/kbase/virtiofs.rst b/docs/kbase/virtiofs.rst
+index 9123fc2316..82b9de35ea 100644
+--- a/docs/kbase/virtiofs.rst
++++ b/docs/kbase/virtiofs.rst
+@@ -168,6 +168,18 @@ memobject interface).
+           ...
+         </domain>
+ 
++   * memfd-private memory
++
++     ::
++
++        <domain>
++          ...
++          <memoryBacking>
++            <source type='memfd-private'/>
++          </memoryBacking>
++          ...
++        </domain>
++
+    * File-backed memory
+ 
+      ::
+diff --git a/po/as.po b/po/as.po
+index 2d9f2f2993..ddcf5bd689 100644
+--- a/po/as.po
++++ b/po/as.po
+@@ -35971,6 +35971,9 @@ msgstr "এই qemu এ rng-egd  বেকএণ্ড সমৰ্থন নক
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "এই qemu এ rng-egd  বেকএণ্ড সমৰ্থন নকৰে"
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "এই qemu এ rng-egd  বেকএণ্ড সমৰ্থন নকৰে"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "এই qemu এ rng-egd  বেকএণ্ড সমৰ্থন নকৰে"
+diff --git a/po/bg.po b/po/bg.po
+index 7cd4b544e0..463584aab3 100644
+--- a/po/bg.po
++++ b/po/bg.po
+@@ -34950,6 +34950,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/bn_IN.po b/po/bn_IN.po
+index 9fddf5f28b..e50b1bc982 100644
+--- a/po/bn_IN.po
++++ b/po/bn_IN.po
+@@ -36124,6 +36124,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/bs.po b/po/bs.po
+index af04c16007..6530771169 100644
+--- a/po/bs.po
++++ b/po/bs.po
+@@ -34731,6 +34731,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/ca.po b/po/ca.po
+index 84a7ef70c3..0ca2481c42 100644
+--- a/po/ca.po
++++ b/po/ca.po
+@@ -35333,6 +35333,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/cs.po b/po/cs.po
+index 50c2da482a..12ea435985 100644
+--- a/po/cs.po
++++ b/po/cs.po
+@@ -35836,6 +35836,9 @@ msgstr "toto qemu nepodporuje objekt memory-backend-file"
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "toto qemu nepodporuje objekt memory-backend-memfd"
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "toto qemu nepodporuje objekt memory-backend-memfd-private"
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "toto qemu nepodporuje objekt memory-backend-ram"
+ 
+diff --git a/po/da.po b/po/da.po
+index decfd4d83d..c833d1579a 100644
+--- a/po/da.po
++++ b/po/da.po
+@@ -34814,6 +34814,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/de.po b/po/de.po
+index 245e1ecf80..23e0e52467 100644
+--- a/po/de.po
++++ b/po/de.po
+@@ -36680,6 +36680,10 @@ msgstr "Diese QEMU unterstützt das rng-egd Backend nicht"
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "Diese QEMU unterstützt das rng-egd Backend nicht"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "Diese QEMU unterstützt das rng-egd Backend nicht"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "Diese QEMU unterstützt das rng-egd Backend nicht"
+diff --git a/po/el.po b/po/el.po
+index 021d6809a8..843d0d3e93 100644
+--- a/po/el.po
++++ b/po/el.po
+@@ -34651,6 +34651,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/en_GB.po b/po/en_GB.po
+index 6b2c4057a4..213ec5f6a7 100644
+--- a/po/en_GB.po
++++ b/po/en_GB.po
+@@ -36026,6 +36026,9 @@ msgstr "this qemu doesn't support the rng-egd backend"
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "this qemu doesn't support the rng-egd backend"
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "this qemu doesn't support the rng-egd backend"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "this qemu doesn't support the rng-egd backend"
+diff --git a/po/es.po b/po/es.po
+index 10e78e4e6d..becde8c578 100644
+--- a/po/es.po
++++ b/po/es.po
+@@ -36812,6 +36812,10 @@ msgstr "Este QEMU no soporta el segundo plano de rng-egd"
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "Este QEMU no soporta el segundo plano de rng-egd"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "Este QEMU no soporta el segundo plano de rng-egd"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "Este QEMU no soporta el segundo plano de rng-egd"
+diff --git a/po/fi.po b/po/fi.po
+index 630b3eefc7..578fe905c7 100644
+--- a/po/fi.po
++++ b/po/fi.po
+@@ -34749,6 +34749,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/fr.po b/po/fr.po
+index cf8697a997..fa86f39966 100644
+--- a/po/fr.po
++++ b/po/fr.po
+@@ -35925,6 +35925,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/gu.po b/po/gu.po
+index 0ce390d9c0..1d9142b668 100644
+--- a/po/gu.po
++++ b/po/gu.po
+@@ -35855,6 +35855,10 @@ msgstr "આ qemu rng-egd બૅકએન્ડને આધાર આપતુ 
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "આ qemu rng-egd બૅકએન્ડને આધાર આપતુ નથી"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "આ qemu rng-egd બૅકએન્ડને આધાર આપતુ નથી"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "આ qemu rng-egd બૅકએન્ડને આધાર આપતુ નથી"
+diff --git a/po/hi.po b/po/hi.po
+index abd75b2535..3c89af10f4 100644
+--- a/po/hi.po
++++ b/po/hi.po
+@@ -36155,6 +36155,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/hu.po b/po/hu.po
+index df62bd7b5c..b226968920 100644
+--- a/po/hu.po
++++ b/po/hu.po
+@@ -34822,6 +34822,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/id.po b/po/id.po
+index dc502a8d1b..855bd63e84 100644
+--- a/po/id.po
++++ b/po/id.po
+@@ -34914,6 +34914,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/it.po b/po/it.po
+index 1fe40824e8..46cb11d45c 100644
+--- a/po/it.po
++++ b/po/it.po
+@@ -36184,6 +36184,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/ja.po b/po/ja.po
+index 8d9b945bf4..367a36d8fa 100644
+--- a/po/ja.po
++++ b/po/ja.po
+@@ -36442,6 +36442,10 @@ msgstr "この QEMU は rng-egd バックエンドをサポートしません"
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "この QEMU は rng-egd バックエンドをサポートしません"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "この QEMU は rng-egd バックエンドをサポートしません"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "この QEMU は rng-egd バックエンドをサポートしません"
+diff --git a/po/ka.po b/po/ka.po
+index 41c514a9e5..4ce4d975a8 100644
+--- a/po/ka.po
++++ b/po/ka.po
+@@ -33991,6 +33991,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/kn.po b/po/kn.po
+index c7b51318a9..b6e4ffb57c 100644
+--- a/po/kn.po
++++ b/po/kn.po
+@@ -36348,6 +36348,10 @@ msgstr "ಈ qemu rng-egd ಬ್ಯಾಕೆಂಡ್ ಅನ್ನು ಬೆಂ
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "ಈ qemu rng-egd ಬ್ಯಾಕೆಂಡ್ ಅನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "ಈ qemu rng-egd ಬ್ಯಾಕೆಂಡ್ ಅನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "ಈ qemu rng-egd ಬ್ಯಾಕೆಂಡ್ ಅನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ"
+diff --git a/po/ko.po b/po/ko.po
+index 1cc5acc94c..61c8fe9d47 100644
+--- a/po/ko.po
++++ b/po/ko.po
+@@ -35169,6 +35169,9 @@ msgstr "이 qemu는 메모리 백엔드 파일 개체를 지원하지 않습니
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "이 qemu는 memory-backend-memfd 개체를 지원하지 않습니다"
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "이 qemu는 memory-backend-memfd-private 개체를 지원하지 않습니다"
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "이 qemu는 memory-backend-ram 개체를 지원하지 않습니다"
+ 
+diff --git a/po/libvirt.pot b/po/libvirt.pot
+index 71cf66f333..f0547af533 100644
+--- a/po/libvirt.pot
++++ b/po/libvirt.pot
+@@ -44479,6 +44479,10 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++#: src/qemu/qemu_command.c:3911
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ #: src/qemu/qemu_command.c:3897
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+diff --git a/po/mk.po b/po/mk.po
+index dbcd50f49f..31795ba30d 100644
+--- a/po/mk.po
++++ b/po/mk.po
+@@ -34908,6 +34908,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/ml.po b/po/ml.po
+index 075c754029..45d8631326 100644
+--- a/po/ml.po
++++ b/po/ml.po
+@@ -36090,6 +36090,10 @@ msgstr "ഈ qemu rng-egd ബാക്കന്‍ഡ് പിന്തുണയ
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "ഈ qemu rng-egd ബാക്കന്‍ഡ് പിന്തുണയ്ക്കുന്നില്ല"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "ഈ qemu rng-egd ബാക്കന്‍ഡ് പിന്തുണയ്ക്കുന്നില്ല"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "ഈ qemu rng-egd ബാക്കന്‍ഡ് പിന്തുണയ്ക്കുന്നില്ല"
+diff --git a/po/mr.po b/po/mr.po
+index debe0ba3f3..8ac770f59d 100644
+--- a/po/mr.po
++++ b/po/mr.po
+@@ -35694,6 +35694,10 @@ msgstr "हे qemu rng-egd बॅकएंडकरिता समर्थन
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "हे qemu rng-egd बॅकएंडकरिता समर्थन पुरवत नाही"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "हे qemu rng-egd बॅकएंडकरिता समर्थन पुरवत नाही"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "हे qemu rng-egd बॅकएंडकरिता समर्थन पुरवत नाही"
+diff --git a/po/ms.po b/po/ms.po
+index 147ee4dd0b..9afdea2ee8 100644
+--- a/po/ms.po
++++ b/po/ms.po
+@@ -34228,6 +34228,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/nb.po b/po/nb.po
+index 47ba95720d..891e1249a3 100644
+--- a/po/nb.po
++++ b/po/nb.po
+@@ -34609,6 +34609,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/nl.po b/po/nl.po
+index 4570c73469..f06adf95b7 100644
+--- a/po/nl.po
++++ b/po/nl.po
+@@ -36317,6 +36317,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/or.po b/po/or.po
+index a03dc2af3a..a96b3ee0c7 100644
+--- a/po/or.po
++++ b/po/or.po
+@@ -35814,6 +35814,10 @@ msgstr "ଏହି qemu rng-egd ପୃଷ୍ଠଭୂମିକୁ ସହାୟତ
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "ଏହି qemu rng-egd ପୃଷ୍ଠଭୂମିକୁ ସହାୟତା କରିନଥାଏ"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "ଏହି qemu rng-egd ପୃଷ୍ଠଭୂମିକୁ ସହାୟତା କରିନଥାଏ"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "ଏହି qemu rng-egd ପୃଷ୍ଠଭୂମିକୁ ସହାୟତା କରିନଥାଏ"
+diff --git a/po/pa.po b/po/pa.po
+index a425748d5b..44b389e668 100644
+--- a/po/pa.po
++++ b/po/pa.po
+@@ -35909,6 +35909,10 @@ msgstr "ਇਹ qemu rng-egd  ਬੈਕਐੰਡ ਦਾ ਸਮਰਥਨ ਨਹੀ
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "ਇਹ qemu rng-egd  ਬੈਕਐੰਡ ਦਾ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "ਇਹ qemu rng-egd  ਬੈਕਐੰਡ ਦਾ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "ਇਹ qemu rng-egd  ਬੈਕਐੰਡ ਦਾ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ"
+diff --git a/po/pl.po b/po/pl.po
+index 8d749554e8..73d25c1a27 100644
+--- a/po/pl.po
++++ b/po/pl.po
+@@ -36490,6 +36490,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/pt.po b/po/pt.po
+index 63d7fa6df5..41b4b43d32 100644
+--- a/po/pt.po
++++ b/po/pt.po
+@@ -34965,6 +34965,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/pt_BR.po b/po/pt_BR.po
+index d81961e109..6f49ac6317 100644
+--- a/po/pt_BR.po
++++ b/po/pt_BR.po
+@@ -36610,6 +36610,10 @@ msgstr "este qemu não suporta o backend do rng-egd"
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "este qemu não suporta o backend do rng-egd"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "este qemu não suporta o backend do rng-egd"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "este qemu não suporta o backend do rng-egd"
+diff --git a/po/ru.po b/po/ru.po
+index bd031298cb..78f561843e 100644
+--- a/po/ru.po
++++ b/po/ru.po
+@@ -36126,6 +36126,9 @@ msgstr "этот QEMU не поддерживает объект memory-backend-
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "этот QEMU не поддерживает объект memory-backend-memfd"
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "этот QEMU не поддерживает объект memory-backend-memfd-private"
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "этот QEMU не поддерживает объект memory-backend-ram"
+ 
+diff --git a/po/si.po b/po/si.po
+index e81336faab..4191c93bc0 100644
+--- a/po/si.po
++++ b/po/si.po
+@@ -33987,6 +33987,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/sr.po b/po/sr.po
+index 9496450be0..0c95eee9f3 100644
+--- a/po/sr.po
++++ b/po/sr.po
+@@ -35386,6 +35386,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/sr@latin.po b/po/sr@latin.po
+index 8fbd3a1e1d..37d9685605 100644
+--- a/po/sr@latin.po
++++ b/po/sr@latin.po
+@@ -35399,6 +35399,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/sv.po b/po/sv.po
+index d6998bc157..cf560baf8f 100644
+--- a/po/sv.po
++++ b/po/sv.po
+@@ -35651,6 +35651,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/ta.po b/po/ta.po
+index 32db15e172..d033fd0d98 100644
+--- a/po/ta.po
++++ b/po/ta.po
+@@ -36211,6 +36211,10 @@ msgstr "இந்த qemu ஆனது rng-egd பின்புல முற
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "இந்த qemu ஆனது rng-egd பின்புல முறைமையை ஆதரிக்காது"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "இந்த qemu ஆனது rng-egd பின்புல முறைமையை ஆதரிக்காது"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "இந்த qemu ஆனது rng-egd பின்புல முறைமையை ஆதரிக்காது"
+diff --git a/po/te.po b/po/te.po
+index b69af31ebd..18be6996a5 100644
+--- a/po/te.po
++++ b/po/te.po
+@@ -35844,6 +35844,10 @@ msgstr "ఈ qemu అనునది rng-egd బ్యాకెండ్‌కు
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "ఈ qemu అనునది rng-egd బ్యాకెండ్‌కు తోడ్పాటునీయదు"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "ఈ qemu అనునది rng-egd బ్యాకెండ్‌కు తోడ్పాటునీయదు"
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "ఈ qemu అనునది rng-egd బ్యాకెండ్‌కు తోడ్పాటునీయదు"
+diff --git a/po/tr.po b/po/tr.po
+index eb4aea857b..49ecd9e0e4 100644
+--- a/po/tr.po
++++ b/po/tr.po
+@@ -34023,6 +34023,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/uk.po b/po/uk.po
+index f597eaf16d..d9816e0184 100644
+--- a/po/uk.po
++++ b/po/uk.po
+@@ -37049,6 +37049,9 @@ msgstr "у цьому qemu не передбачено підтримки об'
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "у цьому qemu не передбачено підтримки об'єктів memory-backend-memfd"
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "у цьому qemu не передбачено підтримки об'єктів memory-backend-memfd-private"
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "у цьому qemu не передбачено підтримки об'єктів memory-backend-ram"
+ 
+diff --git a/po/vi.po b/po/vi.po
+index 2ac071b927..c25e5c4646 100644
+--- a/po/vi.po
++++ b/po/vi.po
+@@ -36094,6 +36094,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/po/zh_CN.po b/po/zh_CN.po
+index 8b34e82d54..0e9f5420ca 100644
+--- a/po/zh_CN.po
++++ b/po/zh_CN.po
+@@ -35746,6 +35746,11 @@ msgstr "这个 qumu 不支持 rng-egd 后端"
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr "这个 qumu 不支持 rng-egd 后端"
+ 
++#, fuzzy
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr "这个 qumu 不支持 rng-egd 后端"
++
++
+ #, fuzzy
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr "这个 qumu 不支持 rng-egd 后端"
+diff --git a/po/zh_TW.po b/po/zh_TW.po
+index a294561ac5..33a1ef01ed 100644
+--- a/po/zh_TW.po
++++ b/po/zh_TW.po
+@@ -34912,6 +34912,9 @@ msgstr ""
+ msgid "this qemu doesn't support the memory-backend-memfd object"
+ msgstr ""
+ 
++msgid "this qemu doesn't support the memory-backend-memfd-private object"
++msgstr ""
++
+ msgid "this qemu doesn't support the memory-backend-ram object"
+ msgstr ""
+ 
+diff --git a/src/conf/domain_conf.c b/src/conf/domain_conf.c
+index f23bf8da44..91ed8465d9 100644
+--- a/src/conf/domain_conf.c
++++ b/src/conf/domain_conf.c
+@@ -1346,6 +1346,7 @@ VIR_ENUM_IMPL(virDomainMemorySource,
+               "file",
+               "anonymous",
+               "memfd",
++              "memfd-private",
+ );
+ 
+ VIR_ENUM_IMPL(virDomainMemoryAllocation,
+diff --git a/src/conf/domain_conf.h b/src/conf/domain_conf.h
+index b925b3fb90..984b81cdb9 100644
+--- a/src/conf/domain_conf.h
++++ b/src/conf/domain_conf.h
+@@ -532,10 +532,11 @@ typedef enum {
+ } virDomainDiskMirrorState;
+ 
+ typedef enum {
+-    VIR_DOMAIN_MEMORY_SOURCE_NONE = 0,  /* No memory source defined */
+-    VIR_DOMAIN_MEMORY_SOURCE_FILE,      /* Memory source is set as file */
+-    VIR_DOMAIN_MEMORY_SOURCE_ANONYMOUS, /* Memory source is set as anonymous */
+-    VIR_DOMAIN_MEMORY_SOURCE_MEMFD,     /* Memory source is set as memfd */
++    VIR_DOMAIN_MEMORY_SOURCE_NONE = 0,      /* No memory source defined */
++    VIR_DOMAIN_MEMORY_SOURCE_FILE,          /* Memory source is set as file */
++    VIR_DOMAIN_MEMORY_SOURCE_ANONYMOUS,     /* Memory source is set as anonymous */
++    VIR_DOMAIN_MEMORY_SOURCE_MEMFD,         /* Memory source is set as memfd */
++    VIR_DOMAIN_MEMORY_SOURCE_MEMFD_PRIVATE, /* Memory source is set as private memfd */
+ 
+     VIR_DOMAIN_MEMORY_SOURCE_LAST,
+ } virDomainMemorySource;
+diff --git a/src/conf/schemas/domaincommon.rng b/src/conf/schemas/domaincommon.rng
+index 8f8b173eec..e53dd5fd68 100644
+--- a/src/conf/schemas/domaincommon.rng
++++ b/src/conf/schemas/domaincommon.rng
+@@ -773,6 +773,7 @@
+                     <value>file</value>
+                     <value>anonymous</value>
+                     <value>memfd</value>
++                    <value>memfd-private</value>
+                   </choice>
+                 </attribute>
+               </element>
+diff --git a/src/qemu/qemu_capabilities.c b/src/qemu/qemu_capabilities.c
+index e6c5460da1..92579b0da0 100644
+--- a/src/qemu/qemu_capabilities.c
++++ b/src/qemu/qemu_capabilities.c
+@@ -510,6 +510,7 @@ VIR_ENUM_IMPL(virQEMUCaps,
+               "vfio-ap", /* QEMU_CAPS_DEVICE_VFIO_AP */
+               "zpci", /* QEMU_CAPS_DEVICE_ZPCI */
+               "memory-backend-memfd", /* QEMU_CAPS_OBJECT_MEMORY_MEMFD */
++              "memory-backend-memfd-private", /* QEMU_CAPS_OBJECT_MEMORY_MEMFD_PRIVATE */
+               "memory-backend-memfd.hugetlb", /* QEMU_CAPS_OBJECT_MEMORY_MEMFD_HUGETLB */
+               "iothread.poll-max-ns", /* QEMU_CAPS_IOTHREAD_POLLING */
+ 
+@@ -1344,6 +1345,7 @@ struct virQEMUCapsStringFlags virQEMUCapsObjectTypes[] = {
+     { "vfio-ap", QEMU_CAPS_DEVICE_VFIO_AP },
+     { "zpci", QEMU_CAPS_DEVICE_ZPCI },
+     { "memory-backend-memfd", QEMU_CAPS_OBJECT_MEMORY_MEMFD },
++    { "memory-backend-memfd-private", QEMU_CAPS_OBJECT_MEMORY_MEMFD_PRIVATE },
+     { "virtio-blk-pci-transitional", QEMU_CAPS_VIRTIO_PCI_TRANSITIONAL },
+     { "virtio-blk-pci-non-transitional", QEMU_CAPS_VIRTIO_PCI_TRANSITIONAL },
+     { "virtio-net-pci-transitional", QEMU_CAPS_VIRTIO_PCI_TRANSITIONAL },
+@@ -1776,6 +1778,10 @@ static struct virQEMUCapsStringFlags virQEMUCapsObjectPropsMemoryBackendMemfd[]
+     { "hugetlb", QEMU_CAPS_OBJECT_MEMORY_MEMFD_HUGETLB },
+ };
+ 
++static struct virQEMUCapsStringFlags virQEMUCapsObjectPropsMemoryBackendMemfdPrivate[] = {
++    { "hugetlb", QEMU_CAPS_OBJECT_MEMORY_MEMFD_HUGETLB },
++};
++
+ static struct virQEMUCapsStringFlags virQEMUCapsObjectPropsMaxCPU[] = {
+     { "unavailable-features", QEMU_CAPS_CPU_UNAVAILABLE_FEATURES },
+     { "kvm-no-adjvtime", QEMU_CAPS_CPU_KVM_NO_ADJVTIME },
+@@ -1789,6 +1795,9 @@ static virQEMUCapsObjectTypeProps virQEMUCapsObjectProps[] = {
+     { "memory-backend-memfd", virQEMUCapsObjectPropsMemoryBackendMemfd,
+       G_N_ELEMENTS(virQEMUCapsObjectPropsMemoryBackendMemfd),
+       QEMU_CAPS_OBJECT_MEMORY_MEMFD },
++    { "memory-backend-memfd-private", virQEMUCapsObjectPropsMemoryBackendMemfdPrivate,
++      G_N_ELEMENTS(virQEMUCapsObjectPropsMemoryBackendMemfdPrivate),
++      QEMU_CAPS_OBJECT_MEMORY_MEMFD_PRIVATE },
+     { "max-x86_64-cpu", virQEMUCapsObjectPropsMaxCPU,
+       G_N_ELEMENTS(virQEMUCapsObjectPropsMaxCPU),
+       QEMU_CAPS_X86_MAX_CPU },
+@@ -6173,6 +6182,10 @@ virQEMUCapsFillDomainMemoryBackingCaps(virQEMUCaps *qemuCaps,
+     if (virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD))
+         VIR_DOMAIN_CAPS_ENUM_SET(memoryBacking->sourceType,
+                                  VIR_DOMAIN_MEMORY_SOURCE_MEMFD);
++    
++    if (virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD_PRIVATE))
++        VIR_DOMAIN_CAPS_ENUM_SET(memoryBacking->sourceType,
++                                 VIR_DOMAIN_MEMORY_SOURCE_MEMFD_PRIVATE);
+ 
+     if (virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_FILE))
+         VIR_DOMAIN_CAPS_ENUM_SET(memoryBacking->sourceType,
+diff --git a/src/qemu/qemu_capabilities.h b/src/qemu/qemu_capabilities.h
+index 92c6cb3fab..5dd79fab60 100644
+--- a/src/qemu/qemu_capabilities.h
++++ b/src/qemu/qemu_capabilities.h
+@@ -489,6 +489,7 @@ typedef enum { /* virQEMUCapsFlags grouping marker for syntax-check */
+     QEMU_CAPS_DEVICE_VFIO_AP, /* -device vfio-ap */
+     QEMU_CAPS_DEVICE_ZPCI, /* -device zpci */
+     QEMU_CAPS_OBJECT_MEMORY_MEMFD, /* -object memory-backend-memfd */
++    QEMU_CAPS_OBJECT_MEMORY_MEMFD_PRIVATE, /* -object memory-backend-memfd-private */
+     QEMU_CAPS_OBJECT_MEMORY_MEMFD_HUGETLB, /* -object memory-backend-memfd.hugetlb */
+     QEMU_CAPS_IOTHREAD_POLLING, /* -object iothread.poll-max-ns */
+ 
+diff --git a/src/qemu/qemu_command.c b/src/qemu/qemu_command.c
+index baecddda80..65e1761bb0 100644
+--- a/src/qemu/qemu_command.c
++++ b/src/qemu/qemu_command.c
+@@ -3743,6 +3743,16 @@ qemuBuildMemoryBackendProps(virJSONValue **backendProps,
+         if (systemMemory)
+             disableCanonicalPath = true;
+ 
++    } else if (!mem->nvdimmPath &&
++        def->mem.source == VIR_DOMAIN_MEMORY_SOURCE_MEMFD_PRIVATE) {
++        backendType = "memory-backend-memfd-private";
++
++        if (useHugepage &&
++            (virJSONValueObjectAdd(&props, "b:hugetlb", useHugepage, NULL) < 0 ||
++             virJSONValueObjectAdd(&props, "U:hugetlbsize", pagesize << 10, NULL) < 0)) {
++            return -1;
++        }
++
+     } else if (useHugepage || mem->nvdimmPath || memAccess ||
+         def->mem.source == VIR_DOMAIN_MEMORY_SOURCE_FILE) {
+ 
+@@ -3879,6 +3889,7 @@ qemuBuildMemoryBackendProps(virJSONValue **backendProps,
+         memAccess == VIR_DOMAIN_MEMORY_ACCESS_DEFAULT &&
+         def->mem.source != VIR_DOMAIN_MEMORY_SOURCE_FILE &&
+         def->mem.source != VIR_DOMAIN_MEMORY_SOURCE_MEMFD &&
++        def->mem.source != VIR_DOMAIN_MEMORY_SOURCE_MEMFD_PRIVATE &&
+         !force) {
+         /* report back that using the new backend is not necessary
+          * to achieve the desired configuration */
+@@ -3903,6 +3914,12 @@ qemuBuildMemoryBackendProps(virJSONValue **backendProps,
+                            _("this qemu doesn't support the "
+                              "memory-backend-memfd object"));
+             return -1;
++        } else if (STREQ(backendType, "memory-backend-memfd-private") &&
++                   !virQEMUCapsGet(priv->qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD_PRIVATE)) {
++            virReportError(VIR_ERR_CONFIG_UNSUPPORTED, "%s",
++                           _("this qemu doesn't support the "
++                             "memory-backend-memfd-private object"));
++            return -1;
+         }
+ 
+         rc = 0;
+@@ -7676,7 +7693,8 @@ qemuBuildNumaCommandLine(virQEMUDriverConfig *cfg,
+      * need to check which approach to use */
+     if (virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_RAM) ||
+         virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_FILE) ||
+-        virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD)) {
++        virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD) ||
++        virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD_PRIVATE)) {
+         int rc;
+ 
+         for (i = 0; i < ncells; i++) {
+diff --git a/src/qemu/qemu_validate.c b/src/qemu/qemu_validate.c
+index 9fd0009c8c..6b2f8b3eb0 100644
+--- a/src/qemu/qemu_validate.c
++++ b/src/qemu/qemu_validate.c
+@@ -852,6 +852,13 @@ qemuValidateDomainDefMemory(const virDomainDef *def,
+         return -1;
+     }
+ 
++    if (mem->source == VIR_DOMAIN_MEMORY_SOURCE_MEMFD_PRIVATE &&
++        !virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD_HUGETLB)) {
++        virReportError(VIR_ERR_CONFIG_UNSUPPORTED, "%s",
++                       _("hugepages is not supported with memfd-private memory source"));
++        return -1;
++    }
++
+     /* We can't guarantee any other mem.access if no guest NUMA
+      * nodes are defined, unless defaultRAMid is provided. */
+     if (!defaultRAMid &&
+@@ -879,7 +886,8 @@ qemuValidateDomainDefNuma(const virDomainDef *def,
+     size_t i;
+     bool hasMemoryCap = virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_RAM) ||
+                         virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_FILE) ||
+-                        virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD);
++                        virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD) ||
++                        virQEMUCapsGet(qemuCaps, QEMU_CAPS_OBJECT_MEMORY_MEMFD_PRIVATE);
+     bool needBacking = false;
+ 
+     if (virDomainNumatuneHasPerNodeBinding(def->numa) && !hasMemoryCap) {
+-- 
+2.31.1
+
