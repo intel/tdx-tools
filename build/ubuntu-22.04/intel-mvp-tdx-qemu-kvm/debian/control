@@ -68,7 +68,7 @@ Build-Depends: debhelper-compat (= 12),
  libsdl2-dev,
 # --enable-seccomp	amd64|arm64|armel|armhf|i386|mips64el|mipsel|ppc64el|s390x|hppa|powerpc|ppc64|riscv64|x32
  libseccomp-dev        [amd64 arm64 armel armhf i386 mips64el mipsel ppc64el s390x hppa powerpc ppc64 riscv64 x32],
-# --enable-slirp=system
+# --enable-slirp
  libslirp-dev,
 # --enable-spice	 linux-amd64|linux-i386|linux-arm64|linux-armel|linux-armhf|linux-mips64el|linux-mipsel|ppc64el|sh4|x32
  libspice-server-dev	[linux-amd64 linux-i386 linux-arm64 linux-armel linux-armhf linux-mips64el linux-mipsel ppc64el sh4 x32],

@@ -1,38 +1,74 @@
-qemu (9:7.0.50+mvp6+13) jammy; urgency=medium
+qemu (9:7.2.0+mvp12+110) jammy; urgency=medium
 
-  * tdx qemu 7.0.50 MVP-QEMU-7.0-v1.3
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.10
 
- -- Jialei Feng <jialei.feng@intel.com>  Tue, 22 Nov 2022 14:12:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Fri, 31 Mar 2023 14:58:00 +0800
 
-qemu (9:7.0.50+mvp5+12) jammy; urgency=medium
+qemu (9:7.2.0+mvp11+18) jammy; urgency=medium
 
-  * tdx qemu 7.0.50 enable capstone
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.8
 
- -- Jialei Feng <jialei.feng@intel.com>  Thu, 24 Nov 2022 14:00:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Fri, 24 Mar 2023 10:21:00 +0800
 
-qemu (9:7.0.50+mvp4+12) jammy; urgency=medium
+qemu (9:7.2.0+mvp10+17) jammy; urgency=medium
 
-  * tdx qemu 7.0.50 MVP-QEMU-7.0-v1.2
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.7
 
- -- Jialei Feng <jialei.feng@intel.com>  Tue, 22 Nov 2022 14:12:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 22 Mar 2023 17:03:00 +0800
 
-qemu (9:7.0.50+mvp3+11) jammy; urgency=medium
+qemu (9:7.2.0+mvp9+16) jammy; urgency=medium
 
-  * tdx qemu 7.0.50 MVP-QEMU-7.0-v1.1
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.6
 
- -- Jialei Feng <jialei.feng@intel.com>  Tue, 15 Nov 2022 10:25:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 22 Mar 2023 10:53:00 +0800
 
-qemu (9:7.0.50+mvp2+10) jammy; urgency=medium
+qemu (9:7.2.0+mvp8+15) jammy; urgency=medium
 
-  * tdx qemu 7.0.50 MVP-QEMU-7.0-v1.0
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.5 fix CPUID for td-migration
 
- -- Jialei Feng <jialei.feng@intel.com>  Mon, 7 Nov 2022 00:12:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 20 Mar 2023 13:09:00 +0800
 
-qemu (9:7.0.50+mvp1+17) jammy; urgency=medium
+qemu (9:7.2.0+mvp7+14) jammy; urgency=medium
 
-  * tdx qemu 7.0.50 EMR-BKC-QEMU-v1.7
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.4 patch for td-migration
 
- -- Jialei Feng <jialei.feng@intel.com>  Fri, 28 Oct 2022 14:56:00 +0800
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 15 Mar 2023 21:11:00 +0800
+
+qemu (9:7.2.0+mvp6+13) jammy; urgency=medium
+
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.3 patch for td-migration
+
+ -- Jialei Feng <jialei.feng@intel.com>  Thu, 9 Mar 2023 15:21:00 +0800
+
+qemu (9:7.2.0+mvp5+12) jammy; urgency=medium
+
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.2 tsx/mwait
+
+ -- Jialei Feng <jialei.feng@intel.com>  Fri, 3 Mar 2023 19:03:00 +0800
+
+qemu (9:7.2.0+mvp4+11) jammy; urgency=medium
+
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.1
+
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 22 Feb 2023 14:40:00 +0800
+
+qemu (9:7.2.0+mvp3+10) jammy; urgency=medium
+
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v1.0
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 20 Feb 2023 17:00:00 +0800
+
+qemu (9:7.2.0+mvp2+02) jammy; urgency=medium
+
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v0.2
+
+ -- Jialei Feng <jialei.feng@intel.com>  Wed, 15 Feb 2023 14:00:00 +0800
+
+qemu (9:7.2.0+mvp1+01) jammy; urgency=medium
+
+  * tdx qemu 7.2.0 MVP-QEMU-7.2-v0.1
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 13 Feb 2023 18:52:00 +0800
 
 qemu (1:6.2+dfsg-2ubuntu6) jammy; urgency=medium
 
