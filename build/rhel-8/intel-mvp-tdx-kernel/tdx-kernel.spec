@@ -31,8 +31,8 @@ Summary: The Linux kernel
 %global released_kernel 0
 
 %define rcver 0
-%define downstream_tag tdx.v2.2
-%define relver 14
+%define downstream_tag tdx.v1.8
+%define relver 10
 
 %if %{rcver}
 %global distro_build 0.rc%{rcver}.%{downstream_tag}.mvp%{relver}
@@ -75,11 +75,11 @@ Summary: The Linux kernel
 %define primary_target rhel
 %endif
 
-%define rpmversion 5.19.0
+%define rpmversion 6.2.0
 %define pkgrelease %{distro_build}
 
 # This is needed to do merge window version magic
-%define patchlevel 19
+%define patchlevel 2
 
 # allow pkg_release to have configurable %%{?dist} tag
 %define specrelease %{distro_build}%{?buildid}%{?dist}
@@ -2230,7 +2230,7 @@ tar xjvf %{SOURCE300} -C $INSTALL_KABI_PATH
 
 %if %{with_perf}
 # perf tool binary and supporting scripts/binaries
-%{perf_make} DESTDIR=$RPM_BUILD_ROOT lib=%{_lib} install-bin install-traceevent-plugins
+%{perf_make} DESTDIR=$RPM_BUILD_ROOT lib=%{_lib} install-bin
 # remove the 'trace' symlink.
 rm -f %{buildroot}%{_bindir}/trace
 
@@ -2552,8 +2552,8 @@ fi
 %files -n %{?adp_prefix}perf
 %{_bindir}/perf
 %{_libdir}/libperf-jvmti.so
-%dir %{_libdir}/traceevent/plugins
-%{_libdir}/traceevent/plugins/*
+#%dir %{_libdir}/traceevent/plugins
+#%{_libdir}/traceevent/plugins/*
 %dir %{_libexecdir}/perf-core
 %{_libexecdir}/perf-core/*
 %{_datadir}/perf-core/*
