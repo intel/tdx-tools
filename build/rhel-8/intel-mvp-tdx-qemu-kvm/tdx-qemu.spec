@@ -124,10 +124,10 @@ Obsoletes: qemu-kvm-block-iscsi <= %{epoch}:%{version}           \
 
 Summary: QEMU is a machine emulator and virtualizer
 Name: intel-mvp-tdx-qemu-kvm
-Version: 7.0.50
-%define source_tag MVP-QEMU-7.0-v1.3
-%define downstream_version v1.3
-%define patch_number mvp6
+Version: 7.2.0
+%define source_tag MVP-QEMU-7.2-v1.10
+%define downstream_version v1.10
+%define patch_number mvp12
 Release: %{downstream_version}.%{patch_number}%{?dist}
 
 Provides: qemu-kvm
@@ -698,7 +698,7 @@ run_configure \
   --enable-rdma \
 %endif
   --enable-seccomp \
-  --enable-slirp=system \
+  --enable-slirp \
   --enable-snappy \
 %if 0%{have_spice}
   --enable-smartcard \

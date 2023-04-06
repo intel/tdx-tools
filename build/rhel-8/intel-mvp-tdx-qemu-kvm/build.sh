@@ -5,17 +5,19 @@ set -ex
 CURR_DIR="$(dirname "$(readlink -f "$0")")"
 
 UPSTREAM_GIT_URI="https://github.com/qemu/qemu.git"
-UPSTREAM_TAG="ad4c7f529a279685da84297773b4ec8080153c2d"
-DOWNSTREAM_TARBALL="tdx-qemu.tar.gz"
+UPSTREAM_TAG="v7.2.0"
 
-PATCHSET="${CURR_DIR}/../../common/patches-tdx-qemu-MVP-QEMU-7.0-v1.3.tar.gz"
+PATCHSET="${CURR_DIR}/../../common/patches-tdx-qemu-MVP-QEMU-7.2-v1.10.tar.gz"
 SPEC_FILE="${CURR_DIR}/tdx-qemu.spec"
 RPMBUILD_DIR="${CURR_DIR}/rpmbuild"
+DOWNSTREAM_TARBALL="${RPMBUILD_DIR}/SOURCES/tdx-qemu.tar.gz"
 
 create_tarball() {
     cd "${CURR_DIR}"
     if [[ ! -d qemu ]]; then
         git clone ${UPSTREAM_GIT_URI} qemu
+    fi
+    if [[ ! -f ${DOWNSTREAM_TARBALL} ]]; then
         tar xf "${PATCHSET}"
         pushd qemu
         git checkout ${UPSTREAM_TAG}
@@ -26,7 +28,7 @@ create_tarball() {
         done
         git submodule update --init
         popd
-        tar --exclude=.git -czf "${RPMBUILD_DIR}"/SOURCES/${DOWNSTREAM_TARBALL} qemu
+        tar --exclude=.git -czf ${DOWNSTREAM_TARBALL} qemu
     fi
 }
 
