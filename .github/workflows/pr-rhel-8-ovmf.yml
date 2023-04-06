@@ -3,7 +3,7 @@ name: Validate PR for RHEL8 ovmf
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-8/intel-mvp-ovmf/**'
+    - 'build/rhel-8/intel-mvp-ovmf/**'
   workflow_dispatch:
 
 jobs:
