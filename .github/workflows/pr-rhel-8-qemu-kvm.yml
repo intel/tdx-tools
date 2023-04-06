@@ -3,7 +3,7 @@ name: Validate PR for RHEL8 qemu-kvm
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-8/intel-mvp-tdx-libvirt/**'
+    - 'build/rhel-8/intel-mvp-tdx-qemu-kvm/**'
   workflow_dispatch:
 
 jobs:

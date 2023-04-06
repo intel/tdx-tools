@@ -28,7 +28,7 @@ create_tarball() {
         done
         git submodule update --init
         popd
-        tar --exclude=.git -czf ${DOWNSTREAM_TARBALL} qemu
+        tar --exclude=.git -czf "${DOWNSTREAM_TARBALL}" qemu
     fi
 }
 

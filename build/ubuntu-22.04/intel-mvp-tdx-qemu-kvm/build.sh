@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 UPSTREAM_GIT_URI="https://github.com/qemu/qemu.git"
 UPSTREAM_TAG="v7.2.0"
@@ -13,7 +15,7 @@ fi
 
 get_source() {
     echo "Get downstream source code..."
-    cd ${CURR_DIR}
+    cd "${CURR_DIR}"
     if [[ ! -d ${PACKAGE} ]]; then
         git clone ${UPSTREAM_GIT_URI} ${PACKAGE}
         tar xf "${PATCHSET}"
@@ -30,7 +32,7 @@ get_source() {
 
 prepare() {
     echo "Prepare..."
-    cp ${CURR_DIR}/debian/ ${CURR_DIR}/${PACKAGE} -fr
+    cp "${CURR_DIR}"/debian/ "${CURR_DIR}"/"${PACKAGE}" -fr
 
     sudo apt update
     sudo apt install systemd -y
@@ -39,7 +41,7 @@ prepare() {
 
 build() {
     echo "Build..."
-    cd ${CURR_DIR}/${PACKAGE}
+    cd "${CURR_DIR}"/"${PACKAGE}"
     sudo -E mk-build-deps --install --build-dep --build-indep '--tool=apt-get --no-install-recommends -y' debian/control
     dpkg-source --before-build .
     debuild -uc -us -b
