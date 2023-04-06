@@ -3,7 +3,7 @@ name: Validate PR for RHEL8 libvirt
 on:
   pull_request:
     paths:
-    - 'build/ubuntu-8/intel-mvp-tdx-libvirt/**'
+    - 'build/rhel-8/intel-mvp-tdx-libvirt/**'
   workflow_dispatch:
 
 jobs:
