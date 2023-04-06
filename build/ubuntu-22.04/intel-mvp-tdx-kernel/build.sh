@@ -1,11 +1,11 @@
 #!/bin/bash
 
 UPSTREAM_GIT_URI="https://github.com/torvalds/linux.git"
-UPSTREAM_TAG="v5.19"
+UPSTREAM_TAG="v6.2"
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 SOURCE_DIR=${CURR_DIR}/"mvp-tdx-kernel-${UPSTREAM_TAG}"
-PATCHSET="${CURR_DIR}/../../common/patches-tdx-kernel-MVP-KERNEL-5.19-v2.2.tar.gz"
+PATCHSET="${CURR_DIR}/../../common/patches-tdx-kernel-MVP-KERNEL-6.2-v1.8.tar.gz"
 
 if [[ $(grep "Ubuntu" /etc/os-release) == "" ]]; then
     echo "Please build the packages in Ubuntu"
@@ -33,7 +33,7 @@ prepare() {
     echo "Prepare..."
     cp ${CURR_DIR}/debian/ ${SOURCE_DIR} -fr
     cp ${CURR_DIR}/debian.master/ ${SOURCE_DIR} -fr
-    cp ${CURR_DIR}/linux-5.19.0/* ${SOURCE_DIR} -fr
+    cp ${CURR_DIR}/linux-6.2.0/* ${SOURCE_DIR} -fr
 
     sudo apt update
     sudo DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai apt install tzdata -y
