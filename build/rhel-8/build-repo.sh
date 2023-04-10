@@ -64,6 +64,7 @@ finalize() {
 # Check whether distro is "RHEL 8"
 [ -f /etc/redhat-release ] || { echo "Invalid OS" && exit 1; }
 [[ $(< /etc/redhat-release) == "Red Hat Enterprise Linux release 8.6 (Ootpa)" ]] || \
+[[ $(< /etc/redhat-release) == "Red Hat Enterprise Linux release 8.7 (Ootpa)" ]] || \
     { echo "Invalid OS" && exit 1; }
 
 # Check whether createrepo tool installed

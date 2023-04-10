@@ -35,15 +35,15 @@ build_grub () {
 build_kernel () {
     cd intel-mvp-tdx-kernel
     ./build.sh
-    cp linux-image-unsigned-5.19.0-*.deb linux-headers-5.19.0-* linux-modules-5.19.0-* ../$GUEST_REPO/
-    cp linux-image-unsigned-5.19.0-*.deb linux-headers-5.19.0-* linux-modules-5.19.0-* linux-modules-extra-5.19.0-* ../$HOST_REPO/
+    cp linux-image-unsigned-6.2.0-*.deb linux-headers-6.2.0-* linux-modules-6.2.0-* ../$GUEST_REPO/
+    cp linux-image-unsigned-6.2.0-*.deb linux-headers-6.2.0-* linux-modules-6.2.0-* linux-modules-extra-6.2.0-* ../$HOST_REPO/
     cd ..
 }
 
 build_qemu () {
     cd intel-mvp-tdx-qemu-kvm
     ./build.sh
-    cp qemu-system-x86_7.0*.deb qemu-system-common_7.0*.deb qemu-system-data_7.0*.deb ../$HOST_REPO/
+    cp qemu-system-x86_7.2*.deb qemu-system-common_7.2*.deb qemu-system-data_7.2*.deb ../$HOST_REPO/
     cd ..
 }
 
