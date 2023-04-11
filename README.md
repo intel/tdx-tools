@@ -52,7 +52,7 @@ cd build/rhel-8
 ```
 
 _NOTE:_ Please refer detail instructions for different distros in `build`
-directory.
+directory. It requires at least 45G space, and could take several hours to complete.
 
 This will build all packages and create two repositories, one for guest and one for host.
 
