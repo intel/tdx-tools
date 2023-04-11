@@ -12,7 +12,7 @@ before providing the TDX guest VM.
 ### Overview
 
 The `RTMR` stands for Run-time Measurement Register, recording measurement for the component participating in the booting process.
-Currently (2023.4), TDX supports four RTMRs, including RTMR[0], RTMR[1], RTMR[2] and RTMR[3]. 
+As of 2023.4, TDX supports four RTMRs, including RTMR[0], RTMR[1], RTMR[2] and RTMR[3]. 
 
 The same RTMR may store measurement for different section in `direct boot` or `grub boot`.
 

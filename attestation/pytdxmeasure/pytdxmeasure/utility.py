@@ -1,5 +1,5 @@
 '''
-Module utility provide constant variales defined in outer
+Module utility provides constant variables defined in outer
 references and helper classes.
 '''
 import os

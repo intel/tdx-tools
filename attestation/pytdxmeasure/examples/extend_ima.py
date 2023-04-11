@@ -15,7 +15,7 @@ To enable IMA in kernel for TDs, please set the kernel configs like this:
 Also additional kernel command needed to be added for IMA enablement
     ima=on, ima_policy=tcb, ima_hash=sha384
 
-Traditionally ima measurements are anchored in Trusted Platform Module (TPM),\
+Traditionally IMA measurements are anchored in Trusted Platform Module (TPM),\
     since vTPM is not available in TD guest. This utility can be used to anchor\
     IMA measurements into RTMR registers. Note that RTMR could only accept SHA384\
     digests.
