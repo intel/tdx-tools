@@ -25,16 +25,16 @@ Must use `-t` to set MigTD type src or dst.
 
 ```bash
 # create the MigTD_src to bind with src user TD 
-sudo ./migTD.sh -t src
+sudo ./mig-td.sh -t src
 
 # create the MigTD_dst to bind with dst user TD 
-sudo ./migTD.sh -t dst
+sudo ./mig-td.sh -t dst
 ```
 
 - Use `-m` parameter to set the alternative path of migtd.bin.
 
 ```bash
-sudo ./migTD.sh -m path/to/migtd.bin -t src
+sudo ./mig-td.sh -m path/to/migtd.bin -t src
 ```
 
 If MigTD starts successfully, the console will display the below message.
@@ -56,20 +56,20 @@ Must use `-t` to set userTD type src or dst.
 
 ```bash
 # create the source user TD
-sudo ./userTD.sh -t src -i path/to/image -k path/to/kernel
+sudo ./user-td.sh -t src -i path/to/image -k path/to/kernel
 
 # create the destination user TD
-sudo ./userTD.sh -t dst -i path/to/image -k path/to/kernel
+sudo ./user-td.sh -t dst -i path/to/image -k path/to/kernel
 ```
 
 - GRUB Boot
 
 ```bash
 # create the source user TD
-sudo ./userTD.sh -t src -i path/to/image -b grub
+sudo ./user-td.sh -t src -i path/to/image -b grub
 
 # create the destination user TD
-sudo ./userTD.sh -t dst -i path/to/image -b grub
+sudo ./user-td.sh -t dst -i path/to/image -b grub
 ```
 
 - Attestation
@@ -77,12 +77,12 @@ Require to install attestation related components in advance.
 
 ```bash
 # tdvmcall
-sudo ./userTD.sh -t src -i path/to/image -b grub -q tdvmcall
-sudo ./userTD.sh -t dst -i path/to/image -b grub -q tdvmcall
+sudo ./user-td.sh -t src -i path/to/image -b grub -q tdvmcall
+sudo ./user-td.sh -t dst -i path/to/image -b grub -q tdvmcall
 
 # vsock
-sudo ./userTD.sh -t src -i path/to/image -b grub -q vsock
-sudo ./userTD.sh -t dst -i path/to/image -b grub -q vsock
+sudo ./user-td.sh -t src -i path/to/image -b grub -q vsock
+sudo ./user-td.sh -t dst -i path/to/image -b grub -q vsock
 ```
 
 ### 2.3 Pre-Migration
@@ -144,16 +144,16 @@ Must use `-t` to set MigTD type src or dst.
 
 ```bash
 # create the MigTD_src to bind with src user TD 
-sudo ./migTD.sh -t src
+sudo ./mig-td.sh -t src
 
 # create the MigTD_dst to bind with dst user TD 
-sudo ./migTD.sh -t dst
+sudo ./mig-td.sh -t dst
 ```
 
 - Use `-m` parameter to set the alternative path of migtd.bin.
 
 ```bash
-sudo ./migTD.sh -t src -m path/to/migtd.bin
+sudo ./mig-td.sh -t src -m path/to/migtd.bin
 ```
 
 If MigTD starts successfully, the console will display the below message.
@@ -173,20 +173,20 @@ Must use `-t` to set userTD type src or dst.
 
 ```bash
 # create the source user TD on source platform
-sudo ./userTD.sh -t src -i path/to/image -k path/to/kernel
+sudo ./user-td.sh -t src -i path/to/image -k path/to/kernel
 
 # create the destination user TD on destination platform
-sudo ./userTD.sh -t dst -i path/to/image -k path/to/kernel
+sudo ./user-td.sh -t dst -i path/to/image -k path/to/kernel
 ```
 
 - GRUB Boot
 
 ```bash
 # create the source user TD on source platform
-sudo ./userTD.sh -t src -i path/to/image -b grub
+sudo ./user-td.sh -t src -i path/to/image -b grub
 
 # create the destination user TD on destination platform
-sudo ./userTD.sh -t dst -i path/to/image -b grub
+sudo ./user-td.sh -t dst -i path/to/image -b grub
 ```
 
 - Cross-host Attestation is same as the Single-host, so please refer Section 2.2.

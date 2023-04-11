@@ -37,7 +37,7 @@ cd tdx-tools/build/rhel-8/guest-image/
 
 _NOTE:_
 
-- For RHEL-8 image, please prepare RHEL 8.7 base ISO image and put it under the same directory as `create-efi-img.sh`. You can download RHEL .6 base ISO image from
+- For RHEL-8 image, please prepare RHEL 8.7 base ISO image and put it under the same directory as `create-efi-img.sh`. You can download RHEL 8.7 base ISO image from
 <https://access.redhat.com/downloads>
 Modify `create-efi-img.sh` and set the ISO variable to the image name as below.
 Then run `create-efi-img.sh` to create the RHEL 8.7 guest image.
