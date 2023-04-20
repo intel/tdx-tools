@@ -66,12 +66,12 @@ process_args() {
         "src")
             GUEST_CID=3
             TELNET_PORT=9088
-            TARGET_PID=$(pgrep migtd-src)
+            TARGET_PID=$(pgrep -n migtd-src)
             ;;
         "dst")
             GUEST_CID=4
             TELNET_PORT=9089
-            TARGET_PID=$(pgrep migtd-dst)
+            TARGET_PID=$(pgrep -n migtd-dst)
             ;;
         *)
             error "Invalid ${TD_TYPE}, must be [src|dst]"

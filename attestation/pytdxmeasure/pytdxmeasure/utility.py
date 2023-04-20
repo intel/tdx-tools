@@ -7,6 +7,7 @@ import logging
 import ctypes
 import struct
 import fcntl
+from typing import List
 
 __author__ = "cpio"
 
@@ -59,7 +60,7 @@ TDX_REPORTDATA_LEN = 64
 # The length of the tdreport
 TDX_REPORT_LEN = 1024
 
-class DeviceNode():
+class DeviceNode:
     """
     DeviceNode manager operation on tdx device in guest
     Support devices:
@@ -70,7 +71,7 @@ class DeviceNode():
     """
     GET_TDREPORT = "get tdreport"
 
-    class DeviceOperatorsMap():
+    class DeviceOperatorsMap:
         '''
         Class DeviceOperatorsMap contains the name of a device node
         and corresponding opertors on it.
@@ -207,3 +208,56 @@ class DeviceNode():
         elif self.device_node_name == DEVICE_NODE_NAME_1_5:
             val = TCB_INFO_VALID_VAL_1_5
         return val
+
+class ModuleVersion:
+    '''
+    class ModuleVersion contains version infomation of tdx module
+    '''
+
+    VALID_SVN_LENGTH = 16
+
+    def __init__(self, release_names: List[str], major: int, minor: int, is_debug: bool = False):
+        self.release_names = release_names
+        self.major = major
+        self.minor = minor
+        self.is_debug = is_debug
+
+    @staticmethod
+    def from_bytes(tee_tcb_svn: bytes):
+        '''
+        Method from_bytes parses bytes of the svn, if it
+        is valid, return the instance of the module version.
+        '''
+        if len(tee_tcb_svn) != ModuleVersion.VALID_SVN_LENGTH:
+            return None, False
+        version_bytes = tee_tcb_svn[0:2]
+        for version in VALID_MODULE_VERSIONS:
+            if version.to_hex().to_bytes(2, byteorder='little') == version_bytes:
+                return version, True
+        return None, False
+
+    def to_hex(self):
+        '''
+        Method to_hex converts the module version to the svn in hex.
+        '''
+        return self.major * 16 * 16 + self.minor
+
+    def __str__(self):
+        sep = " or "
+        names = sep.join(self.release_names)
+        return (f'module version: {{ '
+                f'release_names: {names},'
+                f'major: {self.major},'
+                f'minor: {self.minor},'
+                f'is_debug: {self.is_debug}'
+                f' }}'
+               )
+
+VALID_MODULE_VERSIONS = [
+    ModuleVersion(["1.0"], 0, 0, True),
+    ModuleVersion(["1.0"], 0, 3),
+    ModuleVersion(["1.4", "1.5"], 1, 0, True),
+    ModuleVersion(["1.4", "1.5"], 1, 3),
+    ModuleVersion(["2.0"], 2, 0, True),
+    ModuleVersion(["2.0"], 2, 3),
+]

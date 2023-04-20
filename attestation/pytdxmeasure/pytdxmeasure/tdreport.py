@@ -10,6 +10,8 @@ from .utility import DeviceNode, \
         DEVICE_NODE_NAME_DEPRECATED as DEV_DEPRECATED, \
         DEVICE_NODE_NAME_1_0 as DEV_1_0, \
         DEVICE_NODE_NAME_1_5 as DEV_1_5
+from .utility import ModuleVersion
+
 from .binaryblob import BinaryBlob
 
 __author__ = "cpio"
@@ -69,6 +71,8 @@ class TeeTcbInfo(BinaryBlob):
         super().__init__(data)
         # auxiliary fileds
         self.device = device
+        self.module_version = None
+
         # real fields
         self.valid = None
         self.tee_tcb_svn = None
@@ -119,6 +123,9 @@ class TeeTcbInfo(BinaryBlob):
         elif self.device == DEV_1_5:
             self.tee_tcb_svn2, offset = self.get_bytes(offset, 0x10)
             self.reserved, offset = self.get_bytes(offset, 0x5f)
+
+        # parse module svn
+        self.module_version, _ = ModuleVersion.from_bytes(self.tee_tcb_svn)
 
 class TdInfo(BinaryBlob):
     """
