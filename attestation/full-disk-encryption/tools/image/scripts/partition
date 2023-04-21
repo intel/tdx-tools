@@ -1,0 +1,132 @@
+#!/bin/bash
+
+# This script includes partition operation functions like creating partitions
+# creating LUKS2 partitions format partitions and extract rootfs
+
+create_partitions() {
+    local BOOT_SIZE=$1
+    local OUTPUT_IMAGE=$2
+
+    # Create partition layout
+    sgdisk --clear \
+        --new 14::+1M --typecode=14:ef02 --change-name=14:'bios' \
+        --new 15::+100M --typecode=15:ef00 --change-name=15:'uefi' \
+        --new 16::+$BOOT_SIZE --typecode=16:8300 --change-name=16:'boot' \
+        --new 1::-0 --typecode=1:8300 --change-name=1:'rootfs' \
+        $OUTPUT_IMAGE
+
+    LOOPDEV=$(losetup --find --show $OUTPUT_IMAGE)
+    partprobe ${LOOPDEV}
+    ROOT=${LOOPDEV}p1
+    EFI=${LOOPDEV}p15
+    BOOT=${LOOPDEV}p16
+    echo -e "LOOPDEV:${LOOPDEV} \nROOT:${ROOT} \nEFI:${EFI} \nBOOT:${BOOT}"
+}
+
+create_luks_partition() {
+    local KEY=$1
+
+    # Setup root partition to LUKS with cipher aes-gcm-random 256 bit
+    echo $KEY |
+    cryptsetup -v -q luksFormat --encrypt --type luks2 \
+    --cipher aes-gcm-random --integrity aead --key-size 256 $ROOT
+
+    cryptsetup -v config --label rootfs-enc $ROOT
+
+    echo $KEY | cryptsetup open --key-size 256 $ROOT rootfs-enc-dev
+    ROOT_ENC=/dev/mapper/rootfs-enc-dev
+    echo -e "ROOT_ENC:${ROOT_ENC}"
+}
+
+format_partitions() {
+    local EFI=$1
+    local BOOT=$2
+    local ROOT_ENC=$3
+
+    # Create filesystems for EFI and boot partition
+    mkfs.fat -F32 $EFI
+    # Relabel because fat format clear ext label
+    fatlabel $EFI uefi
+    mkfs.ext4 -F -L "boot" $BOOT
+    mkfs.ext4 -F $ROOT_ENC
+}
+
+make_rootfs() {
+    local ROOTFS_URL=$1
+    local ROOTFS_TAR=$2
+    local TDX_REPO_URL=$3
+    local EFI=$4
+    local BOOT=$5
+    local ROOT_ENC=$6
+    local ROOT=$7
+    local ROOT_PASS=$8
+
+    # Download rootfs
+    if [[ ! -f $ROOTFS_TAR ]] ; then
+        wget $ROOTFS_URL/$ROOTFS_TAR
+    fi
+
+    # Create tmp directory to mount whole patitions
+    mkdir -p /tmp/mnt/root
+    mount $ROOT_ENC /tmp/mnt/root
+    mkdir -p /tmp/mnt/root/boot
+    mount $BOOT /tmp/mnt/root/boot/
+    mkdir -p /tmp/mnt/root/boot/efi
+    mount $EFI /tmp/mnt/root/boot/efi
+
+    # Extract rootfs files
+    tar -xf $ROOTFS_TAR -C /tmp/mnt/root/
+
+    # copy_tdx_repo_to_target_rootfs
+    if [[ -n ${TDX_REPO_LOCAL} ]]; then
+        mkdir -p /tmp/mnt/root/opt/intel
+        cp -r ${TDX_REPO_LOCAL} /tmp/mnt/root/opt/intel/
+        
+        source_content="deb [trusted=yes arch=amd64] file:/opt/intel/${TDX_REPO_NAME} jammy main"
+        dirs=`ls ${TDX_REPO_LOCAL}`
+        if [[ ${dirs} == "jammy" ]]; then
+            source_content="deb [trusted=yes arch=amd64] file:/opt/intel/${TDX_REPO_NAME} jammy/all/\ndeb [trusted=yes arch=amd64] file:/opt/intel/${TDX_REPO_NAME} jammy/amd64/"
+        fi
+
+        echo -e ${source_content} | \
+            tee /tmp/mnt/root/etc/apt/sources.list.d/intel-tdx.list
+    fi
+
+    # copy_fde_agent_target_rootfs
+    cp ${FDE_DIR}/target/release/fde-agent /tmp/mnt/root/sbin/
+    cp ${FDE_DIR}/tools/initramfs/scripts/init-premount/fde-agent /tmp/mnt/root/usr/share/initramfs-tools/scripts/init-premount/
+    cp ${FDE_DIR}/tools/initramfs/modules /tmp/mnt/root/etc/initramfs-tools/
+    cp -r ${FDE_DIR}/tools/initramfs/hooks/* /tmp/mnt/root/usr/share/initramfs-tools/hooks/
+    cp -r ${FDE_DIR}/tools/image/netplan.yaml /tmp/mnt/root/etc/netplan
+
+    # Mount other neccesary fs for chroot
+    mount -t proc none /tmp/mnt/root/proc
+    mount -t sysfs none /tmp/mnt/root/sys
+    mount -t tmpfs none /tmp/mnt/root/tmp
+    mount --bind /run /tmp/mnt/root/run
+    mount --bind /dev /tmp/mnt/root/dev
+    mount --bind /dev/pts /tmp/mnt/root/dev/pts
+
+    # Install packages and configure environment
+    cp scripts/install /tmp/mnt/root/tmp/
+    chroot /tmp/mnt/root/ /bin/bash tmp/install "$TDX_REPO_URL" $ROOT $ROOT_PASS
+    rm /tmp/mnt/root/tmp/install
+
+    # Clean up mount points
+    umount /tmp/mnt/root/dev/pts
+    umount /tmp/mnt/root/dev
+    umount /tmp/mnt/root/run
+    umount /tmp/mnt/root/tmp
+    umount /tmp/mnt/root/sys
+    umount /tmp/mnt/root/proc
+    umount /tmp/mnt/root/boot/efi
+    umount /tmp/mnt/root/boot
+    umount /tmp/mnt/root/
+}
+
+close_partitions() {
+    local LOOPDEV=$1
+
+    cryptsetup close $ROOT_ENC
+    losetup -d $LOOPDEV
+}

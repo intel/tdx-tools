@@ -1,0 +1,57 @@
+#!/bin/sh
+PREREQ="cloud-initramfs-dyn-netconf"
+prereqs()
+{
+    echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
+# shellcheck disable=SC1091
+. /scripts/functions
+
+# Mount efivars to get EFI variables
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+
+# Configure the network
+configure_networking
+
+# Parse command line to get cryptdevice
+CMDLINE=$(cat /proc/cmdline)
+for x in $CMDLINE; do
+    case $x in
+    cryptdevice=*)
+        # Get cryptdevice parameters
+        CRYPTDEVICE=${x#cryptdevice=}
+        oldIFS=$IFS
+        IFS=':'
+        set -- "${CRYPTDEVICE}"
+        FDEROOT=$1
+        FDENAME=$2
+        IFS=$oldIFS
+        ;;
+    esac
+done
+
+if [ -n "${FDEROOT}" ]; then
+    # Get device root and name
+    resolve_device "${FDEROOT}"
+    FDEROOT="--root ${DEV}"
+    if [ -n "${FDENAME}" ]; then
+        FDENAME="--name ${FDENAME}"
+    fi
+
+    # Check FDE agent
+    if [ ! -x "/sbin/fde-agent" ]; then
+        panic "FDE agent executable not found"
+    fi
+
+    log_begin_msg "Starting FDE agent"
+    /sbin/fde-agent "${FDEROOT}" "${FDENAME}" || panic "FDE agent failed"
+    log_end_msg
+fi

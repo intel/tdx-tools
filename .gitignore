@@ -5,3 +5,5 @@ vmlinuz
 .vscode/
 output/
 __pycache__/
+attestation/full-disk-encryption/Cargo.lock
+attestation/full-disk-encryption/target/
