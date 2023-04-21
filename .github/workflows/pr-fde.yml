@@ -16,6 +16,12 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Install libtdx-attest
+        run: |
+          wget https://download.01.org/intel-sgx/sgx-dcap/1.16/linux/distro/ubuntu22.04-server/sgx_debian_local_repo.tgz
+          sudo mkdir -p /opt/intel/ && sudo tar zxf sgx_debian_local_repo.tgz -C /opt/intel/ 
+          sudo echo "deb [trusted=yes arch=amd64] file:/opt/intel/sgx_debian_local_repo jammy main" | sudo tee /etc/apt/sources.list.d/sgx_debian_local_repo.list
+          sudo apt update && yes | DEBIAN_FRONTEND=noninteractive sudo apt install -y libtdx-attest libtdx-attest-dev libcryptsetup-dev
       - name: Run cargo check
         run: |
           cd attestation/full-disk-encryption/
@@ -24,3 +30,4 @@ jobs:
           cargo clippy
           cargo install --locked cargo-deny
           cargo deny check
+          
