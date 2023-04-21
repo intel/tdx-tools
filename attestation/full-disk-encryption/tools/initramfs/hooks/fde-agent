@@ -1,0 +1,19 @@
+#!/bin/sh
+PREREQ="cloud-initramfs-dyn-netconf"
+prereqs()
+{
+  echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+  prereqs
+  exit 0
+  ;;
+esac
+
+# shellcheck disable=SC1091
+. /usr/share/initramfs-tools/hook-functions
+
+# fde-agent
+copy_exec /sbin/fde-agent

@@ -97,6 +97,7 @@ Usage: $(basename "$0") [OPTION]...
   -n <network CIDR>         Network CIDR for TD VM, default is "10.0.2.0/24"
   -a <DHCP start>           Network started address, default is "10.0.2.15"
   -e <extra kernel cmd>     Extra kernel command needed in VM boot
+  -w <sha384 hex string>    pass customiszed 48*2 bytes MROWNERCONFIG to the vm, only support td
   -v                        Flag to enable vsock
   -d                        Flag to enable "debug=on" for GDB guest
   -s                        Flag to use serial console instead of HVC console
@@ -114,7 +115,7 @@ warn() {
 }
 
 process_args() {
-    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:n:s:e:" option; do
+    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:n:s:e:w:" option; do
         case "$option" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -130,8 +131,9 @@ process_args() {
             q) QUOTE_TYPE=$OPTARG;;
             c) CPUS=$OPTARG;;
             r) ROOT_PARTITION=$OPTARG;;
-	    n) NET_CIDR=$OPTARG;;
-	    a) DHCP_START=$OPTARG;;
+            n) NET_CIDR=$OPTARG;;
+            a) DHCP_START=$OPTARG;;
+            w) MROWNERCONFIG=$OPTARG;;
             e) EXTRA_KERNEL_CMD=$OPTARG;;
             h) usage
                exit 0
@@ -223,6 +225,9 @@ process_args() {
             QEMU_CMD+=" -object tdx-guest,sept-ve-disable,id=tdx"
             if [[ ${QUOTE_TYPE} == "tdvmcall" ]]; then
                 QEMU_CMD+=",quote-generation-service=vsock:2:4050"
+            fi
+            if [[ -n ${MROWNERCONFIG} ]]; then
+                QEMU_CMD+=",mrownerconfig=${MROWNERCONFIG}"
             fi
             if [[ ${DEBUG} == true ]]; then
                 QEMU_CMD+=",debug=on"
@@ -325,6 +330,9 @@ process_args() {
     fi
     if [[ -n ${QUOTE_TYPE} ]]; then
         echo "Quote type        : ${QUOTE_TYPE}"
+    fi
+    if [[ -n ${MROWNERCONFIG} ]]; then
+        echo "MROWNERCONFIG     : ${MROWNERCONFIG}"
     fi
     echo "========================================="
 }

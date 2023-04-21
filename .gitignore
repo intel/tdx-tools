@@ -9,3 +9,5 @@ rpmbuild/
 repo/
 *.done
 hosts
+attestation/full-disk-encryption/Cargo.lock
+attestation/full-disk-encryption/target/

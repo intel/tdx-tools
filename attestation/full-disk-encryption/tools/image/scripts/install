@@ -1,0 +1,41 @@
+#!/bin/bash
+
+TDX_REPO_URL=$1
+ROOT=$2
+ROOT_PASS=$3
+
+echo "Installing packages for image"
+
+if [[ -n ${TDX_REPO_URL} ]]; then
+    # Setup TDX packages repo
+    echo "deb [trusted=yes] $TDX_REPO_URL jammy/amd64/" | tee /etc/apt/sources.list.d/intel-tdx.list
+fi
+
+# Install packages
+apt update && yes | DEBIAN_FRONTEND=noninteractive apt install -y linux-image-unsigned-6.2.16* \
+    linux-modules-6.2.16* grub2 grub-efi-amd64-signed shim-signed \
+    grub-efi-amd64-bin=2.06-2ubuntu14.1 libtdx-attest libcryptsetup-dev
+
+# Install Grub2
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu
+
+# Configure kernel command line
+CMDLINE="cryptdevice=UUID=$(blkid -o value -s UUID $ROOT):root-enc console=hvc0"
+sed -i -e "/GRUB_CMDLINE_LINUX_DEFAULT=/ s/=.*/=\"$CMDLINE\"/" \
+    /etc/default/grub.d/50-cloudimg-settings.cfg
+
+cat << EOF > /etc/fstab
+LABEL=rootfs-enc    /               ext4   discard,errors=remount-ro       0 1
+LABEL=boot          /boot           ext4   defaults                        0 1
+LABEL=uefi          /boot/efi       vfat   umask=0077                      0 1
+EOF
+
+# Do not prober os in other disks
+mv /etc/grub.d/30_os-prober /etc/grub.d/.30_os-prober
+update-grub
+mv /etc/grub.d/.30_os-prober /etc/grub.d/30_os-prober
+
+INITRD_NAME=`ls /boot | grep initrd.img-6.2.16* | head -1`
+update-initramfs -u -k ${INITRD_NAME#initrd.img-}
+
+yes $ROOT_PASS | passwd root
