@@ -6,6 +6,7 @@ import os
 import fcntl
 import struct
 import logging
+import hashlib
 from .binaryblob import BinaryBlob
 
 __author__ = 'cpio'
@@ -34,7 +35,7 @@ class RTMR(BinaryBlob):
         return bytearray(bytearray_1) == bytearray(bytearray_2)
 
     @staticmethod
-    def extend_rtmr(raw_extend_data, extend_rtmr_index):
+    def extend_rtmr(raw_extend_data, str_extend_data, digest_extend_data, extend_rtmr_index):
         """
         Perform ioctl on the device file /dev/tdx_guest to extend rtmr
         """
@@ -56,10 +57,21 @@ class RTMR(BinaryBlob):
         #    __u8 index;
         #};
 
-        extend_data = bytearray(raw_extend_data.encode())
-        if len(extend_data) != RTMR.RTMR_LENGTH_BY_BYTES:
-            LOG.error("Invalid length for the extend data. Should be 48B length.")
-            return RTMR.EXTEND_FAILURE_WITH_WRONG_INPUT
+        extend_data = bytearray(64)
+
+        if str_extend_data is not None:
+            data_digest = hashlib.sha384(str_extend_data.encode())
+            extend_data = bytearray(data_digest.digest())
+        elif digest_extend_data is not None:
+            extend_data = bytearray.fromhex(digest_extend_data)
+            if len(extend_data) != RTMR.RTMR_LENGTH_BY_BYTES:
+                LOG.error("Invalid length for the extend data. Should be 48B length.")
+                return RTMR.EXTEND_FAILURE_WITH_WRONG_INPUT
+        else:
+            extend_data = bytearray(raw_extend_data.encode())
+            if len(extend_data) != RTMR.RTMR_LENGTH_BY_BYTES:
+                LOG.error("Invalid length for the extend data. Should be 48B length.")
+                return RTMR.EXTEND_FAILURE_WITH_WRONG_INPUT
 
         req = struct.pack("@48sB", extend_data, int(extend_rtmr_index))
 

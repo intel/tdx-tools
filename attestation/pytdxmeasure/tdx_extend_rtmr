@@ -5,12 +5,14 @@ import argparse
 from pytdxmeasure.cli import TDXRTMRExtendCmd
 
 parser = argparse.ArgumentParser(description="The utility to write data into RTMR register")
-parser.add_argument('-e', type=str, help='Extend value to rtmr register', dest='rtmr_extend_data')
-parser.add_argument('-r', type=int, default=2, help='RTMR register to extend', dest='extended_rtmr_index')
+parser.add_argument('-s', type=str, help='Extend string value to rtmr register', dest='rtmr_extend_str')
+parser.add_argument('-d', type=str, help='Extend digest value to rtmr register. Must be sha384 digest', dest='rtmr_extend_digest')
+parser.add_argument('-r', type=str, help='Extend raw value to rtmr register. Must be 48B.', dest='rtmr_extend_raw')
+parser.add_argument('-i', type=int, default=2, help='RTMR register to extend', dest='extended_rtmr_index')
 
 args = parser.parse_args()
 print(args)
 
-if args.rtmr_extend_data is not None:
-    TDXRTMRExtendCmd().run(args.rtmr_extend_data, args.extended_rtmr_index)
+if args.rtmr_extend_raw is not None or args.rtmr_extend_str is not None or args.rtmr_extend_digest is not None:
+    TDXRTMRExtendCmd().run(args.rtmr_extend_raw, args.rtmr_extend_str, args.rtmr_extend_digest, args.extended_rtmr_index)
 

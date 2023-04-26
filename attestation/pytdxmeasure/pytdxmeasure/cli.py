@@ -96,13 +96,14 @@ class TDXRTMRExtendCmd():
         logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
     @staticmethod
-    def run(extend_raw_data, extend_rtmr_index):
+    def run(extend_raw_data, extend_str_data, extend_digest_data, extend_rtmr_index):
         """
         Run cmd
         """
 
         LOG.info("=> Extend RTMR")
-        res = RTMR.extend_rtmr(extend_raw_data, extend_rtmr_index)
+        res = RTMR.extend_rtmr(extend_raw_data, extend_str_data,
+                               extend_digest_data, extend_rtmr_index)
         if res == RTMR.EXTEND_SUCCESS:
             LOG.info("Changed RTMR value in TD Report")
             TdReport.get_td_report().dump()
