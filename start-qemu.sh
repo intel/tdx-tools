@@ -241,13 +241,13 @@ process_args() {
     QEMU_CMD+=$PARAM_MACHINE
     QEMU_CMD+=" -device virtio-net-pci,netdev=mynet0"
 
-    # Specify the number of CPUs
-    QEMU_CMD+=" -smp ${CPUS} "
-
     # Customize MAC address. NOTE: it will impact TDX measurement RTMR.
     if [[ -n ${MAC_ADDR} ]]; then
         QEMU_CMD+=",mac=${MAC_ADDR}"
     fi
+
+    # Specify the number of CPUs
+    QEMU_CMD+=" -smp ${CPUS} "
 
     # Forward SSH port to the host
     QEMU_CMD+=" -netdev user,id=mynet0,hostfwd=tcp::$FORWARD_PORT-:22 "
