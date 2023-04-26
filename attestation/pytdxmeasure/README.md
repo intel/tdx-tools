@@ -56,6 +56,14 @@ The Log Area Start Address (LASA) is from ACPI CCEL table. Please see [GHCI spec
     ./tdx_verify_rtmr
     ```
 
+4. Extend the RTMR
+
+    ```
+    ./tdx_extend_rtmr -s 'test_extend_rtmr' -i 3
+    ```
+    User can extend RTMR register with different kinds of data, including raw data(with '-r', must be 48B length), string data(with '-s',
+    will be converted to SHA384 digest) and SHA384 digest string(with '-d'). User can also change the index of RTMR register by using '-i'.
+
 ### Installation
 
 Build and install TDX Measurement Tool:
