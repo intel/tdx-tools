@@ -57,6 +57,8 @@ KERNEL_CMD_NON_TD="root=${ROOT_PARTITION} rw console=hvc0"
 KERNEL_CMD_TD="${KERNEL_CMD_NON_TD}"
 MAC_ADDR=""
 QUOTE_TYPE=""
+NET_CIDR="10.0.2.0/24"
+DHCP_START="10.0.2.15"
 
 # Just log message of serial into file without input
 HVC_CONSOLE="-chardev stdio,id=mux,mux=on,logfile=$CURR_DIR/vm_log_$(date +"%FT%H%M").log \
@@ -92,6 +94,8 @@ Usage: $(basename "$0") [OPTION]...
   -q [tdvmcall|vsock]       Support for TD quote using tdvmcall or vsock
   -c <number>               Number of CPUs, default is 1
   -r <root partition>       root partition for direct boot, default is /dev/vda1
+  -n <network CIDR>         Network CIDR for TD VM, default is "10.0.2.0/24"
+  -a <DHCP start>           Network started address, default is "10.0.2.15"
   -v                        Flag to enable vsock
   -d                        Flag to enable "debug=on" for GDB guest
   -s                        Flag to use serial console instead of HVC console
@@ -109,7 +113,7 @@ warn() {
 }
 
 process_args() {
-    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:" option; do
+    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:n:s:" option; do
         case "$option" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -125,6 +129,8 @@ process_args() {
             q) QUOTE_TYPE=$OPTARG;;
             c) CPUS=$OPTARG;;
             r) ROOT_PARTITION=$OPTARG;;
+	    n) NET_CIDR=$OPTARG;;
+	    a) DHCP_START=$OPTARG;;
             h) usage
                exit 0
                ;;
@@ -249,8 +255,8 @@ process_args() {
         QEMU_CMD+=",mac=${MAC_ADDR}"
     fi
 
-    # Forward SSH port to the host
-    QEMU_CMD+=" -netdev user,id=mynet0,hostfwd=tcp::$FORWARD_PORT-:22 "
+    # Set the network cidr, DHCP start address, and forward SSH port to the host 
+    QEMU_CMD+=" -netdev user,id=mynet0,net=$NET_CIDR,dhcpstart=$DHCP_START,hostfwd=tcp::$FORWARD_PORT-:22 "
 
     # Enable vsock
     if [[ ${USE_VSOCK} == true ]]; then
