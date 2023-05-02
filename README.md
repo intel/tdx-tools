@@ -11,6 +11,13 @@ Domain(TD). A TD runs in a CPU mode that protects the confidentiality of its
 memory contents and its CPU state from any other software, including the hosting
 Virtual Machine Monitor (VMM). Please get more details from _[TDX White Papers and Specifications](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-trust-domain-extensions.html)_
 
+For TDX hardware or environment:
+- Azure already [launched](https://azure.microsoft.com/en-us/updates/confidential-vms-with-intel-tdx-dcesv5-ecesv5/) the TDX based confidential computing
+  at zone of `DCesv5` and `ECesv5` series.
+- Google published [Intel Trust Domain Extensions (TDX) Security Review](https://services.google.com/fh/files/misc/intel_tdx_-_full_report_041423.pdf)
+- Please contact Intel sales representative for on-premise bare metal server or
+  processor.
+
 This repository helps to:
 
 - Build individual component's package or install pre-build binaries on IaaS
