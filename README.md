@@ -4,6 +4,7 @@
 
 ## 1. Overview
 
+### 1.1 Intel&reg; Trust Domain Extensions(TDX)
 Intel&reg; Trust Domain Extensions(TDX) refers to an Intel technology that
 extends Virtual Machine Extensions(VMX) and Multi-Key Total Memory
 Encryption(MK-TME) with a new kind of virtual machine guest called a Trust
@@ -18,7 +19,15 @@ For TDX hardware or environment:
 - Please contact Intel sales representative for on-premise bare metal server or
   processor.
 
-This repository helps to:
+### 1.2 API and Specifications
+
+Please see details at [here](https://github.com/intel/tdx-tools/wiki/0.-Intel(R)-Trust-Domain-Extensions(TDX)#2-api-and-specifications):
+
+![](./doc/tdx_specifcations.png)
+
+### 1.3 Linux Stack for Intel TDX
+
+Linux Stack for Intel TDX helps to:
 
 - Build individual component's package or install pre-build binaries on IaaS
 host or create PaaS guest image for quick evaluation
