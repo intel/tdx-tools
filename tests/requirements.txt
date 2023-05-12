@@ -12,7 +12,6 @@ timeout-decorator==0.5.0
 pytest-benchmark==3.2.3
 pyyaml==5.4.1
 libvirt-python
-virtualenv==20.4.6
 kubernetes
 urllib3>=1.26.5 # Regular Expression Denial of Service (ReDoS) required
 cpuid

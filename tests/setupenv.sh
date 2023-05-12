@@ -40,6 +40,7 @@ fi
 
 # Setup the python virtualenv
 if [[ ! -d ${CURR_DIR}/venv ]]; then
+  python3 -m pip install virtualenv
   python3 -m virtualenv -p python3 "${CURR_DIR}"/venv
   # shellcheck source=/dev/null
   source "${CURR_DIR}"/venv/bin/activate
