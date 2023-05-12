@@ -149,7 +149,7 @@ Please get detail grub/direct boot template for qemu-kvm and libvirt at [Launch 
 ## 5. Test
 
 After TDX guest image is created, please refer to [TDX Tests](/doc/run_tests.md) to run tests. It uses
-`RHEL 8.7` as example distro.
+`RHEL 8.7` as example distro
 
 ## 6. FAQ & BKM
 

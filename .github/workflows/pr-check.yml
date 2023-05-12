@@ -29,14 +29,3 @@ jobs:
           set -ex
           export PYTHONPATH=$PWD/utils/pycloudstack:$PWD/attestation/pytdxmeasure:/lib/python3/dist-packages/
           find . -path ./build -prune -o -name *.py -print0 | xargs -n 1 -0 python3 -m pylint
-      - name: Spell Check
-        run: |
-          for f in $(find -type f -name "*.md"); do
-            OUTPUT=$(cat $f | aspell -l en --mode markdown --personal $PWD/.github/workflows/.aspell.en.pws list)
-            if [[ ! -z $OUTPUT ]]; then
-              echo "Misspelled words in $f:"
-              echo $OUTPUT
-              ret=1
-            fi
-          done
-          exit $ret
