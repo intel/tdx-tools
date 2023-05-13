@@ -1,0 +1,25 @@
+name: Check License
+
+on:
+  pull_request:
+    paths:
+    - 'utils/**/requirements.txt'
+    - 'attestation/**/requirements.txt'
+    - 'tests/**/requirements.txt'
+  workflow_dispatch:
+
+jobs:
+  codescan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Check License
+        run: |
+          set -ex
+          python3 -m pip install liccheck
+          for f in $(find -type f -name "requirements.txt"); do
+            liccheck -s ./.license_check.ini -r $f
+          done

@@ -1,0 +1,29 @@
+name: Check Document
+
+on:
+  pull_request:
+    paths:
+    - '**/*.md'
+  workflow_dispatch:
+
+jobs:
+  docscan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install aspell
+      - name: Scan documents
+        run: |
+          set -ex
+          for f in $(find -type f -name "*.md"); do
+            OUTPUT=$(cat $f | aspell -l en --mode markdown --personal $PWD/.github/workflows/.aspell.en.pws list)
+            if [[ ! -z $OUTPUT ]]; then
+              echo "Misspelled words in $f:"
+              echo $OUTPUT
+              ret=1
+            fi
+          done
+          exit $ret

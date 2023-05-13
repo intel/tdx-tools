@@ -1,6 +1,9 @@
 # Linux Stack for Intel&reg; TDX (Trust Domain Extensions)
 
-![CI Check](https://github.com/intel/tdx-tools/actions/workflows/pr-check.yml/badge.svg)
+![CI Check Shell](https://github.com/intel/tdx-tools/actions/workflows/pr-check-shell.yml/badge.svg)
+![CI Check Python](https://github.com/intel/tdx-tools/actions/workflows/pr-check-python.yml/badge.svg)
+![CI Check License](https://github.com/intel/tdx-tools/actions/workflows/pr-check-license.yml/badge.svg)
+![CI Check Document](https://github.com/intel/tdx-tools/actions/workflows/pr-check-document.yml/badge.svg)
 
 ## 1. Overview
 

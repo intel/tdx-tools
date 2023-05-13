@@ -1,0 +1,32 @@
+name: Scan Python Code
+
+on:
+  pull_request:
+    paths:
+    - 'utils/**/*.py'
+    - 'attestation/**/*.py'
+    - 'tests/**/*.py'
+  workflow_dispatch:
+
+jobs:
+  codescan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libvirt-dev python3-bpfcc aspell
+          pip3 install --upgrade pip
+          pip3 install pylint
+          for f in $(find -type f -name "requirements.txt"); do
+            pip3 install -r $f
+          done
+      - name: Analyzing the python code
+        run: |
+          set -ex
+          export PYTHONPATH=$PWD/utils/pycloudstack:$PWD/attestation/pytdxmeasure:/lib/python3/dist-packages/
+          find . -path ./build -prune -o -name *.py -print0 | xargs -n 1 -0 python3 -m pylint
