@@ -15,8 +15,6 @@ import re
 import logging
 import time
 import json
-import tempfile
-import shutil
 import libvirt
 import libvirt_qemu
 from .cmdrunner import NativeCmdRunner
@@ -200,16 +198,11 @@ class VMMLibvirt(VMMBase):
             bios_legacy = BIOS_BINARY_LEGACY_CENTOS
             xmlobj.qemu_exec = QEMU_EXEC_CENTOS
 
-        loader_filename = "OVMF-" + xmlobj.uuid + ".fd"
-        loader_fullpath = os.path.join(tempfile.gettempdir(), loader_filename)
-        assert os.path.exists(BIOS_OVMF)
-        shutil.copy(BIOS_OVMF, loader_fullpath)
-
         if self.vminst.vmtype in [VM_TYPE_LEGACY, VM_TYPE_LEGACY_PERF]:
             xmlobj.loader = bios_legacy
             xmlobj.set_cpu_params("host,-kvm-steal-time,pmu=off")
         elif self.vminst.vmtype in [VM_TYPE_EFI, VM_TYPE_EFI_PERF]:
-            xmlobj.loader = loader_fullpath
+            xmlobj.loader = BIOS_OVMF
             xmlobj.set_cpu_params("host,-kvm-steal-time,pmu=off")
         elif self.vminst.vmtype == VM_TYPE_SGX:
             xmlobj.loader = bios_legacy
@@ -218,7 +211,7 @@ class VMMLibvirt(VMMBase):
                 "+sgx-kss,+sgx-mode64,+sgx-provisionkey,+sgx-tokenkey,+sgx1,+sgx2,+sgxlc")
             xmlobj.set_epc_params(self.vminst.vmspec.epc)
         elif self.vminst.vmtype in [VM_TYPE_TD, VM_TYPE_TD_PERF]:
-            xmlobj.loader = loader_fullpath
+            xmlobj.loader = BIOS_OVMF
 
             param_cpu = ""
             if DUT.get_cpu_base_freq() < 1000000:
