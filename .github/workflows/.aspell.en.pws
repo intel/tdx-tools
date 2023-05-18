@@ -372,3 +372,8 @@ VMX
 PaaS
 BKM
 TDs
+IMA
+mmapped
+tcb
+uid
+euid
