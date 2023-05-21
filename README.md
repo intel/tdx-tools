@@ -13,7 +13,7 @@ extends Virtual Machine Extensions(VMX) and Multi-Key Total Memory
 Encryption(MK-TME) with a new kind of virtual machine guest called a Trust
 Domain(TD). A TD runs in a CPU mode that protects the confidentiality of its
 memory contents and its CPU state from any other software, including the hosting
-Virtual Machine Monitor (VMM). Please get more details from _[TDX White Papers and Specifications](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-trust-domain-extensions.html)_
+Virtual Machine Monitor (VMM). Please get more details from _[TDX White Papers and Specifications](https://github.com/intel/tdx-tools/wiki/API-&-Specifications)_
 
 ### 1.2 Hardware Availability
 
@@ -82,3 +82,11 @@ Linux Stack for Intel&reg; TDX includes the components in below diagram:
 Please refer the white paper: [Linux*Stacks for Intel® Trust Domain
 Extension 1.0](https://www.intel.com/content/www/us/en/content-details/779108/whitepaper-linux-stacks-for-intel-trust-domain-extension-1-0.html) (only cover TDX 1.0)
 and [wiki](https://github.com/intel/tdx-tools/wiki) for additional informational about TDX 1.5 or developer specific.
+
+| Type | Content |
+| ---- | ------- |
+| BKM  | [Check Memory Encryption](https://github.com/intel/tdx-tools/wiki/BKM:-Check-Memory-Encryption) |
+| BKM  | [Enable IMA with TDX RTMR](https://github.com/intel/tdx-tools/wiki/BKM:-Enable-IMA-with-TDX-RTMR) |
+| Developer  | [Developer Guide](https://github.com/intel/tdx-tools/wiki/Developer:-Developer-Guide) |
+| Developer  | [Off TD GDB Debug](https://github.com/intel/tdx-tools/wiki/Developer:-Off-TD-GDB-Debug) |
+| 1.5  | [TD Migration](https://github.com/intel/tdx-tools/wiki/TDX-1.5:-TD-Migration) |
