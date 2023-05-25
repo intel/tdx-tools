@@ -1,0 +1,26 @@
+name: Validate PR for Full Disk Encryption (FDE)
+
+on:
+  pull_request:
+    paths:
+    - 'attestation/full-disk-encryption/**'
+  workflow_dispatch:
+
+jobs:
+  code_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v3
+      - name: Set up Rust action
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Run cargo check
+        run: |
+          cd attestation/full-disk-encryption/
+          cargo check
+          cargo fmt -- --check
+          cargo clippy
+          cargo install --locked cargo-deny
+          cargo deny check
