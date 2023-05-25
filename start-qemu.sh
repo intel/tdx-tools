@@ -96,6 +96,7 @@ Usage: $(basename "$0") [OPTION]...
   -r <root partition>       root partition for direct boot, default is /dev/vda1
   -n <network CIDR>         Network CIDR for TD VM, default is "10.0.2.0/24"
   -a <DHCP start>           Network started address, default is "10.0.2.15"
+  -e <extra kernel cmd>     Extra kernel command needed in VM boot
   -v                        Flag to enable vsock
   -d                        Flag to enable "debug=on" for GDB guest
   -s                        Flag to use serial console instead of HVC console
@@ -113,7 +114,7 @@ warn() {
 }
 
 process_args() {
-    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:n:s:" option; do
+    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:n:s:e:" option; do
         case "$option" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -131,6 +132,7 @@ process_args() {
             r) ROOT_PARTITION=$OPTARG;;
 	    n) NET_CIDR=$OPTARG;;
 	    a) DHCP_START=$OPTARG;;
+            e) EXTRA_KERNEL_CMD=$OPTARG;;
             h) usage
                exit 0
                ;;
@@ -261,6 +263,12 @@ process_args() {
     # Enable vsock
     if [[ ${USE_VSOCK} == true ]]; then
         QEMU_CMD+=" -device vhost-vsock-pci,guest-cid=3 "
+    fi
+
+    # Specify extra kernel cmdline to be added for vm boot
+    if [[ -n ${EXTRA_KERNEL_CMD} ]]; then
+        KERNEL_CMD_TD+=" ${EXTRA_KERNEL_CMD}"
+        KERNEL_CMD_NON_TD+=" ${EXTRA_KERNEL_CMD}"
     fi
 
     case ${BOOT_TYPE} in
