@@ -86,13 +86,13 @@ check_cmd() {
 # Check the OS information
 #
 check_os() {
-    local action="Check OS: The distro and version are correct (manadory & manually)"
+    local action="Check OS: The distro and version are correct (mandatory & manually)"
     local reason=""
     report_result TBD "$action" "$reason" mandatory manual
     local os_info
     os_info=$(head -2 /etc/os-release)
     print_guide "Your OS info." "$os_info"
-    print_guide "Details can be found in Whitepaper: Linux* Stacks for Intel® Trust Domain Extenson"
+    print_guide "Details can be found in Whitepaper: Linux* Stacks for Intel® Trust Domain Extension"
     print_url $URL_TDX_LINUX_WHITE_PAPER
     printf "\n"
 }
@@ -110,7 +110,7 @@ check_tdx_module() {
             do echo "$tdxattr": ; cat /sys/firmware/tdx/tdx_module/"$tdxattr"; echo; done)
     # shellcheck disable=SC2086
     print_guide "Your TDX Module info." $tdx_module_info
-    print_guide "Details can be found in Whitepaper: Linux* Stacks for Intel® Trust Domain Extenson"
+    print_guide "Details can be found in Whitepaper: Linux* Stacks for Intel® Trust Domain Extension"
     print_url $URL_TDX_LINUX_WHITE_PAPER
     printf "\n"
 }
