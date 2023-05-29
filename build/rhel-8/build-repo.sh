@@ -22,7 +22,6 @@ PACKAGES_SPECIAL=( \
     intel-mvp-tdx-kernel \	
     )
     
-
 build_repo() {
     packages=("${@:2}")
     repo_type=$1

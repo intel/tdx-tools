@@ -1,0 +1,29 @@
+name: Validate PR for RHEL8 build-repo.sh
+
+on:
+  pull_request:
+    paths:
+    - 'build/rhel-8/build-repo.sh'
+  workflow_dispatch:
+
+jobs:
+  build_package:
+    name: Build TDX Stack for RHEL8
+    runs-on: self-hosted
+    container:
+        image: gar-registry.caas.intel.com/cpio/devops-base:rhel8-2023WW06
+        volumes:
+          - build:/root/build
+    steps:
+      - name: Cleanup workspace for the job (self hosted only)
+        run: |
+          sudo rm -fr *
+      - id: checkout_self
+        name: Check out PR
+        uses: actions/checkout@v3
+      - id: build
+        name: Build the source and binary packages
+        run: |
+          dnf install createrepo_c -y
+          cd build/rhel-8/
+          ./build-repo.sh
