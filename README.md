@@ -15,6 +15,15 @@ Domain(TD). A TD runs in a CPU mode that protects the confidentiality of its
 memory contents and its CPU state from any other software, including the hosting
 Virtual Machine Monitor (VMM). Please get more details from _[TDX White Papers and Specifications](https://github.com/intel/tdx-tools/wiki/API-&-Specifications)_
 
+NOTE: tdx-tools keeps evolving along with kernel version. Please refer to corresponding _[tag](https://github.com/intel/tdx-tools/tags)_
+for different kernel version support. Please make sure to use the corresponding tag aligned with kernel version.
+| Tag | Kernel version | Description |
+| -- | -- | -- |
+| [2022ww44](https://github.com/intel/tdx-tools/releases/tag/2022ww44) | 5.15 |TDX 1.0 |
+| [2023ww01](https://github.com/intel/tdx-tools/releases/tag/2023ww01) | 5.19 |TDX 1.0 |
+| [2023ww15](https://github.com/intel/tdx-tools/releases/tag/2023ww15) | 6.2 |TDX 1.5 |
+| [2023ww22](https://github.com/intel/tdx-tools/releases/tag/2023ww22) | 5.19.17 |TDX 1.0 update with Full disk encryption(FDE) reference solution, Amber client and IMA support |
+
 ### 1.2 Hardware Availability
 
 - Azure already [launched](https://azure.microsoft.com/en-us/updates/confidential-vms-with-intel-tdx-dcesv5-ecesv5/) the
@@ -43,24 +52,14 @@ It produce the following minimal use cases:
   service (QGS) on the IaaS host
 
 It provides the below tools for developer:
+
 - Build individual component's package or install pre-build binaries on IaaS host or create PaaS guest image for quick evaluation
 - Generate the patch set for deep dive in source code level
 - Test, hack and debug the TDX technology based on [PyCloudStack](utils/pycloudstack/README.md) framework
 - Dump guest VM measurement and generate TD quote report for TDX E2E attestation
 - Measured boot and Secure boot for TDX guest VM
 
-### 2.2 Releases
-
-tdx-tools keeps evolving along with kernel version. It supports kernel 5.15, kernel 5.19 and
-kernel 6.2. Please refer to corresponding _[tag](https://github.com/intel/tdx-tools/tags)_
-for different kernel version support. Please make sure to use the corresponding tag aligned with kernel version.
-| Tag | Kernel version | Description |
-| -- | -- | -- |
-| [2022ww44](https://github.com/intel/tdx-tools/releases/tag/2022ww44) | 5.15 |TDX 1.0 |
-| [2023ww01](https://github.com/intel/tdx-tools/releases/tag/2023ww01) | 5.19 |TDX 1.0 |
-| [2023ww15](https://github.com/intel/tdx-tools/releases/tag/2023ww15) | 6.2 |TDX 1.5 |
-
-### 2.3 Components
+### 2.2 Components
 
 Linux Stack for Intel&reg; TDX includes the components in below diagram:
 
