@@ -52,8 +52,8 @@ class VMGuest:
                  vsock=False, vsock_cid=0,
                  vmm_class=None, cpu_ids=None, mem_numa=True,
                  io_mode=None, cache=None, diskfile_path=None,
-                 migtd_pid=None, incoming_port=None, tsx=None,
-                 tsc=None, mwait=None):
+                 migtd_pid=None, mig_hash=None, incoming_port=None,
+                 tsx=None, tsc=None, mwait=None):
 
         self.vmid = vmid
         self.name = name
@@ -75,6 +75,7 @@ class VMGuest:
         self.cache = cache
         self.diskfile_path = diskfile_path
         self.migtd_pid = migtd_pid
+        self.mig_hash = mig_hash
         self.incoming_port = incoming_port
         self.tsx = tsx
         self.tsc = tsc
@@ -366,7 +367,7 @@ class VMGuestFactory:
                cmdline=KernelCmdline(),auto_start=False, hugepages=False,
                hugepage_size=None, boot=BOOT_TYPE_DIRECT, disk_img=None,
                vsock=False, vsock_cid=3, io_mode=None, cache=None,
-               diskfile_path=None, cpu_ids=None, migtd_pid=None,
+               diskfile_path=None, cpu_ids=None, migtd_pid=None, mig_hash=None,
                incoming_port=None, tsx=None, tsc=None, mwait=None):
         """
         Creat a VM.
@@ -408,7 +409,7 @@ class VMGuestFactory:
                        vsock=vsock, vsock_cid=vsock_cid,
                        io_mode=io_mode, cache=cache,
                        diskfile_path=diskfile_path, cpu_ids=cpu_ids,
-                       migtd_pid=migtd_pid, incoming_port=incoming_port,
+                       migtd_pid=migtd_pid, mig_hash=mig_hash, incoming_port=incoming_port,
                        tsx=tsx, tsc=tsc, mwait=mwait)
 
         self.vms[vm_name] = inst
