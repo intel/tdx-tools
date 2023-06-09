@@ -51,6 +51,7 @@ connect() {
     modprobe vhost_vsock
     if [[ ${TYPE} == "local" ]]; then
         socat TCP4-LISTEN:9009,reuseaddr VSOCK-LISTEN:1235,fork &
+        sleep 3
         socat TCP4-CONNECT:127.0.0.1:9009,reuseaddr VSOCK-LISTEN:1234,fork &
     else
         ssh root@"${DEST_IP}" -o ConnectTimeout=30 "modprobe vhost_vsock; nohup socat TCP4-LISTEN:9009,reuseaddr VSOCK-LISTEN:1235,fork > foo.out 2> foo.err < /dev/null &"
