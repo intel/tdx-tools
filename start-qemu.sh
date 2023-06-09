@@ -59,6 +59,7 @@ MAC_ADDR=""
 QUOTE_TYPE=""
 NET_CIDR="10.0.2.0/24"
 DHCP_START="10.0.2.15"
+HUGEPAGE_PATH="/dev/shm"
 
 # Just log message of serial into file without input
 HVC_CONSOLE="-chardev stdio,id=mux,mux=on,logfile=$CURR_DIR/vm_log_$(date +"%FT%H%M").log \
@@ -100,6 +101,7 @@ Usage: $(basename "$0") [OPTION]...
   -v                        Flag to enable vsock
   -d                        Flag to enable "debug=on" for GDB guest
   -s                        Flag to use serial console instead of HVC console
+  -u                        Use hugepage and set hugepage path
   -h                        Show this help
 EOM
 }
@@ -114,7 +116,7 @@ warn() {
 }
 
 process_args() {
-    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:n:s:e:" option; do
+    while getopts ":i:k:t:b:p:f:o:a:m:vdshq:c:r:n:s:e:u:" option; do
         case "$option" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -130,9 +132,10 @@ process_args() {
             q) QUOTE_TYPE=$OPTARG;;
             c) CPUS=$OPTARG;;
             r) ROOT_PARTITION=$OPTARG;;
-	    n) NET_CIDR=$OPTARG;;
-	    a) DHCP_START=$OPTARG;;
+            n) NET_CIDR=$OPTARG;;
+            a) DHCP_START=$OPTARG;;
             e) EXTRA_KERNEL_CMD=$OPTARG;;
+            u) HUGEPAGE_PATH=$OPTARG;;
             h) usage
                exit 0
                ;;
@@ -216,14 +219,21 @@ process_args() {
             # Note: "pic=no" could only be used in TD mode but not for non-TD mode
             PARAM_MACHINE+=",kernel_irqchip=split,confidential-guest-support=tdx,memory-backend=ram1"
             QEMU_CMD+=" -bios ${OVMF}"
-            QEMU_CMD+=" -object tdx-guest,sept-ve-disable,id=tdx"
+            QEMU_CMD+=" -object tdx-guest,sept-ve-disable=on,id=tdx"
             if [[ ${QUOTE_TYPE} == "tdvmcall" ]]; then
                 QEMU_CMD+=",quote-generation-service=vsock:2:4050"
             fi
             if [[ ${DEBUG} == true ]]; then
                 QEMU_CMD+=",debug=on"
             fi
-            QEMU_CMD+=" -object memory-backend-memfd-private,id=ram1,size=${MEM}"
+
+            # hugepage path is /dev/shm and hugetlb is off by default. When user specify a hugepage path, it will set hugetlb=on and use the user-defined path.
+            if [[ ${HUGEPAGE_PATH} == "/dev/shm" ]]; then
+                QEMU_CMD+=" -object memory-backend-memfd,id=ramhuge,size=${MEM}"
+            else
+                QEMU_CMD+=" -object memory-backend-memfd,id=ramhuge,size=${MEM},hugetlb=on,hugetlbsize=2M,reserve=off"
+            fi
+            QEMU_CMD+=" -object memory-backend-memfd-private,id=ram1,size=${MEM},path=${HUGEPAGE_PATH},shmemdev=ramhuge"
             ;;
         "efi")
             PARAM_MACHINE+=",kernel_irqchip=split"

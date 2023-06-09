@@ -53,7 +53,7 @@ class VMGuest:
                  vmm_class=None, cpu_ids=None, mem_numa=True,
                  io_mode=None, cache=None, diskfile_path=None,
                  migtd_pid=None, mig_hash=None, incoming_port=None,
-                 tsx=None, tsc=None, mwait=None):
+                 tsx=None, tsc=None, mwait=None, hugepage_path=None):
 
         self.vmid = vmid
         self.name = name
@@ -80,6 +80,7 @@ class VMGuest:
         self.tsx = tsx
         self.tsc = tsc
         self.mwait = mwait
+        self.hugepage_path = hugepage_path
 
         # Update rootfs in kernel command line depending on distro
         rootfs_ubuntu = "root=/dev/vda1"
@@ -368,13 +369,18 @@ class VMGuestFactory:
                hugepage_size=None, boot=BOOT_TYPE_DIRECT, disk_img=None,
                vsock=False, vsock_cid=3, io_mode=None, cache=None,
                diskfile_path=None, cpu_ids=None, migtd_pid=None, mig_hash=None,
-               incoming_port=None, tsx=None, tsc=None, mwait=None):
+               incoming_port=None, tsx=None, tsc=None, mwait=None,hugepage_path=None):
         """
-        Creat a VM.
+        Create a VM.
         """
 
         if hugepage_size is None:
             hugepage_size = HUGEPAGES_2M
+
+        # UPM 2M hugepage patches require usage change of qemu
+        # cmdline parameter by adding a "path" for hugepage tmpfs mountpoint
+        if hugepage_path is None:
+            hugepage_path = "/dev/shm"
 
         # default io mode is native
         if io_mode is None:
@@ -410,7 +416,7 @@ class VMGuestFactory:
                        io_mode=io_mode, cache=cache,
                        diskfile_path=diskfile_path, cpu_ids=cpu_ids,
                        migtd_pid=migtd_pid, mig_hash=mig_hash, incoming_port=incoming_port,
-                       tsx=tsx, tsc=tsc, mwait=mwait)
+                       tsx=tsx, tsc=tsc, mwait=mwait,hugepage_path=hugepage_path)
 
         self.vms[vm_name] = inst
 

@@ -739,6 +739,15 @@ class VirtXml:
         self._add_new_element_by_parent(new_disk_leaf, ["target"], {"dev": "vdb", "bus": "virtio"})
         self.save()
 
+    def set_hugepage_path(self, hugepage_path):
+        """
+        Set hugepage path for UPM hugepage usage
+        """
+        self._add_new_element(["memoryBacking", "path"])
+        self._set_single_element_value(["memoryBacking", "path"], f"{hugepage_path}")
+
+        self.save()
+
     @staticmethod
     def get_templates_dir():
         """

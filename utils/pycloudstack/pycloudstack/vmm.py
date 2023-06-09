@@ -212,6 +212,7 @@ class VMMLibvirt(VMMBase):
             xmlobj.set_epc_params(self.vminst.vmspec.epc)
         elif self.vminst.vmtype in [VM_TYPE_TD, VM_TYPE_TD_PERF]:
             xmlobj.loader = BIOS_OVMF
+            xmlobj.set_hugepage_path(self.vminst.hugepage_path)
 
             param_cpu = ""
             if DUT.get_cpu_base_freq() < 1000000:
