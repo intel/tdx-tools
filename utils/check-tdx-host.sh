@@ -199,7 +199,7 @@ check_bios_seam_loader() {
     local action="Check BIOS: SEAM Loader = Enabled (optional)"
     local reason=""
     report_result TBD "$action" "$reason" optional manual
-    print_guide "Details can be found in Whitepaper: Linux* Stacks for Intel® Trust Domain Extensio, Chapter 6.1 Override the Intel TDX SEAM module"
+    print_guide "Details can be found in Whitepaper: Linux* Stacks for Intel® Trust Domain Extension, Chapter 6.1 Override the Intel TDX SEAM module"
     print_url $URL_TDX_LINUX_WHITE_PAPER
     printf "\n"
 }
@@ -245,7 +245,7 @@ check_bios_sgx_reg_server() {
 
 print_title "TDX Host Check"
 
-check_cmd rdmsr "Please install via apt install msr-tool (Ubuntu) or dnf install msr-tools (RHEL/CentOS)"
+check_cmd rdmsr "Please install via apt install msr-tools (Ubuntu) or dnf install msr-tools (RHEL/CentOS)"
 
 check_os
 check_tdx_module
