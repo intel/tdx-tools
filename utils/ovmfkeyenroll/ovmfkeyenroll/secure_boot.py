@@ -234,7 +234,7 @@ def print_usage():
     '''
     helper function
     '''
-    usage = '''tdvf-key-enroll -fd <absolute-path-to-OVMF_VARS.fd>
+    usage = '''ovmfkeyenroll -fd <absolute-path-to-OVMF_VARS.fd>
     -pk <pk-key-guid> <absolute-path-to-PK.cer>
     -kek <kek-guid> <absolute-path-to-KEK.cer>
     -db <db-key-guid> <absolute-path-to-DB.cer>
