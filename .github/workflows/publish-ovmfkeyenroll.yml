@@ -1,8 +1,7 @@
-name: Publish ovmfkeyenroll package to Pypi
+name: Publish ovmfkeyenroll package to PyPI
 
 on:
   workflow_dispatch:
-
 
 jobs:
   publish_pypi:
@@ -20,8 +19,9 @@ jobs:
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
+          set -x
           python3 -m pip install --upgrade twine build wheel
-          cd util/ovmfkeyenroll
+          cd utils/ovmfkeyenroll
           python3 -m pip install --upgrade build
           python3 -m build
           python3 -m twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD --repository pypi dist/*

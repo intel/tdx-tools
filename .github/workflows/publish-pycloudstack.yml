@@ -1,4 +1,4 @@
-name: Publish pycloudstack package to Pypi
+name: Publish pycloudstack package to PyPI
 
 on:
   workflow_dispatch:

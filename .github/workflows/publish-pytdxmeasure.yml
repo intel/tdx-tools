@@ -1,4 +1,4 @@
-name: Publish pytdxmeasure package to Pypi
+name: Publish pytdxmeasure package to PyPI
 
 on:
   workflow_dispatch:
