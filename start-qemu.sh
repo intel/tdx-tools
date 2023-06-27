@@ -59,6 +59,7 @@ MAC_ADDR=""
 QUOTE_TYPE=""
 NET_CIDR="10.0.2.0/24"
 DHCP_START="10.0.2.15"
+CURRENT_TIME=$(date +"%Y-%m-%dT%H:%M:%S")
 
 # Just log message of serial into file without input
 HVC_CONSOLE="-chardev stdio,id=mux,mux=on,logfile=$CURR_DIR/vm_log_$(date +"%FT%H%M").log \
@@ -73,6 +74,7 @@ SERIAL_CONSOLE="-serial stdio"
 
 # Default template for QEMU command line
 QEMU_CMD="${QEMU_EXEC} -accel kvm \
+	  -rtc base=${CURRENT_TIME} \
           -name process=tdxvm,debug-threads=on \
           -m $MEM -vga none \
           -monitor pty \
