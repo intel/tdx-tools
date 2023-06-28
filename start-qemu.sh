@@ -174,7 +174,7 @@ process_args() {
     fi
 
     file_format=$(file "${GUEST_IMG}")
-    if [[ "$file_format" == *"QCOW2"* ]]; then
+    if [[ "$file_format" == *"QCOW"* ]]; then
         FORMAT="qcow2"
     elif [[ "$file_format" == *": data"* ]]; then
         FORMAT="raw"
