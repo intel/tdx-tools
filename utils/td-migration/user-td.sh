@@ -22,6 +22,8 @@ TELNET_PORT=9088
 INCOMING_PORT=6666
 CPU_NUM=2
 MEM_SIZE=8
+MIG_HASH="d83d9a38c238ef3b7bc207bbea3287a8b37b37e731480a8d240d2a6953086c5ecbdf7ee4c72fec3a3e9d4a87f4f9b4fe"
+PRE_BINDING=false
 
 
 usage() {
@@ -36,6 +38,7 @@ Usage: $(basename "$0") [OPTION]...
   -t <src|dst>              Must set userTD type, src or dst
   -c [cpu number]           CPU number (should be > 0), default 2
   -m [memory size]          Memory size (should be > 0, in giga byte), default 8G
+  -e                        Enable pre-binding. Whenit's enabled, mig_hash will be used for TD boot. The real binding will take place before pre-migration
   -h                        Show this help
 EOM
 }
@@ -52,7 +55,7 @@ is_positive_int() {
 }
 
 process_args() {
-    while getopts "i:k:b:p:q:r:t:c:m:h" option; do
+    while getopts "i:k:b:p:q:r:t:c:m:eh" option; do
         case "${option}" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -63,6 +66,7 @@ process_args() {
             t) TD_TYPE=$OPTARG;;
             c) CPU_NUM=$OPTARG;;
             m) MEM_SIZE=$OPTARG;;
+            e) PRE_BINDING=true;;
             h) usage
                exit 0
                ;;
@@ -97,12 +101,16 @@ process_args() {
         "src")
             GUEST_CID=3
             TELNET_PORT=9088
-            TARGET_PID=$(pgrep -n migtd-src)
+            if [[ ${PRE_BINDING} == false ]]; then 
+                TARGET_PID=$(pgrep -n migtd-src)
+            fi
             ;;
         "dst")
             GUEST_CID=4
             TELNET_PORT=9089
-            TARGET_PID=$(pgrep -n migtd-dst)
+            if [[ ${PRE_BINDING} == false ]]; then
+                TARGET_PID=$(pgrep -n migtd-dst)
+            fi
             ;;
         *)
             error "Invalid ${TD_TYPE}, must be [src|dst]"
@@ -174,15 +182,20 @@ QEMU_CMD="${QEMU_EXEC} \
 -device virtio-net-pci,netdev=mynet0,romfile= \
 -netdev bridge,id=mynet0,br=virbr0"
 
+    QEMU_CMD+=" -object tdx-guest,id=tdx0,sept-ve-disable=on,debug=off"
+
+    if [[ ${PRE_BINDING} == true ]]; then
+        QEMU_CMD+=",migtd-hash=${MIG_HASH}"
+    else
+        QEMU_CMD+=",migtd-pid=${TARGET_PID}"
+    fi
+
     if [[ -n ${QUOTE_TYPE} ]]; then
         if [[ ${QUOTE_TYPE} == "tdvmcall" ]]; then
-		    QEMU_CMD+=" -object tdx-guest,id=tdx0,sept-ve-disable=on,debug=off,migtd-pid=${TARGET_PID},quote-generation-service=vsock:2:4050"
+		    QEMU_CMD+=",quote-generation-service=vsock:2:4050"
         else
-		    QEMU_CMD+=" -object tdx-guest,id=tdx0,sept-ve-disable=on,debug=off,migtd-pid=${TARGET_PID}"
             QEMU_CMD+=" -device vhost-vsock-pci,guest-cid=${GUEST_CID}"
         fi
-    else
-		QEMU_CMD+=" -object tdx-guest,id=tdx0,sept-ve-disable=on,debug=off,migtd-pid=${TARGET_PID}"
     fi
 
     if [[ ${BOOT_TYPE} == "direct" ]]; then
