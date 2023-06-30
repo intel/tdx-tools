@@ -1,9 +1,6 @@
 name: Validate PR for Ubuntu-22.04 build-repo.sh
 
 on:
-  pull_request:
-    paths:
-    - 'build/ubuntu-22.04/build-repo.sh'
   workflow_dispatch:
 
 jobs:

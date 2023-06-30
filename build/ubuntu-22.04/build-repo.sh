@@ -73,6 +73,13 @@ build_libvirt () {
     popd
 }
 
+build_migtd () {
+    cd intel-mvp-tdx-migration
+    ./build.sh
+    cp td-migration_*_amd64.deb ../$HOST_REPO/
+    cd ..
+}
+
 build_check "$1"
 
 pushd "$THIS_DIR"
@@ -87,6 +94,7 @@ build_kernel
 build_qemu
 build_tdvf
 build_libvirt
+build_migtd
 
 # All build pass, remove build status directory
 rm -rf "${STATUS_DIR:?}"/

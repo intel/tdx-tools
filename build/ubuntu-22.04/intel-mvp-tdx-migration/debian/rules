@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/default.mk
+
+version := 2023ww25.3-mvp6
+PACKAGE := td-migration
+INSTALL_DIR=/usr/share/td-migration/
+DEST_DIR := debian/$(PACKAGE)$(INSTALL_DIR)
+
+%:
+	dh $@
+
+override_dh_strip:
+override_dh_strip_nondeterminism:
+override_dh_dwz:
+override_dh_shlibdeps:
+override_dh_auto_build:
+override_dh_auto_test:
+override_dh_auto_install:
+override_dh_auto_clean:
+override_dh_clean:
+
+override_dh_install:
+	mkdir -p $(DEST_DIR)
+	install -m 0664 target/release/migtd.bin $(DEST_DIR)/

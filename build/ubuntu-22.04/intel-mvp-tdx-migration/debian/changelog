@@ -1,0 +1,23 @@
+td-migration (2023ww25.3-mvp6) jammy; urgency=medium
+
+  * td-migration: use public https://github.com/intel/MigTD/tree/2023ww25.3
+
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 27 Jun 2023 16:57:00 +0800
+
+td-migration (0.2.2-mvp5) jammy; urgency=medium
+
+  * td-migration: use public https://github.com/intel/MigTD/tree/v0.2.2
+
+ -- Jialei Feng <jialei.feng@intel.com>  Mon, 12 Jun 2023 13:44:00 +0800
+
+td-migration (2023ww13.4-mvp4) jammy; urgency=medium
+
+  * td-migration: update to 2023ww13.4
+
+ -- Jialei Feng <jialei.feng@intel.com>  Fri, 31 Mar 2023 14:31:00 +0800
+
+td-migration (0.2.1-mvp3) jammy; urgency=medium
+
+  * td-migration: init build
+
+ -- Jialei Feng <jialei.feng@intel.com>  Thu, 30 Mar 2023 18:33:00 +0800

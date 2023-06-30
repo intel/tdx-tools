@@ -1,0 +1,9 @@
+Source: td-migration
+Section: admin
+Priority: optional
+Maintainer: Jialei Feng <jialei.feng@intel.com>
+Build-Depends: debhelper-compat (= 12)
+
+Package: td-migration
+Architecture: amd64
+Description: Migration for 64-bit virtual machines supporting trusted domains.

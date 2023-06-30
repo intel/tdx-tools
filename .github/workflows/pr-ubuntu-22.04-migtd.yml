@@ -1,0 +1,21 @@
+name: Validate PR for Ubuntu-22.04 tdx-migration
+
+on:
+  pull_request:
+    paths:
+    - 'build/ubuntu-22.04/intel-mvp-tdx-migration/**'
+  workflow_dispatch:
+
+jobs:
+  build_package:
+    name: Build tdx-migration for Ubuntu 22.04
+    runs-on: ubuntu-22.04
+    steps:
+      - id: checkout_self
+        name: Check out PR
+        uses: actions/checkout@v3
+      - id: build_ubuntu
+        name: Build the source and binary packages
+        run: |
+          cd build/ubuntu-22.04
+          ./pkg-builder intel-mvp-tdx-migration/build.sh
