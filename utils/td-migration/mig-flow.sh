@@ -4,7 +4,7 @@ set -e
 DEST_IP="localhost"
 INCOMING_PORT=6666
 POST_COPY=false
-MULTI_STREAM=false
+MULTI_STREAM=""
 SRC_VSOCK="/tmp/qmp-sock-src"
 DST_VSOCK="/tmp/qmp-sock-dst"
 
@@ -15,20 +15,20 @@ Usage: $(basename "$0") [OPTION]...
   -i                        Destination platform ip, default is "localhost"
   -p                        incoming port
   -c                        Enable post-copy
-  -m                        Enable multi streams
+  -m                        Enabled multi-stream and set value of multifd-channels
   -h                        Show this help
 EOM
 }
 
 process_args() {
-    while getopts "i:p:s:d:cmh" option; do
+    while getopts "i:p:s:d:m:ch" option; do
         case "${option}" in
             i) DEST_IP=$OPTARG;;
             p) INCOMING_PORT=$OPTARG;;
-            c) POST_COPY=true;;
-            m) MULTI_STREAM=true;;
+            m) MULTI_STREAM=$OPTARG;;
             s) SRC_VSOCK=$OPTARG;;
             d) DST_VSOCK=$OPTARG;;
+            c) POST_COPY=true;;
             h) usage
                exit 0
                ;;
@@ -39,15 +39,21 @@ process_args() {
                ;;
         esac
     done
-}
 
-migrate() {
-    # Currently it doesn't support to enable ,post-copy and multi-stream at the same time
-    if [[ $POST_COPY == true && $MULTI_STREAM == true ]]; then
-        echo "It doesn't support to enable post-copy and multi-thread at the same time!"
+    # multi stream number should be 1-255
+    if ! [[ ${MULTI_STREAM} =~ ^[0-9]+$ && ${MULTI_STREAM} -gt 0 && ${MULTI_STREAM} -lt 256 ]]; then
+        echo "Invalid number of multi stream: ${MULTI_STREAM}. It should be a integer from 1 to 255"
         exit 1
     fi
 
+    # Currently it doesn't support to enable ,post-copy and multi-stream at the same time
+    if [[ $POST_COPY == true && $MULTI_STREAM != "" ]]; then
+        echo "It doesn't support to enable post-copy and multi-thread at the same time!"
+        exit 1
+    fi
+}
+
+migrate() {
     # Set post copy parameters
     if [[ $POST_COPY == true ]]; then
         echo "migrate_set_capability postcopy-ram on" | nc -U "${SRC_VSOCK}" -w3
@@ -57,11 +63,11 @@ migrate() {
     fi
 
     # Set multi stream parameters
-    if [[ $MULTI_STREAM == true ]]; then
+    if [[ $MULTI_STREAM != "" ]]; then
         echo "migrate_set_capability multifd on" | nc -U "${SRC_VSOCK}" -w3
-        echo "migrate_set_parameter multifd-channels 4" | nc -U "${SRC_VSOCK}" -w3
+        echo "migrate_set_parameter multifd-channels $MULTI_STREAM" | nc -U "${SRC_VSOCK}" -w3
         echo "migrate_set_capability multifd on" | nc -U "${DST_VSOCK}" -w3
-        echo "migrate_set_parameter multifd-channels 4" | nc -U "${DST_VSOCK}" -w3
+        echo "migrate_set_parameter multifd-channels $MULTI_STREAM" | nc -U "${DST_VSOCK}" -w3
 
     fi
 
