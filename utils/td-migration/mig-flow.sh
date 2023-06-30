@@ -21,7 +21,7 @@ EOM
 }
 
 process_args() {
-    while getopts "i:p:cmh" option; do
+    while getopts "i:p:s:d:cmh" option; do
         case "${option}" in
             i) DEST_IP=$OPTARG;;
             p) INCOMING_PORT=$OPTARG;;
@@ -50,18 +50,18 @@ migrate() {
 
     # Set post copy parameters
     if [[ $POST_COPY == true ]]; then
-        echo "migrate_set_capability postcopy-ram on" | nc -U ${SRC_VSOCK} -w3
-        echo "migrate_set_capability postcopy-ram on" | nc -U ${DST_VSOCK} -w3
-        echo "migrate_set_capability postcopy-preempt on" | nc -U ${SRC_VSOCK} -w3
-        echo "migrate_set_capability postcopy-preempt on" | nc -U ${DST_VSOCK} -w3
+        echo "migrate_set_capability postcopy-ram on" | nc -U "${SRC_VSOCK}" -w3
+        echo "migrate_set_capability postcopy-ram on" | nc -U "${DST_VSOCK}" -w3
+        echo "migrate_set_capability postcopy-preempt on" | nc -U "${SRC_VSOCK}" -w3
+        echo "migrate_set_capability postcopy-preempt on" | nc -U "${DST_VSOCK}" -w3
     fi
-    
+
     # Set multi stream parameters
     if [[ $MULTI_STREAM == true ]]; then
-        echo "migrate_set_capability multifd on" | nc -U ${SRC_VSOCK} -w3
-        echo "migrate_set_parameter multifd-channels 4" | nc -U ${SRC_VSOCK} -w3
-        echo "migrate_set_capability multifd on" | nc -U ${DST_VSOCK} -w3
-        echo "migrate_set_parameter multifd-channels 4" | nc -U ${DST_VSOCK} -w3
+        echo "migrate_set_capability multifd on" | nc -U "${SRC_VSOCK}" -w3
+        echo "migrate_set_parameter multifd-channels 4" | nc -U "${SRC_VSOCK}" -w3
+        echo "migrate_set_capability multifd on" | nc -U "${DST_VSOCK}" -w3
+        echo "migrate_set_parameter multifd-channels 4" | nc -U "${DST_VSOCK}" -w3
 
     fi
 
@@ -73,13 +73,13 @@ migrate() {
     echo "========================================="
 
     # Trigger migration
-    echo "migrate_set_parameter max-bandwidth 100G" | nc -U ${SRC_VSOCK} -w3
-    echo "migrate -d tcp:${DEST_IP}:${INCOMING_PORT}" | nc -U ${SRC_VSOCK} -w3
+    echo "migrate_set_parameter max-bandwidth 100G" | nc -U "${SRC_VSOCK}" -w3
+    echo "migrate -d tcp:${DEST_IP}:${INCOMING_PORT}" | nc -U "${SRC_VSOCK}" -w3
 
     # Trigger post copy if it's enabled
     if [[ $POST_COPY == true ]]; then
         sleep 5
-        echo "migrate_start_postcopy" | nc -U ${SRC_VSOCK} -w3
+        echo "migrate_start_postcopy" | nc -U "${SRC_VSOCK}" -w3
     fi
 }
 

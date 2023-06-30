@@ -24,6 +24,9 @@ CPU_NUM=2
 MEM_SIZE=8
 MIG_HASH="d83d9a38c238ef3b7bc207bbea3287a8b37b37e731480a8d240d2a6953086c5ecbdf7ee4c72fec3a3e9d4a87f4f9b4fe"
 PRE_BINDING=false
+SRC_VSOCK="/tmp/qmp-sock-src"
+DST_VSOCK="/tmp/qmp-sock-dst"
+TD_VSOCK=""
 
 
 usage() {
@@ -39,6 +42,7 @@ Usage: $(basename "$0") [OPTION]...
   -c [cpu number]           CPU number (should be > 0), default 2
   -m [memory size]          Memory size (should be > 0, in giga byte), default 8G
   -e                        Enable pre-binding. Whenit's enabled, mig_hash will be used for TD boot. The real binding will take place before pre-migration
+  -v                        TD vsock file
   -h                        Show this help
 EOM
 }
@@ -55,7 +59,7 @@ is_positive_int() {
 }
 
 process_args() {
-    while getopts "i:k:b:p:q:r:t:c:m:eh" option; do
+    while getopts "i:k:b:p:q:r:t:c:m:v:eh" option; do
         case "${option}" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -66,6 +70,7 @@ process_args() {
             t) TD_TYPE=$OPTARG;;
             c) CPU_NUM=$OPTARG;;
             m) MEM_SIZE=$OPTARG;;
+            v) TD_VSOCK=$OPTARG;;
             e) PRE_BINDING=true;;
             h) usage
                exit 0
@@ -101,6 +106,9 @@ process_args() {
         "src")
             GUEST_CID=3
             TELNET_PORT=9088
+            if [[ ${TD_VSOCK} == "" ]]; then
+                TD_VSOCK=${SRC_VSOCK}
+            fi
             if [[ ${PRE_BINDING} == false ]]; then 
                 TARGET_PID=$(pgrep -n migtd-src)
             fi
@@ -108,6 +116,9 @@ process_args() {
         "dst")
             GUEST_CID=4
             TELNET_PORT=9089
+            if [[ ${TD_VSOCK} == "" ]]; then
+                TD_VSOCK=${DST_VSOCK}
+            fi
             if [[ ${PRE_BINDING} == false ]]; then
                 TARGET_PID=$(pgrep -n migtd-dst)
             fi
@@ -175,7 +186,7 @@ QEMU_CMD="${QEMU_EXEC} \
 -name process=lm-${TD_TYPE},debug-threads=on \
 -no-hpet -nodefaults \
 -D /run/qemu-${TD_TYPE}.log -nographic -vga none \
--monitor unix:/tmp/qmp-sock-${TD_TYPE},server,nowait \
+-monitor unix:${TD_VSOCK},server,nowait \
 -monitor telnet:127.0.0.1:${TELNET_PORT},server,nowait \
 -device virtio-serial,romfile= \
 -device virtconsole,chardev=mux -serial chardev:mux -monitor chardev:mux \
