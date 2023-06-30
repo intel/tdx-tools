@@ -19,7 +19,6 @@ ROOT_PARTITION="/dev/vda1"
 QUOTE_TYPE=""
 GUEST_CID=3
 TELNET_PORT=9088
-INCOMING_PORT=6666
 CPU_NUM=2
 MEM_SIZE=8
 MIG_HASH="d83d9a38c238ef3b7bc207bbea3287a8b37b37e731480a8d240d2a6953086c5ecbdf7ee4c72fec3a3e9d4a87f4f9b4fe"
@@ -59,12 +58,11 @@ is_positive_int() {
 }
 
 process_args() {
-    while getopts "i:k:b:p:q:r:t:c:m:v:eh" option; do
+    while getopts "i:k:b:q:r:t:c:m:v:eh" option; do
         case "${option}" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
             b) BOOT_TYPE=$OPTARG;;
-            p) INCOMING_PORT=$OPTARG;;
             q) QUOTE_TYPE=$OPTARG;;
             r) ROOT_PARTITION=$OPTARG;;
             t) TD_TYPE=$OPTARG;;
@@ -215,7 +213,7 @@ QEMU_CMD="${QEMU_EXEC} \
     fi
 
     if [[ ${TD_TYPE} == "dst" ]]; then
-        QEMU_CMD+=" -incoming tcp:0:${INCOMING_PORT}"
+        QEMU_CMD+=" -incoming defer"
     fi
 
     eval "${QEMU_CMD}"

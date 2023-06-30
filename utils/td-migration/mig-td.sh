@@ -9,6 +9,8 @@ else
     QEMU_EXEC="/usr/libexec/qemu-kvm"
 fi
 
+# QEMU_EXEC="/home/xiaocheng/ws/qemu-bkc/build/qemu-system-x86_64"
+
 GUEST_CID=18
 MIGTD="/usr/share/td-migration/migtd.bin"
 MIGTD_TYPE=""
