@@ -13,17 +13,19 @@ Usage: $(basename "$0") [OPTION]...
   -t <local|remote>         Use single or cross host live migration
   -s <source port>          Source port
   -d <destination port>     Destination port
+  -b                        Bind migTD and user TD
   -h                        Show this help
 EOM
 }
 
 process_args() {
-    while getopts "i:t:s:d:h" option; do
+    while getopts "i:t:s:d:bh" option; do
         case "${option}" in
             i) DEST_IP=$OPTARG;;
             t) TYPE=$OPTARG;;
             s) VSOCK_PORT_SRC=$OPTARG;;
             d) VSOCK_PORT_DST=$OPTARG;;
+            b) BIND=true;;
             h) usage
                exit 0
                ;;
@@ -54,14 +56,26 @@ error() {
 }
 
 pre_mig(){
+    # If bind is true, it needs to bind migTD and user TD firstly
+    SRC_MIGTD_PID=$(pgrep -n migtd-src)
+    DST_MIGTD_PID=$(pgrep -n migtd-dst)
     # Asking migtd-dst to connect to the dst socat
     if [[ ${TYPE} == "local" ]]; then
+        if [[ ${BIND} == true ]]; then
+            echo "qom-set /objects/tdx0/ migtd-pid ${DST_MIGTD_PID}" | nc -U /tmp/qmp-sock-dst -w3
+        fi
         echo "qom-set /objects/tdx0/ vsockport ${VSOCK_PORT_DST}" | nc -U /tmp/qmp-sock-dst -w3
-    else 
+    else
+        if [[ ${BIND} == true ]]; then
+            ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo qom-set /objects/tdx0/ migtd-pid ${DST_MIGTD_PID} | nc -U /tmp/qmp-sock-dst -w3"
+        fi
        ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo qom-set /objects/tdx0/ vsockport ${VSOCK_PORT_DST} | nc -U /tmp/qmp-sock-dst"
     fi
 
     # Asking migtd-dst to connect to the src socat
+    if [[ ${BIND} == true ]]; then
+        echo "qom-set /objects/tdx0/ migtd-pid ${SRC_MIGTD_PID}" | nc -U /tmp/qmp-sock-src -w3
+    fi
     echo "qom-set /objects/tdx0/ vsockport ${VSOCK_PORT_SRC}" | nc -U /tmp/qmp-sock-src -w3
 }
 

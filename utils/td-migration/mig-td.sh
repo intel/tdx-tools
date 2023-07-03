@@ -76,7 +76,8 @@ QEMU_CMD="${QEMU_EXEC} \
 -name migtd-${MIGTD_TYPE},process=migtd-${MIGTD_TYPE},debug-threads=on \
 -no-hpet \
 -nographic -vga none -nic none \
--serial mon:stdio"
+-serial mon:stdio \
+-pidfile /var/run/migtd-${MIGTD_TYPE}.pid"
 
     eval "${QEMU_CMD}"
 }

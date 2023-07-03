@@ -19,12 +19,16 @@ ROOT_PARTITION="/dev/vda1"
 QUOTE_TYPE=""
 GUEST_CID=3
 TELNET_PORT=""
-INCOMING_PORT=6666
 CPU_NUM=2
 MEM_SIZE=8
 TDX_ENABLE="true"
 NETDEV_ID=mynet0
 MAC_ADDR=""
+MIG_HASH="d83d9a38c238ef3b7bc207bbea3287a8b37b37e731480a8d240d2a6953086c5ecbdf7ee4c72fec3a3e9d4a87f4f9b4fe"
+PRE_BINDING=false
+SRC_VSOCK="/tmp/qmp-sock-src"
+DST_VSOCK="/tmp/qmp-sock-dst"
+TD_VSOCK=""
 
 
 usage() {
@@ -43,6 +47,8 @@ Usage: $(basename "$0") [OPTION]...
   -e                        Telnet port
   -n                        netdev id
   -a                        MAC address
+  -g                        Enable pre-binding. When it's enabled, mig_hash will be used for TD boot. The real binding will take place before pre-migration
+  -v                        Value of MIG_HASH
   -h                        Show this help
 EOM
 }
@@ -70,12 +76,11 @@ is_valid_port() {
 }
 
 process_args() {
-    while getopts "i:k:b:p:q:r:t:c:m:x:e:n:a:h" option; do
+    while getopts "i:k:b:q:r:t:c:m:x:e:n:a:v:gh" option; do
         case "${option}" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
             b) BOOT_TYPE=$OPTARG;;
-            p) INCOMING_PORT=$OPTARG;;
             q) QUOTE_TYPE=$OPTARG;;
             r) ROOT_PARTITION=$OPTARG;;
             t) TD_TYPE=$OPTARG;;
@@ -85,6 +90,8 @@ process_args() {
             e) TELNET_PORT=$OPTARG;;
             n) NETDEV_ID=$OPTARG;;
             a) MAC_ADDR=$OPTARG;;
+            v) MIG_HASH=$OPTARG;;
+            g) PRE_BINDING=true;;
             h) usage
                exit 0
                ;;
@@ -134,7 +141,12 @@ process_args() {
             fi
             if [[ ${TDX_ENABLE} == "true" ]]; then
                 GUEST_CID=3
-                TARGET_PID=$(pgrep -n migtd-src)
+                if [[ ${PRE_BINDING} == false ]]; then 
+                    TARGET_PID=$(pgrep -n migtd-src)
+                fi
+                if [[ ${TD_VSOCK} == "" ]]; then
+                    TD_VSOCK=${SRC_VSOCK}
+                fi
             fi
             ;;
         "dst")
@@ -143,7 +155,12 @@ process_args() {
             fi
             if [[ ${TDX_ENABLE} == "true" ]]; then
                 GUEST_CID=4
-                TARGET_PID=$(pgrep -n migtd-dst)
+                if [[ ${PRE_BINDING} == false ]]; then 
+                    TARGET_PID=$(pgrep -n migtd-dst)
+                fi
+                if [[ ${TD_VSOCK} == "" ]]; then
+                    TD_VSOCK=${DST_VSOCK}
+                fi
             fi
             ;;
         *)
@@ -221,23 +238,29 @@ ${PARAM_MACHINE} \
 -name process=lm-${TD_TYPE},debug-threads=on \
 -no-hpet -nodefaults \
 -D /run/qemu-${TD_TYPE}.log -nographic -vga none \
--monitor unix:/tmp/qmp-sock-${TD_TYPE},server,nowait \
+-monitor unix:${TD_VSOCK},server,nowait \
 -monitor telnet:127.0.0.1:${TELNET_PORT},server,nowait \
 -device virtio-serial,romfile= \
 -device virtconsole,chardev=mux -serial chardev:mux -monitor chardev:mux \
--device virtio-net-pci,netdev=${NETDEV_ID},mac=${MAC_ADDR},romfile= \
+-device virtio-net-pci,netdev=${NETDEV_ID},romfile= \
 -netdev bridge,id=${NETDEV_ID},br=virbr0"
 
     if [[ ${TDX_ENABLE} == "true" ]]; then
+        QEMU_CMD+=" -object tdx-guest,id=tdx0,sept-ve-disable=on,debug=off"
+
+        # If pre-binding is enabled, use mig_hash other than migtd_pid
+        if [[ ${PRE_BINDING} == true ]]; then
+            QEMU_CMD+=",migtd-hash=${MIG_HASH}"
+        else
+            QEMU_CMD+=",migtd-pid=${TARGET_PID}"
+        fi
+        # Append get quote method for attestation
         if [[ -n ${QUOTE_TYPE} ]]; then
             if [[ ${QUOTE_TYPE} == "tdvmcall" ]]; then
-                QEMU_CMD+=" -object tdx-guest,id=tdx0,sept-ve-disable=on,debug=off,migtd-pid=${TARGET_PID},quote-generation-service=vsock:2:4050"
+                QEMU_CMD+=",quote-generation-service=vsock:2:4050"
             else
-                QEMU_CMD+=" -object tdx-guest,id=tdx0,sept-ve-disable=on,debug=off,migtd-pid=${TARGET_PID}"
                 QEMU_CMD+=" -device vhost-vsock-pci,guest-cid=${GUEST_CID}"
             fi
-        else
-            QEMU_CMD+=" -object tdx-guest,id=tdx0,sept-ve-disable=on,debug=off,migtd-pid=${TARGET_PID}"
         fi
     fi
 
@@ -247,7 +270,7 @@ ${PARAM_MACHINE} \
     fi
 
     if [[ ${TD_TYPE} == "dst" ]]; then
-        QEMU_CMD+=" -incoming tcp:0:${INCOMING_PORT}"
+        QEMU_CMD+=" -incoming defer"
     fi
 
     eval "${QEMU_CMD}"
