@@ -16,6 +16,7 @@ GUEST_USER="tdx"
 GUEST_PASSWORD="123456"
 GUEST_HOSTNAME="tdx-guest"
 GUEST_REPO=""
+NTP_SERVERS=""
 
 ok() {
     echo -e "\e[1;32mSUCCESS: $*\e[0;0m"
@@ -45,6 +46,7 @@ Usage: $(basename "$0") [OPTION]...
   -u                        Guest user name, default is "tdx"
   -p                        Guest password, default is "123456"
   -s                        Specify the size of guest image
+  -t                        Set the custom NTP server address, it can be "111.111.111.111,222.222.222.222"
   -o <output file>          Specify the output file, default is tdx-guest-ubuntu-22.04.qcow2.
                             Please make sure the suffix is qcow2. Due to permission consideration,
                             the output file will be put into /tmp/<output file>.
@@ -53,7 +55,7 @@ EOM
 }
 
 process_args() {
-    while getopts "o:s:n:u:p:r:fch" option; do
+    while getopts "o:s:n:u:p:r:t:fch" option; do
         case "$option" in
         o) GUEST_IMG=$OPTARG ;;
         s) SIZE=$OPTARG ;;
@@ -61,6 +63,7 @@ process_args() {
         u) GUEST_USER=$OPTARG ;;
         p) GUEST_PASSWORD=$OPTARG ;;
         r) GUEST_REPO=$OPTARG ;;
+        t) NTP_SERVERS=$OPTARG;;
         f) FORCE_RECREATE=true ;;
         c) USE_OFFICIAL_IMAGE=false ;;
         h)
@@ -224,8 +227,12 @@ install_tdx_measure_tool() {
 }
 
 startup_ntp_service() {
-    virt-customize -a /tmp/${GUEST_IMG} \
-        --run ${CURR_DIR}/setup-ntp.sh
+    echo "NTP Server: ${NTP_SERVERS}"
+    if [[ ! -z ${NTP_SERVERS} ]]; then
+        ${CURR_DIR}/setup-ntp.sh ${NTP_SERVERS}
+    else
+        ${CURR_DIR}/setup-ntp.sh
+    fi
 }
 
 cleanup() {
