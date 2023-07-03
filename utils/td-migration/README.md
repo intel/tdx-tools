@@ -31,7 +31,7 @@ TD migration supports several features as below. The scripts described later wil
     sudo ./mig-td.sh -t dst
     ```
 
-    Use `-m` parameter to set the alternative path of migtd.bin.
+    Use `-m` parameter to set the alternative path of `migtd.bin`.
 
     ```bash
     sudo ./mig-td.sh -m path/to/migtd.bin -t src
@@ -141,7 +141,7 @@ TD migration supports several features as below. The scripts described later wil
     sudo ./mig-td.sh -t dst
     ```
 
-    Use `-m` parameter to set the alternative path of migtd.bin.
+    Use `-m` parameter to set the alternative path of `migtd.bin`.
 
     ```bash
     sudo ./mig-td.sh -m path/to/migtd.bin -t src
@@ -239,7 +239,7 @@ It supports to run post-copy migration for TD. The steps are similar with pre-co
 It supports to run multi-stream migration for TD. The steps are similar with pre-copy migration, except
  for extra parameter when starting migration.
 
-- Start Migration with multi-stream enabled with specific multifd_channel number
+- Start Migration with multi-stream enabled with specific `multifd_channel` number
 
     ```bash
     sudo ./mig-flow.sh -m -n <number_of_multifd_channel>
@@ -254,9 +254,9 @@ It supports to run multi-stream migration for TD. The steps are similar with pre
 
 ### 2.4 Pre-binding
 
-It supports to pre-binding a user TD with migTD hash in case migTD is not created yet. The real binding needs to be done before pre-migration. Please run below command to go through migration using pre-binding. 
+It supports to pre-binding a user TD with `migtd_hash` in case `migTD` is not created yet. The real binding needs to be done before pre-migration. Please run below command to go through migration using pre-binding. 
 
-- Create Migration TDs, please refer to orevious step
+- Create Migration TDs, please refer to previous step
 
 - Create source TD and destination TD
 
