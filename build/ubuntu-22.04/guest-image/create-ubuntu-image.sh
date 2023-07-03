@@ -223,6 +223,11 @@ install_tdx_measure_tool() {
     ok "Install the TDX measurement tool..."
 }
 
+startup_ntp_service() {
+    virt-customize -a /tmp/${GUEST_IMG} \
+        --run ${CURR_DIR}/setup-ntp.sh
+}
+
 cleanup() {
     if [[ -f ${CURR_DIR}/"SHA256SUMS" ]]; then
         rm ${CURR_DIR}/"SHA256SUMS"
@@ -253,6 +258,7 @@ resize_guest_image
 config_cloud_init
 install_tdx_guest_packages
 install_tdx_measure_tool
+startup_ntp_service
 cleanup
 
 ok "Please get the output TDX guest image file at /tmp/${GUEST_IMG}"
