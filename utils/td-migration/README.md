@@ -2,225 +2,292 @@
 
 ## 1. Overview
 
-This feature is to meet the CSP who may want to relocate/migrate an executing Trust Domain (TD) from a source Trust Domain Extension (TDX) platform to a destination TDX platform in the cloud environment. Currently, td-migration only works on **TDX 1.5 (kernel-v6.2/tag 2023ww15 and later)**. Tags for TDX 1.0 do not support this feature. It also requires `MigTD` which is not included in tdx-tools yet. Please contact Intel sales rep to get MigTD before performing the following TD migration steps.
+This feature is to meet the CSP who may want to relocate/migrate an executing Trust Domain (TD) from a source Trust Domain Extension (TDX) platform to a destination TDX platform in the cloud environment. Currently, td-migration only works on **TDX 1.5 (kernel-v6.2/tag 2023ww15 and 2023ww27)**. TDX 1.0 releases do not support this feature. It also requires `MigTD` which can be built via build tool in tdx-tools. Please make sure TDX migration package is installed before running migration. The default installation path of `migtd.bin` is `/usr/share/td-migration/migtd.bin`.
 
 In this doc, the TD being migrated is called the source TD, and the TD created as a result of the migration is called the destination TD.
 
 **Prerequisite**: Please install all attestation required components on both source and destination platform because pre-migration includes mutual attestation for MigTD. If pre-migration is successful, it means MigTD attestation pass. Please refer to
 [TDX End to End Attestation](https://github.com/intel/tdx-tools/wiki/5.-TDX-End-to-End-Attestation) to setup attestation environment.
 
-## 2. Single Host Test Steps
+## 2. TD migration
 
-**NOTE**: each command needs one terminal, so please prepare 5 terminal tabs firstly or use tmux.
+TD migration supports several features as below. The scripts described later will help you go through each feature. It supports to run TD migration in single host or cross host scenario with different parameters.
 
-### 2.1 Create Migration TDs
+**NOTE**: Post-copy and Multi-stream are not supported to be used at the same time.
 
-The migration TDs are designed to evaluate potential migration source and target for adherence to the TD Migration Policy and exchange MSK(Migration session Key) from the source platform to the destination platform. Creating migration TDs is an additional workflow compared with live migration.
+### 2.1 Pre-copy migration
 
-NOTE: the default installation path of `migtd.bin` is "/usr/share/td-migration/migtd.bin" (provided by intel-mvp-tdx-migration pkg)
+#### 2.1.1 Single Host Test Steps
 
-```bash
-# create the MigTD_src to bind with src user TD 
-sudo ./mig-td.sh -t src
+**NOTE**: Each command needs one terminal, so please prepare 5 terminal tabs firstly or use tmux.
 
-# create the MigTD_dst to bind with dst user TD 
-sudo ./mig-td.sh -t dst
-```
+- Create Migration TDs
 
-Use `-m` parameter to set the alternative path of migtd.bin.
+    ```bash
+    # create the MigTD_src to bind with src user TD 
+    sudo ./mig-td.sh -t src
 
-```bash
-sudo ./mig-td.sh -m path/to/migtd.bin -t src
-```
+    # create the MigTD_dst to bind with dst user TD 
+    sudo ./mig-td.sh -t dst
+    ```
 
-If MigTD starts successfully, the console will display the below message.
+    Use `-m` parameter to set the alternative path of migtd.bin.
 
-```console
-MigTD Version - 0.2.1
-Loop to wait for request
-```
+    ```bash
+    sudo ./mig-td.sh -m path/to/migtd.bin -t src
+    ```
 
-### 2.2 Launch Source and Destination TDs
+    If MigTD starts successfully, the console will display the below message.
 
-For live migration, it is a process that transfers source TD to destination TD. 
+    ```console
+    MigTD Version - 0.2.2
+    Loop to wait for request
+    ```
 
-Before starting live migration, you can use direct boot or grub boot to launch both types of TDs.
+- Launch Source and Destination TDs
 
-- Direct Boot
+    You can use direct boot or grub boot to launch TD.
 
-NOTE: The default ROOT_PARTITION is `/dev/vda1`, which is for ubuntu guest TD. For RHEL, please add parameter `-r /dev/vda3`
+    - Direct Boot
 
-```bash
-# create the source TD
-sudo ./user-td.sh -t src -i path/to/image -k path/to/kernel
+        NOTE: The default ROOT_PARTITION is `/dev/vda1`, which is for ubuntu guest TD. For RHEL, please add parameter `-r /dev/vda3`
 
-# create the destiation TD
-sudo ./user-td.sh -t dst -i path/to/image -k path/to/kernel
-```
+        ```bash
+        # create the source TD
+        sudo ./user-td.sh -t src -i path/to/image -k path/to/kernel
 
-- GRUB Boot
+        # create the destiation TD
+        sudo ./user-td.sh -t dst -i path/to/image -k path/to/kernel
+        ```
 
-```bash
-# create the source TD
-sudo ./user-td.sh -t src -i path/to/image -b grub
+    - GRUB Boot
 
-# create the destiation TD
-sudo ./user-td.sh -t dst -i path/to/image -b grub
-```
+        ```bash
+        # create the source TD
+        sudo ./user-td.sh -t src -i path/to/image -b grub
 
-For attestation, you need to enable tdvmcall or vsock for TD to connect with QGS.
+        # create the destiation TD
+        sudo ./user-td.sh -t dst -i path/to/image -b grub
+        ```
 
-```bash
-# tdvmcall
-sudo ./user-td.sh -t src -i path/to/image -b grub -q tdvmcall
-sudo ./user-td.sh -t dst -i path/to/image -b grub -q tdvmcall
+    For attestation, you need to enable tdvmcall or vsock for TD to connect with QGS.
 
-# vsock
-sudo ./user-td.sh -t src -i path/to/image -b grub -q vsock
-sudo ./user-td.sh -t dst -i path/to/image -b grub -q vsock
-```
+    ```bash
+    # tdvmcall
+    sudo ./user-td.sh -t src -i path/to/image -b grub -q tdvmcall
+    sudo ./user-td.sh -t dst -i path/to/image -b grub -q tdvmcall
 
-### 2.3 Pre-Migration
+    # vsock
+    sudo ./user-td.sh -t src -i path/to/image -b grub -q vsock
+    sudo ./user-td.sh -t dst -i path/to/image -b grub -q vsock
+    ```
 
-Wait a while for source and destination TDs to be ready.
+- Pre-Migration
 
-Before starting pre-migration, create a channel between source and destination side migration TDs.
+    Wait a while for source and destination TDs to be ready. Before starting pre-migration, create a channel between source and destination side migration TDs.
 
-```bash
-sudo ./connect.sh
-```
+    ```bash
+    sudo ./connect.sh
+    ```
 
-Check if it creates successfully.
+    Check if it creates successfully.
 
-```console
-$ ps axu| grep socat
-root      112608  0.0  0.0  27828  3072 pts/5    S    Mar22   0:00 socat TCP4-LISTEN:9009,reuseaddr VSOCK-LISTEN:1234,fork
-root      112609  0.0  0.0  27828  3072 pts/5    S    Mar22   0:00 socat TCP4-CONNECT:127.0.0.1:9009,reuseaddr VSOCK-LISTEN:1235,fork
-```
+    ```console
+    $ ps axu| grep socat
+    root      112608  0.0  0.0  27828  3072 pts/5    S    Mar22   0:00 socat TCP4-LISTEN:9009,reuseaddr VSOCK-LISTEN:1234,fork
+    root      112609  0.0  0.0  27828  3072 pts/5    S    Mar22   0:00 socat TCP4-CONNECT:127.0.0.1:9009,reuseaddr VSOCK-LISTEN:1235,fork
+    ```
 
-Start pre-migration.
+    Start pre-migration.
 
-```bash
-sudo ./pre-mig.sh
-```
+    ```bash
+    sudo ./pre-mig.sh
+    ```
 
-Check pre-migrate status.
+    Check pre-migrate status.
 
-```console
-$ dmesg
-[110722.032798] kvm_intel: Pre-migration is done, userspace pid=368587
-[110722.074132] kvm_intel: Pre-migration is done, userspace pid=368515
-```
+    ```console
+    $ dmesg
+    [110722.032798] kvm_intel: Pre-migration is done, userspace pid=368587
+    [110722.074132] kvm_intel: Pre-migration is done, userspace pid=368515
+    ```
 
-### 2.4 Live Migration
+- Start Migration
 
-Start transferring TD's data from source to destination.
+    Start transferring TD's data from source to destination.
 
-```bash
-sudo ./mig-flow.sh
-```
+    ```bash
+    sudo ./mig-flow.sh
+    ```
 
-After migration is complete, you will see the following message and destination TD is ready.
+    After migration is complete, you will see the following message and destination TD is ready.
 
-```console
-$ dmesg
-[110983.886989] migration flow is done, userspace pid 397008
-```
+    ```console
+    $ dmesg
+    [110983.886989] migration flow is done, userspace pid 397008
+    ```
 
-## 3.Cross Host Test Steps
+#### 2.1.2 Cross Host Test Steps
 
 **NOTE:** For cross-host live migration, you have to set up NFS server or use other ways to share the image/kernel for source TD and destination TD before starting the migration. (It means source TD and destination TD can access the shared image/kernel together)
 
-### 3.1 Create Migration TDs
+- Create Migration TDs
 
-NOTE: the default installation path of `migtd.bin` is "/usr/share/td-migration/migtd.bin" (provided by intel-mvp-tdx-migration pkg)
+    ```bash
+    # create the MigTD_src to bind with src user TD 
+    sudo ./mig-td.sh -t src
 
-```bash
-# create the MigTD_src to bind with src user TD 
-sudo ./mig-td.sh -t src
+    # create the MigTD_dst to bind with dst user TD 
+    sudo ./mig-td.sh -t dst
+    ```
 
-# create the MigTD_dst to bind with dst user TD 
-sudo ./mig-td.sh -t dst
-```
+    Use `-m` parameter to set the alternative path of migtd.bin.
 
-Use `-m` parameter to set the alternative path of migtd.bin.
+    ```bash
+    sudo ./mig-td.sh -m path/to/migtd.bin -t src
+    ```
 
-```bash
-sudo ./mig-td.sh -t src -m path/to/migtd.bin
-```
+    If MigTD starts successfully, the console will display the below message.
 
-If the migration TD starts successfully, the console will display the below message.
+    ```console
+    MigTD Version - 0.2.2
+    Loop to wait for request
+    ```
 
-```console
-MigTD Version - 0.2.1
-Loop to wait for request
-```
+- Launch Source and Destination TDs
 
-### 3.2 Launch Source and Destination TDs
+    You can use direct boot or grub boot to launch TD.
 
-Create source and destination TDs before starting live migration.
+    - Direct Boot
 
-- Direct Boot
+        NOTE: The default ROOT_PARTITION is `/dev/vda1`, which is for ubuntu guest TD. For RHEL, please add parameter `-r /dev/vda3`
 
-NOTE: The default ROOT_PARTITION is `/dev/vda1`, which is for ubuntu guest TD. For RHEL, please add parameter `-r /dev/vda3`
+        ```bash
+        # create the source TD on source platform
+        sudo ./user-td.sh -t src -i path/to/image -k path/to/kernel
 
-```bash
-# create the source TD on source platform
-sudo ./user-td.sh -t src -i path/to/image -k path/to/kernel
+        # create the destiation TD on destination platform
+        sudo ./user-td.sh -t dst -i path/to/image -k path/to/kernel
+        ```
 
-# create the destiation TD on destination platform
-sudo ./user-td.sh -t dst -i path/to/image -k path/to/kernel
-```
+    - GRUB Boot
 
-- GRUB Boot
+        ```bash
+        # create the source TD on source platform
+        sudo ./user-td.sh -t src -i path/to/image -b grub
 
-```bash
-# create the source TD on source platform
-sudo ./user-td.sh -t src -i path/to/image -b grub
+        # create the destiation TD on destination platform
+        sudo ./user-td.sh -t dst -i path/to/image -b grub
+        ```
 
-# create the destiation TD on destination platform
-sudo ./user-td.sh -t dst -i path/to/image -b grub
-```
+- Pre-Migration
 
-Cross-host attestation is same as the Single-host, so please refer Section 2.2.
+    Wait a while for source and destination TDs to be ready. Before starting pre-migration, create a channel between source and destination side migration TDs.
 
-### 3.3 Pre-Migration
+    ```bash
+    sudo ./connect.sh -t remote -i <DEST_IP>
+    ```
 
-This step has a little difference with the single host live migration.
+    Start pre-migration.
 
-Create a channel between source and destination side migration TDs.
+    ```bash
+    sudo ./pre-mig.sh -t remote -i <DEST_IP>
+    ```
 
-```bash
-sudo ./connect.sh -t remote -i <DEST_IP>
-```
+    Check pre-migrate status on both source and destination platform.
 
-Start Pre-Migration.
+    ```console
+    $ dmesg
+    [110722.032798] kvm_intel: Pre-migration is done, userspace pid=368587
+    ```
 
-```bash
-sudo ./pre-mig.sh -t remote -i <DEST_IP>
-```
+- Start Migration
 
-Check if pre-migrate is successful on both platforms.
+    Start transferring TD's data from source to destination.
 
-```console
-$ dmesg
-[110722.032798] kvm_intel: Pre-migration is done, userspace pid=368587
-```
+    ```bash
+    sudo ./mig-flow.sh -i <DEST_IP>
+    ```
 
-### 3.4 Live Migration
+    After migration is complete, you will see the following message and destination TD is ready.
 
-```bash
-sudo ./mig-flow.sh -i <dest-platform-ip>
-```
+    ```console
+    $ dmesg
+    [110983.886989] migration flow is done, userspace pid 397008
+    ```
 
-After migration is complete, you will see the following message and destination TD is ready.
+### 2.2 Post-copy migration
 
-```console
-$ dmesg
-[110983.886989] migration flow is done, userspace pid 397008
-```
+It supports to run post-copy migration for TD. The steps are similar with pre-copy migration, except
+ for extra parameter when starting migration.
 
-## 4. Related Specification
+- Start Migration with post-copy
+
+    ```bash
+    sudo ./mig-flow.sh -c
+    ```
+
+    After migration is complete, you will see the following message and destination TD is ready.
+
+    ```console
+    $ dmesg
+    [110983.886989] migration flow is done, userspace pid 397008
+    ```
+
+### 2.3 Multi-stream migration
+
+It supports to run multi-stream migration for TD. The steps are similar with pre-copy migration, except
+ for extra parameter when starting migration.
+
+- Start Migration with multi-stream enabled with specific multifd_channel number
+
+    ```bash
+    sudo ./mig-flow.sh -m -n <number_of_multifd_channel>
+    ```
+
+    After migration is complete, you will see the following message and destination TD is ready.
+
+    ```console
+    $ dmesg
+    [110983.886989] migration flow is done, userspace pid 397008
+    ```
+
+### 2.4 Pre-binding
+
+It supports to pre-binding a user TD with migTD hash in case migTD is not created yet. The real binding needs to be done before pre-migration. Please run below command to go through migration using pre-binding. 
+
+- Create Migration TDs, please refer to orevious step
+
+- Create source TD and destination TD
+
+    ```bash
+    sudo ./user-td.sh -t src -i <path/to>/image -b grub -g -v <migtd_hash>
+    sudo ./user-td.sh -t dst -i <path/to>/image -b grub -g -v <migtd_hash>
+
+    ```
+
+- Pre migration
+
+    ```bash
+    sudo ./connect.sh
+    # Bind migTD PID to user TD before pre-migration starts
+    sudo ./pre-mig.sh -b
+    ```
+
+- Start Migration
+
+    ```bash
+    sudo ./mig-flow.sh
+    ```
+
+    After migration is complete, you will see the following message and destination TD is ready.
+
+    ```console
+    $ dmesg
+    [110983.886989] migration flow is done, userspace pid 397008
+    ```
+
+## 3. Related Specification
 
 1. [Intel® TDX Module Architecture Specification: TD
 Migration](https://cdrdv2.intel.com/v1/dl/getContent/733578)

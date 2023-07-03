@@ -242,7 +242,7 @@ ${PARAM_MACHINE} \
 -monitor telnet:127.0.0.1:${TELNET_PORT},server,nowait \
 -device virtio-serial,romfile= \
 -device virtconsole,chardev=mux -serial chardev:mux -monitor chardev:mux \
--device virtio-net-pci,netdev=${NETDEV_ID},romfile= \
+-device virtio-net-pci,netdev=${NETDEV_ID},mac=${MAC_ADDR},romfile= \
 -netdev bridge,id=${NETDEV_ID},br=virbr0"
 
     if [[ ${TDX_ENABLE} == "true" ]]; then
