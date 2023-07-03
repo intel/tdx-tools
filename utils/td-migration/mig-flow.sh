@@ -18,6 +18,8 @@ Usage: $(basename "$0") [OPTION]...
   -c                        Enable post-copy
   -m                        Enabled multi-stream
   -n                        Multifd-channel number
+  -s                        Source TD vsock file, default value is "/tmp/qmp-sock-src"
+  -d                        Destination vsock file, default value is "/tmp/qmp-sock.dst"
   -h                        Show this help
 EOM
 }
