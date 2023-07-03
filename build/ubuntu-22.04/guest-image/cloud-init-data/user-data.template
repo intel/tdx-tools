@@ -27,3 +27,4 @@ packages:
   - golang-go
   - golang
   - golang-doc
+  - ntp
