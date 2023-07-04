@@ -39,6 +39,14 @@ build_check() {
     if [[ "$1" == clean-build ]]; then
         rm -rf "${STATUS_DIR:?}"/*
     fi
+
+    if [[ ! -z $rust_mirror ]]; then
+        mkdir -p ~/.cargo
+        cat > ~/.cargo/config << EOL
+[register]
+index = "$rust_mirror"
+EOL
+    fi
 }
 
 build_shim () {
@@ -123,13 +131,13 @@ pushd "$THIS_DIR"
 mkdir -p $GUEST_REPO/more
 mkdir -p $HOST_REPO/more
 
-build_shim
-build_grub
-build_kernel
-build_qemu
-build_tdvf
-build_libvirt
+#build_shim
+#build_grub
+#build_kernel
+#build_qemu
+#build_tdvf
+#build_libvirt
 build_migtd
-build_repo
+#build_repo
 
 popd
