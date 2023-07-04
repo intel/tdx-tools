@@ -212,7 +212,7 @@ install_tdx_guest_packages() {
         --run-command "apt remove --allow-remove-essential shim-signed -y" \
         --run-command "apt remove grub-pc -y" \
         --run-command "dpkg -r --force-all grub-efi-amd64-signed" \
-        --run-command "cd /srv/guest_repo/ && dpkg -i *.deb" \
+        --run-command "cd /srv/guest_repo/ && dpkg -i *.deb || true" \
         --run-command 'grub-install --target=x86_64-efi --modules "tpm"'
     ok "Install the TDX guest packages into guest image..."
 }

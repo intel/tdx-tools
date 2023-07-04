@@ -2,11 +2,31 @@ name: Validate Full Build for Ubuntu22.04
 
 on:
   workflow_dispatch:
+    inputs:
+      remote_server:
+        type: string
+        default: ""
+        required: false
+      remote_user:
+        type: string
+        default: ""
+        required: false
+      remote_path:
+        type: string
+        default: "/srv/"
+      build_tag:
+        type: string
+        default: "2023WW27"
 
 jobs:
   build_package:
     name: Build TDX Stack for Ubuntu 22.04
     runs-on: self-hosted
+    env:
+      REMOTE_SERVER: ${{ github.event.inputs.remote_server }}
+      REMOTE_USER: ${{ github.event.inputs.remote_user }}
+      REMOTE_PATH: ${{ github.event.inputs.remote_path }}
+      BUILD_TAG: ${{ github.event.inputs.build_tag }}
     steps:
       - name: Cleanup workspace for the job (self hosted only)
         run: |
@@ -25,3 +45,10 @@ jobs:
           cd build/ubuntu-22.04/guest-image/
           sudo ./create-ubuntu-image.sh -f -r ../guest_repo
 
+      - name: Publish
+        if: env.REMOTE_SERVER != ''
+        run: |
+          ssh $REMOTE_USER@$REMOTE_SERVER "mkdir -p $REMOTE_PATH/$BUILD_TAG"
+          scp -r build/ubuntu-22.04/guest_repo/ $REMOTE_USER@$REMOTE_SERVER:$REMOTE_PATH/$BUILD_TAG/
+          scp -r build/ubuntu-22.04/host_repo/ $REMOTE_USER@$REMOTE_SERVER:$REMOTE_PATH/$BUILD_TAG/
+          scp -r /tmp/tdx-guest-ubuntu-22.04.qcow2 $REMOTE_USER@$REMOTE_SERVER:$REMOTE_PATH/$BUILD_TAG/

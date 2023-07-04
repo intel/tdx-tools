@@ -39,6 +39,27 @@ build_check() {
     if [[ "$1" == clean-build ]]; then
         rm -rf "${STATUS_DIR:?}"/*
     fi
+
+    if [[ ! -z ${rust_mirror} ]]; then
+        mkdir -p ~/.cargo
+        cat > ~/.cargo/config << EOL
+[source.crates-io]
+replace-with = 'mirror'
+
+[source.mirror]
+registry = "${rust_mirror}"
+
+[registries.mirror]
+index = "${rust_mirror}"
+EOL
+    fi
+
+    if [[ ! -z ${rustup_dist_server} ]]; then
+        export RUSTUP_DIST_SERVER="${rustup_dist_server}"
+    fi
+    if [[ ! -z ${rustup_update_server} ]]; then
+        export RUSTUP_UPDATE_SERVER="${rustup_update_server}"
+    fi
 }
 
 build_shim () {
