@@ -1,4 +1,4 @@
-name: Validate PR for Ubuntu-22.04 build-repo.sh
+name: Validate Full Build for Ubuntu22.04
 
 on:
   workflow_dispatch:
@@ -8,15 +8,20 @@ jobs:
     name: Build TDX Stack for Ubuntu 22.04
     runs-on: self-hosted
     steps:
-      - id: cleanup_workspace
-        name: Cleanup workspace for the job (self hosted only)
+      - name: Cleanup workspace for the job (self hosted only)
         run: |
           sudo rm -fr * .* || true
-      - id: checkout_self
-        name: Check out PR
+
+      - name: Check out PR
         uses: actions/checkout@v3
-      - id: build_ubuntu
-        name: Build the source and binary packages
+
+      - name: Build the source and binary packages
         run: |
           cd build/ubuntu-22.04/
           ./pkg-builder build-repo.sh
+
+      - name: Generate guest image
+        run: |
+          cd build/ubuntu-22.04/guest-image/
+          sudo ./create-ubuntu-image.sh -f -r ../guest_repo
+
