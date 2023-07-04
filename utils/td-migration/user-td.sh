@@ -37,7 +37,6 @@ Usage: $(basename "$0") [OPTION]...
   -i <guest image file>     Guest image file 
   -k <kernel file>          Kernel file
   -b [direct|grub]          Boot type, default is "direct" which requires kernel binary specified via "-k"
-  -p                        incoming port
   -q [tdvmcall|vsock]       Support for TD quote using tdvmcall or vsock
   -r <root partition>       root partition for direct boot, default is /dev/vda1
   -t <src|dst>              Must set userTD type, src or dst
