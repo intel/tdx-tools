@@ -256,6 +256,8 @@ It supports to run multi-stream migration for TD. The steps are similar with pre
 
 It supports to pre-binding a user TD with `migtd_hash` in case `migTD` is not created yet. The real binding needs to be done before pre-migration. Please run below command to go through migration using pre-binding. 
 
+**Note:** The MigTD hash value is stored in `/usr/share/td-migration/migtd.servtd_info_hash`, if the td-migration package has been installed.
+
 - Create Migration TDs, please refer to previous step
 
 - Create source TD and destination TD
@@ -264,6 +266,11 @@ It supports to pre-binding a user TD with `migtd_hash` in case `migTD` is not cr
     sudo ./user-td.sh -t src -i <path/to>/image -b grub -g -v <migtd_hash>
     sudo ./user-td.sh -t dst -i <path/to>/image -b grub -g -v <migtd_hash>
 
+    ```
+
+    ```bash
+    # use self-built migtd with custom migtd attribute
+    sudo ./user-td.sh -t src -i <path/to>/image -b grub -g -v <migtd_hash> -z <migtd_attr>
     ```
 
 - Pre migration

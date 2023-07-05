@@ -24,7 +24,8 @@ MEM_SIZE=8
 TDX_ENABLE="true"
 NETDEV_ID=mynet0
 MAC_ADDR=""
-MIG_HASH="d83d9a38c238ef3b7bc207bbea3287a8b37b37e731480a8d240d2a6953086c5ecbdf7ee4c72fec3a3e9d4a87f4f9b4fe"
+MIG_HASH=""
+MIG_ATTR="0x000007f900000001"
 PRE_BINDING=false
 SRC_VSOCK="/tmp/qmp-sock-src"
 DST_VSOCK="/tmp/qmp-sock-dst"
@@ -75,7 +76,7 @@ is_valid_port() {
 }
 
 process_args() {
-    while getopts "i:k:b:q:r:t:c:m:x:e:n:a:v:gh" option; do
+    while getopts "i:k:b:q:r:t:c:m:x:e:n:a:v:z:gh" option; do
         case "${option}" in
             i) GUEST_IMG=$OPTARG;;
             k) KERNEL=$OPTARG;;
@@ -90,6 +91,7 @@ process_args() {
             n) NETDEV_ID=$OPTARG;;
             a) MAC_ADDR=$OPTARG;;
             v) MIG_HASH=$OPTARG;;
+            z) MIG_ATTR=$OPTARG;;
             g) PRE_BINDING=true;;
             h) usage
                exit 0
@@ -105,6 +107,13 @@ process_args() {
     if [[ -z ${TD_TYPE} ]]; then
         usage
         error "Must set TD_TYPE -t [src|dst]"
+    fi
+
+    if [[ ${PRE_BINDING} == true ]]; then
+        if [[ -z ${MIG_HASH} ]]; then
+            usage
+            error "Must set MIG_HASH -v <mig_hash>"
+        fi
     fi
 
     local cpu_num_valid
@@ -249,7 +258,7 @@ ${PARAM_MACHINE} \
 
         # If pre-binding is enabled, use mig_hash other than migtd_pid
         if [[ ${PRE_BINDING} == true ]]; then
-            QEMU_CMD+=",migtd-hash=${MIG_HASH}"
+            QEMU_CMD+=",migtd-hash=${MIG_HASH},migtd-attr=${MIG_ATTR}"
         else
             QEMU_CMD+=",migtd-pid=${TARGET_PID}"
         fi
