@@ -1,0 +1,8 @@
+Package: vtpm-td
+Version: 0.1.0-mvp6
+Architecture: amd64
+Maintainer: Jialei Feng <jialei.feng@intel.com>
+Installed-Size: 16393
+Section: admin
+Priority: optional
+Description: Trust Domain (TD) based vTPM solution

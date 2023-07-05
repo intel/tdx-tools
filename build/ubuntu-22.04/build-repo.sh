@@ -24,7 +24,8 @@ ovmf_*_all.deb \
 libvirt-clients_*.deb libvirt0_*.deb libvirt-daemon_*.deb libvirt-daemon-system_*.deb libvirt-daemon-system-systemd_*.deb\
  libvirt-daemon-driver-qemu_*.deb libvirt-daemon-config-network_*.deb libvirt-daemon-config-nwfilter_*.deb\
  libvirt-login-shell_*.deb libvirt-daemon-driver-lxc_*.deb libvirt-dev_*.deb \
-td-migration_*_amd64.deb
+td-migration_*_amd64.deb \
+vtpm-td_*_amd64.deb \
 "
 
 build_check() {
@@ -118,9 +119,17 @@ build_libvirt () {
 
 build_migtd () {
     pushd intel-mvp-tdx-migration
-    [[ -f $STATUS_DIR/migtd.done ]] || ./build.sh 2>&1 | tee "$LOG_DIR"/libvirt.log
+    [[ -f $STATUS_DIR/migtd.done ]] || ./build.sh 2>&1 | tee "$LOG_DIR"/migtd.log
     touch "$STATUS_DIR"/migtd.done
     cp td-migration_*_amd64.deb ../$HOST_REPO/more/
+    popd
+}
+
+build_vtpm-td () {
+    pushd intel-mvp-vtpm-td
+    [[ -f $STATUS_DIR/vtpm-td.done ]] || ./build.sh 2>&1 | tee "$LOG_DIR"/vtpm-td.log
+    touch "$STATUS_DIR"/vtpm-td.done
+    cp vtpm-td_*_amd64.deb ../$HOST_REPO/more/
     popd
 }
 

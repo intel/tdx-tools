@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/default.mk
+
+version := 0.1.0-mvp6
+PACKAGE := vtpm-td
+INSTALL_DIR=/usr/share/tdx-vtpm/
+DEST_DIR := debian/$(PACKAGE)$(INSTALL_DIR)
+
+%:
+	dh $@
+
+override_dh_strip:
+override_dh_strip_nondeterminism:
+override_dh_dwz:
+override_dh_shlibdeps:
+override_dh_auto_build:
+override_dh_auto_test:
+override_dh_auto_install:
+override_dh_auto_clean:
+override_dh_clean:
+
+override_dh_install:
+	mkdir -p $(DEST_DIR)
+	install -m 0664 vtpm-td/target/x86_64-unknown-none/release/vtpmtd.bin $(DEST_DIR)/

@@ -1,0 +1,21 @@
+name: Validate PR for Ubuntu-22.04 vtpm-td
+
+on:
+  pull_request:
+    paths:
+    - 'build/ubuntu-22.04/intel-mvp-vtpm-td/**'
+  workflow_dispatch:
+
+jobs:
+  build_package:
+    name: Build vtpm-td for Ubuntu 22.04
+    runs-on: ubuntu-22.04
+    steps:
+      - id: checkout_self
+        name: Check out PR
+        uses: actions/checkout@v3
+      - id: build_ubuntu
+        name: Build the source and binary packages
+        run: |
+          cd build/ubuntu-22.04
+          ./pkg-builder intel-mvp-vtpm-td/build.sh

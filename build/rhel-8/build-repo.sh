@@ -18,6 +18,7 @@ PACKAGES_HOST=( \
     intel-mvp-tdx-libvirt \
     intel-mvp-ovmf \
     intel-mvp-tdx-migration \
+    intel-mvp-vtpm-td \
     )
 
 # For packages which need to be moved from host build to guest repo

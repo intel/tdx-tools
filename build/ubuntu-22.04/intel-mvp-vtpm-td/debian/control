@@ -1,0 +1,9 @@
+Source: vtpm-td
+Section: admin
+Priority: optional
+Maintainer: Jialei Feng <jialei.feng@intel.com>
+Build-Depends: debhelper-compat (= 12)
+
+Package: vtpm-td
+Architecture: amd64
+Description: Trust Domain (TD) based vTPM solution
