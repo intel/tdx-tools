@@ -3,8 +3,8 @@
 # This spec file began as CentOS's ovmf spec file, then cut down and modified.
 
 Name:       intel-mvp-vtpm-td
-Version:    v0.1.0
-Release:    mvp6
+Version:    v0.1.1
+Release:    mvp7
 Summary:    Trust Domain (TD) based vTPM solution
 Group:      Applications/Emulators
 License:    BSD and OpenSSL and MIT

@@ -2,7 +2,7 @@
 
 include /usr/share/dpkg/default.mk
 
-version := 0.1.0-mvp6
+version := 0.1.1-mvp7
 PACKAGE := vtpm-td
 INSTALL_DIR=/usr/share/tdx-vtpm/
 DEST_DIR := debian/$(PACKAGE)$(INSTALL_DIR)

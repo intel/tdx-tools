@@ -1,3 +1,9 @@
+vtpm-td (0.1.1-mvp7) jammy; urgency=medium
+
+  * vtpm-td: https://github.com/intel/vtpm-td/tree/v0.1.1
+
+ -- Jialei Feng <jialei.feng@intel.com>  Tue, 6 Jul 2023 09:35:00 +0800
+
 vtpm-td (0.1.0-mvp6) jammy; urgency=medium
 
   * vtpm-td: https://github.com/intel/vtpm-td/tree/v0.1.0

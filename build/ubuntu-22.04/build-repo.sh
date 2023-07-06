@@ -161,6 +161,7 @@ build_qemu
 build_tdvf
 build_libvirt
 build_migtd
+build_vtpm-td
 build_repo
 
 popd

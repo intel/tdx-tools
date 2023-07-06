@@ -4,7 +4,7 @@ set -e
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 GIT_URI="https://github.com/intel/vtpm-td.git"
-GIT_TAG="v0.1.0"
+GIT_TAG="v0.1.1"
 PKG_DIR="${CURR_DIR}"/vtpm-td
 
 get_source() {
