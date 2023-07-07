@@ -34,6 +34,7 @@ IFWI
 img
 initramfs
 Interlaken
+Keylime
 LCK
 LIV
 MCHECK
@@ -187,6 +188,7 @@ td
 tdvf
 tdvmcall
 tdx
+tpm
 txt
 ucode
 uncompress
