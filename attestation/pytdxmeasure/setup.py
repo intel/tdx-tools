@@ -24,15 +24,15 @@ def load_requirements():
 
 setup(
     name='pytdxmeasure',
-    version='0.0.8',
+    version='0.0.9',
     packages=['pytdxmeasure'],
     package_data={
-        '': ['tdx_eventlogs', 'tdx_tdreport', 'tdx_verify_rtmr', 'tdx_extend_rtmr']
+        '': ['tdx_eventlogs', 'tdx_tdreport', 'tdx_verify_rtmr', 'tdx_extend_rtmr', 'tdx_quote']
     },
     include_package_data=True,
     python_requires='>=3.6.8',
     license='Apache License 2.0',
-    scripts=['tdx_eventlogs', 'tdx_tdreport', 'tdx_verify_rtmr', 'tdx_extend_rtmr'],
+    scripts=['tdx_eventlogs', 'tdx_tdreport', 'tdx_verify_rtmr', 'tdx_extend_rtmr', 'tdx_quote'],
     long_description=load_readme(),
     long_description_content_type='text/markdown',
     install_requires=load_requirements()

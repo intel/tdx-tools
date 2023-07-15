@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+
+import argparse
+
+from pytdxmeasure.cli import TDXQuoteCmd
+
+parser = argparse.ArgumentParser(description="The utility to get TD Quote in TD guest")
+parser.add_argument('-o', type=str, help='Save TD Quote to the path', dest='output')
+parser.add_argument('-n', type=str, help='The base64 encoded nonce to be measured in report data',
+                    dest='nonce')
+parser.add_argument('-u', type=str, help='The base64 encoded user data to be measured in report data',
+                    dest='user_data')
+parser.add_argument('-q', default=False, help='Do not display TD Quote', dest='quiet',
+                    action="store_true")
+args = parser.parse_args()
+
+TDXQuoteCmd().run(args.output, args.nonce, args.user_data, args.quiet)

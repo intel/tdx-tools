@@ -2,11 +2,13 @@
 Dump command line
 """
 
+import base64
 from abc import abstractmethod
 import logging
 import logging.config
 from .actor import VerifyActor, TDEventLogActor
 from .tdreport import TdReport
+from .tdquote import TdQuote
 from .rtmr import RTMR
 from .ccel import CCEL
 
@@ -24,7 +26,7 @@ class TDXMeasurementCmdBase:
         logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
     @abstractmethod
-    def run(self):
+    def run(self, *args):
         """
         Interface to be impelemented by child classes
         """
@@ -36,7 +38,7 @@ class TDXEventLogsCmd(TDXMeasurementCmdBase):
     Cmd executor for dump TDX event logs.
     """
 
-    def run(self):
+    def run(self, *args):
         """
         Run cmd
         """
@@ -66,7 +68,7 @@ class TDXVerifyCmd(TDXMeasurementCmdBase):
     Cmd executor for verify RTMR
     """
 
-    def run(self):
+    def run(self, *args):
         """
         Run cmd
         """
@@ -79,13 +81,39 @@ class TDXTDReportCmd(TDXMeasurementCmdBase):
     Cmd executor to dump TD report.
     """
 
-    def run(self):
+    def run(self, *args):
         """
         Run cmd
         """
 
         LOG.info("=> Dump TD Report")
         TdReport.get_td_report().dump()
+
+class TDXQuoteCmd(TDXMeasurementCmdBase):
+    """
+    Cmd executor to dump TD quote.
+    """
+
+    def run(self, *args):
+        """
+        Run cmd
+        """
+
+        LOG.info("=> Dump TD Quote")
+
+        output, nonce, user_data, quiet = args
+        if nonce is not None:
+            nonce = base64.b64decode(nonce)
+        if user_data is not None:
+            user_data = base64.b64decode(user_data)
+
+        tdquote = TdQuote.get_quote(nonce, user_data)
+        if tdquote is not None:
+            if not quiet:
+                tdquote.dump()
+            if output is not None:
+                with open(output, "wb") as output_file:
+                    output_file.write(tdquote.data)
 
 class TDXRTMRExtendCmd():
     """
