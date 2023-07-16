@@ -152,9 +152,9 @@ process_args() {
                 if [[ ${PRE_BINDING} == false ]]; then 
                     TARGET_PID=$(pgrep -n migtd-src)
                 fi
-                if [[ ${TD_VSOCK} == "" ]]; then
-                    TD_VSOCK=${SRC_VSOCK}
-                fi
+            fi
+            if [[ ${TD_VSOCK} == "" ]]; then
+                TD_VSOCK=${SRC_VSOCK}
             fi
             ;;
         "dst")
@@ -166,9 +166,9 @@ process_args() {
                 if [[ ${PRE_BINDING} == false ]]; then 
                     TARGET_PID=$(pgrep -n migtd-dst)
                 fi
-                if [[ ${TD_VSOCK} == "" ]]; then
-                    TD_VSOCK=${DST_VSOCK}
-                fi
+            fi
+            if [[ ${TD_VSOCK} == "" ]]; then
+                TD_VSOCK=${DST_VSOCK}
             fi
             ;;
         *)
