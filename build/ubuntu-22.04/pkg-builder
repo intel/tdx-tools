@@ -24,14 +24,24 @@ build_docker_image() {
 }
 
 run_in_docker() {
-    docker run \
+    DOCKER_ARGS=" \
         -e http_proxy -e https_proxy -e no_proxy \
         -e rust_mirror \
         -e rustup_update_server \
         -e rustup_dist_server \
-        -v "${BUILD_DIR}":/root/build \
+        -v ${BUILD_DIR}:/root/build \
+        -w /root/build/ubuntu-22.04 \
+    "
+
+    if [ $1 == "--shell" ]; then
+      docker run ${DOCKER_ARGS} \
+        -it \
+        "${BUILDER}" bash
+    else
+      docker run ${DOCKER_ARGS} \
         -i --entrypoint "/root/build/ubuntu-22.04/$1" \
         "${BUILDER}"
+    fi
 }
 
 check_docker_cmd
