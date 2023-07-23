@@ -4,7 +4,7 @@
 
 This project is used to create a customized Ubuntu TDX guest image from an official Ubuntu cloud image:
 - Include TDX enabled packages like kernel, grub, shim etc.
-- Include TDX guest tools like `pytdxmeasure`, `amber-cli` etc.
+- Include TDX guest tools like `pytdxattest`, `amber-cli` etc.
 - Include full measured boot
 - Include secure boot (TBD)
 - Include full DCAP packages from https://download.01.org/intel-sgx/latest/dcap-latest/linux/ (TBD)

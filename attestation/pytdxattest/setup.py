@@ -24,7 +24,7 @@ def load_requirements():
 
 setup(
     name='pytdxattest',
-    version='0.0.10',
+    version='0.0.11',
     packages=['pytdxattest'],
     package_data={
         '': ['tdx_eventlogs', 'tdx_tdreport', 'tdx_verify_rtmr', 'tdx_extend_rtmr', 'tdx_quote']

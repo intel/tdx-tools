@@ -2,7 +2,7 @@
 
 import argparse
 
-from pytdxmeasure.cli import TDXQuoteCmd
+from pytdxattest.cli import TDXQuoteCmd
 
 parser = argparse.ArgumentParser(description="The utility to get TD Quote in TD guest")
 parser.add_argument('-o', type=str, help='Save TD Quote to the path', dest='output')

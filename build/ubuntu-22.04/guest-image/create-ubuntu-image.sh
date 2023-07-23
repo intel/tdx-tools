@@ -223,7 +223,7 @@ install_tdx_measure_tool() {
     virt-customize -a /tmp/${GUEST_IMG} \
         --run-command "apt install -y python3-pip"
     virt-customize -a /tmp/${GUEST_IMG} \
-        --run-command "python3 -m pip install pytdxmeasure"
+        --run-command "python3 -m pip install pytdxattest"
     ok "Install the TDX measurement tool..."
 }
 

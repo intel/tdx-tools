@@ -28,5 +28,5 @@ jobs:
       - name: Analyzing the python code
         run: |
           set -ex
-          export PYTHONPATH=$PWD/utils/pycloudstack:$PWD/utils/ovmfkeyenroll:$PWD/attestation/pytdxmeasure:/lib/python3/dist-packages/
+          export PYTHONPATH=$PWD/utils/pycloudstack:$PWD/utils/ovmfkeyenroll:$PWD/attestation/pytdxattest:/lib/python3/dist-packages/
           find . -path ./build -prune -o -name *.py -print0 | xargs -n 1 -0 python3 -m pylint

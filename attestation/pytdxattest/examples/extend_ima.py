@@ -28,7 +28,7 @@ User have to set 'ima_hash=sha384' in kernel command line while boot and is able
 import os
 import logging
 import argparse
-from pytdxmeasure.rtmr import RTMR
+from pytdxattest.rtmr import RTMR
 
 DEFAULT_PATH_FOR_MEASUREMENT = '/sys/kernel/security/ima/ascii_runtime_measurements'
 EXCEPTION_KEY_WORD = 'boot_aggregate'
