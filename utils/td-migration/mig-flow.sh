@@ -19,7 +19,7 @@ Usage: $(basename "$0") [OPTION]...
   -m                        Enabled multi-stream
   -n                        Multifd-channel number
   -s                        Source TD vsock file, default value is "/tmp/qmp-sock-src"
-  -d                        Destination vsock file, default value is "/tmp/qmp-sock.dst"
+  -d                        Destination vsock file, default value is "/tmp/qmp-sock-dst"
   -h                        Show this help
 EOM
 }
@@ -64,18 +64,27 @@ migrate() {
     # Set post copy parameters
     if [[ $POST_COPY == true ]]; then
         echo "migrate_set_capability postcopy-ram on" | nc -U "${SRC_VSOCK}" -w3
-        echo "migrate_set_capability postcopy-ram on" | nc -U "${DST_VSOCK}" -w3
         echo "migrate_set_capability postcopy-preempt on" | nc -U "${SRC_VSOCK}" -w3
-        echo "migrate_set_capability postcopy-preempt on" | nc -U "${DST_VSOCK}" -w3
+        if [[ ${DEST_IP} == "localhost" ]]; then
+            echo "migrate_set_capability postcopy-ram on" | nc -U "${DST_VSOCK}" -w3
+            echo "migrate_set_capability postcopy-preempt on" | nc -U "${DST_VSOCK}" -w3
+        else 
+            ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo migrate_set_capability postcopy-ram on | nc -U ${DST_VSOCK} -w3"
+            ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo migrate_set_capability postcopy-preempt on | nc -U ${DST_VSOCK} -w3"
+        fi
     fi
 
     # Set multi stream parameters
     if [[ $MULTI_STREAM == true ]]; then
         echo "migrate_set_capability multifd on" | nc -U "${SRC_VSOCK}" -w3
         echo "migrate_set_parameter multifd-channels $MULTI_CHANNEL" | nc -U "${SRC_VSOCK}" -w3
-        echo "migrate_set_capability multifd on" | nc -U "${DST_VSOCK}" -w3
-        echo "migrate_set_parameter multifd-channels $MULTI_CHANNEL" | nc -U "${DST_VSOCK}" -w3
-
+        if [[ ${DEST_IP} == "localhost" ]]; then
+            echo "migrate_set_capability multifd on" | nc -U "${DST_VSOCK}" -w3
+            echo "migrate_set_parameter multifd-channels $MULTI_CHANNEL" | nc -U "${DST_VSOCK}" -w3
+        else 
+            ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo migrate_set_capability multifd on | nc -U ${DST_VSOCK} -w3"
+            ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo migrate_set_capability multifd-channels on | nc -U ${DST_VSOCK} -w3"
+        fi
     fi
 
     echo "========================================="
@@ -88,7 +97,11 @@ migrate() {
 
     # Trigger migration
     echo "migrate_set_parameter max-bandwidth 100G" | nc -U /tmp/qmp-sock-src -w3
-    echo "migrate_incoming tcp:${DEST_IP}:${INCOMING_PORT}" | nc -U "${DST_VSOCK}" -w3
+    if [[ ${DEST_IP} == "localhost" ]]; then
+        echo "migrate_incoming tcp:${DEST_IP}:${INCOMING_PORT}" | nc -U "${DST_VSOCK}" -w3
+    else 
+        ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo migrate_incoming tcp:${DEST_IP}:${INCOMING_PORT} | nc -U ${DST_VSOCK} -w3"
+    fi
     sleep 3
     echo "migrate -d tcp:${DEST_IP}:${INCOMING_PORT}" | nc -U /tmp/qmp-sock-src -w3
 

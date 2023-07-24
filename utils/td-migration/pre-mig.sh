@@ -58,14 +58,15 @@ error() {
 pre_mig(){
     # If bind is true, it needs to bind migTD and user TD firstly
     SRC_MIGTD_PID=$(pgrep -n migtd-src)
-    DST_MIGTD_PID=$(pgrep -n migtd-dst)
     # Asking migtd-dst to connect to the dst socat
     if [[ ${TYPE} == "local" ]]; then
+        DST_MIGTD_PID=$(pgrep -n migtd-dst)
         if [[ ${BIND} == true ]]; then
             echo "qom-set /objects/tdx0/ migtd-pid ${DST_MIGTD_PID}" | nc -U /tmp/qmp-sock-dst -w3
         fi
         echo "qom-set /objects/tdx0/ vsockport ${VSOCK_PORT_DST}" | nc -U /tmp/qmp-sock-dst -w3
     else
+        DST_MIGTD_PID=$(ssh root@"${DEST_IP}" "pgrep -n migtd-dst")
         if [[ ${BIND} == true ]]; then
             ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo qom-set /objects/tdx0/ migtd-pid ${DST_MIGTD_PID} | nc -U /tmp/qmp-sock-dst -w3"
         fi
