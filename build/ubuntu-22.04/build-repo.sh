@@ -77,9 +77,9 @@ mkdir -p $GUEST_REPO
 mkdir -p $HOST_REPO
 
 build_kernel
-$GUEST_ONLY && build_qemu
-$GUEST_ONLY && build_tdvf
-$GUEST_ONLY && build_libvirt
+$GUEST_ONLY || build_qemu
+$GUEST_ONLY || build_tdvf
+$GUEST_ONLY || build_libvirt
 build_amber-cli
 
 popd
