@@ -1,0 +1,23 @@
+#cloud-config
+merge_how:
+ - name: list
+   settings: [append]
+ - name: dict
+   settings: [no_replace, recurse_list]
+
+packages:
+  - ca-certificates
+  - curl 
+  - gnupg
+  - cpuid
+  - qemu-guest-agent
+  - python3-pip
+
+apt:
+  preserve_sources_list: true
+
+runcmd:
+  - apt --fix-broken install
+  - systemctl mask pollinate.service
+
+

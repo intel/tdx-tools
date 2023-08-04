@@ -18,4 +18,4 @@ jobs:
         name: Build the source and binary packages
         run: |
           cd build/ubuntu-22.04/
-          ./pkg-builder intel-mvp-ovmf/build.sh
+          ./pkg-builder -s intel-mvp-ovmf/build.sh

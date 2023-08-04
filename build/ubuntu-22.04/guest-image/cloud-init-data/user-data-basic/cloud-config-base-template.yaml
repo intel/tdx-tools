@@ -1,4 +1,9 @@
 #cloud-config
+merge_how:
+ - name: list
+   settings: [append]
+ - name: dict
+   settings: [no_replace, recurse_list]
 
 write_files:
 - content: |
@@ -22,21 +27,22 @@ write_files:
     SUBSYSTEM=="misc",KERNEL=="tdx-guest",MODE="0666"
   path: /etc/udev/rules.d/90-tdx.rules
 
-packages:
-  - python3-pip
-  - golang-go
-  - golang
-  - golang-doc
-  - ntp
-
-runcmd:
-  - apt install --fix-broken
-  - sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& ima_hash=sha384 ima_policy=critical_data/' /etc/default/grub.d/50-cloudimg-settings.cfg
-  - update-grub2
-
 power_state:
   delay: now
   mode: poweroff
   message: Bye Bye
   timeout: 1
   condition: True
+
+user: root
+password: xxxx
+chpasswd: { expire: False }
+
+apt:
+  preserve_sources_list: true
+
+runcmd:
+  - sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  - sed -i 's/\"console=tty1 console=ttyS0\"/\"console=hvc0\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg
+  - update-grub2
+

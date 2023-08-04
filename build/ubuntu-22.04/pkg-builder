@@ -4,6 +4,34 @@ THIS_DIR=$(readlink -f "$(dirname "$0")")
 BUILD_DIR="${THIS_DIR}/.."
 BUILDER=pkg-builder-ubuntu-22.04
 
+USING_EXITING_IMG=false
+SCRIPT=""
+
+usage() {
+    cat << EOM
+Usage: $(basename "$0") [OPTION]...
+  -e                        Using existing building container image
+  -h                        Show this help
+EOM
+}
+
+process_args() {
+    while getopts ":s:eh" option; do
+        case "$option" in
+            e) USING_EXITING_IMG=true;;
+            s) SCRIPT=$OPTARG;;
+            h) usage
+               exit 0
+               ;;
+            *)
+               echo "Invalid option '-$OPTARG'"
+               usage
+               exit 1
+               ;;
+        esac
+    done
+}
+
 check_docker_cmd() {
     if ! command -v docker &> /dev/null; then
         echo "Please install docker first."
@@ -34,9 +62,14 @@ run_in_docker() {
         "${BUILDER}"
 }
 
+process_args "$@"
+
 check_docker_cmd
 check_user_in_docker
-build_docker_image
+
+if [[ $USING_EXITING_IMG == "false" ]]; then
+    build_docker_image
+fi
 
 # Run build script within docker
-run_in_docker "$1"
+run_in_docker $SCRIPT
