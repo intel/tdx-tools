@@ -86,6 +86,7 @@ class VMGuest:
         tsx=None,
         tsc=None,
         mwait=None,
+        mac_addr=None,
         has_vtpm=False,
         vtpm_path=None,
         vtpm_log=None,
@@ -117,6 +118,7 @@ class VMGuest:
         self.tsx = tsx
         self.tsc = tsc
         self.mwait = mwait
+        self.mac_addr = mac_addr
         self.has_vtpm = has_vtpm
         self.vtpm_path = vtpm_path
         self.vtpm_log = vtpm_log
@@ -489,6 +491,7 @@ class VMGuestFactory:
         tsx=None,
         tsc=None,
         mwait=None,
+        mac_addr=None,
         has_vtpm=False,
         vtpm_path=None,
         vtpm_log=None,
@@ -563,6 +566,7 @@ class VMGuestFactory:
             tsx=tsx,
             tsc=tsc,
             mwait=mwait,
+            mac_addr=mac_addr,
             has_vtpm=has_vtpm,
             vtpm_path=vtpm_path,
             vtpm_log=vtpm_log,
