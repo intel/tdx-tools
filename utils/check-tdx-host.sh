@@ -247,6 +247,8 @@ print_title "TDX Host Check"
 
 check_cmd rdmsr "Please install via apt install msr-tools (Ubuntu) or dnf install msr-tools (RHEL/CentOS)"
 
+sudo modprobe msr
+
 check_os
 check_tdx_module
 check_bios_memory_map
