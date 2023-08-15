@@ -13,13 +13,25 @@ import libvirt
 from .cmdrunner import SSHCmdRunner, NativeCmdRunner
 from .dut import DUT
 from .vmimg import VMImage
-from .vmm import VMMLibvirt
-from .vmparam import VM_TYPE_TD, VM_TYPE_TD_PERF, VM_TYPE_SGX, \
-BOOT_TYPE_DIRECT, BOOT_TYPE_GRUB, HUGEPAGES_2M, BOOT_TIMEOUT, \
-KernelCmdline, VMSpec, VTPM_PATH, VM_STATE_SHUTDOWN, VM_STATE_RUNNING, \
-VM_STATE_PAUSE, VM_STATE_SHUTDOWN_IN_PROGRESS
+from .vmm import VMMLibvirt, VMMKubeVirt
+from .vmparam import (
+    VM_TYPE_TD,
+    VM_TYPE_TD_PERF,
+    VM_TYPE_SGX,
+    BOOT_TYPE_DIRECT,
+    BOOT_TYPE_GRUB,
+    HUGEPAGES_2M,
+    BOOT_TIMEOUT,
+    KernelCmdline,
+    VMSpec,
+    VTPM_PATH,
+    VM_STATE_SHUTDOWN,
+    VM_STATE_RUNNING,
+    VM_STATE_PAUSE,
+    VM_STATE_SHUTDOWN_IN_PROGRESS,
+)
 
-__author__ = 'cpio'
+__author__ = "cpio"
 
 LOG = logging.getLogger(__name__)
 
@@ -47,17 +59,38 @@ class VMGuest:
 
     """
 
-    def __init__(self, image, guest_distro, name, vmid,
-                 vmtype=VM_TYPE_TD, vmspec=VMSpec.model_base(),
-                 boot=BOOT_TYPE_DIRECT, kernel=None,
-                 cmdline=KernelCmdline(),
-                 hugepages=False, hugepage_size=HUGEPAGES_2M,
-                 vsock=False, vsock_cid=0,
-                 vmm_class=None, cpu_ids=None, mem_numa=True,
-                 io_mode=None, cache=None, diskfile_path=None,
-                 migtd_pid=None, mig_hash=None, incoming_port=None,
-                 tsx=None, tsc=None, mwait=None,
-                 has_vtpm=False, vtpm_path=None, vtpm_log=None,hugepage_path=None):
+    def __init__(
+        self,
+        name,
+        image=None,
+        guest_distro=None,
+        vmid=None,
+        vmtype=VM_TYPE_TD,
+        vmspec=VMSpec.model_base(),
+        boot=BOOT_TYPE_DIRECT,
+        kernel=None,
+        cmdline=KernelCmdline(),
+        hugepages=False,
+        hugepage_size=HUGEPAGES_2M,
+        vsock=False,
+        vsock_cid=0,
+        vmm_class=None,
+        cpu_ids=None,
+        mem_numa=True,
+        io_mode=None,
+        cache=None,
+        diskfile_path=None,
+        migtd_pid=None,
+        mig_hash=None,
+        incoming_port=None,
+        tsx=None,
+        tsc=None,
+        mwait=None,
+        has_vtpm=False,
+        vtpm_path=None,
+        vtpm_log=None,
+        hugepage_path=None,
+    ):
 
         self.vmid = vmid
         self.name = name
@@ -89,6 +122,9 @@ class VMGuest:
         self.vtpm_log = vtpm_log
         self.hugepage_path = hugepage_path
 
+        self.vmm = vmm_class(self)
+        if isinstance(self.vmm, VMMKubeVirt):
+            return
         # Update rootfs in kernel command line depending on distro
         rootfs_ubuntu = "root=/dev/vda1"
         rootfs_centos = "root=/dev/vda3"
@@ -104,7 +140,6 @@ class VMGuest:
             assert self.kernel is not None
             assert os.path.exists(self.kernel)
             self.kernel = os.path.realpath(self.kernel)
-        self.vmm = vmm_class(self)
 
     def ssh_run(self, cmdarr, ssh_id_key, no_wait=False):
         """
@@ -116,11 +151,11 @@ class VMGuest:
 
         try:
             runner = SSHCmdRunner(
-                cmdarr, ssh_id_key, DEFAULT_SSH_PORT, ip=self.get_ip())
+                cmdarr, ssh_id_key, DEFAULT_SSH_PORT, ip=self.get_ip()
+            )
         except NotImplementedError:
             # Fall back to SSH forward mode if fail to get bridge IP
-            runner = SSHCmdRunner(
-                cmdarr, ssh_id_key, self.ssh_forward_port)
+            runner = SSHCmdRunner(cmdarr, ssh_id_key, self.ssh_forward_port)
 
         if no_wait:
             runner.runnowait()
@@ -141,13 +176,22 @@ class VMGuest:
             return False
 
         os.chmod(ssh_id_key, 0o600)
-        cmdarr = ["scp",
-                  "-o", "StrictHostKeyChecking=no",
-                  "-o", "UserKnownHostsFile=/dev/null",
-                  "-o", "ConnectTimeout=30",
-                  "-o", "PreferredAuthentications=publickey",
-                  "-i", ssh_id_key,
-                  "-r", source, f"root@{self.get_ip()}:{target}"]
+        cmdarr = [
+            "scp",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-o",
+            "UserKnownHostsFile=/dev/null",
+            "-o",
+            "ConnectTimeout=30",
+            "-o",
+            "PreferredAuthentications=publickey",
+            "-i",
+            ssh_id_key,
+            "-r",
+            source,
+            f"root@{self.get_ip()}:{target}",
+        ]
         runner = NativeCmdRunner(cmdarr)
         runner.runwait()
         return runner
@@ -157,18 +201,29 @@ class VMGuest:
         Copy files/directories out of VM via SSH
         """
         os.chmod(ssh_id_key, 0o600)
-        cmdarr = ["scp",
-                  "-o", "StrictHostKeyChecking=no",
-                  "-o", "UserKnownHostsFile=/dev/null",
-                  "-o", "ConnectTimeout=30",
-                  "-o", "PreferredAuthentications=publickey",
-                  "-i", ssh_id_key,
-                  "-r", f"root@{self.get_ip()}:{source}", target]
+        cmdarr = [
+            "scp",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-o",
+            "UserKnownHostsFile=/dev/null",
+            "-o",
+            "ConnectTimeout=30",
+            "-o",
+            "PreferredAuthentications=publickey",
+            "-i",
+            ssh_id_key,
+            "-r",
+            f"root@{self.get_ip()}:{source}",
+            target,
+        ]
         runner = NativeCmdRunner(cmdarr)
         runner.runwait()
         return runner
 
-    def wait_for_ssh_ready(self, timeout=BOOT_TIMEOUT, check_interval=DEFAULT_CHECK_INTERVAL):
+    def wait_for_ssh_ready(
+        self, timeout=BOOT_TIMEOUT, check_interval=DEFAULT_CHECK_INTERVAL
+    ):
         """
         Wait for the port of forwarded SSH ready until timeout
         @return True is ready, False is timeout
@@ -184,7 +239,7 @@ class VMGuest:
         ssh_ip = None
 
         # use *(tnow - tstart) < timeout * check to ensure it really elapsed *timeout* seconds
-        while ((tnow - tstart) < timeout and not ssh_ok):
+        while (tnow - tstart) < timeout and not ssh_ok:
             try:
                 ssh_ip = self.get_ip(force_refresh=True)
                 ssh_port = DEFAULT_SSH_PORT
@@ -196,7 +251,9 @@ class VMGuest:
                 # Fall back to ssh forward approach
                 ssh_ip = LOOPBACK
                 ssh_port = self.ssh_forward_port
-                LOG.debug("No IP allocated for %s, using %s:%s", self.name, ssh_ip, ssh_port)
+                LOG.debug(
+                    "No IP allocated for %s, using %s:%s", self.name, ssh_ip, ssh_port
+                )
 
             assert ssh_port is not None and ssh_ip is not None
 
@@ -205,7 +262,11 @@ class VMGuest:
             sock.settimeout(timeout)
             retcode = sock.connect_ex((ssh_ip, ssh_port))
             if retcode != 0:
-                LOG.error("Fail to connect SSH for guest %s, connect error: %d", self.name, retcode)
+                LOG.error(
+                    "Fail to connect SSH for guest %s, connect error: %d",
+                    self.name,
+                    retcode,
+                )
                 sock.close()
                 time.sleep(check_interval)
                 tnow = time.time()
@@ -222,7 +283,7 @@ class VMGuest:
 
             # Check the SSH- header
             if data is not None:
-                sdata = data.decode('utf-8')
+                sdata = data.decode("utf-8")
                 if "SSH-" in sdata[0:4]:
                     ssh_ok = True
 
@@ -236,8 +297,11 @@ class VMGuest:
 
             # If SSH is ready for connection
             if ssh_ok:
-                LOG.info("SSH for guest %s is ready. (duration: %d seconds)", self.name,
-                         time.time() - tstart)
+                LOG.info(
+                    "SSH for guest %s is ready. (duration: %d seconds)",
+                    self.name,
+                    time.time() - tstart,
+                )
                 return True
 
             # Update tnow for a new round socket check
@@ -398,18 +462,38 @@ class VMGuestFactory:
         self.vms = {}
         if part is None:
             part = {"root": "/dev/sda3", "efi": "/dev/sda2"}
-        self._mother_image = VMImage(
-            vm_mother_image, part["root"], part["efi"])
+        self._mother_image = VMImage(vm_mother_image, part["root"], part["efi"])
         self._vm_kernel = vm_kernel
         self._keep_issue_vm = False
 
-    def new_vm(self, vmtype, vmspec=VMSpec.model_base(), vm_class=VMMLibvirt,
-               cmdline=KernelCmdline(),auto_start=False, hugepages=False,
-               hugepage_size=None, boot=BOOT_TYPE_DIRECT, disk_img=None,
-               vsock=False, vsock_cid=3, io_mode=None, cache=None,
-               diskfile_path=None, cpu_ids=None, migtd_pid=None, mig_hash=None,
-               incoming_port=None, tsx=None, tsc=None, mwait=None,
-               has_vtpm=False, vtpm_path=None, vtpm_log=None,hugepage_path=None):
+    def new_vm(
+        self,
+        vmtype,
+        vmspec=VMSpec.model_base(),
+        vm_class=VMMLibvirt,
+        cmdline=KernelCmdline(),
+        auto_start=False,
+        hugepages=False,
+        hugepage_size=None,
+        boot=BOOT_TYPE_DIRECT,
+        disk_img=None,
+        vsock=False,
+        vsock_cid=3,
+        io_mode=None,
+        cache=None,
+        diskfile_path=None,
+        cpu_ids=None,
+        migtd_pid=None,
+        mig_hash=None,
+        incoming_port=None,
+        tsx=None,
+        tsc=None,
+        mwait=None,
+        has_vtpm=False,
+        vtpm_path=None,
+        vtpm_log=None,
+        hugepage_path=None,
+    ):
         """
         Create a VM.
         """
@@ -454,16 +538,36 @@ class VMGuestFactory:
         if disk_img is None:
             disk_img = self._mother_image.clone(vm_name + ".qcow2")
 
-        inst = VMGuest(disk_img, guest_distro=guest_distro, name=vm_name, vmid=vm_id,
-                       kernel=self._vm_kernel, vmtype=vmtype, boot=boot,
-                       vmspec=vmspec, cmdline=cmdline, vmm_class=vm_class,
-                       hugepages=hugepages, hugepage_size=hugepage_size,
-                       vsock=vsock, vsock_cid=vsock_cid,
-                       io_mode=io_mode, cache=cache,
-                       diskfile_path=diskfile_path, cpu_ids=cpu_ids,
-                       migtd_pid=migtd_pid, mig_hash=mig_hash, incoming_port=incoming_port,
-                       tsx=tsx, tsc=tsc, mwait=mwait, has_vtpm=has_vtpm,
-                       vtpm_path=vtpm_path, vtpm_log=vtpm_log,hugepage_path=hugepage_path)
+        inst = VMGuest(
+            name=vm_name,
+            image=disk_img,
+            guest_distro=guest_distro,
+            vmid=vm_id,
+            kernel=self._vm_kernel,
+            vmtype=vmtype,
+            boot=boot,
+            vmspec=vmspec,
+            cmdline=cmdline,
+            vmm_class=vm_class,
+            hugepages=hugepages,
+            hugepage_size=hugepage_size,
+            vsock=vsock,
+            vsock_cid=vsock_cid,
+            io_mode=io_mode,
+            cache=cache,
+            diskfile_path=diskfile_path,
+            cpu_ids=cpu_ids,
+            migtd_pid=migtd_pid,
+            mig_hash=mig_hash,
+            incoming_port=incoming_port,
+            tsx=tsx,
+            tsc=tsc,
+            mwait=mwait,
+            has_vtpm=has_vtpm,
+            vtpm_path=vtpm_path,
+            vtpm_log=vtpm_log,
+            hugepage_path=hugepage_path,
+        )
 
         self.vms[vm_name] = inst
 

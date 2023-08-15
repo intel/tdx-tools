@@ -8,14 +8,14 @@ from kubernetes.config.config_exception import ConfigException
 from kubernetes.client.rest import ApiException
 from kubernetes import client, config
 
-__author__ = 'cpio'
+__author__ = "cpio"
 
 LOG = logging.getLogger(__name__)
 
 WAIT_INTERVAL = 2
 WAIT_TIMEOUT = 660
-CREATED = 'created'
-DELETED = 'deleted'
+CREATED = "created"
+DELETED = "deleted"
 
 
 # pylint: disable=too-many-public-methods
@@ -40,8 +40,9 @@ class ClusterBase:
             else:
                 config.load_kube_config(config_file)
         except ConfigException:
-            LOG.error("Fail to load kubernete config, might not in cluster",
-                      exc_info=True)
+            LOG.error(
+                "Fail to load kubernete config, might not in cluster", exc_info=True
+            )
             assert False
 
     @property
@@ -64,6 +65,13 @@ class ClusterBase:
         https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/BatchV1Api.md
         """
         return client.BatchV1Api()
+
+    @property
+    def crd_api(self):
+        """
+        https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/CustomObjectsApi.md
+        """
+        return client.CustomObjectsApi()
 
     @property
     def client(self):
@@ -100,11 +108,10 @@ class ClusterBase:
         if isinstance(new_timeout, int) and new_timeout > self.interval:
             self._timeout = new_timeout
 
-    def wait_for_namespace(self, namespace_name,
-                           expect=CREATED):
-        '''
+    def wait_for_namespace(self, namespace_name, expect=CREATED):
+        """
         Wait for namespace created/deleted
-        '''
+        """
         interval = 0
         while interval < self.timeout:
             LOG.info("Read namespace %s, expect %s", namespace_name, expect)
@@ -136,13 +143,10 @@ class ClusterBase:
             LOG.info("Namespace %s not found", namespace_name)
 
         LOG.info("Create namespace %s", namespace_name)
-        body = client.V1Namespace(
-            metadata=client.V1ObjectMeta(name=namespace_name)
-        )
+        body = client.V1Namespace(metadata=client.V1ObjectMeta(name=namespace_name))
         self.core_api.create_namespace(body=body)
 
-        return self.wait_for_namespace(
-            namespace_name, expect=CREATED)
+        return self.wait_for_namespace(namespace_name, expect=CREATED)
 
     def delete_namespace(self, namespace_name):
         """
@@ -151,11 +155,11 @@ class ClusterBase:
         LOG.info("Delete namespace %s", namespace_name)
         self.core_api.delete_namespace(name=namespace_name)
 
-        return self.wait_for_namespace(
-            namespace_name, expect=DELETED)
+        return self.wait_for_namespace(namespace_name, expect=DELETED)
 
-    def wait_for_deployement(self, deployment_name, namespace="default",
-                             expect=CREATED):
+    def wait_for_deployement(
+        self, deployment_name, namespace="default", expect=CREATED
+    ):
         """
         Wait for deployment created/deleted
         """
@@ -164,9 +168,9 @@ class ClusterBase:
             LOG.info("Read deployment %s, expect %s", deployment_name, expect)
             try:
                 resp = self.ext_api.read_namespaced_deployment(
-                    deployment_name, namespace)
-                if CREATED == expect and \
-                        resp.status.available_replicas is not None:
+                    deployment_name, namespace
+                )
+                if CREATED == expect and resp.status.available_replicas is not None:
                     return True
             except ApiException:
                 if DELETED == expect:
@@ -182,12 +186,9 @@ class ClusterBase:
         Create a deployment until success
         """
         LOG.info("Create deployment %s", deployment_name)
-        self.ext_api.create_namespaced_deployment(
-            body=body,
-            namespace=namespace)
+        self.ext_api.create_namespaced_deployment(body=body, namespace=namespace)
 
-        return self.wait_for_deployement(
-            deployment_name, namespace, expect=CREATED)
+        return self.wait_for_deployement(deployment_name, namespace, expect=CREATED)
 
     def delete_deployment(self, deployment_name, namespace="default"):
         """
@@ -195,24 +196,20 @@ class ClusterBase:
         """
         LOG.info("Delete deployment %s", deployment_name)
         self.ext_api.delete_namespaced_deployment(
-            name=deployment_name,
-            namespace=namespace,
-            grace_period_seconds=5)
+            name=deployment_name, namespace=namespace, grace_period_seconds=5
+        )
 
-        return self.wait_for_deployement(
-            deployment_name, namespace, expect=DELETED)
+        return self.wait_for_deployement(deployment_name, namespace, expect=DELETED)
 
     def get_service_port(self, service_name, namespace="default"):
         """
         Get service's cluster IP and port
         """
         LOG.info("Read service %s", service_name)
-        resp = self.core_api.read_namespaced_service(
-            service_name, namespace)
+        resp = self.core_api.read_namespaced_service(service_name, namespace)
         return (resp.spec.cluster_ip, resp.spec.ports[0].port)
 
-    def wait_for_service(self, service_name, namespace="default",
-                         expect=CREATED):
+    def wait_for_service(self, service_name, namespace="default", expect=CREATED):
         """
         Wait for service created/deleted
         """
@@ -220,8 +217,7 @@ class ClusterBase:
         while interval < self.timeout:
             LOG.info("Read service %s, expect %s", service_name, expect)
             try:
-                self.core_api.read_namespaced_service(
-                    service_name, namespace)
+                self.core_api.read_namespaced_service(service_name, namespace)
                 if CREATED == expect:
                     return True
             except ApiException:
@@ -238,12 +234,9 @@ class ClusterBase:
         Create a service until ready
         """
         LOG.info("Create service %s", service_name)
-        self.core_api.create_namespaced_service(
-            body=body,
-            namespace=namespace)
+        self.core_api.create_namespaced_service(body=body, namespace=namespace)
 
-        return self.wait_for_service(
-            service_name, namespace, expect=CREATED)
+        return self.wait_for_service(service_name, namespace, expect=CREATED)
 
     def delete_service(self, service_name, namespace="default"):
         """
@@ -251,15 +244,12 @@ class ClusterBase:
         """
         LOG.info("Delete service %s", service_name)
         self.core_api.delete_namespaced_service(
-            name=service_name,
-            namespace=namespace,
-            grace_period_seconds=5)
+            name=service_name, namespace=namespace, grace_period_seconds=5
+        )
 
-        return self.wait_for_service(
-            service_name, namespace, expect=DELETED)
+        return self.wait_for_service(service_name, namespace, expect=DELETED)
 
-    def wait_for_job(self, job_name, namespace="default",
-                     expect=CREATED):
+    def wait_for_job(self, job_name, namespace="default", expect=CREATED):
         """
         Read job until it ready
         """
@@ -267,13 +257,11 @@ class ClusterBase:
         while interval < self.timeout:
             LOG.info("Read job %s, expect %s", job_name, expect)
             try:
-                resp = self.batch_api.read_namespaced_job(
-                    job_name, namespace)
+                resp = self.batch_api.read_namespaced_job(job_name, namespace)
                 if CREATED == expect:
                     if resp.status.failed is not None:
                         return False
-                    if resp.status.succeeded is not None and \
-                            resp.status.succeeded >= 1:
+                    if resp.status.succeeded is not None and resp.status.succeeded >= 1:
                         return True
             except ApiException:
                 if DELETED == expect:
@@ -289,12 +277,9 @@ class ClusterBase:
         Create a job until success
         """
         LOG.info("Create job %s", job_name)
-        self.batch_api.create_namespaced_job(
-            body=body,
-            namespace=namespace)
+        self.batch_api.create_namespaced_job(body=body, namespace=namespace)
 
-        return self.wait_for_job(
-            job_name, namespace, expect=CREATED)
+        return self.wait_for_job(job_name, namespace, expect=CREATED)
 
     def delete_job(self, job_name, namespace="default"):
         """
@@ -302,12 +287,10 @@ class ClusterBase:
         """
         LOG.info("Delete job %s", job_name)
         self.batch_api.delete_namespaced_job(
-            name=job_name,
-            namespace=namespace,
-            grace_period_seconds=5)
+            name=job_name, namespace=namespace, grace_period_seconds=5
+        )
 
-        return self.wait_for_job(
-            job_name, namespace, expect=DELETED)
+        return self.wait_for_job(job_name, namespace, expect=DELETED)
 
     def get_pods_by_selector(self, selector, namespace="default"):
         """
@@ -326,8 +309,7 @@ class ClusterBase:
         Get pod log
         """
         LOG.info("Get pod %s log", pod_name)
-        log = self.core_api.read_namespaced_pod_log(
-            pod_name, namespace)
+        log = self.core_api.read_namespaced_pod_log(pod_name, namespace)
         return log
 
     # This method return specific status of a given node
@@ -339,7 +321,7 @@ class ClusterBase:
         LOG.info("Get node %s status", node_name)
 
         body = self.core_api.read_node_status(node_name)
-        status = [s.status for s in body.status.conditions if s.type == 'Ready']
+        status = [s.status for s in body.status.conditions if s.type == "Ready"]
         return status
 
 
@@ -363,15 +345,28 @@ class SGXCluster(ClusterBase):
         """
         for item in self.core_api.list_node().items:
             node = self.core_api.read_node(name=item.metadata.name)
-            if 'feature.node.kubernetes.io/cpu-cpuid.SGXLC' in node.metadata.labels.keys():
-                if 'sgx.intel.com/enclave' in node.status.capacity.keys():
-                    self._sgx_dcap_nodes[node.metadata.labels['kubernetes.io/hostname']] = node
+            if (
+                "feature.node.kubernetes.io/cpu-cpuid.SGXLC"
+                in node.metadata.labels.keys()
+            ):
+                if "sgx.intel.com/enclave" in node.status.capacity.keys():
+                    self._sgx_dcap_nodes[
+                        node.metadata.labels["kubernetes.io/hostname"]
+                    ] = node
                 else:
-                    self._sgx_epid_nodes[node.metadata.labels['kubernetes.io/hostname']] = node
-        LOG.info("Found %d EPID devices: %s",
-                 len(self._sgx_epid_nodes.keys()), str(self._sgx_epid_nodes.keys()))
-        LOG.info("Found %d DCAP devices: %s",
-                 len(self._sgx_dcap_nodes.keys()), str(self._sgx_dcap_nodes.keys()))
+                    self._sgx_epid_nodes[
+                        node.metadata.labels["kubernetes.io/hostname"]
+                    ] = node
+        LOG.info(
+            "Found %d EPID devices: %s",
+            len(self._sgx_epid_nodes.keys()),
+            str(self._sgx_epid_nodes.keys()),
+        )
+        LOG.info(
+            "Found %d DCAP devices: %s",
+            len(self._sgx_dcap_nodes.keys()),
+            str(self._sgx_dcap_nodes.keys()),
+        )
 
     def get_total_epc_size(self):
         """
@@ -379,7 +374,7 @@ class SGXCluster(ClusterBase):
         """
         total = 0
         for node in self._sgx_dcap_nodes.values():
-            total += int(node.status.capacity['sgx.intel.com/epc'])
+            total += int(node.status.capacity["sgx.intel.com/epc"])
         LOG.info("Total EPC size: %d", total)
         return total
 
@@ -389,7 +384,7 @@ class SGXCluster(ClusterBase):
         """
         total = 0
         for node in self._sgx_dcap_nodes.values():
-            total += int(node.status.capacity['sgx.intel.com/enclave'])
+            total += int(node.status.capacity["sgx.intel.com/enclave"])
         LOG.info("Total enclave number: %d", total)
         return total
 
@@ -398,22 +393,20 @@ class SGXCluster(ClusterBase):
         Get EPC size for specific node
         """
         if node_name not in self._sgx_dcap_nodes:
-            LOG.error(
-                "Fail to find the DCAP node %s in cluster", node_name)
+            LOG.error("Fail to find the DCAP node %s in cluster", node_name)
             return None
         node = self._sgx_dcap_nodes.keys[node_name]  # pylint: disable=E1136
-        return int(node.status.capacity['sgx.intel.com/epc'])
+        return int(node.status.capacity["sgx.intel.com/epc"])
 
     def get_enclave_size(self, node_name):
         """
         Get enclave number for specific node
         """
         if node_name not in self._sgx_dcap_nodes:
-            LOG.error(
-                "Fail to find the DCAP node %s in cluster", node_name)
+            LOG.error("Fail to find the DCAP node %s in cluster", node_name)
             return None
         node = self._sgx_dcap_nodes.keys[node_name]  # pylint: disable=E1136
-        return int(node.status.capacity['sgx.intel.com/enclave'])
+        return int(node.status.capacity["sgx.intel.com/enclave"])
 
     def get_total_allocated_sgx(self):
         """
@@ -425,18 +418,176 @@ class SGXCluster(ClusterBase):
         for i in res_pods.items:
             for j in i.spec.containers:
                 if j.resources.requests or j.resources.limits:
-                    if 'sgx.intel.com/epc' in j.resources.requests.keys():
-                        epc_requests = j.resources.requests['sgx.intel.com/epc']
+                    if "sgx.intel.com/epc" in j.resources.requests.keys():
+                        epc_requests = j.resources.requests["sgx.intel.com/epc"]
                         # epc_limits = j.resources.limits['sgx.intel.com/epc']
-                        if epc_requests.endswith('k'):
+                        if epc_requests.endswith("k"):
                             total_epc += int(epc_requests[:-1]) * 1024
                         else:
                             total_epc += int(epc_requests)
-                    if 'sgx.intel.com/enclave' in j.resources.requests.keys():
-                        enclave_requests = j.resources.requests['sgx.intel.com/enclave']
+                    if "sgx.intel.com/enclave" in j.resources.requests.keys():
+                        enclave_requests = j.resources.requests["sgx.intel.com/enclave"]
                         # enclave_limits = j.resources.limits['sgx.intel.com/enclave']
-                        if enclave_requests.endswith('k'):
+                        if enclave_requests.endswith("k"):
                             total_enclave += int(enclave_requests[:-1]) * 1024
                         else:
                             total_enclave += int(enclave_requests)
         return (total_enclave, total_epc)
+
+
+class KubeVirtCluster(ClusterBase):
+    """
+    KubeVirt cluster is designed to manage tdvm created by kubevirt-tdx.
+    """
+
+    def create_tdvm(self, tdvm, namespace="default"):
+        """
+        Deploy TDVM in cluster
+        """
+        try:
+            self.crd_api.create_namespaced_custom_object(
+                group="kubevirt.io",
+                version="v1",
+                namespace=namespace,
+                plural="virtualmachines",
+                body=tdvm,
+            )
+        except ApiException as ex:
+            if "Conflict" in ex.reason:
+                LOG.info("create_tdvm failed: %s", ex.body)
+                return True
+            LOG.error("create_tdvm error: %s", ex)
+            return False
+
+        return True
+
+    def delete_tdvm(self, tdvm_name, namespace="default"):
+        """
+        Delete TDVM in cluster
+        """
+        try:
+            self.crd_api.delete_namespaced_custom_object(
+                group="kubevirt.io",
+                version="v1",
+                name=tdvm_name,
+                namespace=namespace,
+                plural="virtualmachines",
+            )
+        except ApiException as ex:
+            if "Not Found" in ex.reason:
+                LOG.info("delete_tdvm failed: %s", ex.body)
+                return True
+            LOG.error("delete_tdvm error: %s", ex)
+            return False
+
+        return True
+
+    def launch_tdvm(self, tdvm_name, namespace="default"):
+        """
+        Launch TDVM
+        """
+        patch_body = {
+            "spec": {
+                "running": True,
+            }
+        }
+        try:
+            LOG.info("Launch %s", tdvm_name)
+            self.crd_api.patch_namespaced_custom_object(
+                group="kubevirt.io",
+                version="v1",
+                name=tdvm_name,
+                namespace=namespace,
+                plural="virtualmachines",
+                body=patch_body,
+            )
+            self.wait_for_tdvm_ready(tdvm_name=tdvm_name, namespace=namespace)
+        except ApiException as ex:
+            LOG.error("Exception when calling patch_namespaced_custom_object: %s", ex)
+
+    def shutdown_tdvm(self, tdvm_name, namespace="default"):
+        """
+        Shutdown TDVM
+        """
+        patch_body = {
+            "spec": {
+                "running": False,
+            }
+        }
+        try:
+            LOG.info("Shutdown %s", tdvm_name)
+            self.crd_api.patch_namespaced_custom_object(
+                group="kubevirt.io",
+                version="v1",
+                name=tdvm_name,
+                namespace=namespace,
+                plural="virtualmachines",
+                body=patch_body,
+            )
+        except ApiException as ex:
+            LOG.error("Exception when calling patch_namespaced_custom_object: %s", ex)
+
+    def wait_for_tdvm_ready(self, tdvm_name, namespace="default"):
+        """
+        Wait for tdvm ready
+        """
+        interval = 0
+        while interval < self.timeout:
+            try:
+                resource = self.get_tdvm(tdvm_name=tdvm_name, namespace=namespace)
+                if (
+                    "ready" in resource["status"]
+                    and resource["status"]["ready"] is True
+                ):
+                    return True
+            except ApiException as ex:
+                LOG.info("wait for tdvm ready error: %s", ex)
+            time.sleep(self.interval)
+            interval += self.interval
+
+        # LOG.error("Timeout to wait for service %s %s", service_name, expect)
+        return False
+
+    def get_tdvm(self, tdvm_name, namespace="default"):
+        """
+        Get tdvm  info
+        """
+        resource = self.crd_api.get_namespaced_custom_object(
+            group="kubevirt.io",
+            version="v1",
+            name=tdvm_name,
+            namespace=namespace,
+            plural="virtualmachines",
+        )
+        return resource
+
+    def get_tdvm_instance(self, tdvm_name, namespace="default"):
+        """
+        Get tdvm instance info
+        """
+        resource = self.crd_api.get_namespaced_custom_object(
+            group="kubevirt.io",
+            version="v1",
+            name=tdvm_name,
+            namespace=namespace,
+            plural="virtualmachineinstances",
+        )
+        return resource
+
+    def get_tdvm_ip(self, tdvm_name, namespace="default"):
+        """
+        Get tdvm instance ip
+        """
+        interval = 0
+        while interval < self.timeout:
+            try:
+                resource = self.get_tdvm_instance(tdvm_name, namespace)
+                if "interfaces" in resource["status"]:
+                    return resource["status"]["interfaces"][0]["ipAddress"]
+            except ApiException as ex:
+                LOG.info("get tdvm ip error: %s", ex)
+            time.sleep(self.interval)
+            interval += self.interval
+
+        LOG.error("Timeout to get %s ip", tdvm_name)
+        return None
