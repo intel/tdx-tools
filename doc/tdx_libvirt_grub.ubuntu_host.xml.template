@@ -35,6 +35,10 @@
     <interface type="user">
       <model type="virtio"/>
     </interface>
+    <interface type='bridge'>
+      <source bridge='virbr0'/>
+      <model type='virtio'/>
+    </interface>
     <console type='pty'>
       <target type='virtio' port='0'/>
     </console>
@@ -45,7 +49,7 @@
   </devices>
   <allowReboot value='no'/>
   <launchSecurity type='tdx'>
-    <policy>0x10000001</policy>
+    <policy>0x10000000</policy>
   </launchSecurity>
   <qemu:commandline>
     <qemu:arg value='-cpu'/>
