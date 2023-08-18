@@ -468,6 +468,48 @@ class VirtXml:
 
         self.dump()
 
+    def _find_single_element_by_value(self, tag_arr, attrib, value):
+        """
+        Find a single element with given tag_arr, attrib and value.
+        This can be used when there are multiple elements sharing
+        the same tag but having different value.
+        For example, find element "interface type='bridge'" in the
+        following tree:
+            <devices>
+                <interface type='bridge'>
+                    ...
+                </interface>
+                <interface type='user'>
+                    ...
+                </interface>
+                ...
+            </devices>
+
+        :tag_arr  the tag array for element. For example ["devices", "interface"] means
+            <devices>
+                <interface type='bridge'>
+        : attrib  the attrib name. For example "type" of
+            <devices>
+                <interface type='bridge'>
+        :value   the value of the attrib. For example "bridge" of
+            <devices>
+                <interface type='bridge'>
+        """
+        parent = self._tree.getroot()
+
+        while len(tag_arr) > 0:
+            curr = tag_arr.pop(0)
+            items = parent.findall(curr)
+            if items is None:
+                LOG.error("Could not find %s", curr)
+                return None, None
+            if len(tag_arr) == 0:
+                for i in items:
+                    if i.get(attrib) == value:
+                        return parent, i
+            parent = items[0]
+        return None, None
+
     def _find_single_element(self, tag_arr):
         """
         Find a single element for give tag_arr
@@ -624,6 +666,16 @@ class VirtXml:
         self._add_new_element(
             ["memoryBacking", "hugepages", "page"],
             {"unit": f"{unit}", "size": f"{size}"})
+        self.save()
+
+    def set_driver(self, driver):
+        """
+        Set driver
+        """
+        _, interface = self._find_single_element_by_value(
+            ["devices", "interface"],"type", "bridge")
+        self._add_new_element_by_parent(
+            interface, ["driver"],{"name":driver})
         self.save()
 
     def set_cpu_params(self, cpu_param):

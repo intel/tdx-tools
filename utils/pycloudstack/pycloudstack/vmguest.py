@@ -90,6 +90,7 @@ class VMGuest:
         vtpm_path=None,
         vtpm_log=None,
         hugepage_path=None,
+        driver=None
     ):
 
         self.vmid = vmid
@@ -121,6 +122,7 @@ class VMGuest:
         self.vtpm_path = vtpm_path
         self.vtpm_log = vtpm_log
         self.hugepage_path = hugepage_path
+        self.driver = driver
 
         self.vmm = vmm_class(self)
         if isinstance(self.vmm, VMMKubeVirt):
@@ -493,6 +495,7 @@ class VMGuestFactory:
         vtpm_path=None,
         vtpm_log=None,
         hugepage_path=None,
+        driver=None
     ):
         """
         Create a VM.
@@ -567,6 +570,7 @@ class VMGuestFactory:
             vtpm_path=vtpm_path,
             vtpm_log=vtpm_log,
             hugepage_path=hugepage_path,
+            driver=driver
         )
 
         self.vms[vm_name] = inst

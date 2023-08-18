@@ -181,6 +181,9 @@ class VMMLibvirt(VMMBase):
         if self.vminst.hugepages:
             xmlobj.set_hugepage_params(self.vminst.hugepage_size)
 
+        if self.vminst.driver:
+            xmlobj.set_driver(self.vminst.driver)
+
         if self.vminst.vsock:
             xmlobj.set_vsock(self.vminst.vsock_cid)
 
