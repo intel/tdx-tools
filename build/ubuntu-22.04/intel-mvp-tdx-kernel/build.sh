@@ -51,6 +51,7 @@ build() {
     sudo -E mk-build-deps --install --build-dep --build-indep '--tool=apt-get --no-install-recommends -y' debian/control
     dpkg-source --before-build .
     debuild -uc -us -b
+    exit 0
 }
 
 pushd "${CURR_DIR}"
@@ -58,3 +59,5 @@ get_source
 prepare
 build
 popd
+
+exit 0
