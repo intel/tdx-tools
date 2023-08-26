@@ -88,7 +88,7 @@ Linux Stack for Intel&reg; TDX includes the components in below diagram:
 ## 3. How to Use
 
 Please refer the white paper: [Linux*Stacks for Intel® Trust Domain
-Extension 1.0](https://www.intel.com/content/www/us/en/content-details/783067/whitepaper-linux-stacks-for-intel-trust-domain-extension-1-0.html) (only cover TDX 1.0)
+Extension 1.0](https://www.intel.com/content/www/us/en/content-details/787041/whitepaper-linux-stacks-for-intel-trust-domain-extension-1-0.html) (only cover TDX 1.0)
 and [wiki](https://github.com/intel/tdx-tools/wiki) for additional informational about TDX 1.5 or developer specific.
 
 | Type | Content |
