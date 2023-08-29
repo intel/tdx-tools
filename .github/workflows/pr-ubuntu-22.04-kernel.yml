@@ -22,4 +22,4 @@ jobs:
         name: Build the source and binary packages
         run: |
           cd build/ubuntu-22.04/
-          ./pkg-builder intel-mvp-tdx-kernel/build.sh
+          ./pkg-builder -c "./intel-mvp-tdx-kernel/build.sh"

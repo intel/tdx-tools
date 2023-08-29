@@ -1,0 +1,47 @@
+#cloud-config
+merge_how:
+ - name: list
+   settings: [append]
+ - name: dict
+   settings: [no_replace, recurse_list]
+
+write_files:
+- content: |
+    network:
+        version: 2
+        renderer: networkd
+        ethernets:
+            en:
+                match:
+                    name: "en*"
+                dhcp4: true
+                dhcp-identifier: mac
+  path: /etc/netplan/netplan.yaml
+- content: |
+    ===========================================================================
+    Welcome to TDX guest.
+    Created by https://github.com/intel/tdx-tools
+    ===========================================================================
+  path: /etc/motd
+- content: |
+    SUBSYSTEM=="misc",KERNEL=="tdx-guest",MODE="0666"
+  path: /etc/udev/rules.d/90-tdx.rules
+
+power_state:
+  delay: now
+  mode: poweroff
+  message: Bye Bye
+  timeout: 1
+  condition: True
+
+user: root
+password: xxxx
+chpasswd: { expire: False }
+
+apt:
+  preserve_sources_list: true
+
+runcmd:
+  - sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  - sed -i 's/\"console=tty1 console=ttyS0\"/\"console=hvc0\"/g' /etc/default/grub.d/50-cloudimg-settings.cfg
+  - update-grub2

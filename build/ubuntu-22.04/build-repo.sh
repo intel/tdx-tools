@@ -29,8 +29,6 @@ build_kernel () {
     pushd intel-mvp-tdx-kernel
     [[ -f $STATUS_DIR/kernel.done ]] || ./build.sh 2>&1 | tee "$LOG_DIR"/kernel.log
     touch "$STATUS_DIR"/kernel.done
-    cp linux-image-unsigned-5.19.17-*.deb linux-headers-5.19.17-* linux-modules-5.19.17-* ../$GUEST_REPO/
-    cp linux-image-unsigned-5.19.17-*.deb linux-headers-5.19.17-* linux-modules-5.19.17-* linux-modules-extra-5.19.17-* ../$HOST_REPO/
     popd
 }
 
@@ -38,7 +36,6 @@ build_qemu () {
     pushd intel-mvp-tdx-qemu-kvm
     [[ -f $STATUS_DIR/qemu.done ]] || ./build.sh 2>&1 | tee "$LOG_DIR"/qemu.log
     touch "$STATUS_DIR"/qemu.done
-    cp qemu-system-x86_7.0*.deb qemu-system-common_7.0*.deb qemu-system-data_7.0*.deb ../$HOST_REPO/
     popd
 }
 
@@ -46,7 +43,6 @@ build_tdvf () {
     pushd intel-mvp-ovmf
     [[ -f $STATUS_DIR/ovmf.done ]] || ./build.sh 2>&1 | tee "$LOG_DIR"/ovmf.log
     touch "$STATUS_DIR"/ovmf.done
-    cp ovmf_*_all.deb ../$HOST_REPO/
     popd
 }
 
@@ -54,9 +50,6 @@ build_libvirt () {
     pushd intel-mvp-tdx-libvirt
     [[ -f $STATUS_DIR/libvirt.done ]] || ./build.sh 2>&1 | tee "$LOG_DIR"/libvirt.log
     touch "$STATUS_DIR"/libvirt.done
-    cp libvirt-clients_*.deb libvirt0_*.deb libvirt-daemon_*.deb libvirt-daemon-system_*.deb libvirt-daemon-system-systemd_*.deb \
-            libvirt-daemon-driver-qemu_*.deb libvirt-daemon-config-network_*.deb libvirt-daemon-config-nwfilter_*.deb \
-            libvirt-login-shell_*.deb libvirt-daemon-driver-lxc_*.deb libvirt-dev_*.deb ../$HOST_REPO/
     popd
 }
 
@@ -64,22 +57,103 @@ build_amber-cli () {
     pushd intel-mvp-amber-cli
     [[ -f $STATUS_DIR/amber-cli.done ]] || ./build.sh 2>&1 | tee "$LOG_DIR"/amber-cli.log
     touch $STATUS_DIR/amber-cli.done
-    cp sgx_debian_local_repo/pool/main/libt/libtdx-attest/libtdx-attest-dev_*_amd64.deb \
-            sgx_debian_local_repo/pool/main/libt/libtdx-attest/libtdx-attest_*_amd64.deb \
-            amber-cli_*_amd64.deb ../$GUEST_REPO/
     popd
 }
+
+_build_repo() {
+    PKG_DIR=$1
+    if [ -d jammy ]; then
+        rm -rf jammy
+    fi
+
+    if [ -d mini-dinstall ]; then
+        rm -rf mini-dinstall
+    fi
+
+    mkdir -p mini-dinstall
+
+    mv $PKG_DIR ./mini-dinstall/incoming
+    cur=$(realpath .)
+
+    content='[DEFAULT] 
+archive_style = simple-subdir
+archivedir = '$cur'
+architectures = all, amd64
+dynamic_reindex = 1
+verify_sigs = 0
+incoming_permissions = 0775
+generate_release = 1
+mail_on_success = false
+release_description = Linux MVP Stacks Packages for Ubuntu
+[jammy]'
+
+    echo "$content" > ./mini-dinstall/mini-dinstall.conf
+
+    mini-dinstall -b -q -c ./mini-dinstall/mini-dinstall.conf
+
+    rm -rf mini-dinstall
+}
+
+_build_guest_repo() {
+    mkdir -p $GUEST_REPO/incoming
+
+    pushd intel-mvp-tdx-kernel
+    cp *.build *.buildinfo *.changes *.tar.gz *.deb ../$GUEST_REPO/incoming/
+    popd
+
+    pushd intel-mvp-amber-cli
+    cp *.build *.buildinfo *.changes *.deb ../$GUEST_REPO/incoming/
+    popd
+
+    pushd $GUEST_REPO
+
+    _build_repo ./incoming
+
+    popd
+}
+
+_build_host_repo () {
+    mkdir -p $HOST_REPO/incoming
+
+    pushd intel-mvp-tdx-kernel
+    cp *.build *.buildinfo *.changes *.tar.gz *.deb ../$HOST_REPO/incoming/
+    popd    
+
+    pushd intel-mvp-tdx-qemu-kvm
+    cp *.build *.buildinfo *.changes *.deb *.ddeb ../$HOST_REPO/incoming/
+    popd
+
+    pushd intel-mvp-ovmf
+    cp *.build *.buildinfo *.changes *.deb ../$HOST_REPO/incoming/
+    popd    
+
+    pushd intel-mvp-tdx-libvirt
+    cp *.build *.buildinfo *.changes *.deb *.ddeb ../$HOST_REPO/incoming/
+    popd
+
+    pushd $HOST_REPO
+    _build_repo ./incoming
+    popd
+}
+
+build_repo() {
+    _build_guest_repo
+    if [[ $GUEST_ONLY == "false" ]]; then
+        _build_host_repo
+    fi
+}
+
 
 build_check "$1"
 
 pushd "$THIS_DIR"
-mkdir -p $GUEST_REPO
-mkdir -p $HOST_REPO
 
 build_kernel
 $GUEST_ONLY || build_qemu
 $GUEST_ONLY || build_tdvf
 $GUEST_ONLY || build_libvirt
 build_amber-cli
+
+build_repo
 
 popd

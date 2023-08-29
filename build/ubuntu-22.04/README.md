@@ -2,7 +2,7 @@
 # Build TDX Stack on Ubuntu 22.04
 
 For Ubuntu it also supports building in Docker container to isolate the build environment from the linux host.
-`./pkg-builder <build-script>` will create a Docker image named `pkg-builder-ubuntu-22.04` and start a container to run the build script.
+`./pkg-builder -c <build-script>` will create a Docker image named `pkg-builder-ubuntu-22.04` and start a container to run the build script.
 
 ## Build requirements
 
@@ -24,20 +24,21 @@ Run it in docker container using `pkg-builder`.
 
 ```
 cd tdx-tools/build/ubuntu-22.04
-./pkg-builder build-repo.sh
+./pkg-builder -c "./build-repo.sh"
 ```
 
 If you need to build some packages separately, run `build.sh` in each subdirectory.
 
 ```
-./pkg-builder intel-mvp-ovmf/build.sh
+./pkg-builder -c "./intel-mvp-ovmf/build.sh"
 ```
 
 ## Install TDX host packages
 
 ```
 cd host_repo
-sudo apt -y --allow-downgrades install ./*.deb
+sudo apt -y --allow-downgrades install ./jammy/amd64/*.deb
+sudo apt -y --allow-downgrades install ./jammy/all/*.deb
 ```
 
 Please skip the warning message below, or eliminate it by installing local packages from `/tmp/` .
