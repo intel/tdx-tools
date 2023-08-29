@@ -146,19 +146,23 @@ check_os() {
 # Check the TDX module's version
 #
 check_tdx_module() {
-    local action="Check TDX Module: The version is expected (required & manually)"
-    local reason=""
-    report_result TBD "$action" "$reason" required manual
-    local tdx_module_info
-    # shellcheck disable=SC2012
-    tdx_module_info=$(ls /sys/firmware/tdx/tdx_module | while read -r tdxattr; \
+    if [[ -e /sys/firmware/tdx/tdx_module ]]; then
+        local action="Check TDX Module: The version is expected (required & manually)"
+        report_result TBD "$action" "" required manual
+        local tdx_module_info
+        # shellcheck disable=SC2012
+        tdx_module_info=$(ls /sys/firmware/tdx/tdx_module | while read -r tdxattr; \
             do echo "$tdxattr": ; cat /sys/firmware/tdx/tdx_module/"$tdxattr"; echo; done)
-    # shellcheck disable=SC2086
-    print_guide "Your TDX Module info." $tdx_module_info
-    print_guide "Different releases could require different versions of TDX module."
-    print_guide "Please check your TDX Module info to see if that's what you need."
-    print_guide "Details can be found in the Whitepaper: Linux* Stacks for Intel® Trust Domain Extension"
-    print_url $URL_TDX_LINUX_WHITE_PAPER
+        # shellcheck disable=SC2086
+        print_guide "Your TDX Module info." $tdx_module_info
+        print_guide "Different releases could require different versions of TDX module."
+        print_guide "Please check your TDX Module info to see if that's what you need."
+        print_guide "Details can be found in the Whitepaper: Linux* Stacks for Intel® Trust Domain Extension"
+        print_url $URL_TDX_LINUX_WHITE_PAPER
+    else
+        local action="Check TDX Module: The version is expected (required)"
+        report_result FAIL "$action" "TDX Module is required" required
+    fi
     printf "\n"
 }
 
