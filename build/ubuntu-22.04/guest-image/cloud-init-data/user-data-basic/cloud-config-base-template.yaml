@@ -27,7 +27,7 @@ write_files:
     SUBSYSTEM=="misc",KERNEL=="tdx-guest",MODE="0666"
   path: /etc/udev/rules.d/90-tdx.rules
 - content: |
-    D /run/ccnp/uds 0666 - - -
+    D /run/ccnp/uds 0757 - - -
   path: /usr/lib/tmpfiles.d/ccnp.conf
 
 power_state:
