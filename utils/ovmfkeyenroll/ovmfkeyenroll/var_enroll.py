@@ -326,6 +326,7 @@ class VariableTimeBasedAuth:
         print("    Monotonic Cnt  : 0x%x" % self.count)
         print("    PubKey Index   : 0x%x" % self.pk_index)
         print("    TimeStamp      : %s" % self.time_stamp.dump())
+        print("    Data (hex)     : %s" % self.data.hex())
 
 
 class VariableStore:
@@ -952,7 +953,7 @@ def main():
         help="Print the variable info in the FD")
 
     argparser.add_argument(
-        '-f', "--fd",
+        '-f', "--input",
         help="The input FD file")
 
     argparser.add_argument(

@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ovmfkeyenroll"
-version = "1.2.0"
+version = "1.2.1"
 authors = [
   { name="Xu, Min", email="min.m.xu@intel.com" },
   { name="Feng, Jialei", email="jialei.feng@intel.com" },
 ]
 readme = "README.md"
-description = "OVMF PK, KEK and DB Keys Enrolling"
+description = "OVMF PK, KEK and DB Keys and Variables Enrolling"
 requires-python = ">=3.6.8"
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -27,3 +27,4 @@ classifiers = [
 
 [project.scripts]
 ovmfkeyenroll = "ovmfkeyenroll.secure_boot:main"
+ovmfvarenroll = "ovmfkeyenroll.var_enroll:main"

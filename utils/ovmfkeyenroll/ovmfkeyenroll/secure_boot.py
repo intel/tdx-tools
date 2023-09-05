@@ -7,7 +7,6 @@ Enrolling secure boot related keys and variables
 import sys
 import argparse
 import os
-import pathlib
 import shutil
 import logging
 from pathlib import Path
@@ -19,13 +18,13 @@ def secure_boot_config_valid(sbconfig, build_log):
     '''
     If User provide the PK/KEK/db/dbx params via command line,
     We need check whether whether the params are valid.
-    PK/KEK/db/SecureBootEnable is mandatory,
-    dbx is optional
+    SecureBootEnable is mandatory,
+    PK/KEK/db/dbx is optional
     :param sbconfig:
     :param build_log:
     :return:
     '''
-    mandatory_vars = ['PK', 'KEK', 'db', 'SecureBootEnable']
+    mandatory_vars = ['SecureBootEnable']
     valid = True
     for mandatory_var in mandatory_vars:
         if mandatory_var not in sbconfig:
@@ -149,59 +148,57 @@ def do_var_enroll(input_fd, output_fd, pkg_path, sbconfig, build_log):
 
     # pylint: disable=unnecessary-lambda-assignment
     file_path = lambda file, base_dir: file if os.path.isabs(file) else os.path.join(base_dir, file)
-    pk_file = file_path(sbconfig['PK'][1], pkg_path)
-    kek_file = file_path(sbconfig['KEK'][1], pkg_path)
-    db_file = file_path(sbconfig['db'][1], pkg_path)
+    pk_file = file_path(sbconfig['PK'][1], pkg_path) if 'PK' in sbconfig else None
+    kek_file = file_path(sbconfig['KEK'][1], pkg_path) if 'KEK' in sbconfig else None
+    db_file = file_path(sbconfig['db'][1], pkg_path) if 'db' in sbconfig else None
     dbx_file = file_path(sbconfig['dbx'][1], pkg_path) if 'dbx' in sbconfig else None
     enable_bin_file = file_path(sbconfig['SecureBootEnable'][1], pkg_path)
 
-    out_pk = input_fd + '.pk'
-    out_kek = out_pk + '.kek'
-    out_db = out_kek + '.db'
-    out_dbx = out_db + '.dbx'
-    out_sb_enable = out_dbx + '.sb'
+    tmp_file = input_fd  + '.sb'
     result = False
+    args = VarEnrollParams()
+    shutil.copyfile(input_fd, tmp_file)
 
     # enroll pk
-    args = VarEnrollParams()
-    args.__dict__.update(input=input_fd, output=out_pk, data_file=pk_file,
-    guid=sbconfig['PK'][0], name='PK', operation=VarEnrollOps.ADD)
-    ret = var_enroll(args)
-    build_log.log(LOG_DBG, "\nEnroll PK variable -- %s\n"%('Success' if ret else 'Failed'))
-    if not ret:
-        return ret
+    if pk_file:
+        args.__dict__.update(input=tmp_file, output=tmp_file, data_file=pk_file,
+        guid=sbconfig['PK'][0], name='PK', operation=VarEnrollOps.ADD)
+        ret = var_enroll(args)
+        build_log.log(LOG_DBG, "\nEnroll PK variable -- %s\n"%('Success' if ret else 'Failed'))
+        if not ret:
+            return ret
 
     # enroll kek
-    args.__dict__.update(input=out_pk, output=out_kek, data_file=kek_file,
-    guid=sbconfig['KEK'][0], name='KEK', operation=VarEnrollOps.ADD)
-    ret = var_enroll(args)
-    build_log.log(LOG_DBG, "\nEnroll KEK variable -- %s\n" % ('Success' if ret else 'Failed'))
-    if not ret:
-        return ret
+    if kek_file:
+        args.__dict__.update(input=tmp_file, output=tmp_file, data_file=kek_file,
+        guid=sbconfig['KEK'][0], name='KEK', operation=VarEnrollOps.ADD)
+        ret = var_enroll(args)
+        build_log.log(LOG_DBG, "\nEnroll KEK variable -- %s\n" % ('Success' if ret else 'Failed'))
+        if not ret:
+            return ret
 
     # enroll db
-    args.__dict__.update(input=out_kek, output=out_db, data_file=db_file,
-    guid=sbconfig['db'][0], name='db', operation=VarEnrollOps.ADD)
-    ret = var_enroll(args)
-    build_log.log(LOG_DBG, "\nEnroll db variable -- %s\n" % ('Success' if ret else 'Failed'))
-    if not ret:
-        return ret
+    if db_file:
+        args.__dict__.update(input=tmp_file, output=tmp_file, data_file=db_file,
+        guid=sbconfig['db'][0], name='db', operation=VarEnrollOps.ADD)
+        ret = var_enroll(args)
+        build_log.log(LOG_DBG, "\nEnroll db variable -- %s\n" % ('Success' if ret else 'Failed'))
+        if not ret:
+            return ret
 
     # enroll dbx
     # dbx may not be enrolled
     if dbx_file:
-        args.__dict__.update(input=out_db, output=out_dbx, data_file=dbx_file,
+        args.__dict__.update(input=tmp_file, output=tmp_file, data_file=dbx_file,
         guid=sbconfig['dbx'][0], name='dbx', operation=VarEnrollOps.ADD)
         ret = var_enroll(args)
         build_log.log(LOG_DBG, "\nEnroll dbx variable -- %s\n" % \
                 ('Success' if ret else 'Failed'))
         if not ret:
             return ret
-    else:
-        shutil.copyfile(out_db, out_dbx)
 
     # enable SecureBoot
-    args.__dict__.update(input=out_dbx, output=out_sb_enable, data_file=enable_bin_file,
+    args.__dict__.update(input=tmp_file, output=tmp_file, data_file=enable_bin_file,
             name='SecureBootEnable', guid=sbconfig['SecureBootEnable'][0],
             attributes="0x3", operation=VarEnrollOps.ADD)
     ret = var_enroll(args)
@@ -210,20 +207,12 @@ def do_var_enroll(input_fd, output_fd, pkg_path, sbconfig, build_log):
     if not ret:
         return ret
 
-    shutil.copyfile(out_sb_enable, output_fd)
+    shutil.copyfile(tmp_file, output_fd)
     result = True
 
     ## then clean the tmp files
-    if os.path.isfile(out_pk):
-        os.remove(out_pk)
-    if os.path.isfile(out_kek):
-        os.remove(out_kek)
-    if os.path.isfile(out_db):
-        os.remove(out_db)
-    if os.path.isfile(out_dbx):
-        os.remove(out_dbx)
-    if os.path.isfile(out_sb_enable):
-        os.remove(out_sb_enable)
+    if os.path.isfile(tmp_file):
+        os.remove(tmp_file)
 
     build_log.log(LOG_DBG, "\n[%s] Enroll All Variables to %s\n" % \
             ('Success' if result else 'Failed', output_fd))
@@ -260,8 +249,7 @@ def main():
     }
 
     parser = argparse.ArgumentParser(add_help=False)
-    curr_path = pathlib.Path(__file__).parent.absolute()
-    pkg_path = str(curr_path)
+    pkg_path = os.getcwd()
     build_log = BuildLog(os.path.join(pkg_path, "Build.log"))
 
     # scan command line to override defaults
