@@ -210,8 +210,11 @@ check_bios_tme_bypass() {
     local reason="The bit 31 of MSR 0x982 should be 1"
     local retval
     retval=$(sudo rdmsr -f 31:31 0x982)
-    [[ "$retval" == 1 ]] && result="OK" || result="WARNING"
+    [[ "$retval" == 1 ]] && result="OK" || result="TBD"
     report_result "$result" "$action" "$reason" optional
+    if [[ "$retval" != 1 ]]; then
+        print_guide "The TME Bypass has not been enabled now."
+    fi
     print_guide "It's better to enable TME Bypass for traditional non-confidential workloads."
     print_guide "Details can be found in the Intel SDM: Vol. 4 Model Specific Registers (MSRs)"
     print_url $URL_INTEL_SDM
