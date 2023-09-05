@@ -313,7 +313,7 @@ create_user_data() {
         GUEST_REPO_NAME=$(basename $(realpath ${GUEST_REPO}))
         guest_repo_source='deb [trusted=yes] file:/srv/'$GUEST_REPO_NAME'/ jammy/all/\ndeb [trusted=yes] file:/srv/'$GUEST_REPO_NAME'/ jammy/amd64/'
         if [ -z $KERNEL_VERSION ]; then
-            kernel=$(tree ${GUEST_REPO} | grep linux-image-unsigned | head -1 | awk '{print $3}')
+            kernel=$(basename $(find $GUEST_REPO -name linux-image-unsigned* | head -1))
             KERNEL_VERSION=$(echo $kernel | awk -F'_' '{print $1}')
             KERNEL_VERSION=$(echo ${KERNEL_VERSION#linux-image-unsigned-})
         fi
