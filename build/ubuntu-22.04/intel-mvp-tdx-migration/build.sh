@@ -4,7 +4,7 @@ set -e
 
 CURR_DIR=$(dirname "$(readlink -f "$0")")
 GIT_URI="https://github.com/intel/MigTD.git"
-GIT_TAG="v0.2.3"
+GIT_TAG="v0.3.0"
 PKG_DIR="${CURR_DIR}"/migtd
 
 get_source() {
@@ -29,16 +29,28 @@ prepare() {
         export HOME=/root
     fi
 
-    if [[ $($HOME/.cargo/bin/cargo --version) =~ 1.67.0-nightly ]]; then
-        echo "Found Cargo 1.67.0-nightly in $HOME/.cargo/"
+    # install rust and deps
+    if [[ $($HOME/.cargo/bin/cargo --version) =~ 1.74.0-nightly ]]; then
+        echo "Found Cargo 1.74.0-nightly in $HOME/.cargo/"
     else
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup-init.sh
-        chmod +x rustup-init.sh;./rustup-init.sh -y --profile minimal --default-toolchain nightly-2022-11-15
+        chmod a+x rustup-init.sh
+        ./rustup-init.sh -y --profile minimal --default-toolchain nightly-2023-08-28
     fi
-    # shellcheck source=/dev/null
+
     source $HOME/.cargo/env
-    cargo install cargo-xbuild
-    rustup component add rust-src
+    # install cargo xbuild
+    cargo_build=$(cargo --list | grep xbuild | wc -l)
+    if [[ $cargo_build == 0 ]]; then
+        cargo install cargo-xbuild
+    fi
+
+    # install rust src
+    rust_src=$(rustup component list | grep rust-src | wc -l)
+    if [[ $rust_src == 0 ]]; then
+        rustup component add rust-src
+    fi
+
     sudo apt install nasm llvm clang ocaml ocamlbuild -y
 }
 

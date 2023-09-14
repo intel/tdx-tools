@@ -14,3 +14,6 @@ attestation/full-disk-encryption/target/
 deploy/tdx_stack/tdx_repo/
 build/ubuntu-22.04/guest_repo/
 build/ubuntu-22.04/host_repo/
+
+build/ubuntu-22.04/local/
+build/ubuntu-22.04/intel-mvp-tdx-migration/migtd/
