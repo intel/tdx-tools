@@ -1,8 +1,0 @@
-apiVersion: v2
-name: tdx-qgs
-description: Intel(R) TD Quoting Generation Service
-
-type: application
-
-version: 0.1.0
-appVersion: "0.1.0"
