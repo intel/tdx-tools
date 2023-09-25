@@ -17,3 +17,5 @@ build/ubuntu-22.04/host_repo/
 
 build/ubuntu-22.04/local/
 build/ubuntu-22.04/intel-mvp-tdx-migration/migtd/
+attestation/pckid-service/pckid-retrieve-tool-service_1.0-1_amd64/etc/systemd/system/pckid_retrieve_tool_service.service
+attestation/pckid-service/pckid-retrieve-tool-service_1.0-1_amd64.deb

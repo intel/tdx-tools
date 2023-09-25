@@ -1,0 +1,18 @@
+[Unit]
+Description=pckid retrieve tool service
+Requires=pccs.service mpa_registration_tool.service
+After=pccs.service mpa_registration_tool.service
+StartLimitInterval=350
+StartLimitBurst=5
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/intel/sgx-pck-id-retrieval-tool
+User=root
+ExecStart=/bin/bash -c "/opt/intel/sgx-pck-id-retrieval-tool/PCKIDRetrievalTool -user_token $PASSWD"
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
+

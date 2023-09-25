@@ -1,0 +1,7 @@
+Package: pckid-retrieve-tool-service
+Version: 1.0
+Architecture: amd64
+Maintainer: Haokun Xing <haokun.xin@intel.com>
+Description: A service register platform on sgx server 
+ The service, invoked by systemd at the boot time once, uses PCKIDRetrieveTool
+ to register the platform to the sgx server.

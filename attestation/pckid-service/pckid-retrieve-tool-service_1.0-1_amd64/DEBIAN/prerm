@@ -1,0 +1,1 @@
+systemctl disable pckid_retrieve_tool_service.service
