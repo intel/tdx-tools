@@ -70,7 +70,7 @@ pre_mig(){
         if [[ ${BIND} == true ]]; then
             ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo qom-set /objects/tdx0/ migtd-pid ${DST_MIGTD_PID} | nc -U /tmp/qmp-sock-dst -w3"
         fi
-       ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo qom-set /objects/tdx0/ vsockport ${VSOCK_PORT_DST} | nc -U /tmp/qmp-sock-dst"
+       ssh root@"${DEST_IP}" -o ConnectTimeout=30 "echo qom-set /objects/tdx0/ vsockport ${VSOCK_PORT_DST} | nc -U /tmp/qmp-sock-dst -w3"
     fi
 
     # Asking migtd-dst to connect to the src socat

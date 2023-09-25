@@ -11,7 +11,9 @@ fi
 
 GUEST_CID=18
 MIGTD="/usr/share/td-migration/migtd.bin"
+VIRTIO_SERIAL=false
 MIGTD_TYPE=""
+DEST_IP="127.0.0.1"
 
 usage() {
     cat << EOM
@@ -23,10 +25,12 @@ EOM
 }
 
 process_args() {
-    while getopts "m:t:h" option; do
+    while getopts "i:m:t:hs" option; do
         case "${option}" in
+            i) DEST_IP=$OPTARG;;
             m) MIGTD=$OPTARG;;
             t) MIGTD_TYPE=$OPTARG;;
+            s) VIRTIO_SERIAL=true;;
             h) usage
                exit 0
                ;;
@@ -41,6 +45,10 @@ process_args() {
     if [[ -z ${MIGTD_TYPE} ]]; then
         usage
         error "Must set MIGTD_TYPE -t [src|dst]"
+    fi
+
+    if [[ ${VIRTIO_SERIAL} == true ]]; then
+        MIGTD="/usr/share/td-migration/migtd-serial.bin"
     fi
 
     case ${MIGTD_TYPE} in
@@ -72,12 +80,23 @@ QEMU_CMD="${QEMU_EXEC} \
 -object memory-backend-memfd-private,id=ram1,size=1G \
 -machine q35,memory-backend=ram1,confidential-guest-support=tdx0,kernel_irqchip=split \
 -bios ${MIGTD} \
--device vhost-vsock-pci,id=vhost-vsock-pci1,guest-cid=${GUEST_CID},disable-legacy=on \
 -name migtd-${MIGTD_TYPE},process=migtd-${MIGTD_TYPE},debug-threads=on \
 -no-hpet \
 -nographic -vga none -nic none \
 -serial mon:stdio \
 -pidfile /var/run/migtd-${MIGTD_TYPE}.pid"
+
+    if [[ ${VIRTIO_SERIAL} == true ]]; then
+        QEMU_CMD+=" -device virtio-serial-pci,id=virtio-serial0 "
+        if [[ ${MIGTD_TYPE} == "src" ]]; then
+            QEMU_CMD+=" -chardev socket,host=0.0.0.0,port=1236,server=on,id=foo "
+        else
+            QEMU_CMD+=" -chardev socket,host=${DEST_IP},port=1236,server=off,id=foo "
+        fi
+        QEMU_CMD+=" -device virtserialport,chardev=foo,bus=virtio-serial0.0 "
+    else
+        QEMU_CMD+=" -device vhost-vsock-pci,id=vhost-vsock-pci1,guest-cid=${GUEST_CID},disable-legacy=on "
+    fi
 
     eval "${QEMU_CMD}"
 }

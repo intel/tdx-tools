@@ -31,11 +31,18 @@ TD migration supports several features as below. The scripts described later wil
     sudo ./mig-td.sh -t dst
     ```
 
-    Use `-m` parameter to set the alternative path of `migtd.bin`.
+    1. Use `-m` parameter to set the alternative path of `migtd.bin`.
 
-    ```bash
-    sudo ./mig-td.sh -m path/to/migtd.bin -t src
-    ```
+        ```bash
+        sudo ./mig-td.sh -m path/to/migtd.bin -t src
+        ```
+
+    2. Use `-s` to enable virtio-serial instead of vsock
+
+        ```bash
+        sudo ./mig-td.sh -t src -s
+        sudo ./mig-td.sh -t dst -s
+        ```
 
     If MigTD starts successfully, the console will display the below message.
 
@@ -85,6 +92,8 @@ TD migration supports several features as below. The scripts described later wil
 - Pre-Migration
 
     Wait a while for source and destination TDs to be ready. Before starting pre-migration, create a channel between source and destination side migration TDs.
+
+    **Note: if use the virtio-serial mode to launch MigTD, the step of connecting to socat can be ignored.**
 
     ```bash
     sudo ./connect.sh
@@ -292,7 +301,6 @@ It supports to pre-binding a user TD with `migtd_hash` in case `migTD` is not cr
     ```console
     $ dmesg
     [110983.886989] migration flow is done, userspace pid 397008
-    ```
 
 ## 3. Related Specification
 
