@@ -30,7 +30,7 @@ are full optimized for performance, please see [`Performance Considerations of I
 
 | Tag | Kernel version | TDX Version | Descriptions |
 | -- | -- | -- | -- |
-| [2023ww38](https://github.com/intel/tdx-tools/releases/tag/2023ww38) | 6.2.16  | TDX 1.5 | vTPM, Live Migration+, latest CVE |
+| [2023ww41](https://github.com/intel/tdx-tools/releases/tag/2023ww41) | 6.2.16  | TDX 1.5 | Performance improvement, vTPM+, Live Migration+, latest CVE |
 
 ### 1.1 Intel&reg; Trust Domain Extensions(TDX)
 Intel&reg; Trust Domain Extensions(TDX) refers to an Intel technology that
@@ -54,7 +54,7 @@ _**NOTE**_:
 
 Please see details at [here](https://github.com/intel/tdx-tools/wiki/API-&-Specifications):
 
-![](./doc/tdx_specifcations.png)
+![](./doc/tdx_specifications.png)
 
 ## 2. Stacks and Solutions for Intel&reg; TDX
 
