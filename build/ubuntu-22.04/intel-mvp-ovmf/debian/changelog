@@ -1,3 +1,9 @@
+ovmf (2023.10-ww36.2.mvp17) jammy; urgency=medium
+
+  * Expand event log size to 1MB
+
+ -- Jialei Feng <jialei.feng@intel.com>  Sat, 28 Oct 2023 16:28:00 +0800
+
 ovmf (2023.09-ww36.2.mvp16) jammy; urgency=medium
 
   * Shorten version length

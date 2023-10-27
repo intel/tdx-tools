@@ -1,0 +1,33 @@
+From e4bdb0f2dc94d82819b13bcad16764fc5c4ede20 Mon Sep 17 00:00:00 2001
+From: Xiaocheng Dong <xiaocheng.dong@intel.com>
+Date: Tue, 8 Aug 2023 16:32:51 +0800
+Subject: [PATCH] SecurityPkg: Enlarge event log size to record more logs from
+ user space
+
+Currently, the event log will be recorded when measuring OVMF, Shim,
+Grub, Kernel, etc, the records will be large especially when Linux
+Kernel running with IMA enabled. Enlarge minimum log size to 1MB to
+support such huge records scenarios.
+
+Signed-off-by: Xiaocheng Dong <xiaocheng.dong@intel.com>
+---
+ OvmfPkg/IntelTdx/IntelTdxX64.dsc | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/OvmfPkg/IntelTdx/IntelTdxX64.dsc b/OvmfPkg/IntelTdx/IntelTdxX64.dsc
+index f8c296c273..6abf17d629 100644
+--- a/OvmfPkg/IntelTdx/IntelTdxX64.dsc
++++ b/OvmfPkg/IntelTdx/IntelTdxX64.dsc
+@@ -485,6 +485,9 @@
+   #
+   gUefiCpuPkgTokenSpaceGuid.PcdFirstTimeWakeUpAPsBySipi|FALSE
+ 
++  # Enlarge to 1MB for recording more event logs from user space.
++  gEfiSecurityPkgTokenSpaceGuid.PcdTcgLogAreaMinLen|0x100000
++
+ ################################################################################
+ #
+ # Pcd Dynamic Section - list of all EDK II PCD Entries defined by this Platform
+-- 
+2.34.1
+

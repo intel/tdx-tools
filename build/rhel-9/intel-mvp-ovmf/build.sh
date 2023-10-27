@@ -17,6 +17,7 @@ get_origin() {
         git submodule init
         git submodule sync
         git submodule update
+        git apply ../0001*.patch
         popd
     fi
 }
