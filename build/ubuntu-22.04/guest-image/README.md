@@ -20,11 +20,16 @@ It allows the customizations via the `cloud-init` script, please see [meta-data.
 - Install the following apps or tools:
   - Ubuntu:
   ```
-  sudo apt install qemu-utils libguestfs-tools virtinst genisoimage
+  sudo apt install qemu-utils libguestfs-tools virtinst genisoimage cloud-init
   ```
   - RHEL/CentOS Stream:
   ```
-  sudo dnf install libguestfs-tools-c qemu-img virt-install genisoimage
+  sudo dnf install libguestfs-tools-c qemu-img virt-install genisoimage cloud-init
+  ```
+- Install the latest `yq` to handle yaml files
+  ```
+  sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq 
+  sudo chmod +x /usr/bin/yq
   ```
 
 ## 3. Usage

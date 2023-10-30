@@ -7,7 +7,7 @@
 
 CURR_DIR=$(dirname "$(realpath $0)")
 FORCE_RECREATE=false
-IMAGE_DAILY="20230914"
+IMAGE_DAILY="current"
 OFFICIAL_UBUNTU_IMAGE="https://cloud-images.ubuntu.com/jammy/${IMAGE_DAILY}/"
 CLOUD_IMG="jammy-server-cloudimg-amd64.img"
 GUEST_IMG="tdx-guest-ubuntu-22.04.qcow2"
@@ -448,7 +448,6 @@ check_tool genisoimage
 check_tool cloud-init
 check_tool git
 check_tool awk
-check_tool tree
 check_tool yq
 
 process_args "$@"
