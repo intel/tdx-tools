@@ -218,7 +218,7 @@ process_args() {
                 PARAM_CPU+=",tsc-freq=1000000000"
             fi
             # Note: "pic=no" could only be used in TD mode but not for non-TD mode
-            PARAM_MACHINE+=",kernel_irqchip=split,confidential-guest-support=tdx"
+            PARAM_MACHINE+=",kernel_irqchip=split,memory-encryption=tdx,memory-backend=ram1"
             QEMU_CMD+=" -bios ${OVMF}"
             QEMU_CMD+=" -object tdx-guest,sept-ve-disable,id=tdx"
             if [[ ${QUOTE_TYPE} == "tdvmcall" ]]; then
@@ -230,6 +230,7 @@ process_args() {
             if [[ ${DEBUG} == true ]]; then
                 QEMU_CMD+=",debug=on"
             fi
+	    QEMU_CMD+=" -object memory-backend-ram,id=ram1,size=${MEM},private=on"
             ;;
         "efi")
             PARAM_MACHINE+=",kernel_irqchip=split"
