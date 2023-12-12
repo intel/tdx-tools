@@ -78,7 +78,7 @@ class FirmwareVolume:
         UCHAR: FileSystemGUID[16]
         UINT64: Length
         UINT32: Signature (_FVH)
-        UINT8: Attribute mask
+        UINT32: Attribute mask
         UINT16: Header Length
         UINT16: Checksum
         UINT16: ExtHeaderOffset
