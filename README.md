@@ -22,6 +22,11 @@ Virtual Machine Monitor (VMM). Please see details at [here](https://www.intel.co
 - Google published [Intel Trust Domain Extensions (TDX) Security Review](https://services.google.com/fh/files/misc/intel_tdx_-_full_report_041423.pdf)
 - Please contact Intel sales representative for on-premise bare metal server or processor.
 
+### 1.3 Software Availability
+
+You can follow Red Hat [documentation](https://sigs.centos.org/virt/tdx/) for Intel TDX technology early access with CentOS Stream 9 or refer to Canonical [README](https://github.com/canonical/tdx/blob/main/README.md) for TDX build with Ubuntu 23.10.
+More information can be found in Red Hat [blog](https://www.redhat.com/en/blog/enabling-hardware-backed-confidential-computing-centos-sig) and Canonical [blog](https://ubuntu.com/blog/intel-tdx-1-0-preview-on-ubuntu-23-10).
+
 ## 2. How to launch TD
 
 Use the script [start-qemu.sh](https://github.com/intel/tdx-tools/blob/tdx-mid-stream/start-qemu.sh) to start a TD
