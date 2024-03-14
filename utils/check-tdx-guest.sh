@@ -4,7 +4,7 @@
 #
 
 tdx_cpuinfo=$(grep -o tdx_guest /proc/cpuinfo)
-if [[ $tdx_cpuinfo != "tdx_guest" ]]; then
+if [[ $tdx_cpuinfo =~ "tdx_guest$" ]]; then
   echo "This is NOT a TDX guest!"
   echo "No config in cpuinfo!"
   exit 1
